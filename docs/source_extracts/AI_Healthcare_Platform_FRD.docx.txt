@@ -1,0 +1,328 @@
+
+FUNCTIONAL REQUIREMENTS DOCUMENT
+AI-Powered Connected Healthcare Platform
+AI-Powered Connected Healthcare Platform • Version 1.0 • 2026
+Document Item
+ | Value
+ | Purpose
+ | Translate business needs into implementable system functions and workflows.
+ | Platforms
+ | Flutter mobile app, clinician web/app, admin web portal.
+ | Backend
+ | API services + PostgreSQL + background jobs + AI services.
+ | Priority
+ | P0 = MVP critical, P1 = next release, P2 = future.
+ | 
+1. Functional Architecture
+Layer
+ | Functions
+ | Mobile
+ | Patient onboarding, home, AI, appointments, home visits, records, wellness, safety.
+ | Clinician
+ | Patient queue, history, AI summary, consultation, care plan, follow-up.
+ | Admin
+ | Users, providers, services, content, safety, analytics, audit.
+ | API
+ | Authentication, authorization, business workflows, integrations.
+ | AI
+ | Conversation, summarization, classification, RAG, voice, safety routing.
+ | Data
+ | PostgreSQL, object storage, audit logs, cache/queue.
+ | 2. Authentication & Authorization
+ID
+ | Requirement
+ | Priority
+ | AUTH-01
+ | User registration/login must support secure verification.
+ | P0
+ | AUTH-02
+ | Role-based access must separate patient, caregiver, clinician, intern, admin and super admin.
+ | P0
+ | AUTH-03
+ | Privileged accounts must support stronger authentication.
+ | P0
+ | AUTH-04
+ | Sessions/tokens must expire and be revocable.
+ | P0
+ | AUTH-05
+ | All sensitive actions must be audited.
+ | P0
+ | 3. Patient Home Screen
+ID
+ | Requirement
+ | Priority
+ | HOME-01
+ | Show personalized greeting and profile access.
+ | P0
+ | HOME-02
+ | Show AI Health Assistant primary CTA.
+ | P0
+ | HOME-03
+ | Provide search for symptoms, doctors, tests and hospitals.
+ | P1
+ | HOME-04
+ | Show quick actions: Doctor, Home Checkup, Medicines, Upload Report.
+ | P0
+ | HOME-05
+ | Show health insights only when data is available/authorized.
+ | P1
+ | HOME-06
+ | Show contextual care promotion.
+ | P1
+ | HOME-07
+ | Show Explore features such as wellness, wound, fall and hospitals.
+ | P1
+ | HOME-08
+ | Use bottom navigation: Home, Care, Ask AI, Records, Profile.
+ | P0
+ | 4. AI Health Assistant
+ID
+ | Requirement
+ | Priority
+ | AI-01
+ | Accept text questions.
+ | P0
+ | AI-02
+ | Accept voice input.
+ | P1
+ | AI-03
+ | Respond in selected language where supported.
+ | P1
+ | AI-04
+ | Ask structured follow-up questions.
+ | P0
+ | AI-05
+ | Use authorized patient history.
+ | P0
+ | AI-06
+ | Apply safety/red-flag rules.
+ | P0
+ | AI-07
+ | Escalate to clinician/care pathway when required.
+ | P0
+ | AI-08
+ | Generate clinician summary.
+ | P1
+ | AI-09
+ | Record model/version and safety metadata.
+ | P0
+ | AI-10
+ | Never label uncertain output as confirmed diagnosis.
+ | P0
+ | 5. Doctor Discovery & Appointment
+User opens doctor search.
+System applies specialty, location, availability and preference filters.
+User views provider profile and verification status.
+User selects slot.
+System confirms booking and sends notification.
+Appointment appears in patient and clinician calendars.
+Cancellation/rescheduling follows configured policy.
+6. Home Checkup
+ID
+ | Requirement
+ | Priority
+ | HOME-01
+ | Check service coverage.
+ | P0
+ | HOME-02
+ | Capture address and preferred slot.
+ | P0
+ | HOME-03
+ | Match verified field provider.
+ | P0
+ | HOME-04
+ | Track assignment and arrival status.
+ | P0
+ | HOME-05
+ | Capture vitals and structured observations.
+ | P0
+ | HOME-06
+ | Support escalation to doctor.
+ | P0
+ | HOME-07
+ | Generate visit summary.
+ | P0
+ | HOME-08
+ | Support offline capture for selected field workflows.
+ | P1
+ | 7. Medical Records
+Upload PDF/image/document.
+Categorize report/prescription/record.
+Store source and timestamp.
+Display chronological timeline.
+Allow authorized sharing.
+Support correction and deletion workflows according to policy.
+Maintain audit history.
+8. Medication & Follow-up
+ID
+ | Requirement
+ | Priority
+ | MED-01
+ | Create medication entry.
+ | P0
+ | MED-02
+ | Schedule reminders.
+ | P0
+ | MED-03
+ | Record adherence.
+ | P1
+ | MED-04
+ | Show upcoming follow-ups.
+ | P0
+ | MED-05
+ | Notify patient/caregiver where permitted.
+ | P1
+ | 9. Mental Wellness
+Mood check-in
+Wellness activities
+AI conversation within defined non-clinical scope
+Professional support referral
+Safety escalation for high-risk signals
+Consent and privacy controls
+10. Wound Image Workflow
+Capture/upload image.
+Run image-quality checks.
+Request retake if quality is inadequate.
+Store image with consent and timestamp.
+Run validated analysis only when available.
+Present observations as assistive information.
+Route to clinician when required.
+11. Fall Detection
+Receive supported device event.
+Prompt user to confirm safety.
+If safe, close event.
+If help requested/no response, notify configured contact.
+Escalate through supported emergency workflow.
+Store incident metadata.
+12. Wearable Integration
+Connect supported provider/device.
+Request explicit permissions.
+Synchronize supported metrics.
+Display trends.
+Allow disconnect/revoke.
+Mark data source and timestamp.
+13. Hospital Discovery
+Search by location/service.
+Filter by specialty/service.
+Display verified information where available.
+Display review source and moderation status.
+Provide directions/contact/booking when available.
+Emergency flow must prioritize urgent care rather than review ranking.
+14. Clinician Portal
+ID
+ | Requirement
+ | Priority
+ | DOC-01
+ | View assigned patients/appointments.
+ | P0
+ | DOC-02
+ | View authorized medical timeline.
+ | P0
+ | DOC-03
+ | View home-visit data.
+ | P0
+ | DOC-04
+ | View AI summary with source context.
+ | P1
+ | DOC-05
+ | Record clinical notes/care plan.
+ | P0
+ | DOC-06
+ | Schedule follow-up.
+ | P0
+ | DOC-07
+ | Override AI assistance.
+ | P0
+ | DOC-08
+ | Audit sensitive access.
+ | P0
+ | 15. Admin & Super Admin
+User/provider management
+Credential verification
+Service areas
+Home-visit operations
+Content/language management
+AI safety monitoring
+Complaints
+Analytics
+Audit logs
+Integration configuration
+Role/permission management
+16. Notifications
+Event
+ | Channels
+ | Priority
+ | Appointment
+ | Push/SMS/email as configured
+ | P0
+ | Home visit
+ | Push/SMS
+ | P0
+ | Medication
+ | Push
+ | P0
+ | Follow-up
+ | Push/SMS/email
+ | P1
+ | Safety event
+ | Push/SMS/call workflow where supported
+ | P0
+ | New report
+ | Push
+ | P1
+ | 17. API / Integration Requirements
+Authentication API
+Patient API
+Appointment API
+Home visit API
+Medical records API
+Notification API
+AI gateway
+Speech-to-text/text-to-speech
+Maps/location services
+Payment gateway
+Wearable APIs
+Authorized government APIs
+18. Security Requirements
+Encryption at rest/in transit
+RBAC
+Least privilege
+Audit logging
+Secure secrets
+Rate limiting
+Input validation
+File scanning
+Backup/recovery
+Security monitoring
+Periodic penetration testing
+19. Error Handling
+Scenario
+ | System behavior
+ | AI unavailable
+ | Show safe fallback and offer human/provider pathway.
+ | Payment failure
+ | Do not confirm paid service; allow retry.
+ | Provider unavailable
+ | Offer alternate slot/provider.
+ | Poor image
+ | Request retake.
+ | Network failure
+ | Preserve safe local state where permitted; retry.
+ | Emergency signal
+ | Prioritize escalation workflow over normal chatbot response.
+ | 20. Functional Acceptance Criteria
+All P0 requirements pass functional testing.
+Role permissions prevent unauthorized access.
+Core patient-to-provider journey works end-to-end.
+AI safety rules trigger defined escalation cases.
+Records are stored and retrieved correctly.
+Home visits can be booked, assigned and completed.
+Audit records are generated for sensitive actions.
+Critical notifications are delivered through configured channels.
+21. Future Functional Requirements
+Advanced multilingual voice
+Wearable synchronization
+Remote patient monitoring
+AR/VR education
+Government scheme eligibility/navigation through authorized APIs
+Advanced clinical AI after validation

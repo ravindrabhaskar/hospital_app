@@ -1,0 +1,16 @@
+# App icon generation: `dart run flutter_launcher_icons`
+# Source artwork lives in docs/design/brand/ (placeholder, see README "Branding").
+flutter_launcher_icons:
+  image_path: "../../docs/design/brand/app_icon_1024.png"
+  android: "ic_launcher"
+  adaptive_icon_background: "#0B5D45"
+  adaptive_icon_foreground: "../../docs/design/brand/app_icon_foreground.png"
+  min_sdk_android: 21
+  ios: true
+  image_path_ios: "../../docs/design/brand/app_icon_1024_ios.png"
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "../../docs/design/brand/app_icon_1024.png"
+    background_color: "#EEF7F2"
+    theme_color: "#0B5D45"

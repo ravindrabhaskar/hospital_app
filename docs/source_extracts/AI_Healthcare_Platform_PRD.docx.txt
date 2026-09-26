@@ -1,0 +1,487 @@
+
+PRODUCT REQUIREMENTS DOCUMENT
+AI-Powered Connected Healthcare Platform
+Patient-first • AI-assisted • Clinician-supervised • Multilingual • Home + Digital Care
+Item
+ | Value
+ | Version
+ | 1.0
+ | Status
+ | Product Definition / MVP Planning
+ | Primary platform
+ | Flutter mobile app + web admin/clinician portals
+ | Primary market
+ | India initially; architecture prepared for multi-region expansion
+ | Core positioning
+ | AI-powered healthcare companion and care coordinator
+ | AI principle
+ | Assistive decision support; not an autonomous doctor
+ | 
+1. Product Vision
+Create a trusted healthcare companion that helps a person understand what to do next, connects them to the appropriate care pathway, coordinates home and digital care, maintains a longitudinal health record, and supports follow-up and monitoring.
+1.1 Product Promise
+Understand the user's health concern in natural language or voice.
+Guide the user toward an appropriate next step.
+Connect the user with qualified healthcare professionals and services.
+Keep health information organized in one longitudinal timeline.
+Support family caregivers, elderly users and multilingual users.
+Use AI with clear safety boundaries and clinician escalation.
+2. Problem Statement
+Healthcare journeys are fragmented. A patient may have symptoms, old reports, medicines, appointments and multiple providers but still lack a single place that explains what to do next. Teleconsultation solves only one part of the journey; home assessment, records, follow-up, safety monitoring and caregiver coordination often remain disconnected.
+Uncertainty about urgency and the right care pathway.
+Scattered medical records and incomplete history during consultations.
+Difficulty accessing routine care from home.
+Manual coordination of doctors, medicines, reports and follow-ups.
+Language and health-literacy barriers.
+Limited continuity after a consultation.
+3. Goals & Objectives
+Goal
+ | Success outcome
+ | Care navigation
+ | User reaches an appropriate care pathway with fewer unnecessary steps.
+ | Accessibility
+ | Voice and multilingual flows make key services easier to access.
+ | Continuity
+ | Patient history, reports, medicines and care plans remain connected.
+ | Home care
+ | Users can request and track home checkups.
+ | Clinical support
+ | Doctors receive structured patient context and AI-generated summaries.
+ | Safety
+ | High-risk signals trigger deterministic escalation and human review.
+ | Commercial viability
+ | Support transaction, subscription and B2B/B2B2C revenue models.
+ | 4. Target Users
+Persona
+ | Needs
+ | Primary journeys
+ | Patient
+ | Fast, understandable care
+ | AI assistant, appointment, home visit, records, follow-up
+ | Family caregiver
+ | Coordinate another person's care
+ | Family profile, alerts, appointments, records
+ | Elderly user
+ | Simple, voice-first experience
+ | Voice assistant, home care, reminders, emergency support
+ | Doctor
+ | Relevant patient context
+ | Consultation, history, AI summary, care plan
+ | Intern/field worker
+ | Structured home visit workflow
+ | Assigned visits, vitals, notes, escalation
+ | Admin
+ | Safe platform operations
+ | Users, providers, services, analytics, audit
+ | Super Admin
+ | Platform governance
+ | Tenants, policies, integrations, configuration
+ | 5. Product Scope
+5.1 MVP Scope
+Secure onboarding and authentication.
+Patient profile and consent management.
+AI health assistant using text.
+Basic voice input/output architecture.
+Medical history and document storage.
+Doctor discovery and appointment booking.
+Home-checkup request and provider assignment.
+Clinician dashboard for review and consultation.
+Medication and follow-up reminders.
+Notifications.
+Multilingual-ready content architecture.
+Admin portal and audit logs.
+5.2 Phase 2
+Advanced voice assistant.
+Mood/wellness check-ins.
+Wound image upload and clinician-assisted analysis.
+Fall detection.
+AI longitudinal summaries.
+Teleconsultation.
+Caregiver dashboard.
+WhatsApp/SMS communication where appropriate.
+5.3 Future Scope
+Apple Watch/Fitbit and other wearable integrations.
+Remote patient monitoring.
+AR/VR patient education and rehabilitation.
+Authorized government health-scheme integrations.
+Advanced clinical AI subject to validation and regulatory requirements.
+6. Patient App PRD
+6.1 Onboarding
+Mobile verification, profile, language, emergency contacts, consent, optional family setup.
+6.2 Home Dashboard
+Greeting, AI assistant, search, quick actions, health insights, upcoming appointments, alerts.
+6.3 AI Health Assistant
+Text/voice questions, symptom intake, history context, service navigation, escalation.
+6.4 Doctor Consultation
+Search by specialty/location/availability, doctor profile, booking, consultation status, history.
+6.5 Home Checkup
+Select service, address, date/time, reason, provider status, visit summary.
+6.6 Health Records
+Medical timeline, reports, prescriptions, allergies, conditions, documents.
+6.7 Medications
+Medication list, schedule, reminders, adherence logging.
+6.8 Mental Wellness
+Mood check-in, wellness activities, professional support, safety escalation.
+6.9 Wound Analysis
+Image capture, quality checks, timeline comparison, clinician review.
+6.10 Fall Detection
+Device event, confirmation, emergency contacts, escalation and incident history.
+6.11 Hospitals & Care
+Search, filters, services, availability, reviews with source attribution.
+6.12 Wearables
+Connect device, permissions, synced metrics, trends.
+6.13 Notifications
+Appointments, medication, visit, follow-up, safety alerts.
+6.14 Profile & Privacy
+Consent, sharing controls, language, security, account management.
+7. Home Screen Requirements
+The home screen should feel human-designed: calm, white/green visual language, generous spacing, clear hierarchy, limited card density and obvious primary action.
+Element
+ | Requirement
+ | Header
+ | Greeting, profile, notification and optional family selector.
+ | Search
+ | Search symptoms, doctors, tests, hospitals or ask a question.
+ | AI hero
+ | Primary CTA to start a conversation; voice entry available.
+ | Quick actions
+ | Doctor, Home Checkup, Medicines, Upload Report.
+ | Health insights
+ | Heart rate, steps, sleep and mood only when connected/available.
+ | Care promotion
+ | Contextual home-care or preventive-care CTA.
+ | Explore
+ | Mental wellness, wound analysis, fall detection, hospitals, wearables.
+ | Bottom navigation
+ | Home, Care, Ask AI, Records, Profile.
+ | 8. AI Assistant Requirements
+ID
+ | Requirement
+ | Priority
+ | AI-01
+ | Accept natural-language health questions.
+ | P0
+ | AI-02
+ | Ask follow-up questions when essential information is missing.
+ | P0
+ | AI-03
+ | Use authorized patient history when consented.
+ | P0
+ | AI-04
+ | Separate general information from clinical advice.
+ | P0
+ | AI-05
+ | Detect defined red-flag patterns and escalate.
+ | P0
+ | AI-06
+ | Provide voice interaction.
+ | P1
+ | AI-07
+ | Support multiple languages.
+ | P1
+ | AI-08
+ | Generate clinician-facing summaries with source references.
+ | P1
+ | AI-09
+ | Log model/version and safety events.
+ | P0
+ | AI-10
+ | Never present uncertain AI output as a confirmed diagnosis.
+ | P0
+ | 9. Home Checkup Requirements
+Patient selects Home Checkup.
+System verifies service coverage.
+Patient provides reason, address and preferred slot.
+System matches a verified provider/field worker.
+Patient confirms booking.
+Provider completes identity/consent verification.
+Provider records vitals and structured observations.
+Red flags trigger immediate clinician escalation.
+Visit is submitted and reviewed when required.
+Patient receives visit summary and follow-up tasks.
+10. Doctor / Clinician Portal
+Secure provider authentication and credential status.
+Patient queue and appointment calendar.
+Pre-consultation AI summary.
+Medical timeline and uploaded reports.
+Home-visit results.
+Clinical notes and care plan.
+Prescription workflow where legally permitted.
+Follow-up scheduling.
+AI/wound review with clinician override.
+Audit trail.
+11. Admin Portal
+User and provider management.
+Provider verification.
+Service-area management.
+Home-checkup assignment and operational monitoring.
+Appointment monitoring.
+Content and language management.
+AI safety dashboard.
+Complaints and support.
+Analytics.
+Consent and audit management.
+Integration monitoring.
+12. Functional Requirements
+ID
+ | Requirement
+ | Priority
+ | AUTH-01
+ | Users must authenticate securely using supported login methods.
+ | P0
+ | CONS-01
+ | The platform must record consent for relevant health-data processing/sharing.
+ | P0
+ | REC-01
+ | Users must upload and view health documents.
+ | P0
+ | APP-01
+ | Users must search and book available appointments.
+ | P0
+ | HOME-01
+ | Users must request and track home visits.
+ | P0
+ | NOT-01
+ | The platform must send configurable appointment and care notifications.
+ | P0
+ | AI-01
+ | AI must provide controlled health assistance with escalation.
+ | P0
+ | LANG-01
+ | The system must support localization without changing core workflows.
+ | P1
+ | VOICE-01
+ | Voice input/output must be supported for key AI workflows.
+ | P1
+ | WOUND-01
+ | Wound images must pass basic quality validation before processing.
+ | P1
+ | FALL-01
+ | Potential fall events must support user confirmation and escalation.
+ | P1
+ | WEAR-01
+ | Wearable data must only be imported after explicit permission.
+ | P2
+ | GOV-01
+ | Government integrations must use authorized interfaces only.
+ | P2
+ | 13. Non-Functional Requirements
+Area
+ | Requirement
+ | Security
+ | Encryption in transit/at rest, RBAC, MFA for privileged roles, secure secrets.
+ | Privacy
+ | Consent, data minimization, access controls, retention and deletion policies.
+ | Performance
+ | Core screens should feel responsive; define measurable SLOs before production.
+ | Availability
+ | High availability for authentication, appointments and emergency workflows.
+ | Scalability
+ | Stateless APIs and scalable background/AI workers.
+ | Accessibility
+ | Readable typography, high contrast, touch-friendly controls and voice support.
+ | Localization
+ | All user-facing strings externalized; locale-aware formatting.
+ | Auditability
+ | Sensitive access and AI actions must be traceable.
+ | Reliability
+ | Retries, idempotency and graceful degradation for integrations.
+ | 14. Data Model
+Entity
+ | Key fields
+ | User
+ | id, name, phone, email, language, role, status
+ | Patient
+ | user_id, DOB, emergency contacts, preferences
+ | Consent
+ | purpose, scope, version, timestamp, status
+ | MedicalRecord
+ | patient_id, type, source, file, verification, timestamp
+ | Condition
+ | patient_id, condition, status, source
+ | Allergy
+ | patient_id, substance, severity, source
+ | Medication
+ | patient_id, name, dose, schedule, status
+ | Doctor
+ | credentials, specialties, verification, availability
+ | HomeVisit
+ | patient, provider, slot, status, vitals, notes, escalation
+ | Appointment
+ | patient, provider, type, slot, status
+ | AIInteraction
+ | user, use case, model version, input/output reference, safety flag
+ | WoundCase
+ | patient, images, observations, clinician review
+ | FallEvent
+ | patient, time, source, confirmation, escalation
+ | MoodEntry
+ | patient, score, input type, timestamp
+ | DeviceConnection
+ | patient, device, permission, sync status
+ | AuditLog
+ | actor, action, entity, time, outcome
+ | 15. Core User Journeys
+15.1 AI Health Journey
+User opens Ask AI.
+User speaks/types concern.
+AI collects essential context.
+Safety layer checks defined red flags.
+AI provides appropriate next-step guidance or escalates.
+User can book care without restarting the journey.
+Interaction is stored according to consent.
+15.2 Report Upload Journey
+User uploads report/photo.
+System checks file/image quality.
+OCR/extraction is performed where supported.
+AI summarizes only supported information.
+User sees source report alongside summary.
+User can share with a doctor.
+15.3 Family Care Journey
+Primary user creates/links family member with permission.
+Family member profile stores relevant records.
+Caregiver receives only permitted alerts.
+Appointments and home visits can be managed on behalf of the member.
+Access can be revoked.
+16. Safety & Clinical Governance
+AI must not be positioned as a replacement for a clinician.
+Emergency red flags must use deterministic safety rules in addition to generative AI.
+High-risk workflows should have human review.
+Clinical claims must be validated before production use.
+AI outputs require model/version traceability.
+Clinicians can override AI-generated suggestions.
+Sensitive mental-health safety signals require an appropriate escalation pathway.
+Medical image analysis must be validated before any diagnostic claim.
+Use representative evaluation datasets across supported languages and relevant populations.
+17. Monetization Requirements
+Revenue stream
+ | Product capability
+ | Home visits
+ | Booking, payment, provider settlement and visit tracking.
+ | Consultations
+ | Appointment, payment and consultation workflow.
+ | Family subscription
+ | Care coordination, reminders, records and monitoring.
+ | Provider SaaS
+ | Clinician dashboard, AI summaries, patient engagement.
+ | Enterprise
+ | Admin, reporting, integrations and organization controls.
+ | Remote monitoring
+ | Device connection, alerts and care-plan subscription.
+ | 18. Analytics & KPIs
+Daily/monthly active users.
+AI assistant activation and task-completion rate.
+AI-to-care conversion rate.
+Home-checkup booking and completion rate.
+Appointment booking and completion rate.
+Repeat usage and subscription conversion.
+Average response/escalation time.
+Clinician time saved.
+Follow-up adherence.
+Report-upload and record-sharing usage.
+Voice task completion rate.
+Safety-event false-positive/false-negative monitoring.
+Provider retention and enterprise renewal.
+19. MVP Acceptance Criteria
+A new patient can complete onboarding and consent.
+A patient can ask the AI assistant a health question and receive a safe, structured response.
+A patient can search for a doctor and request an appointment.
+A patient can request a home checkup and track its status.
+A patient can upload a medical report and view it later.
+A clinician can view authorized patient history and the home-checkup result.
+Critical escalation paths are logged and visible to authorized staff.
+Notifications work for core appointment and follow-up events.
+Admin can manage users/providers and review audit logs.
+20. Release Plan
+Release
+ | Scope
+ | Exit criteria
+ | MVP 1
+ | Auth, profile, records, AI text, doctors, appointments
+ | Core patient journey works end-to-end
+ | MVP 2
+ | Home checkups, clinician portal, notifications
+ | Paid/controlled pilot ready
+ | V1
+ | Voice, multilingual, mental wellness, advanced summaries
+ | Safety + usability validation completed
+ | V2
+ | Wound, fall, wearables, remote monitoring
+ | Clinical/technical validation completed
+ | Future
+ | AR/VR, government integrations, advanced AI
+ | Regulatory and integration readiness established
+ | 21. Risks & Mitigation
+Risk
+ | Mitigation
+ | Incorrect AI output
+ | Guardrails, validated knowledge, uncertainty and escalation.
+ | Privacy breach
+ | Encryption, RBAC, audits, secure infrastructure and testing.
+ | Provider quality
+ | Credential verification and periodic revalidation.
+ | False emergency alerts
+ | Confirmation flow and configurable escalation.
+ | Missed emergency
+ | Conservative safety rules and clear emergency instructions.
+ | Low retention
+ | Focus on recurring care journeys, not one-off chat.
+ | High operational cost
+ | Start in a focused geography and use provider partnerships.
+ | Regulatory complexity
+ | Jurisdiction-specific legal/clinical review before regulated features.
+ | 22. Product Design Direction
+Primary visual language: white + calm green/mint with restrained accent colors.
+Natural human-designed feel; avoid excessive gradients, excessive cards and futuristic clutter.
+iPhone 16 Pro Max target reference for premium mobile experience.
+Large readable headings and high-contrast primary actions.
+Use one dominant CTA per section.
+AI should feel approachable and trustworthy rather than robotic.
+Accessibility and elderly-friendly interaction patterns should be considered from the beginning.
+Bottom navigation: Home, Care, Ask AI, Records, Profile.
+23. Final Product Definition
+The product is an AI-powered healthcare companion and care coordinator. Its differentiator is the connected journey: understand the concern, determine the appropriate next step, connect the user to home or digital care, organize health information, support clinicians, and continue monitoring and follow-up. The product should launch with a narrow, measurable care workflow and expand only after clinical safety, user demand and unit economics are validated.
+24. Appendix — Suggested MVP Screen List
+#
+ | Screen
+ | 01
+ | Splash / onboarding
+ | 02
+ | Login / OTP
+ | 03
+ | Consent & language
+ | 04
+ | Home
+ | 05
+ | Ask AI
+ | 06
+ | Voice AI
+ | 07
+ | Doctor search
+ | 08
+ | Doctor profile
+ | 09
+ | Appointment booking
+ | 10
+ | Home checkup
+ | 11
+ | Visit tracking
+ | 12
+ | Health records
+ | 13
+ | Report upload
+ | 14
+ | Medication reminders
+ | 15
+ | Mental wellness
+ | 16
+ | Wound analysis
+ | 17
+ | Fall detection
+ | 18
+ | Hospital discovery
+ | 19
+ | Notifications
+ | 20
+ | Profile & privacy
+ | 

@@ -1,0 +1,969 @@
+
+AI-POWERED CARE ORCHESTRATION PLATFORM
+Complete Product Blueprint + Market Gap + Claude Development Execution Map
+A step-by-step plan to take the current healthcare concept from validated scope to a production-ready patient app, clinician portal, provider app, operations control tower, and AI safety layer.
+CORE POSITIONING
+Build an AI-powered care coordination platform, not an autonomous AI doctor. The system should connect concern → structured intake → safe routing → doctor/home care → care plan → longitudinal record → family coordination → follow-up.
+ | 
+Prepared as an execution document for building the product with Claude / Claude Code.
+Important: Clinical rules, medical content, scope-of-practice decisions, diagnostic claims, telemedicine workflows and regulatory classification must be reviewed by qualified clinical and legal/regulatory professionals before production use.
+
+How to Use This Document
+Use this as the controlling product and build sequence. Do not ask Claude to “build the entire healthcare app” in one prompt. Give Claude one bounded phase at a time, require evidence and tests at every gate, and prevent it from moving forward when the current phase has unresolved failures.
+Part
+ | Purpose
+ | I. Product Thesis & Market Gap
+ | What the product is, who it serves, why it can matter.
+ | II. Final Product Scope
+ | What belongs in MVP, later versions, and the long-term platform.
+ | III. Product Architecture
+ | Users, workflows, domain model, systems and AI safety model.
+ | IV. Claude Operating Model
+ | What to give Claude, repository rules, master prompt and working discipline.
+ | V. Build Sequence
+ | Exact order of engineering phases with prompts and acceptance gates.
+ | VI. Testing, Security & Release
+ | Quality, clinical-safety, privacy, observability, staging and release gates.
+ | VII. Final Delivery Checklist
+ | What must exist before the product is considered finished.
+ | 
+
+PART I — Product Thesis & Market Gap
+1. Final Product Definition
+An AI-powered healthcare companion and care-orchestration platform that helps a patient or family explain a health concern, gathers relevant context, routes the user toward appropriate professional care, coordinates home and digital healthcare, maintains longitudinal health information, and manages follow-up until the care episode is completed.
+NOT THE PRODUCT
+Do not position the launch product as an AI doctor, autonomous diagnosis system, pharmacy marketplace, generic symptom checker, records locker or doctor directory. Those can be capabilities or integrations; they are not the strategic category.
+ | 
+2. Core Problem
+The problem is care fragmentation. Patients often use separate tools for symptoms, doctor discovery, consultations, labs, medicines, reports and family coordination. The missing value is continuity: what should happen next, who should do it, what information do they need, and did the next step actually happen?
+3. Primary Market Gap
+The strongest gap is not the absence of individual healthcare features. It is the absence of a consistently integrated, family-aware care journey that begins with an unstructured health concern and stays connected through assessment, professional care, a care plan, records and follow-up.
+Gap
+ | Current friction
+ | Product response
+ | Care navigation
+ | User must know whether to choose doctor, clinic, test, home care or urgent care.
+ | Start with natural-language concern and route through a controlled workflow.
+ | Digital-to-physical bridge
+ | Teleconsultation may lack vitals/physical observations.
+ | Arrange qualified home assessment and feed structured observations to clinician.
+ | Care episode continuity
+ | Appointments, reports, medicines and follow-ups are disconnected.
+ | Make Care Episode the central object linking all events.
+ | Family coordination
+ | Caregivers manually coordinate parents/dependents.
+ | Permission-based family profiles, alerts and care management.
+ | Post-consultation execution
+ | Prescription often ends the digital workflow.
+ | Care Plan → Care Tasks → reminders → follow-up completion.
+ | Clinician context
+ | Doctor reconstructs history manually.
+ | Source-linked pre-consultation clinical snapshot.
+ | Regional-language access
+ | Translated UI does not equal understandable care navigation.
+ | Conversational multilingual voice mapped to structured workflow.
+ | 
+4. Initial Customer Wedge
+Primary launch segment: families coordinating recurring healthcare for parents or dependent adults, especially elderly, chronic-care, mobility-limited and post-discharge users. This segment naturally needs care coordination, home care, repeated doctor interactions, records, medication support and family visibility.
+5. Market Validation Questions
+☐ Will families pay for coordination beyond the cost of underlying services?
+☐ Can a reliable home-assessment network deliver within promised service levels?
+☐ Will clinicians consistently use a structured pre-consultation summary?
+☐ Does AI-first navigation improve conversion to appropriate care without creating unsafe over-reliance?
+☐ Can repeat care and family subscriptions produce positive contribution margin?
+☐ Can hospitals/clinics use the platform as a post-discharge or between-visit continuity layer?
+RULE
+Treat these as hypotheses until paid pilots prove them. Do not encode them into investor or marketing claims as established facts.
+ | 
+
+PART II — Final Product Scope
+6. Product Layers
+Layer
+ | Core capabilities
+ | Intelligence
+ | AI Care Assistant, structured intake, context retrieval, clinical safety rules, report intelligence, voice, translation, clinician summaries.
+ | Care Delivery
+ | Doctor consultation, appointment booking, home assessment, provider assignment, partner diagnostics/pharmacy/hospital routing.
+ | Continuity
+ | Care Episodes, Health Timeline, Care Plan, Care Tasks, family access, medications, follow-ups, reminders, later monitoring.
+ | 
+7. Final MVP
+Capability
+ | MVP status
+ | Reason
+ | OTP/authentication
+ | P0
+ | Foundation.
+ | Consent & privacy controls
+ | P0
+ | Health-data requirement.
+ | Patient profile
+ | P0
+ | Clinical context.
+ | Family profiles & permissions
+ | P0
+ | Strategic customer need.
+ | Care Episode
+ | P0
+ | Backbone of product.
+ | AI Care Assistant
+ | P0
+ | Primary navigation interface.
+ | Structured intake
+ | P0
+ | Turns conversation into usable data.
+ | Deterministic safety engine
+ | P0
+ | Separate from generative model.
+ | Doctor discovery/booking
+ | P0
+ | Care access.
+ | Home assessment
+ | P0
+ | Digital-to-physical bridge.
+ | Provider matching/tracking
+ | P0
+ | Operational fulfillment.
+ | Health Timeline
+ | P0
+ | Longitudinal context.
+ | Report upload/intelligence
+ | P0
+ | Patient context.
+ | Care Plan & Care Tasks
+ | P0
+ | Post-consultation continuity.
+ | Medication reminders
+ | P0
+ | Follow-through.
+ | Follow-up workflow
+ | P0
+ | Closure/retention.
+ | Clinician portal
+ | P0
+ | Professional workflow.
+ | Provider app
+ | P0
+ | Home-care operations.
+ | Operations control tower
+ | P0
+ | Service reliability.
+ | Payments/refunds
+ | P0
+ | Commercial pilot.
+ | Notifications
+ | P0
+ | Operational communication.
+ | Analytics/audit
+ | P0
+ | Safety + business measurement.
+ | 
+8. Deferred Capabilities
+Advanced wound diagnosis
+Mental-wellness AI
+Automatic fall detection
+Broad wearable integrations
+AR/VR
+Predictive disease models
+Own pharmacy logistics
+Own laboratory network
+Insurance claims engine
+Government-scheme intelligence
+These can be added only after the core care workflow has demonstrated clinical safety, user demand, provider reliability and viable economics.
+9. Primary Navigation
+Tab
+ | Purpose
+ | Home
+ | Current care, family status, reminders, upcoming events and one dominant care-entry CTA.
+ | Care
+ | Doctor appointments, home assessments, active Care Episodes and Care Plans.
+ | Ask AI
+ | Conversational care navigation with structured intake and safety routing.
+ | Records
+ | Health Timeline, reports, prescriptions, vitals and source provenance.
+ | Profile
+ | Personal/family profiles, permissions, consent, security and preferences.
+ | 
+
+PART III — Product Architecture & Domain Model
+10. Core Domain Objects
+Entity
+ | Purpose
+ | User
+ | Authentication identity and role.
+ | Patient
+ | Clinical/user profile.
+ | FamilyRelationship
+ | Authorized caregiver/dependent relationship.
+ | Consent
+ | Purpose/scope/version/status of data permission.
+ | Provider
+ | Doctor, nurse, allied-health or service provider.
+ | ProviderCredential
+ | License/qualification/verification metadata.
+ | Facility
+ | Clinic/hospital/service location.
+ | CareEpisode
+ | One health concern from initiation through resolution.
+ | CareEpisodeEvent
+ | Chronological event inside a care episode.
+ | ClinicalSafetyEvent
+ | Safety rule trigger and escalation trace.
+ | Appointment
+ | Doctor/clinic booking.
+ | HomeVisit
+ | Home assessment workflow.
+ | VitalMeasurement
+ | Structured vitals with source/timestamp.
+ | MedicalRecord
+ | Report/prescription/document with provenance.
+ | Medication
+ | Medication schedule and source.
+ | CarePlan
+ | Clinician-approved next-step plan.
+ | CareTask
+ | Executable task derived from Care Plan.
+ | FollowUp
+ | Scheduled follow-up event.
+ | AIInteraction
+ | Model/version/input/output/safety audit.
+ | Notification
+ | User/provider communication event.
+ | Payment / Refund
+ | Commercial transaction.
+ | Complaint / Incident
+ | Quality/safety operation.
+ | AuditLog
+ | Immutable record of sensitive actions.
+ | 
+11. Care Episode Lifecycle
+Recommended state model:
+NEW → INTAKE → AWAITING_CARE → CARE_SCHEDULED → UNDER_CARE → FOLLOW_UP → RESOLVED
+Exceptional states: ESCALATED, EMERGENCY, TRANSFERRED, CANCELLED. Preserve history even when a state changes.
+12. AI Architecture
+Never use the pattern User → LLM → Medical Answer as the complete clinical workflow. Use a layered architecture:
+User Input → Intent/Patient Resolution → Context Retrieval → Structured Intake → Deterministic Safety Rules → Curated Knowledge/RAG → LLM Response/Summary → Policy Check → Service Routing/Escalation → Audit
+AI service
+ | Responsibility
+ | Model gateway
+ | Provider/model abstraction, version routing, cost/latency telemetry.
+ | Conversation service
+ | Natural-language interaction.
+ | Structured intake
+ | Maps dialogue into typed clinical-intake fields.
+ | Context service
+ | Retrieves only authorized relevant patient information.
+ | Safety engine
+ | Clinician-approved deterministic high-risk rules.
+ | RAG service
+ | Retrieves reviewed source content.
+ | Document intelligence
+ | Classifies/extracts/summarizes uploaded documents.
+ | Clinician summarizer
+ | Creates concise source-linked consultation brief.
+ | Translation/speech
+ | Multilingual STT/TTS and controlled terminology.
+ | AI audit/evaluation
+ | Model version, prompt/policy version, sources, safety events, test scores.
+ | 
+NON-NEGOTIABLE
+Claude may build the safety engine software, but it must not invent the actual medical red-flag rules or scope-of-practice policy. Those must come from your clinical governance team and be versioned as approved data/configuration.
+ | 
+13. Roles & Applications
+Role
+ | Application / main workflow
+ | Patient/Family
+ | Mobile app: care request, AI, appointments, home visit, timeline, care plan, family management.
+ | Doctor/Clinician
+ | Web/app: queue, patient snapshot, episode, reports, notes, care plan, follow-up, override.
+ | Home-care Provider
+ | Mobile app: assignments, navigation, identity/consent, observations/vitals, escalation, completion.
+ | Care Coordinator
+ | Web: assigned families, episodes, open tasks, provider coordination, follow-ups.
+ | Operations Admin
+ | Web: demand, dispatch, SLA, payments, incidents, complaints, provider quality.
+ | Super Admin
+ | Web: roles, policies, integrations, AI configs, audit, system settings.
+ | 
+
+PART IV — How to Build the Product with Claude
+14. What You Must Give Claude Before Coding
+Create a /docs/product folder in the repository and place the following documents there. Claude should treat them as source-of-truth artifacts, not loose reference material.
+01_PRODUCT_MASTER.md — product vision, customer, market gap, boundaries, terminology.
+02_MVP_SCOPE.md — exact P0/P1/P2 scope; explicit out-of-scope list.
+03_USER_ROLES_AND_PERMISSIONS.md — every role and permission matrix.
+04_DOMAIN_MODEL.md — entities, relationships, state machines and provenance rules.
+05_CARE_EPISODE_SPEC.md — lifecycle, events, transitions and ownership.
+06_CARE_PLAN_SPEC.md — plans, tasks, completion and follow-up.
+07_CLINICAL_SAFETY_INTERFACE.md — software contract for red flags/escalation; actual rules supplied by clinicians.
+08_AI_POLICY.md — what AI may and may not do, logging and human-review rules.
+09_PRIVACY_CONSENT.md — purposes, access, revocation and audit requirements.
+10_API_CONVENTIONS.md — auth, error format, pagination, idempotency, versioning.
+11_DESIGN_SYSTEM.md — visual language, typography, spacing, components, accessibility.
+12_TEST_STRATEGY.md — unit, integration, end-to-end, security and AI evaluation.
+13_DEPLOYMENT.md — environments, secrets, observability and release process.
+14_DECISIONS.md — architectural decision records and unresolved questions.
+15. Recommended Repository Structure
+Target monorepo structure
+/apps  /patient-mobile  /provider-mobile  /clinician-web  /ops-web/services  /api  /ai-gateway  /worker/packages  /domain  /api-contracts  /ui  /config  /logging  /security/docs  /product  /architecture  /adr  /runbooks/infra/tests  /e2e  /fixtures  /ai-evals
+ | 
+If your team selects a modular monolith rather than multiple backend services, keep the same bounded modules inside one backend codebase. Do not prematurely split everything into microservices.
+16. Master Claude Operating Prompt
+Paste this at the beginning of the main Claude Code project session
+You are the lead software architect and senior implementation engineer for an AI-powered healthcare care-orchestration platform.SOURCE OF TRUTH:1. Read every file under /docs/product before proposing or changing architecture.2. Treat P0/P1/P2 scope, domain terminology, safety boundaries and role permissions in those files as authoritative.3. Do not silently invent healthcare policy, clinical rules, medical claims or regulatory interpretations. If a clinical/regulatory rule is missing, create a clearly marked configuration/TODO and stop that behavior from reaching production.ENGINEERING RULES:- Work in the exact build order I provide. Do not jump ahead.- Before coding a phase, summarize its goal, dependencies, files to change, schema/API impact, tests and risks.- Prefer a modular monolith for the core API unless there is a demonstrated reason to split a service.- Use typed contracts and migrations. Never change persistent data models without a migration.- Every sensitive action must be authorization checked and auditable.- AI output is assistive. The generative model must never be the sole emergency/safety decision-maker.- Never expose secrets or PHI/health data in application logs.- Use idempotency for payments, booking, visit assignment and external callbacks.- Build accessibility, localization and observability into the product rather than adding them at the end.- Do not create mock success paths that bypass real authorization, validation or error handling.QUALITY GATE FOR EVERY PHASE:1. Implement.2. Run formatter/linter/type checks.3. Run unit tests.4. Run relevant integration tests.5. Run security/authorization regression tests for the changed area.6. Update docs and ADRs when design decisions changed.7. Report exact commands run and results.8. List remaining risks/TODOs.9. Stop and wait for my approval before beginning the next phase.When requirements conflict, do not guess. Show the conflict, identify the affected source documents, recommend a resolution and wait for a decision.
+ | 
+17. Rules for Working with Claude
+☐ One phase per conversation milestone. Avoid “build everything” prompts.
+☐ Always ask Claude to inspect existing code before writing replacements.
+☐ Require a plan before modifications for cross-cutting changes.
+☐ Require migrations, rollback notes and test coverage for schema changes.
+☐ Require exact file paths in implementation summaries.
+☐ Never accept “tests should pass”; require Claude to run them and report results.
+☐ After each phase, commit/tag the repository before moving forward.
+☐ Use ADRs for architecture decisions so later Claude sessions do not reinvent them.
+☐ Keep clinical policy in versioned configuration approved outside code generation.
+☐ Use staging data only; never paste real patient data into Claude sessions.
+
+PART V — Exact Claude Build Sequence
+Each phase below includes the objective, what Claude must build, and a prompt you can paste into Claude Code. Do not move to the next phase until the acceptance gate is satisfied.
+Phase 0 — Repository Audit & Architecture Baseline
+Claude must build:
+Read all /docs/product files and current repository.
+Produce system-context diagram and module map.
+Identify missing requirements/conflicts without coding.
+Create ADR-001 for chosen backend architecture and ADR-002 for monorepo/package strategy.
+Create backlog grouped P0/P1/P2.
+Acceptance gate
+No production code yet. You understand exactly what exists and what is missing.
+ | 
+Claude prompt for this phase
+Phase 0 only. Read all product documents and inspect the repository. Do not implement features. Produce: (1) current-state code map, (2) target architecture, (3) bounded modules, (4) dependency map, (5) P0/P1/P2 backlog, (6) known requirement conflicts, (7) ADR-001 architecture decision, (8) recommended first migration. Stop after the audit.
+ | 
+Phase 1 — Project Foundation & CI
+Claude must build:
+Set up workspace/monorepo conventions.
+Environment config with validation.
+Formatting, linting, type checking and test runners.
+CI workflow.
+Structured application logging with PHI-safe defaults.
+Health/readiness endpoints.
+Base error contract and request correlation ID.
+Acceptance gate
+A clean clone can install, lint, type-check and test with one documented command.
+ | 
+Claude prompt for this phase
+Implement Phase 1: project foundation only. Establish reproducible local setup, environment validation, lint/type/test scripts, CI, structured PHI-safe logging, common API error format, correlation IDs and health/readiness endpoints. Do not implement business features. Add README setup and run commands. Run every check and report results.
+ | 
+Phase 2 — Identity, Authentication & RBAC
+Claude must build:
+User identity and OTP/auth provider abstraction.
+Role model: patient, caregiver, doctor, provider, coordinator, admin, super_admin.
+RBAC middleware/policies.
+Privileged MFA hook.
+Session/token revocation.
+Audit sensitive auth events.
+Acceptance gate
+Unauthorized roles cannot reach restricted APIs; tests demonstrate denial paths.
+ | 
+Claude prompt for this phase
+Implement Phase 2: authentication and authorization. Use the documented role matrix. Build secure identity/session flow, RBAC/policy enforcement, revocation and audit. Add negative authorization tests for every role boundary. Do not add healthcare business flows yet.
+ | 
+Phase 3 — Patient, Family & Consent Core
+Claude must build:
+Patient profile.
+Family relationships and dependent management.
+Emergency contacts.
+Consent ledger with purpose/scope/version/status.
+Grant/revoke/share flows.
+Access-check helper used by later modules.
+Acceptance gate
+A caregiver can act only within explicit permissions and revocation takes effect immediately.
+ | 
+Claude prompt for this phase
+Implement Phase 3 exactly from Patient/Family/Consent specs. Include consent ledger and family relationship permissions. Every read/write of another patient must go through an explicit access check. Add audit events and end-to-end permission tests.
+ | 
+
+Phase 4 — Care Episode Domain Backbone
+Claude must build:
+CareEpisode table/model.
+State machine and transition guard.
+CareEpisodeEvent append-only chronology.
+Episode ownership/responsibility.
+API: create, view, list, transition, timeline.
+Idempotency for episode creation.
+Acceptance gate
+All later appointments, visits, records and care plans can reference an episode.
+ | 
+Claude prompt for this phase
+Implement Phase 4: Care Episode as the central product object. Use the documented lifecycle and exceptional states. Enforce allowed transitions in the domain layer, not only UI. Create append-only episode events and audit every transition. Add unit tests for every valid and invalid transition.
+ | 
+Phase 5 — Provider Registry, Credentials & Serviceability
+Claude must build:
+Provider model and categories.
+Credential records, verification status and expiry.
+Facilities/service areas.
+Provider availability.
+Capability/scope flags driven by configuration.
+Do not encode medical scope assumptions not supplied by governance.
+Acceptance gate
+Only active, verified providers can be offered for a service they are configured to perform.
+ | 
+Claude prompt for this phase
+Implement Phase 5 provider registry and serviceability. Use configuration for provider capability/scope. Do not invent clinical permissions. Build credential verification states, expiry handling, service areas and availability. Add tests proving unverified/expired providers are excluded.
+ | 
+Phase 6 — Doctor Discovery & Appointment Engine
+Claude must build:
+Doctor profiles.
+Specialty/language/location/service filters.
+Availability slots.
+Booking/reschedule/cancel.
+Concurrency-safe slot reservation.
+Appointment ↔ CareEpisode link.
+Notifications/event hooks.
+Acceptance gate
+Double booking is prevented and appointment lifecycle is deterministic.
+ | 
+Claude prompt for this phase
+Implement Phase 6 appointment engine. Make slot booking concurrency-safe and idempotent. Link appointments to Care Episodes when relevant. Include cancellation/reschedule policy hooks and event emission. Write concurrency/integration tests for double-booking and retry scenarios.
+ | 
+Phase 7 — Home Visit Operations
+Claude must build:
+HomeVisit lifecycle.
+Serviceability check.
+Provider matching candidate query.
+Assignment/accept/reject/reassign.
+ETA/status events.
+Patient identity + consent confirmation.
+Structured observation/vital capture.
+Escalation hook.
+Visit completion summary.
+Acceptance gate
+A request can be fulfilled end-to-end without bypassing provider verification or consent.
+ | 
+Claude prompt for this phase
+Implement Phase 7 home-visit workflow end-to-end. Use explicit state transitions, verified-provider checks, identity/consent confirmation, structured observations and escalation hooks. Build reassignment and provider-unavailable paths. Do not implement clinical interpretation of vitals unless rules are supplied.
+ | 
+
+Phase 8 — Health Timeline & Medical Records
+Claude must build:
+Secure file upload.
+Malware/file-type/size validation hooks.
+Record classification.
+Object storage abstraction.
+Metadata and provenance.
+Timeline query.
+Authorized sharing.
+Correction/restriction workflow.
+Acceptance gate
+Original source is retained; provenance is visible and authorization enforced.
+ | 
+Claude prompt for this phase
+Implement Phase 8 Medical Records and Health Timeline. Preserve original documents and source provenance. Use secure upload/storage abstractions and signed access. Add authorization, audit and sharing controls. Do not let extracted/AI text overwrite original clinical documents.
+ | 
+Phase 9 — AI Gateway & Audit Infrastructure
+Claude must build:
+Provider-agnostic LLM gateway.
+Model configuration/versioning.
+Prompt/policy version identifiers.
+Timeout/retry/circuit-breaker behavior.
+Token/cost/latency metrics.
+AIInteraction audit schema.
+PHI-safe observability policy.
+Acceptance gate
+AI provider can be switched/configured without changing business-domain code.
+ | 
+Claude prompt for this phase
+Implement Phase 9 AI infrastructure only: model gateway, configuration/versioning, AIInteraction audit, retries/timeouts, cost/latency telemetry and safe logging. Do not build medical conversation behavior yet.
+ | 
+Phase 10 — Structured AI Intake
+Claude must build:
+Conversation session model.
+Patient/family selection.
+Intent classification.
+Typed intake schema.
+Follow-up-question orchestration.
+Authorized context retrieval.
+Uncertainty/missing-data handling.
+No diagnosis label.
+Acceptance gate
+Conversation can produce a structured intake object with provenance for each field.
+ | 
+Claude prompt for this phase
+Implement Phase 10 structured intake. The output is a typed intake object, not a diagnosis. Track which fields came from the user, record, provider or model extraction. Ask for missing required fields. Never invent absent clinical data. Include adversarial tests for hallucinated values.
+ | 
+Phase 11 — Deterministic Clinical Safety Engine
+Claude must build:
+Rule engine interface.
+Versioned rule packs.
+Rule evaluation trace.
+Severity/action output.
+Escalation event creation.
+Safe fallback if rules unavailable.
+Admin-visible version/status.
+Acceptance gate
+Generative model cannot suppress or override a triggered deterministic safety rule.
+ | 
+Claude prompt for this phase
+Implement Phase 11 safety engine software. IMPORTANT: do not invent medical rules. Create a versioned rules interface and use clearly labeled non-clinical fixtures for testing. When a rule triggers, the generative model cannot downgrade it. Log rule version, inputs used and escalation outcome.
+ | 
+
+Phase 12 — RAG / Reviewed Knowledge Layer
+Claude must build:
+Knowledge-source registry.
+Document ingestion pipeline.
+Version/status/owner metadata.
+Chunking/indexing.
+Retrieval citations/source IDs.
+Approved-content filter.
+Expired/deprecated source handling.
+Acceptance gate
+AI can answer only with approved source context for configured clinical-information workflows.
+ | 
+Claude prompt for this phase
+Implement Phase 12 reviewed knowledge/RAG layer. Every source must have owner, version, status and effective date. Retrieval results must carry source IDs. Exclude unapproved/expired content. Do not add medical knowledge from the open web automatically.
+ | 
+Phase 13 — AI Care Assistant & Routing
+Claude must build:
+Conversation UX API.
+Combine intake + safety + RAG.
+Route to information/doctor/home-care/emergency workflow.
+Explain limitations.
+Create/update CareEpisode.
+Store complete AI audit metadata.
+Acceptance gate
+Every conversation ends in a clear next state; high-risk routing is controlled by safety engine.
+ | 
+Claude prompt for this phase
+Implement Phase 13 AI Care Assistant orchestration using the existing intake, safety and RAG modules. The assistant must never override safety output. Link interactions to Care Episodes and route to configured care actions. Add tests for AI unavailable, knowledge unavailable and safety-trigger scenarios.
+ | 
+Phase 14 — Clinician Snapshot & Consultation Workflow
+Claude must build:
+Pre-consultation summary.
+Source links/provenance.
+Relevant conditions/allergies/meds/vitals.
+Clinician notes.
+Consultation outcome.
+Clinician override of AI suggestions.
+Audit.
+Acceptance gate
+Doctor can review original sources behind every AI summary claim.
+ | 
+Claude prompt for this phase
+Implement Phase 14 clinician workflow. Create a concise pre-consultation snapshot with source references and direct links to original records. Add clinician note and override flows. AI summaries are advisory and must never overwrite clinician-authored information.
+ | 
+Phase 15 — Care Plan, Tasks & Follow-Up
+Claude must build:
+CarePlan linked to episode/clinician.
+CareTask model.
+Medication/test/follow-up/general task types.
+Due dates/status/owner.
+Completion evidence.
+FollowUp scheduling.
+Episode resolution criteria hooks.
+Acceptance gate
+The product can continue the workflow after the consultation rather than ending at prescription.
+ | 
+Claude prompt for this phase
+Implement Phase 15 Care Plan and follow-up engine. Care Plans must be clinician-authored/approved for clinical instructions. Convert plan actions into trackable Care Tasks. Support reminders, completion, overdue states and follow-up appointments. Link all changes to the Care Episode timeline.
+ | 
+
+Phase 16 — Notifications & Communication
+Claude must build:
+Push/SMS/email/WhatsApp abstraction as configured.
+Template registry/localization.
+User preferences.
+Critical vs non-critical channels.
+Delivery status/retry.
+No sensitive content in lock-screen notifications by default.
+Acceptance gate
+Notifications are idempotent, preference-aware and privacy-safe.
+ | 
+Claude prompt for this phase
+Implement Phase 16 communication service. Use templates and localization. Separate critical operational notifications from marketing. Ensure lock-screen text does not expose sensitive health details by default. Add retry/idempotency and delivery-state tracking.
+ | 
+Phase 17 — Payments, Refunds & Provider Settlement Hooks
+Claude must build:
+Payment intent/order.
+Gateway abstraction.
+Webhook verification.
+Idempotency.
+Refund workflow.
+Invoice/receipt metadata.
+Provider settlement ledger hooks.
+Acceptance gate
+Repeated callbacks/retries cannot double-charge or duplicate bookings.
+ | 
+Claude prompt for this phase
+Implement Phase 17 payments with a provider abstraction. Verify signatures, make webhook processing idempotent, and model refunds explicitly. Do not store prohibited payment credentials. Add duplicate callback and partial-failure tests.
+ | 
+Phase 18 — Patient Mobile App
+Claude must build:
+Onboarding/OTP.
+Consent/language/family setup.
+Home dashboard.
+Ask AI.
+Care episodes.
+Doctor booking.
+Home visit tracking.
+Health Timeline/report upload.
+Care Plan/tasks.
+Profile/privacy.
+Acceptance gate
+All P0 patient journeys work against real APIs, not mock-only paths.
+ | 
+Claude prompt for this phase
+Implement Phase 18 patient mobile app using the approved design system. Use five primary tabs: Home, Care, Ask AI, Records, Profile. Keep one dominant CTA and limit card density. Integrate real API states including loading, empty, error, offline and unauthorized states. Add accessibility labels and localization keys.
+ | 
+Phase 19 — Provider Mobile App
+Claude must build:
+Provider auth/status.
+Assignments.
+Navigation/arrival.
+Patient verification/consent.
+Observation/vitals forms.
+Escalation.
+Completion.
+Offline queue where required.
+Acceptance gate
+Provider cannot access unrelated patient data and offline sync cannot duplicate events.
+ | 
+Claude prompt for this phase
+Implement Phase 19 provider mobile app. Follow least-privilege access and minimum necessary patient context. Support visit lifecycle, structured observations and escalation. If offline capture is enabled, use encrypted local storage and idempotent sync. Test duplicate-sync and revoked-access cases.
+ | 
+
+Phase 20 — Clinician Web App
+Claude must build:
+Queue/calendar.
+Clinical Snapshot.
+Episode/timeline.
+Reports.
+Home-visit data.
+Consultation notes.
+Care Plan.
+Follow-up.
+AI source inspection/override.
+Acceptance gate
+Clinician can complete a care journey without using admin tools.
+ | 
+Claude prompt for this phase
+Implement Phase 20 clinician web app. Optimize for fast patient-context review. Keep AI summaries visually distinct from verified clinical information and always expose sources. Add keyboard/accessibility support and permission tests.
+ | 
+Phase 21 — Operations Control Tower
+Claude must build:
+Live care requests.
+Unassigned/late visits.
+Provider status.
+Doctor queue.
+High-risk escalations.
+Overdue care tasks.
+Complaints/incidents.
+Payments/refunds.
+SLA metrics.
+Support actions with audit.
+Acceptance gate
+Operations can detect and act on fulfillment failures without database access.
+ | 
+Claude prompt for this phase
+Implement Phase 21 operations control tower. Build actionable queues, SLA breach indicators, care escalation inbox, complaint/incident workflow and audited support actions. Do not expose raw sensitive data unless necessary for the operator role.
+ | 
+Phase 22 — Analytics & Product Instrumentation
+Claude must build:
+Event taxonomy.
+Care funnel.
+Episode completion.
+AI-to-care conversion.
+Provider SLA/utilization.
+Follow-up completion.
+Safety metrics.
+Financial metrics.
+De-identification/aggregation strategy.
+Acceptance gate
+Every launch KPI has a defined numerator, denominator, source event and dashboard owner.
+ | 
+Claude prompt for this phase
+Implement Phase 22 analytics. First create an event dictionary and metric definitions. Instrument only approved events and avoid unnecessary health-data payloads. Build dashboards for activation, care funnel, operations, continuity, safety and unit economics.
+ | 
+Phase 23 — External Integrations
+Claude must build:
+ABDM-ready adapter boundaries.
+Maps/location.
+Video consultation.
+SMS/WhatsApp.
+Pharmacy/lab partner adapter interfaces.
+Integration retries/webhook audit.
+Acceptance gate
+A failed external service degrades gracefully and cannot corrupt core domain state.
+ | 
+Claude prompt for this phase
+Implement Phase 23 integration architecture. Use adapters so external providers can be replaced. Do not claim production ABDM connectivity unless the required sandbox/certification steps are complete. Add retry, circuit-breaker and webhook audit behavior.
+ | 
+
+Phase 24 — Security Hardening
+Claude must build:
+Threat model.
+Authorization matrix regression.
+Rate limiting.
+Input validation.
+File scanning.
+Secret management.
+Dependency/SAST/DAST scans.
+Backup/restore.
+Session security.
+Pen-test remediation tracker.
+Acceptance gate
+No known critical/high security findings remain for launch scope.
+ | 
+Claude prompt for this phase
+Phase 24 security hardening. Produce a threat model for patient, provider, clinician, admin, AI and integration surfaces. Run the full security test suite and scanners available in the repo. Fix critical/high issues and document residual risk. Do not weaken controls to make tests pass.
+ | 
+Phase 25 — Reliability, Observability & Disaster Recovery
+Claude must build:
+Metrics/traces/logs.
+SLOs.
+Alerting.
+Queue/dead-letter monitoring.
+AI/provider dependency monitoring.
+Backups.
+Restore drill.
+Runbooks.
+Feature flags/kill switches.
+Acceptance gate
+Core workflows have measurable SLOs and rehearsed recovery procedures.
+ | 
+Claude prompt for this phase
+Implement Phase 25 reliability. Define SLIs/SLOs for auth, booking, home visit, AI, notifications and emergency routing. Add dashboards/alerts, backup verification, restore drill documentation, feature flags and emergency kill switches for AI/clinical features.
+ | 
+Phase 26 — Full End-to-End Release Candidate
+Claude must build:
+Seed safe synthetic data.
+Run full patient/provider/clinician/ops journeys.
+Run AI evaluation suite.
+Run permission regression.
+Run migration rehearsal.
+Produce release notes and known-issues list.
+Acceptance gate
+Release candidate passes all launch gates on staging.
+ | 
+Claude prompt for this phase
+Phase 26 release candidate. Do not add new features. Stabilize the complete product. Run all unit, integration, E2E, authorization, AI-evaluation, migration, load and security tests. Produce a release-readiness report with exact failures, fixes and residual risks.
+ | 
+Phase 27 — Production Readiness & Controlled Pilot
+Claude must build:
+Production config review.
+Secrets and key rotation.
+Incident contacts.
+Support runbook.
+Provider roster.
+Clinical governance approval.
+Legal/privacy approval.
+Feature-flagged rollout.
+Pilot dashboards.
+Acceptance gate
+Only approved pilot cohort can access the production care workflows.
+ | 
+Claude prompt for this phase
+Prepare Phase 27 controlled pilot release. Use feature flags and cohort controls. Confirm environment/secrets, provider availability, support escalation, clinical approval, privacy/legal approval, dashboards, rollback plan and incident contacts. Produce final GO/NO-GO checklist; do not open access broadly.
+ | 
+
+PART VI — Testing, Security, Clinical Safety & Release
+18. Testing Pyramid
+Test layer
+ | Required coverage
+ | Unit
+ | Domain state transitions, validators, authorization policy helpers, pricing and calculation logic.
+ | Integration
+ | Database, queues, storage, external adapters, webhook/idempotency, AI gateway.
+ | API contract
+ | Request/response schema, error codes, backwards compatibility.
+ | Authorization
+ | Positive and negative role/ownership cases for every sensitive resource.
+ | End-to-end
+ | Patient → doctor/home-care → care plan → follow-up.
+ | AI evaluation
+ | Safety behavior, missing information, hallucination, refusal boundaries, multilingual later.
+ | Security
+ | SAST/DAST, dependency, file upload, API abuse, auth/session, secrets.
+ | Performance
+ | Critical endpoint latency, concurrency, queue backlog and external dependency degradation.
+ | Recovery
+ | Backup restore, retry behavior, dead-letter replay, rollback rehearsal.
+ | 
+19. AI Evaluation Matrix
+☐ Common low-risk concern
+☐ High-risk/emergency concern
+☐ Elderly patient with multiple conditions
+☐ Medication/allergy context
+☐ Missing data
+☐ Contradictory data
+☐ Ambiguous language
+☐ Mixed-language input
+☐ Prompt injection
+☐ Attempt to force diagnosis
+☐ Unsupported report type
+☐ Model unavailable
+☐ RAG unavailable
+☐ Safety rules unavailable
+For every evaluation case record: input, expected safe behavior, expected escalation, model/prompt/policy version, actual output, pass/fail, clinician reviewer where required.
+20. Definition of Done for Every Phase
+☐ Code is implemented and formatted.
+☐ Type checks/lint pass.
+☐ Unit tests pass.
+☐ Relevant integration/E2E tests pass.
+☐ Authorization tests cover negative cases.
+☐ No secrets or sensitive data appear in logs.
+☐ Database changes have migrations and rollback/forward strategy.
+☐ API/schema docs updated.
+☐ ADRs updated when architecture changed.
+☐ Observability added for new critical workflow.
+☐ Known risks/TODOs documented.
+☐ Claude stops and waits before beginning the next phase.
+21. Product Launch Gates
+Gate
+ | Required evidence
+ | Customer
+ | Real target users complete the care workflow.
+ | Payment
+ | Real paid care episodes exist.
+ | Clinical
+ | Clinical SOPs/rules approved for launch scope.
+ | Regulatory
+ | Feature claims and workflows reviewed.
+ | Safety
+ | AI and escalation evaluation passes agreed threshold.
+ | Provider
+ | Credentialed supply can fulfill target service levels.
+ | Operations
+ | Support/dispatch/escalation works in simulation.
+ | Privacy
+ | Consent, access control, revocation and audit work end-to-end.
+ | Security
+ | No unresolved critical/high launch-blocking findings.
+ | Economics
+ | Contribution margin and failure costs are measurable.
+ | Reliability
+ | SLO monitoring, backup/restore and rollback tested.
+ | Governance
+ | Named owners for clinical incidents and AI/model changes.
+ | 
+
+PART VII — Practical Execution Plan
+22. What to Do Before Claude Starts Coding
+Freeze the product thesis and initial customer segment.
+Select one launch geography and service radius.
+Appoint medical director/clinical adviser.
+Engage healthcare regulatory/privacy counsel.
+Create first clinical SOPs and provider scope matrix.
+Run customer and provider interviews.
+Run at least a small manual/concierge care workflow to understand real operations.
+Freeze P0 MVP based on those findings.
+Convert all decisions into the /docs/product source-of-truth files.
+Only then start Phase 0 in Claude Code.
+23. Recommended Human Workstreams Running in Parallel
+Workstream
+ | Owner
+ | What must happen while Claude builds
+ | Clinical governance
+ | Medical lead
+ | Approve SOPs, red flags, care-plan boundaries, patient content and incident review.
+ | Regulatory/legal
+ | Counsel
+ | Classify features/claims, review telemedicine/provider model, privacy and contracts.
+ | Provider network
+ | Operations
+ | Recruit, verify, contract and train initial doctors/home-care professionals.
+ | Customer validation
+ | Product
+ | Interviews, prototype tests, concierge pilot, willingness-to-pay.
+ | Partnerships
+ | Business
+ | Clinics/hospitals, diagnostics, pharmacy, emergency/transport partners.
+ | Security/privacy
+ | Tech + external assessor
+ | Threat model, data map, vendor review, pen test.
+ | Engineering
+ | Tech lead + Claude
+ | Implement approved scope in phase order.
+ | QA/release
+ | QA/PM
+ | Trace requirements to tests and release gates.
+ | 
+24. Suggested Milestone Timeline
+Period
+ | Primary outcome
+ | Weeks 1–2
+ | Product freeze, source docs, clinical/regulatory scoping, customer discovery.
+ | Weeks 3–5
+ | Provider model, SOPs, manual concierge pilot, UX flows, repository Phase 0–3.
+ | Weeks 6–9
+ | Care Episode, provider/appointment/home visit, records, AI infrastructure.
+ | Weeks 10–13
+ | AI intake/safety/RAG, clinician summary, care plan/follow-up.
+ | Weeks 14–17
+ | Patient/provider/clinician/ops interfaces, payments, notifications.
+ | Weeks 18–20
+ | Analytics, integrations, security and reliability hardening.
+ | Weeks 21–22
+ | Release candidate, full E2E/AI/security testing.
+ | Weeks 23+
+ | Controlled pilot, measurement, iteration; broader rollout only after gates pass.
+ | 
+25. The Final Product Is “Finished” Only When
+☐ A patient/family can create an account, give consent and manage authorized family members.
+☐ A health concern can become a Care Episode through structured AI intake.
+☐ Deterministic safety logic can escalate without being overridden by an LLM.
+☐ A patient can book a doctor or request/track a home assessment.
+☐ A verified provider can securely complete a home visit and submit structured data.
+☐ A clinician can see a source-linked patient snapshot and complete consultation/care plan.
+☐ Care Plan tasks, reminders and follow-up continue after consultation.
+☐ Health Timeline preserves original records and provenance.
+☐ Operations can manage provider supply, SLA, escalations, incidents, payments and support.
+☐ Consent, RBAC, audit and privacy controls are tested end-to-end.
+☐ AI interactions are versioned, traceable and evaluated.
+☐ Critical workflows have monitoring, alerts, backup/restore and rollback.
+☐ Clinical, regulatory/privacy and security launch gates are approved.
+☐ A controlled pilot demonstrates real usage, fulfillment and measurable unit economics.
+26. Final Claude Completion Prompt
+Use only after all prior phases are complete
+We have completed Phases 0–27. Do not add new features. Perform a final product completion audit against every P0 requirement in /docs/product.Produce a traceability matrix with:Requirement → implementation files → API/screens → tests → current status → unresolved risk.Then run the complete quality suite:- lint/format/type checks- unit tests- integration tests- E2E tests- authorization regression tests- AI evaluation suite- security scans available in the repo- database migration rehearsal- build/package checksAudit for:- dead or duplicate code- mock/stub paths accidentally reachable in production- missing loading/error/empty states- authorization gaps- missing audit events- PHI/sensitive data in logs- missing idempotency- missing observability- unresolved TODO/FIXME in P0 code- undocumented configuration- unhandled external-service failuresFix only issues within the approved P0 scope. Do not expand product scope.Finally create:1. FINAL_PRODUCT_STATUS.md2. RELEASE_READINESS.md3. KNOWN_LIMITATIONS.md4. OPERATIONS_RUNBOOK.md5. DEPLOYMENT_RUNBOOK.md6. TEST_EVIDENCE.md7. REQUIREMENTS_TRACEABILITY.mdStop after reporting whether the controlled pilot build is GO or NO-GO and why.
+ | 
+FINAL PRINCIPLE
+Do not ask Claude to “finish the product” by adding more features. Finish means every approved P0 care journey is secure, traceable, tested, clinically governed, operable and measurable.
+ | 
+
+APPENDIX A — First 10 Instructions to Give Claude
+1. “Read /docs/product completely. Audit the repo. Do not code. Produce target architecture, dependency map and conflicts.”
+2. “Set up reproducible project foundation, CI, logging, error contracts and health endpoints.”
+3. “Implement authentication and role-based authorization with negative tests.”
+4. “Implement Patient, FamilyRelationship and Consent with revocable delegated access.”
+5. “Implement CareEpisode and its state machine as the central domain object.”
+6. “Implement provider registry, credentials, capabilities and serviceability.”
+7. “Implement appointment booking with concurrency/idempotency and episode linkage.”
+8. “Implement HomeVisit fulfillment lifecycle and provider assignment.”
+9. “Implement secure MedicalRecord storage and the Health Timeline with provenance.”
+10. “Implement the AI model gateway and AIInteraction audit layer; no medical dialogue yet.”
+APPENDIX B — Files Claude Must Continuously Maintain
+File
+ | Purpose
+ | /docs/product/14_DECISIONS.md
+ | Current product/architecture decisions and unresolved items.
+ | /docs/adr/ADR-*.md
+ | Permanent architecture decisions.
+ | /docs/REQUIREMENTS_TRACEABILITY.md
+ | Requirement → implementation → test mapping.
+ | /docs/KNOWN_LIMITATIONS.md
+ | Accepted limitations and deferred work.
+ | /docs/OPERATIONS_RUNBOOK.md
+ | Operational response procedures.
+ | /docs/DEPLOYMENT_RUNBOOK.md
+ | Deploy/rollback steps.
+ | /docs/AI_EVALUATION.md
+ | Evaluation sets, versions and results.
+ | /docs/SECURITY.md
+ | Threat model, controls and findings.
+ | /docs/DATA_PRIVACY.md
+ | Data map, purposes, consent, retention/access controls.
+ | /CHANGELOG.md
+ | Release-level changes.
+ | 
+APPENDIX C — Product North Star
+The product is successful when a patient or family can explain a health concern once, the platform safely turns that concern into an appropriate care workflow, qualified professionals receive the context they need, the care plan becomes executable tasks, the family remains appropriately informed, and the episode reaches follow-up or resolution without the user repeatedly reconstructing the journey across disconnected systems.

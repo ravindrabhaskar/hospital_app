@@ -1,0 +1,1978 @@
+{
+  "@@locale": "en",
+  "appName": "CareCompanion",
+  "tagline": "Your health, our priority.",
+  "yourHealthOurPriority": "Your health, our priority.",
+  "homeQuote": "“Small steps today, healthier tomorrow.”",
+  "goodMorning": "Good Morning",
+  "goodAfternoon": "Good Afternoon",
+  "goodEvening": "Good Evening",
+  "robotSemantic": "AI health assistant robot",
+  "loading": "Loading",
+  "retry": "Retry",
+  "seeAll": "See All",
+  "continueLabel": "Continue",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "save": "Save",
+  "saved": "Saved",
+  "add": "Add",
+  "remove": "Remove",
+  "edit": "Edit",
+  "close": "Close",
+  "skip": "Skip",
+  "search": "Search",
+  "change": "Change",
+  "required": "Required",
+  "optional": "Optional",
+  "all": "All",
+  "active": "Active",
+  "closed": "Closed",
+  "upcoming": "Upcoming",
+  "past": "Past",
+  "current": "current",
+  "comingSoon": "Coming soon",
+  "verified": "Verified",
+  "unread": "Unread",
+  "unavailable": "unavailable",
+  "noResults": "No results",
+  "results": "Results",
+  "selectDate": "Select date",
+  "fieldRequired": "This field is required",
+  "fillRequired": "Please fill all required fields",
+  "enterValidNumber": "Enter a valid number",
+  "notNow": "Not now",
+  "viewDetails": "View details",
+  "goHome": "Go to Home",
+  "moreOptions": "More options",
+  "appVersion": "Version {version}",
+  "@appVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "ageYears": "{age} years",
+  "@ageYears": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "durationMins": "{minutes} min",
+  "@durationMins": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "kmAway": "{km} km",
+  "@kmAway": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "history": "History",
+  "title": "Title",
+  "value": "Value",
+  "size": "Size",
+  "file": "File",
+  "image": "Image",
+  "reason": "Reason",
+  "noReasonGiven": "No reason given",
+  "patient": "Patient",
+  "@patient": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "call": "Call",
+  "directions": "Directions",
+  "send": "Send",
+  "invite": "Invite",
+  "revoke": "Revoke",
+  "upload": "Upload",
+  "uploaded": "Uploaded successfully",
+  "errorTitle": "Something went wrong",
+  "errorGeneric": "Please try again in a moment.",
+  "offlineTitle": "You are offline",
+  "errorOffline": "Check your internet connection and try again.",
+  "unauthorizedTitle": "Session expired",
+  "errorSessionExpired": "Please sign in again to continue.",
+  "signInAgain": "Sign in again",
+  "forbiddenTitle": "No access",
+  "errorForbidden": "You do not have permission for this family member.",
+  "errorConsentRequired": "Your consent is needed for this feature.",
+  "errorRateLimited": "Too many attempts. Please wait and try again.",
+  "errorServer": "Our service is temporarily unavailable. Please try again shortly.",
+  "errorNotFound": "We could not find what you were looking for.",
+  "chooseLanguageTitle": "Choose your language",
+  "chooseLanguageSubtitle": "You can change this any time in Profile.",
+  "changeLanguage": "Language",
+  "phoneTitle": "Enter your mobile number",
+  "phoneSubtitle": "We will send a 6-digit code to verify it.",
+  "phoneLabel": "Mobile number",
+  "phoneInvalid": "Enter a valid 10-digit mobile number",
+  "sendOtp": "Send OTP",
+  "phoneDisclaimer": "By continuing you agree to receive an SMS for verification.",
+  "otpTitle": "Verify your number",
+  "otpSubtitle": "Enter the code sent to {phone}",
+  "@otpSubtitle": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "otpLabel": "One-time password",
+  "otpInvalid": "Enter the 6-digit code",
+  "otpWrong": "That code is not correct or has expired",
+  "otpResent": "A new code has been sent",
+  "devOtpHint": "Dev OTP: {code}",
+  "@devOtpHint": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "useCode": "Use",
+  "verify": "Verify",
+  "resendOtp": "Resend code",
+  "resendIn": "Resend in {seconds}s",
+  "@resendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "consentsTitle": "Your privacy",
+  "consentsIntro": "Please review and accept how we handle your health information. Required items are needed to use the app.",
+  "consentsRequiredHint": "Tick all required items to continue",
+  "agreeAndContinue": "Agree and continue",
+  "profileSetupTitle": "About you",
+  "profileSetupSubtitle": "This helps doctors and care teams know who they are helping.",
+  "fullName": "Full name",
+  "nameRequired": "Please enter your name",
+  "emailOptional": "Email (optional)",
+  "emailInvalid": "Enter a valid email",
+  "dateOfBirth": "Date of birth",
+  "gender": "Gender",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "genderOther": "Other",
+  "emergencyContactTitle": "Emergency contact",
+  "emergencyContactSubtitle": "We will alert this person if you use SOS or a fall is detected.",
+  "contactName": "Contact name",
+  "relationLabel": "Relation",
+  "relationHint": "e.g. Son, Daughter, Spouse",
+  "relationSelf": "Self",
+  "saveAndContinue": "Save and continue",
+  "navHome": "Home",
+  "navCare": "Care",
+  "navAskAi": "Ask AI",
+  "navRecords": "Records",
+  "navProfile": "Profile",
+  "notifications": "Notifications",
+  "notificationsUnread": "Notifications, {count} unread",
+  "@notificationsUnread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "switchFamilyMember": "Switch family member",
+  "actingFor": "Acting for {name}",
+  "@actingFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "actingForTitle": "Who is this for?",
+  "actingForSubtitle": "Bookings, records and AI chats will be for the selected person.",
+  "manageFamily": "Manage family",
+  "aiHeroTitle": "Hi, I'm your\nAI Health Assistant",
+  "aiHeroSubtitle": "Ask anything about your health, get instant guidance, or book a service.",
+  "howCanIHelp": "How can I help you today?",
+  "openAssistant": "Open AI assistant",
+  "voiceInput": "Voice input",
+  "qaTalkToDoctor": "Talk to a Doctor",
+  "qaTalkToDoctorSub": "Online Consultation",
+  "qaHomeCheckup": "Home Checkup",
+  "qaHomeCheckupSub": "Book at your home",
+  "qaUploadReport": "Upload Report",
+  "qaUploadReportSub": "Get AI insights",
+  "qaOrderMedicines": "Order Medicines",
+  "qaOrderMedicinesSub": "Fast & Safe Delivery",
+  "bannerTitle": "Care for every stage of life",
+  "bannerSubtitle": "From prevention to recovery — we're with you always.",
+  "bannerScript": "Healthier\nHappier\nYou ♡",
+  "exploreCarePlans": "Explore Care Plans",
+  "quickAccess": "Quick Access",
+  "qxSymptoms": "Symptoms Checker",
+  "@qxSymptoms": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxMentalWellness": "Mental Wellness",
+  "@qxMentalWellness": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxWound": "Wound Analysis",
+  "@qxWound": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxMedicineReminders": "Medicine Reminders",
+  "qxHealthRecords": "Health Records",
+  "qxFallDetection": "Fall Detection",
+  "qxGovtSchemes": "Govt. Health Schemes",
+  "qxFindHospitals": "Find Hospitals",
+  "qxWearables": "Wearables Connect",
+  "qxEmergencySos": "Emergency SOS",
+  "todaysReminders": "Today's Reminders",
+  "activeCare": "Active Care",
+  "nextStep": "Next: {action}",
+  "@nextStep": {
+    "placeholders": {
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "priorityUrgent": "Urgent",
+  "@priorityUrgent": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "priorityEmergency": "Emergency",
+  "@priorityEmergency": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "todaysInsights": "Today's Insights",
+  "goalLabel": "Goal: {goal}",
+  "@goalLabel": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "searchHint": "Search symptoms, doctors, tests...",
+  "searchEmptyTitle": "What are you looking for?",
+  "searchEmptyMessage": "Type at least 2 letters to search doctors, hospitals and medicines.",
+  "askAiAbout": "Ask AI about \"{query}\"",
+  "@askAiAbout": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "symptomsViaAi": "Check symptoms safely with guided questions",
+  "@symptomsViaAi": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "doctors": "Doctors",
+  "hospitals": "Hospitals",
+  "medicines": "Medicines",
+  "markAllRead": "Mark all read",
+  "noNotifications": "No notifications yet",
+  "aiAssistantTitle": "AI Health Assistant",
+  "online": "Online",
+  "newChat": "New conversation",
+  "aiGeneratedLabel": "AI-generated · not a diagnosis",
+  "@aiGeneratedLabel": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "typeOrSpeak": "Type or speak...",
+  "listening": "Listening...",
+  "stopListening": "Stop listening",
+  "assistantTyping": "Assistant is typing…",
+  "messageNotSent": "Message not sent",
+  "micPermissionDenied": "Microphone permission is off. You can type your message instead.",
+  "voiceUnavailable": "Voice input is not available on this device. Please type instead.",
+  "starterHeadache": "I have a headache",
+  "@starterHeadache": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "starterSymptoms": "Check my symptoms",
+  "@starterSymptoms": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "starterHomeCheckup": "Should I get a home checkup?",
+  "starterReport": "Explain my test report",
+  "questionProgress": "Question {current} of {total}",
+  "@questionProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "emergencyAlertTitle": "This may be an emergency",
+  "@emergencyAlertTitle": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "emergencyTemplate": "Your symptoms may need urgent medical attention. Call 108 for an ambulance now or press SOS to alert your emergency contacts.",
+  "@emergencyTemplate": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "call108": "Call 108",
+  "sosButton": "SOS",
+  "routeBookDoctor": "Book a doctor: {specialty}",
+  "@routeBookDoctor": {
+    "placeholders": {
+      "specialty": {
+        "type": "String"
+      }
+    }
+  },
+  "routeBookHomeCheckup": "Book a home checkup",
+  "findDoctors": "Find doctors",
+  "aiConsentTitle": "Allow AI assistance?",
+  "aiConsentBody": "The AI assistant uses the health details you share to ask follow-up questions and guide you to the right care.",
+  "aiConsentPoint1": "It does not diagnose — a doctor makes clinical decisions.",
+  "@aiConsentPoint1": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "aiConsentPoint2": "Emergency warning signs are always checked by safety rules.",
+  "aiConsentPoint3": "You can withdraw this consent any time in Privacy settings.",
+  "allowAiAssistance": "Allow AI assistance",
+  "talkToDoctorInstead": "Talk to a doctor instead",
+  "askAiNow": "Ask AI now",
+  "findADoctor": "Find a Doctor",
+  "searchDoctorsHint": "Search by name, speciality...",
+  "topDoctorsNearYou": "Top Doctors Near You",
+  "noDoctorsTitle": "No doctors found",
+  "noDoctorsMessage": "Try another speciality or clear the filters.",
+  "clearFilters": "Clear filters",
+  "videoConsult": "Video Consult",
+  "homeVisit": "Home Visit",
+  "yearsExperience": "{years}+ years",
+  "@yearsExperience": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "availableNow": "Available now",
+  "nextAvailable": "Next: {time}",
+  "@nextAvailable": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "addFavorite": "Add to favourites",
+  "removeFavorite": "Remove from favourites",
+  "overview": "Overview",
+  "availability": "Availability",
+  "reviews": "Reviews",
+  "reviewsCount": "({count} reviews)",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "about": "About",
+  "registrationNumber": "Registration no.",
+  "languagesSpoken": "Languages",
+  "clinic": "Clinic",
+  "whyThisDoctor": "Why this doctor",
+  "noReviews": "No reviews yet",
+  "verifiedPatient": "Verified patient",
+  "morning": "Morning",
+  "afternoon": "Afternoon",
+  "noSlots": "No slots on this day",
+  "noSlotsMessage": "Please pick another date.",
+  "consultationType": "Consultation Type",
+  "modeVideo": "Video",
+  "modeAudio": "Audio",
+  "modeChat": "Chat",
+  "modeInClinic": "In-clinic",
+  "reasonForVisit": "Reason for visit",
+  "reasonHint": "e.g. Fever since 2 days",
+  "@reasonHint": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "defaultConsultReason": "General consultation",
+  "selectASlot": "Select a time slot",
+  "confirmAppointmentFee": "Confirm Appointment · {amount}",
+  "@confirmAppointmentFee": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "rescheduleToSlot": "Reschedule to this slot",
+  "rescheduled": "Appointment rescheduled",
+  "slotUnavailable": "That slot was just taken. Please choose another time.",
+  "noBookPermission": "You do not have booking permission for this family member.",
+  "consultationWith": "Consultation with {name}",
+  "@consultationWith": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appointmentConfirmed": "Appointment confirmed",
+  "amountPaid": "Paid",
+  "viewAppointment": "View appointment",
+  "bookingConfirmed": "Booking confirmed",
+  "payment": "Payment",
+  "totalAmount": "Total amount",
+  "payAmount": "Pay {amount}",
+  "@payAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "retryPaymentAmount": "Retry payment · {amount}",
+  "@retryPaymentAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "simulateFailure": "Simulate failure",
+  "payLater": "Pay later",
+  "mockGatewayNote": "Test payment gateway — no real money is charged.",
+  "paymentFailedBody": "Payment failed. Your booking is not confirmed yet — please try again.",
+  "paymentFailedTitle": "Payment failed",
+  "paymentPendingTitle": "Payment pending",
+  "paymentNotConfirmedBody": "Your booking will be confirmed only after payment succeeds.",
+  "completePayment": "Complete payment · {amount}",
+  "@completePayment": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "noPendingPayment": "No pending payment found",
+  "payIfPending": "Complete pending payment",
+  "payments": "Payments",
+  "noPayments": "No payments yet",
+  "refunded": "Refunded {amount}",
+  "@refunded": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "payPending": "Pending",
+  "paySucceeded": "Paid",
+  "payFailed": "Failed",
+  "payRefunded": "Refunded",
+  "payPartiallyRefunded": "Partly refunded",
+  "purposeAppointment": "Doctor consultation",
+  "purposeHomeVisit": "Home visit",
+  "purposePharmacyOrder": "Medicine order",
+  "careEpisodes": "Episodes",
+  "careEpisode": "Care episode",
+  "appointments": "Appointments",
+  "appointment": "Appointment",
+  "homeVisits": "Home visits",
+  "carePlans": "Care plans",
+  "carePlan": "Care plan",
+  "medications": "Medications",
+  "@medications": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noEpisodesTitle": "No care episodes yet",
+  "noEpisodesMessage": "Start by asking the AI assistant or booking a doctor.",
+  "noUpcomingAppointments": "No upcoming appointments",
+  "noPastAppointments": "No past appointments",
+  "bookDoctor": "Book a doctor",
+  "noHomeVisits": "No home visits",
+  "bookHomeCheckup": "Book a Home Checkup",
+  "noCarePlansTitle": "No care plan yet",
+  "noCarePlansMessage": "Your doctor will share a care plan after a consultation.",
+  "openTasks": "Open tasks",
+  "noOpenTasks": "No open tasks — well done!",
+  "tasks": "Tasks",
+  "markDone": "Mark done",
+  "taskCompleted": "Task completed",
+  "taskOpen": "Open",
+  "taskDone": "Done",
+  "taskOverdue": "Overdue",
+  "taskCancelled": "Cancelled",
+  "dueOn": "Due {date}",
+  "@dueOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "doneBy": "by {name}",
+  "@doneBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "todaysDoses": "Today's doses",
+  "@todaysDoses": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "markTaken": "Taken",
+  "doseTaken": "Taken",
+  "@doseTaken": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "doseSkipped": "Skipped",
+  "@doseSkipped": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "doseMissed": "Missed",
+  "@doseMissed": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "dosePending": "Due",
+  "@dosePending": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "prescribedBy": "Prescribed by {name}",
+  "@prescribedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noMedications": "No medicines added",
+  "noMedicationsMessage": "Add your medicines to get reminders.",
+  "addMedication": "Add medication",
+  "@addMedication": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "medicineReminders": "Medicine reminders",
+  "medicineName": "Medicine name",
+  "@medicineName": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "dose": "Dose",
+  "@dose": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "doseHint": "e.g. 500 mg, 1 tablet",
+  "@doseHint": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "frequency": "Frequency",
+  "@frequency": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "frequencyHint": "e.g. Twice a day after food",
+  "@frequencyHint": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "reminderTimes": "Reminder times",
+  "addTime": "Add time",
+  "addAtLeastOneTime": "Add at least one reminder time",
+  "timesPerDay": "{count} times a day",
+  "@timesPerDay": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "startDate": "Start date",
+  "endDateOptional": "End date (optional)",
+  "instructionsOptional": "Instructions (optional)",
+  "instructionsHint": "e.g. After breakfast",
+  "medicationSelfEnteredNote": "Medicines you add are marked as patient-entered. Always follow your doctor's advice.",
+  "@medicationSelfEnteredNote": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "medicationAdded": "Medication added",
+  "careOwner": "Care owner: {name}",
+  "@careOwner": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "episodeExceptional": "Status: {status}. Our care team is handling this with priority.",
+  "@episodeExceptional": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "timeline": "Timeline",
+  "noEvents": "No updates yet",
+  "viewCareEpisode": "View care episode",
+  "byDoctor": "By {name}",
+  "@byDoctor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "followUpDue": "Follow-up by {date}",
+  "@followUpDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "instructions": "Instructions",
+  "epNew": "New",
+  "epIntake": "Understanding your concern",
+  "epAwaitingCare": "Awaiting care",
+  "epCareScheduled": "Care scheduled",
+  "epUnderCare": "Under care",
+  "epFollowUp": "Follow-up",
+  "@epFollowUp": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "epResolved": "Resolved",
+  "epEscalated": "Escalated",
+  "epEmergency": "Emergency",
+  "@epEmergency": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "epTransferred": "Transferred",
+  "epCancelled": "Cancelled",
+  "apPendingPayment": "Payment pending",
+  "apConfirmed": "Confirmed",
+  "apInProgress": "In progress",
+  "apCompleted": "Completed",
+  "apCancelled": "Cancelled",
+  "apNoShow": "Missed",
+  "dateTime": "Date & time",
+  "fee": "Fee",
+  "doctorNotes": "Doctor's notes",
+  "@doctorNotes": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "joinVideo": "Join video consultation",
+  "videoLinkLater": "The video link will appear here shortly before your consultation.",
+  "reschedule": "Reschedule",
+  "cancelAppointment": "Cancel appointment",
+  "appointmentCancelled": "Appointment cancelled",
+  "homeCheckupTitle": "Complete Healthcare at Home",
+  "homeCheckupSubtitle": "Book a certified nurse or technician for sample collection, vitals check, and more.",
+  "@homeCheckupSubtitle": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "myVisits": "My visits",
+  "noServices": "No services available",
+  "selectService": "Select a service",
+  "address": "Address",
+  "addressLine1": "House / flat, street",
+  "addressLine2": "Area (optional)",
+  "landmark": "Landmark (optional)",
+  "city": "City",
+  "pincode": "Pincode",
+  "pincodeInvalid": "Enter a valid 6-digit pincode",
+  "notServiceable": "Sorry, home visits are not available at this pincode yet.",
+  "serviceable": "Great — we serve {zone}",
+  "@serviceable": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "preferredTime": "Preferred time",
+  "homeVisitReasonHint": "e.g. Blood sugar check for my father",
+  "@homeVisitReasonHint": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bookAndPay": "Book & Pay {amount}",
+  "@bookAndPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "homeVisitBooked": "Home visit booked",
+  "visitCode": "Visit code",
+  "visitCodeHint": "Share this code only with your care provider when they arrive.",
+  "visitCodeInline": "Visit code: {code}",
+  "@visitCodeInline": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "visitCodeSemantic": "Visit code {code}",
+  "@visitCodeSemantic": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "trackVisit": "Track visit",
+  "viewRequest": "View request",
+  "homeVisitTracking": "Home visit",
+  "etaMinutes": "Arriving in about {minutes} min",
+  "@etaMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "visitUnassigned": "We are finding an available care provider near you. We will notify you soon.",
+  "yourCareProvider": "Your care provider",
+  "visitStatusTitle": "Visit status",
+  "visitSummary": "Visit summary",
+  "vitalsRecorded": "Vitals recorded",
+  "@vitalsRecorded": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "cancelVisit": "Cancel visit",
+  "visitCancelled": "Visit cancelled",
+  "hvRequested": "Requested",
+  "hvUnassigned": "Finding provider",
+  "hvAssigned": "Provider assigned",
+  "hvAccepted": "Accepted",
+  "hvEnRoute": "On the way",
+  "hvArrived": "Arrived",
+  "hvInProgress": "Visit in progress",
+  "hvCompleted": "Completed",
+  "hvCancelled": "Cancelled",
+  "hvEscalated": "Escalated to doctor",
+  "searchMedicines": "Search medicines...",
+  "uploadPrescription": "Upload Prescription",
+  "@uploadPrescription": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "uploadPrescriptionSub": "Upload a photo or PDF",
+  "popularCategories": "Popular Categories",
+  "frequentlyOrdered": "Frequently Ordered",
+  "rxRequired": "Rx",
+  "@rxRequired": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "outOfStock": "Out of stock",
+  "addToCart": "Add {name} to cart",
+  "@addToCart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "decreaseQty": "Decrease quantity",
+  "increaseQty": "Increase quantity",
+  "viewCart": "View Cart",
+  "cart": "Cart",
+  "cartEmpty": "Your cart is empty",
+  "browseMedicines": "Browse medicines",
+  "prescription": "Prescription",
+  "@prescription": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxRequiredBody": "Some items need a valid prescription. Select one or upload a new one.",
+  "@rxRequiredBody": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxMissing": "A prescription is required for one or more items.",
+  "@rxMissing": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "deliveryAddress": "Delivery address",
+  "placeOrderAndPay": "Place order · {amount}",
+  "@placeOrderAndPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "medicineOrder": "Medicine order",
+  "orderPlaced": "Order placed",
+  "fulfilledBy": "Fulfilled by {name}",
+  "@fulfilledBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "healthRecords": "Health Records",
+  "healthTimeline": "Health timeline",
+  "vitals": "Vitals",
+  "@vitals": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "reports": "Reports",
+  "prescriptions": "Prescriptions",
+  "@prescriptions": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "images": "Images",
+  "noRecordsTitle": "No records yet",
+  "noRecordsMessage": "Upload reports and prescriptions to keep everything in one place.",
+  "noRecordsPermission": "You do not have permission to view records for this family member.",
+  "uploadNewReport": "Upload New Report",
+  "uploadNewReportSub": "Add reports, prescriptions, images",
+  "record": "Record",
+  "recordType": "Type",
+  "recordDate": "Report date",
+  "addedBy": "Added by",
+  "uploadedOn": "Uploaded on",
+  "openOriginal": "Open original file",
+  "aiSummary": "AI summary",
+  "summarizeWithAi": "Summarize with AI",
+  "aiDisclaimerDefault": "This summary is AI-generated to help you understand your report. It is not a diagnosis — please discuss results with your doctor.",
+  "@aiDisclaimerDefault": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "generatedOn": "Generated {date}",
+  "@generatedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "originalImmutableNote": "Your original file is never changed. AI summaries are stored separately.",
+  "previewUnavailable": "Preview is not available for this file type.",
+  "previewUnavailableMobile": "File downloaded ({size}). In-app preview supports images only for now.",
+  "@previewUnavailableMobile": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "sourceLabel": "Source: {source}",
+  "@sourceLabel": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "chooseFile": "Choose file",
+  "takePhoto": "Take photo",
+  "chooseFromGallery": "Choose from gallery",
+  "choosePhoto": "Choose photo",
+  "allowedFiles": "PDF, JPG, PNG, WEBP or HEIC up to 15 MB",
+  "fileTooLarge": "File is larger than 15 MB",
+  "pickerFailed": "Could not open the file. Please try again.",
+  "uploadPrivacyNote": "Files are stored securely and shared only with people you allow.",
+  "rtLabReport": "Lab report",
+  "@rtLabReport": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rtPrescription": "Prescription",
+  "@rtPrescription": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rtImaging": "Scan / X-ray",
+  "@rtImaging": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rtDischargeSummary": "Discharge summary",
+  "@rtDischargeSummary": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rtVisitSummary": "Visit summary",
+  "rtOther": "Other",
+  "provPatientEntered": "Patient entered",
+  "provClinicianVerified": "Clinician verified",
+  "@provClinicianVerified": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "provHomeVisit": "Home visit",
+  "provImported": "Imported",
+  "provAiExtracted": "AI extracted",
+  "provDevice": "Device",
+  "provUnknown": "Unknown",
+  "timelineEmpty": "Your health timeline will appear here",
+  "noVitals": "No vitals recorded",
+  "@noVitals": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noVitalsMessage": "Add readings like BP, pulse or sugar to track trends.",
+  "@noVitalsMessage": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "addVital": "Add vital",
+  "@addVital": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalTypeLabel": "Measurement",
+  "vitalSelfEnteredNote": "Readings you add are marked as patient-entered.",
+  "vitalBpSystolic": "BP (systolic)",
+  "@vitalBpSystolic": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalBpDiastolic": "BP (diastolic)",
+  "@vitalBpDiastolic": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalPulse": "Pulse",
+  "@vitalPulse": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalSpo2": "SpO₂ (oxygen)",
+  "@vitalSpo2": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalTemperature": "Temperature",
+  "@vitalTemperature": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalBloodGlucose": "Blood sugar",
+  "@vitalBloodGlucose": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalWeight": "Weight",
+  "@vitalWeight": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "vitalRespiratoryRate": "Breathing rate",
+  "@vitalRespiratoryRate": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "wellnessHeroTitle": "A healthier mind for a brighter you",
+  "wellnessHeroSubtitle": "Talk to a therapist or try our AI-guided support.",
+  "@wellnessHeroSubtitle": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "howAreYouFeeling": "How are you feeling today?",
+  "moodVeryLow": "Very low",
+  "moodLow": "Low",
+  "moodOkay": "Okay",
+  "moodGood": "Good",
+  "moodGreat": "Great",
+  "moodNoteOptional": "Want to add a note? (optional)",
+  "shareWithClinician": "Share with my clinician",
+  "saveCheckIn": "Save check-in",
+  "talkToTherapist": "Talk to a Therapist",
+  "@talkToTherapist": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "talkToTherapistSub": "Book an online session",
+  "aiMoodSupport": "AI Mood Support",
+  "aiMoodSupportSub": "Chat anonymously",
+  "meditationExercises": "Meditation & Exercises",
+  "noActivities": "No activities available",
+  "moodTracker": "Mood Tracker",
+  "noMoodHistory": "Your mood check-ins will appear here",
+  "youAreNotAlone": "You are not alone",
+  "moodSupportFallback": "If you feel unsafe or might hurt yourself, please call 108 now or reach someone you trust.",
+  "@moodSupportFallback": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "woundNoDiagnosis": "No AI diagnosis. We only check that the photo is clear; a clinician will review it.",
+  "@woundNoDiagnosis": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "uploadWoundPhoto": "Upload a photo of the wound",
+  "@uploadWoundPhoto": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "woundPhotoTips": "Good light, in focus, whole wound visible",
+  "@woundPhotoTips": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bodySite": "Where is the wound?",
+  "@bodySite": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bodySiteHint": "e.g. Left ankle",
+  "@bodySiteHint": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noteOptional": "Note (optional)",
+  "sendForReview": "Send for clinician review",
+  "retakeAndSubmit": "Submit new photo",
+  "woundRetakeTitle": "Please retake the photo",
+  "woundRetakeBody": "The photo could not be used because:",
+  "woundPendingTitle": "Sent for clinician review",
+  "woundPendingBody": "A clinician will review your photo and contact you. If the wound worsens, bleeds heavily or you have fever, seek care immediately.",
+  "@woundPendingBody": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "woundIssueTooSmall": "The image resolution is too low",
+  "woundIssueFileTooSmall": "The file is too small or incomplete",
+  "woundIssueTooDark": "The photo is too dark",
+  "woundIssueBlurry": "The photo is blurry",
+  "woundStatusRetake": "Retake needed",
+  "woundStatusPending": "Awaiting review",
+  "woundStatusReviewed": "Reviewed",
+  "noWoundHistory": "No wound photos yet",
+  "@noWoundHistory": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "clinicianReviewBy": "Reviewed by {name}",
+  "@clinicianReviewBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "connectWearable": "Connect Wearable",
+  "trackHealthRealtime": "Track your health in real time",
+  "heartRate": "Heart rate",
+  "@heartRate": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "stepsActivity": "Steps & activity",
+  "sleep": "Sleep",
+  "linkedDevices": "Linked Devices",
+  "linkedDevicesSub": "Wearables & apps",
+  "selectDevice": "Select a device",
+  "connectDeviceName": "Connect {name}",
+  "@connectDeviceName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deviceConnected": "Device connected",
+  "connected": "Connected",
+  "disconnect": "Disconnect",
+  "disconnectDevice": "Disconnect device?",
+  "disconnectDeviceBody": "New readings will stop syncing. Existing readings stay in your records.",
+  "lastSynced": "Last synced {date}",
+  "@lastSynced": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "connectedNotSynced": "Connected · not synced yet",
+  "noWearableProviders": "No devices available",
+  "wearableDataNote": "Device readings are labelled with their source and are not a medical diagnosis.",
+  "@wearableDataNote": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "emergency": "Emergency",
+  "sosSubtitle": "Get help quickly. We'll notify your emergency contacts.",
+  "sosSentTitle": "SOS sent. Help is being arranged.",
+  "holdToSend": "Press and hold for 3 seconds",
+  "sosSemantic": "SOS emergency button. Double tap to confirm sending an alert.",
+  "sendSosTitle": "Send SOS alert?",
+  "sendSosBody": "Your emergency contacts and our care team will be alerted with your location.",
+  "sendSos": "Send SOS",
+  "sosFailed": "Could not send SOS. Call 108 directly.",
+  "sendLocation": "Send Location",
+  "toEmergencyContacts": "To emergency contacts",
+  "callAmbulance": "Call Ambulance",
+  "helpline108": "Helpline: 108",
+  "callNumber": "Call {number}",
+  "@callNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "notifiedContacts": "Contacts notified",
+  "noEmergencyContacts": "No emergency contacts yet",
+  "addEmergencyContact": "Add emergency contact",
+  "nearestEmergencyFacilities": "Nearest emergency facilities",
+  "emergencyContacts": "Emergency Contacts",
+  "emergencyContactsFor": "People we alert for {name}",
+  "@emergencyContactsFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "fallTitle": "Fall detection",
+  "fallBody": "If a fall is detected by your phone or wearable, we ask if you are OK. If you don't respond, we alert your emergency contacts and care team.",
+  "fallStep1": "A possible fall is detected",
+  "fallStep2": "You get a countdown to respond",
+  "fallStep3": "No response? We alert your contacts",
+  "fallContactsHint": "Make sure your contacts are up to date",
+  "fallWearableHint": "Connect a watch for better detection",
+  "simulateFall": "Simulate fall (test)",
+  "simulateFallNote": "For testing only. This creates a real fall alert for your care team.",
+  "areYouOk": "Are you OK?",
+  "fallDetectedBody": "We detected a possible fall. If you don't respond, we will alert your emergency contacts.",
+  "secondsLeft": "{seconds} seconds left",
+  "@secondsLeft": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "imOk": "I'm OK",
+  "needHelp": "I need help",
+  "fallGladSafe": "Glad you're safe",
+  "fallHelpComing": "We are alerting your contacts",
+  "fallNoResponse": "No response — alerting your contacts",
+  "openSos": "Open SOS",
+  "useMyLocation": "Use my location",
+  "locationUnavailable": "Location is unavailable. Showing all results.",
+  "noFacilities": "No facilities found",
+  "emergency247": "24x7 Emergency",
+  "facHospital": "Hospital",
+  "facClinic": "Clinic",
+  "facLab": "Lab",
+  "facPharmacy": "Pharmacy",
+  "govtSchemesComingSoon": "Government health scheme guidance is coming soon.",
+  "myProfile": "My Profile",
+  "personalInformation": "Personal Information",
+  "personalInfoNote": "Your phone number is your login and cannot be changed here.",
+  "healthProfile": "Health Profile",
+  "healthProfileSub": "Blood group, allergies, conditions",
+  "@healthProfileSub": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "healthProfileFor": "Health details for {name}",
+  "@healthProfileFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "healthSettingsFor": "Health settings below apply to {name}",
+  "@healthSettingsFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "bloodGroup": "Blood group",
+  "@bloodGroup": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bloodGroupOptional": "Blood group (optional)",
+  "@bloodGroupOptional": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "heightCm": "Height (cm)",
+  "weightKg": "Weight (kg)",
+  "allergies": "Allergies",
+  "@allergies": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "addAllergy": "Add allergy",
+  "@addAllergy": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noAllergies": "No known allergies recorded",
+  "@noAllergies": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "substance": "Allergic to",
+  "@substance": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "reactionOptional": "Reaction (optional)",
+  "@reactionOptional": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "mild": "Mild",
+  "@mild": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "moderate": "Moderate",
+  "@moderate": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "severe": "Severe",
+  "@severe": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "conditions": "Conditions",
+  "@conditions": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "addCondition": "Add condition",
+  "@addCondition": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noConditions": "No conditions recorded",
+  "@noConditions": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "conditionName": "Condition",
+  "@conditionName": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "sinceYearOptional": "Since (year, optional)",
+  "since": "since {year}",
+  "@since": {
+    "placeholders": {
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "familyMembers": "Family Members",
+  "familyMembersSub": "Add and manage family",
+  "familyIntro": "Manage care for your family. Choose who can see records, book care and receive alerts.",
+  "peopleYouCareFor": "People you care for",
+  "addDependent": "Add",
+  "addDependentSub": "Add a family member whose care you manage (e.g. a parent or child).",
+  "actingNow": "Selected",
+  "caregiversFor": "Caregivers for {name}",
+  "@caregiversFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "noCaregivers": "No one else has access yet.",
+  "revokeAccess": "Revoke access?",
+  "revokeAccessBody": "{name} will immediately lose access.",
+  "@revokeAccessBody": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inviteCaregiver": "Invite a caregiver",
+  "inviteCaregiverSub": "They will be able to help with care for {name}.",
+  "@inviteCaregiverSub": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "permissions": "Permissions",
+  "permViewRecords": "View records",
+  "permManageCare": "Manage care",
+  "permBook": "Book & pay",
+  "permReceiveAlerts": "Receive alerts",
+  "permViewRecordsDesc": "See reports, prescriptions and vitals",
+  "permManageCareDesc": "Use AI assistant, complete care tasks",
+  "permBookDesc": "Book appointments, visits and medicines",
+  "permReceiveAlertsDesc": "Get SOS, fall and care alerts",
+  "sendInvite": "Send invite",
+  "caregiverInvited": "Caregiver invited",
+  "language": "Language",
+  "languageSettingsSub": "The app and AI replies will use this language where available.",
+  "medicalTermsNote": "Some medical terms may appear in English for safety.",
+  "langEnglish": "English",
+  "langHindi": "Hindi",
+  "langTelugu": "Telugu",
+  "allNotifications": "All notifications",
+  "channels": "Channels",
+  "prefPush": "Push notifications",
+  "prefSms": "SMS",
+  "prefWhatsapp": "WhatsApp",
+  "prefEmail": "Email",
+  "prefMarketing": "Offers & updates",
+  "notificationPrivacyNote": "Lock-screen notifications never show health details.",
+  "privacyConsents": "Privacy & Consents",
+  "privacyIntro": "You are in control. Turn permissions on or off at any time; changes apply immediately.",
+  "grantedOn": "Granted on {date}",
+  "@grantedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "revokeConsentTitle": "Withdraw consent?",
+  "revokeConsentBody": "Features that depend on this consent will stop working.",
+  "revokeRequiredConsentBody": "This consent is required to use CareCompanion. Withdrawing it will limit most features until you grant it again.",
+  "consentTerms": "Terms of use",
+  "consentPrivacy": "Privacy policy",
+  "consentHealthData": "Health data processing",
+  "consentAi": "AI assistance",
+  "consentShareClinicians": "Share with clinicians",
+  "consentFamilySharing": "Family sharing",
+  "consentMarketing": "Marketing communication",
+  "logout": "Log out",
+  "logoutConfirm": "Log out of CareCompanion on this device?",
+  "ok": "OK",
+  "allow": "Allow",
+  "loadMore": "Load more",
+  "couldNotOpenLink": "Could not open the link on this device.",
+  "featureUnavailable": "This feature is not available right now. Please check again later.",
+  "errorMfaRequired": "This is a staff account and needs two-step verification. Please use the CareCompanion staff portal.",
+  "mfaRequiredTitle": "Use the staff portal",
+  "aiUnavailableTitle": "AI assistant is unavailable",
+  "aiUnavailableBody": "The AI health assistant is switched off for now. You can still book a doctor. In an emergency, call 108.",
+  "updateRequiredTitle": "Please update CareCompanion",
+  "updateRequiredBody": "This version is no longer supported. Update to the latest version to keep your care information safe and up to date.",
+  "updateVersionInfo": "Installed {current} · required {minimum} or newer",
+  "@updateVersionInfo": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "Update now",
+  "checkAgain": "Check again",
+  "pushPermissionTitle": "Stay on top of your care",
+  "pushPermissionBody": "Allow notifications for appointment reminders, home-visit updates and urgent safety alerts. Notifications never show health details on the lock screen.",
+  "paymentUnavailable": "Payment could not be started. Please try again in a moment.",
+  "paymentCancelled": "Payment was cancelled. Nothing was charged.",
+  "razorpaySecureNote": "Secure payment by Razorpay: UPI, cards, net banking and wallets.",
+  "checkPaymentStatus": "Check payment status",
+  "paymentConfirming": "We are confirming your payment with the bank. Your booking is confirmed only after this completes.",
+  "payInMobileAppTitle": "Complete payment in the mobile app",
+  "payInMobileAppBody": "Online payment is not available in the browser yet. Open CareCompanion on your Android or iPhone to pay. Your booking stays reserved until then.",
+  "yourData": "Your data",
+  "myDataExport": "My CareCompanion data",
+  "downloadMyData": "Download my data",
+  "downloadMyDataSub": "A copy of your profile, records list, appointments and more (JSON file)",
+  "dataExportReady": "Your data file is ready.",
+  "deleteMyAccount": "Delete my account",
+  "deleteMyAccountSub": "Permanently delete your account after a grace period",
+  "deleteAccount": "Delete account",
+  "deleteAccountIntro": "We are sorry to see you go. Please read what happens before you continue.",
+  "deletionWhatHappens": "What happens",
+  "deletionGracePeriod": "Your account is scheduled for deletion after a grace period (7 days by default). You can cancel any time before then by signing in again.",
+  "deletionRemoved": "Then you are signed out everywhere, family access is removed, and your name, phone number and email are erased.",
+  "deletionDependents": "Personal data of family members you manage is deleted too, unless the law requires us to keep it.",
+  "deletionWhatRetained": "What we must keep",
+  "deletionRetainedBody": "Clinical records, payment records and audit logs are kept for the period the law requires, separated from your identity.",
+  "@deletionRetainedBody": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "deletionExportHint": "Want a copy first? Use \"Download my data\" before deleting.",
+  "deletionReasonOptional": "Reason (optional)",
+  "typeDeleteToConfirm": "Type {word} to confirm",
+  "@typeDeleteToConfirm": {
+    "placeholders": {
+      "word": {
+        "type": "String"
+      }
+    }
+  },
+  "deletionScheduledTitle": "Account deletion scheduled",
+  "deletionScheduledFor": "Your account will be deleted on {date}.",
+  "@deletionScheduledFor": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deletionScheduledNoDate": "Your account will be deleted when the grace period ends.",
+  "deletionScheduledLogoutBody": "Your account will be deleted on {date}. You will now be logged out. To cancel, sign in again before then and tap \"Cancel deletion\".",
+  "@deletionScheduledLogoutBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "deletionCancelHint": "Changed your mind? Cancel now and keep using CareCompanion as before.",
+  "cancelDeletion": "Cancel deletion",
+  "deletionCancelled": "Deletion cancelled. Your account stays active.",
+  "helpSupport": "Help & Support",
+  "helpSupportSub": "Call, WhatsApp or email our care team",
+  "helpSupportIntro": "Questions about bookings, payments or the app? Our team is here to help.",
+  "supportEmergencyNote": "For a medical emergency, call 108 now.",
+  "supportUnavailable": "Support contact details are not available right now.",
+  "supportCall": "Call us",
+  "supportWhatsapp": "Chat on WhatsApp",
+  "supportEmail": "Email us",
+  "supportEmailSubject": "CareCompanion app support",
+  "videoConsultation": "Video consultation",
+  "audioConsultation": "Audio consultation",
+  "joinConsultation": "Join consultation",
+  "consultationOpensIn": "You can join in {time}",
+  "@consultationOpensIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "consultationOpensAt": "Joining opens at {time}",
+  "@consultationOpensAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "consultationOpenNow": "Your consultation room is open. Your doctor will join shortly.",
+  "consultationEnded": "This consultation has ended.",
+  "beforeYouJoin": "Before you join",
+  "beforeYouJoinSub": "A quick check helps your doctor hear and see you clearly.",
+  "checklistCameraMic": "Allow camera and microphone when asked",
+  "checklistMic": "Allow the microphone when asked (camera stays off)",
+  "checklistQuietPlace": "Sit in a quiet, private place",
+  "checklistConnection": "Use a stable Wi-Fi or mobile data connection",
+  "checklistReports": "Keep your reports and medicines nearby",
+  "joinOpensOutside": "The call opens in the Jitsi Meet app if installed, otherwise in your browser.",
+  "joinNow": "Join now",
+  "download": "Download",
+  "share": "Share",
+  "viewPdf": "View PDF",
+  "pdfDocument": "PDF document: {name}",
+  "@pdfDocument": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "pageOf": "Page {page} of {total}",
+  "@pageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfReady": "Your PDF is ready ({size})",
+  "@pdfReady": {
+    "placeholders": {
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfWebNote": "On the web, PDFs open in your browser's own viewer.",
+  "openPdfInNewTab": "Open in a new tab",
+  "photoOf": "Photo of {name}",
+  "@photoOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "ePrescription": "e-Prescription",
+  "@ePrescription": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "ePrescriptions": "From your doctors",
+  "uploadedPrescriptions": "Prescription documents",
+  "noUploadedPrescriptions": "No uploaded prescriptions yet.",
+  "@noUploadedPrescriptions": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noEPrescriptions": "No e-prescriptions yet",
+  "@noEPrescriptions": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noEPrescriptionsBody": "Prescriptions your doctor writes after a consultation appear here.",
+  "@noEPrescriptionsBody": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFromDoctor": "Prescription from {name}",
+  "@rxFromDoctor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "medicinesCount": "{count} medicines",
+  "@medicinesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "registrationNo": "Reg. No. {number}",
+  "@registrationNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "doctorsAdvice": "Advice",
+  "@doctorsAdvice": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "followUp": "Follow-up",
+  "@followUp": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "followUpInDays": "Review after {days} days",
+  "@followUpInDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "digitallyGenerated": "Digitally generated prescription",
+  "@digitallyGenerated": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxDose": "Dose",
+  "@rxDose": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFrequency": "How often",
+  "@rxFrequency": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxTiming": "When",
+  "@rxTiming": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxDuration": "For",
+  "@rxDuration": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxReminderTimes": "Reminders",
+  "durationDays": "{days} days",
+  "@durationDays": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "rxFormTablet": "Tablet",
+  "@rxFormTablet": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormCapsule": "Capsule",
+  "@rxFormCapsule": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormSyrup": "Syrup",
+  "@rxFormSyrup": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormInjection": "Injection",
+  "@rxFormInjection": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormOintment": "Ointment",
+  "@rxFormOintment": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormDrops": "Drops",
+  "@rxFormDrops": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormInhaler": "Inhaler",
+  "@rxFormInhaler": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "rxFormOther": "Other",
+  "orderTheseMedicines": "Order these medicines",
+  "pharmacyUnavailable": "Medicine ordering is not available right now.",
+  "noPharmacyMatches": "This prescription has no medicines to order.",
+  "pharmacyMatchIntro": "We matched your prescription with our partner pharmacy. Choose what to order.",
+  "pharmacyMatchNote": "Check the medicine name and strength before paying. Ask your pharmacist or doctor if anything looks different.",
+  "@pharmacyMatchNote": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "selectMedicines": "Select medicines",
+  "addItemsToCart": "Add {count} to cart · {amount}",
+  "@addItemsToCart": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "notInCatalogue": "Not available from our pharmacy partner",
+  "usingEPrescription": "Using your e-prescription from {doctor} ({date})",
+  "@usingEPrescription": {
+    "placeholders": {
+      "doctor": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "messageCareTeam": "Message care team",
+  "invoice": "Invoice",
+  "invoiceNo": "Invoice {number}",
+  "@invoiceNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "taxInvoice": "Tax invoice",
+  "soldBy": "Sold by",
+  "billedTo": "Billed to",
+  "taxRateLabel": "Tax {rate}%",
+  "@taxRateLabel": {
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "subtotal": "Subtotal",
+  "tax": "Tax",
+  "refundedLabel": "Refunded",
+  "invoiceFooter": "This is a computer-generated invoice and needs no signature.",
+  "purposeSubscription": "Family Care Plan",
+  "paymentsSub": "History and invoices",
+  "reviewPromptTitle": "How was your care?",
+  "yourRating": "Your rating",
+  "notRatedYet": "Not rated yet",
+  "rateStars": "Rate {count} out of 5",
+  "@rateStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ratingOutOfFive": "{count} out of 5 stars",
+  "@ratingOutOfFive": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCommentOptional": "Tell us more (optional)",
+  "reviewCommentHint": "What went well? What could be better?",
+  "reviewModerationInfo": "A rating on its own is published right away. Comments are checked by our team first.",
+  "submitReview": "Submit",
+  "reviewThanksPublished": "Thank you! Your rating is published.",
+  "reviewThanksPending": "Thank you! Your review will appear after a quick check.",
+  "reviewsModerationNote": "Reviews come from verified patients and are checked before they appear.",
+  "inbox": "Messages",
+  "inboxUnread": "Messages, {count} unread",
+  "@inboxUnread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inboxEmpty": "No conversations yet",
+  "inboxEmptyBody": "When you have an active care episode, you can message your care team here.",
+  "unreadMessages": "{count} unread",
+  "@unreadMessages": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "careTeamMessages": "Care team",
+  "noMessagesYet": "No messages yet",
+  "noMessagesYetBody": "Ask your doctor or care coordinator a question about this episode.",
+  "messageHint": "Write a message",
+  "attachRecord": "Attach a record",
+  "attachedRecord": "Attached record",
+  "messagingNotForEmergencies": "Not for emergencies. In an emergency call 108.",
+  "youSaid": "You: {text}",
+  "@youSaid": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "senderSaid": "{sender}: {text}",
+  "@senderSaid": {
+    "placeholders": {
+      "sender": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "roleDoctor": "Doctor",
+  "roleCoordinator": "Care coordinator",
+  "roleCareTeam": "Care team",
+  "roleFamily": "Family",
+  "rolePatient": "Patient",
+  "roleSystem": "CareCompanion",
+  "familyCarePlan": "Family Care Plan",
+  "familyCarePlanSub": "Savings and a care coordinator for your family",
+  "familyPlanIntro": "One plan for the whole family: discounts on home visits and extra support from our care team.",
+  "noPlansAvailable": "No plans are available right now",
+  "billingMonthly": "Monthly",
+  "billingYearly": "Yearly",
+  "billingYearlySave": "Yearly · save {pct}%",
+  "@billingYearlySave": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "perMonth": " / month",
+  "perYear": " / year",
+  "planYearlySavings": "You save {amount} ({pct}%) a year",
+  "@planYearlySavings": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "planMembers": "Covers up to {count} family members",
+  "@planMembers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "planHomeVisitDiscount": "{pct}% off home visits",
+  "@planHomeVisitDiscount": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "planCoordinatorIncluded": "A dedicated care coordinator",
+  "subscribeFor": "Subscribe · {amount}",
+  "@subscribeFor": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "planPaymentTitle": "{name} subscription",
+  "@planPaymentTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planActivated": "{name} is now active",
+  "@planActivated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planPendingPayment": "Your {name} payment is not complete yet. Subscribe again to finish.",
+  "@planPendingPayment": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planPrepaidNote": "Plans are prepaid for the period you choose. We remind you 7 days before it ends.",
+  "planActive": "Active",
+  "planRenewsOn": "Current period ends on {date}",
+  "@planRenewsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planEndsOn": "Ends on {date}",
+  "@planEndsOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planBenefits": "Your benefits",
+  "planCancelScheduled": "Your plan will not renew. Benefits continue until the end date.",
+  "cancelAtPeriodEnd": "Cancel at period end",
+  "cancelPlanTitle": "Cancel your plan?",
+  "cancelPlanBody": "Your benefits continue until {date}. After that the plan will not renew.",
+  "@cancelPlanBody": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelPlanBodyNoDate": "Your benefits continue until the end of the current period.",
+  "keepPlan": "Keep plan",
+  "planDiscountApplied": "Family Care Plan discount: −{amount}",
+  "@planDiscountApplied": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "planDiscountWillApply": "Your Family Care Plan discount is applied when you book.",
+  "govtSchemes": "Govt. Health Schemes",
+  "schemesDisclaimer": "Information only. This app does not decide whether you are eligible; the scheme authority does.",
+  "yourState": "Your state",
+  "allStates": "All states",
+  "centralSchemesAlwaysShown": "Central government schemes are always listed.",
+  "noSchemes": "No schemes to show",
+  "centralScheme": "Central",
+  "stateScheme": "State · {state}",
+  "@stateScheme": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "aboutScheme": "About",
+  "schemeBenefits": "Benefits",
+  "mayBeRelevantIf": "May be relevant if…",
+  "eligibilityNotDetermined": "These are hints, not an eligibility check. Confirm with the official source.",
+  "documentsTypicallyNeeded": "Documents usually needed",
+  "helpline": "Helpline",
+  "openOfficialWebsite": "Open official website",
+  "lastReviewedOn": "Information last reviewed on {date}",
+  "@lastReviewedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "abhaTitle": "ABHA (Health ID)",
+  "abhaIntro": "Add your Ayushman Bharat Health Account number or address to keep it with your profile.",
+  "abhaNumber": "ABHA number",
+  "abhaAddress": "ABHA address",
+  "addAbha": "Add ABHA",
+  "notVerified": "Not verified",
+  "abhaEditHint": "Enter the 14-digit number or the address (for example name@abdm).",
+  "abhaEnterOne": "Enter an ABHA number or address",
+  "abhaNumberInvalid": "ABHA number must have 14 digits",
+  "abhaAddressInvalid": "Use the form name@abdm",
+  "abhaVerifyComingSoonTitle": "Coming soon",
+  "abhaVerifyComingSoon": "ABDM verification is coming soon. Your ABHA details are saved and will be verified once the connection is ready.",
+  "wearablePurpose": "With your permission we read steps, heart rate, sleep, SpO2, blood pressure, glucose and weight so you and your care team can see trends. You choose each type.",
+  "@wearablePurpose": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "chooseDataToShare": "Choose what to read from {name}",
+  "@chooseDataToShare": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "metricSteps": "Steps",
+  "metricSpo2": "Blood oxygen (SpO2)",
+  "@metricSpo2": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "metricBloodPressure": "Blood pressure",
+  "@metricBloodPressure": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "metricGlucose": "Blood glucose",
+  "@metricGlucose": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "metricWeight": "Weight",
+  "healthConnect": "Health Connect",
+  "appleHealth": "Apple Health",
+  "healthConnectMissingTitle": "Health Connect is needed",
+  "healthConnectUpdateTitle": "Please update Health Connect",
+  "healthConnectMissingBody": "Your watch and fitness apps share data through Google Health Connect. Install or update it from the Play Store, then come back.",
+  "openPlayStore": "Open Play Store",
+  "healthPermissionDenied": "Access was not allowed. You can allow it any time in Health Connect (Android) or Settings → Health → Data Access (iPhone), then tap Connect again.",
+  "wearablesUnsupported": "Health data sync works in the CareCompanion app on Android and iPhone. It is not available in the web version.",
+  "syncedReadings": "Synced {count} readings",
+  "@syncedReadings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncing": "Syncing…",
+  "syncNow": "Sync now",
+  "autoSyncNote": "We also sync when you open the app (at most every 30 minutes).",
+  "otherDevices": "Other devices",
+  "healthDataPrivacy": "Health data & privacy",
+  "healthPrivacyIntro": "How CareCompanion uses the health data you allow",
+  "healthPrivacyPoint1": "We only read the types you switch on, and never write to your health store.",
+  "healthPrivacyPoint2": "Readings are shown to you and to clinicians caring for you.",
+  "healthPrivacyPoint3": "We never sell your data or use it for advertising.",
+  "healthPrivacyPoint4": "You can disconnect at any time from Linked devices.",
+  "readPrivacyPolicy": "Read the privacy policy",
+  "fallDetectToggle": "Detect falls while the app is open",
+  "fallDetectOn": "On: we watch the phone's motion sensor while CareCompanion is open.",
+  "fallDetectOff": "Off",
+  "fallDetectUnsupported": "Available in the Android and iPhone app",
+  "fallForegroundOnly": "Works only while the app is open on screen. It does not run in the background.",
+  "fallNotMedicalDevice": "A supportive feature, not a medical device. It can miss falls or raise false alarms.",
+  "@fallNotMedicalDevice": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "readRepliesAloud": "Read replies aloud",
+  "changePhoto": "Change profile photo",
+  "photoUpdated": "Profile photo updated",
+  "photoTooLarge": "The photo is larger than 5 MB",
+  "appearance": "Appearance",
+  "themeSystem": "System default",
+  "themeSystemSub": "Follows your phone's setting",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "itemsCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@itemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+# Deploy API + worker + web to AWS ECS (Fargate).
+#
+# Triggers
+#   * push of a tag v*        -> staging, then production (production waits for approval)
+#   * manual (Actions tab)    -> the chosen environment only
+#
+# One-time setup (see docs/runbooks/DEPLOYMENT_RUNBOOK.md §3):
+#   GitHub -> Settings -> Environments -> create "staging" and "production".
+#     production: Required reviewers = tech lead + ops/product lead;
+#                 Deployment branches and tags = "Selected" -> tags v*
+#     staging:    optional reviewers; branches main + tags v*
+#   Environment VARIABLES (per environment, no secrets needed thanks to OIDC):
+#     AWS_DEPLOY_ROLE_ARN   terraform output github_deploy_role_arn
+#     AWS_REGION            ap-south-1
+#     API_BASE_URL          terraform output api_url    e.g. https://api.carecompanion.in/api/v1
+#     PORTAL_URL            terraform output portal_url e.g. https://portal.carecompanion.in
+#   Optional web build-time variables (baked into the bundle; blank = app default):
+#     NEXT_PUBLIC_LEGAL_DRAFT (true until counsel approves the legal texts), NEXT_PUBLIC_JITSI_DOMAIN,
+#     NEXT_PUBLIC_SUPPORT_EMAIL, NEXT_PUBLIC_SUPPORT_PHONE, NEXT_PUBLIC_LEGAL_ENTITY_NAME,
+#     NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME, NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL
+name: Deploy
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options: [staging, production]
+        default: staging
+      run_migrations:
+        description: Run the one-off migration task before updating services
+        type: boolean
+        default: true
+      smoke:
+        description: Run smoke tests after the rollout (turn off for the very first bootstrap deploy)
+        type: boolean
+        default: true
+
+permissions:
+  id-token: write # OIDC -> AWS
+  contents: read
+
+jobs:
+  staging:
+    if: github.event_name == 'push' || inputs.environment == 'staging'
+    uses: ./.github/workflows/deploy-environment.yml
+    with:
+      environment: staging
+      run_migrations: ${{ github.event_name == 'push' || inputs.run_migrations }}
+      smoke: ${{ github.event_name == 'push' || inputs.smoke }}
+
+  production:
+    needs: staging
+    # Tag push: only after staging succeeded. Manual: staging is skipped, which is allowed.
+    if: ${{ !cancelled() && !failure() && (github.event_name == 'push' || inputs.environment == 'production') }}
+    uses: ./.github/workflows/deploy-environment.yml
+    with:
+      environment: production
+      run_migrations: ${{ github.event_name == 'push' || inputs.run_migrations }}
+      smoke: ${{ github.event_name == 'push' || inputs.smoke }}

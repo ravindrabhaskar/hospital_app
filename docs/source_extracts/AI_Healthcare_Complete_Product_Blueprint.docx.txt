@@ -1,0 +1,967 @@
+
+AI-POWEREDCONNECTED HEALTHCARE
+Complete Product Groundwork & Launch Blueprint
+53-point product definition for taking the concept from specification to controlled commercial launch
+
+Core direction: Build a care-orchestration platform, not just a healthcare super-app or AI chatbot.
+ | 
+Version 1.0  |  September 2026
+
+How to Use This Document
+This document consolidates the complete launch-oriented product definition into 53 product, clinical, operational, regulatory, technical, commercial and validation decisions. It is intended to be used as the master reference for founders, product, design, engineering, clinical governance, operations and partner teams.
+Primary launch thesis: one intelligent care system that takes a person from health concern to appropriate care and stays with them through follow-up.
+ | 
+Sections 1–27
+ | Sections 28–53
+ | 1. Final product definition
+ | 2. One-line product promise
+ | 3. Core problem being solved
+ | 4. Initial customer segment
+ | 5. Initial launch geography
+ | 6. Flagship use case
+ | 7. Core object: Care Episode
+ | 8. Final launch MVP
+ | 9. Patient application
+ | 10. AI Care Assistant
+ | 11. AI architecture
+ | 12. Clinical safety model
+ | 13. Doctor consultation product
+ | 14. Home Checkup product
+ | 15. Provider categories
+ | 16. Family Care
+ | 17. Health Timeline
+ | 18. Care Plan
+ | 19. Report upload
+ | 20. Medication module
+ | 21. Emergency experience
+ | 22. Wound functionality
+ | 23. Mental wellness
+ | 24. Wearables
+ | 25. ABDM strategy
+ | 26. Privacy architecture
+ | 27. Provider credentialing
+ | 28. Provider training
+ | 29. Operations Control Tower
+ | 30. Customer support
+ | 31. Partner strategy
+ | 32. Revenue model
+ | 33. Proposed subscription product
+ | 34. Unit economics model
+ | 35. Core product KPIs
+ | 36. Technology architecture
+ | 37. Expanded data model
+ | 38. Auditability
+ | 39. Regulatory product boundary
+ | 40. Clinical Governance Board
+ | 41. Product approval process
+ | 42. AI evaluation before launch
+ | 43. Security groundwork
+ | 44. Customer research plan
+ | 45. Manual concierge pilot
+ | 46. Prototype testing
+ | 47. Controlled MVP pilot
+ | 48. Pilot success criteria
+ | 49. Launch GO / NO-GO framework
+ | 50. 90-day execution plan
+ | 51. What not to build before pilot success
+ | 52. What becomes the moat
+ | 53. Final product hierarchy
+ | 
+ | 
+
+1. Final product definition
+The product should be positioned as an AI-powered healthcare companion and care-coordination platform that helps patients and families understand a health concern, reach the appropriate care, coordinate home and digital healthcare, maintain longitudinal health information, and complete follow-up.
+The product should not be positioned as an “AI doctor,” “AI diagnosis app,” “symptom checker app,” “doctor marketplace,” “home-healthcare marketplace,” or “medical-record locker.” It may contain capabilities from those categories, but the differentiation is the connected care journey.
+Strategic category: AI-powered care orchestration.
+ | 
+2. One-line product promise
+Tell us what is happening. We help you understand the next step, connect you to the right care, organize everything, and stay with you through follow-up.
+ | 
+Short consumer version: “From health concern to care to recovery — one connected companion.”
+3. Core problem being solved
+The patient’s problem is not the absence of healthcare apps. It is fragmentation. A typical journey may involve search or AI for symptoms, a separate doctor-search app, a hospital, reports on WhatsApp, a laboratory app, pharmacy, paper prescriptions, family calls, reminders and follow-up—without one party coordinating the episode end to end.
+• Uncertainty about what level of care is needed.
+• Health information scattered across providers, documents and apps.
+• Difficulty arranging routine care at home.
+• Manual family coordination of appointments, medicines, reports and follow-ups.
+• Language and health-literacy barriers.
+• Limited continuity after a consultation.
+Problem statement: Patients and families lack a trusted orchestration layer connecting health concerns, patient context, professional care, home support, records and follow-up.
+ | 
+4. Initial customer segment
+Do not launch for “everyone.” The initial primary customer should be families managing healthcare for themselves and parents or dependents.
+Segment
+ | Primary problem
+ | Adults managing elderly parents
+ | Remote coordination, medicines, appointments, reports
+ | Chronic-care families
+ | Repeat consultations, vitals, reports, monitoring
+ | Post-discharge patients
+ | Follow-up, home care, medicines, warning signs
+ | Mobility-limited patients
+ | Difficulty reaching clinics
+ | Busy working families
+ | Coordination and time problem
+ | Multilingual / low-digital-literacy users
+ | Navigation and comprehension difficulty
+ | 
+Secondary customers: doctors, clinics, hospitals, employers and later insurers/TPAs.
+5. Initial launch geography
+Start in one city rather than attempting an India-wide launch. Provider density, operational reliability and response time matter more than download volume.
+• Select a city where doctor, home-care, diagnostics, hospital and operations networks can be built quickly.
+• Begin with a 5–10 km micro-zone, then expand toward a 15–20 km service area, then city-wide only after SLA performance is stable.
+• A Hyderabad pilot is a reasonable model if the founding/provider network is concentrated there.
+6. Flagship use case
+Patient/family has a health concern → AI gathers structured context → safety layer identifies the appropriate next step → home or digital care occurs → doctor receives complete context → care plan created → records retained → family/follow-up coordinated.
+ | 
+Example: A 62-year-old mother reports dizziness. The AI gathers age, onset, duration, conditions, medicines, related symptoms and available vitals. The safety layer checks red flags. If suitable, a home assessment captures approved vitals; the doctor receives the structured context and records, consults, creates a care plan, and the family is kept informed according to permissions. The episode remains active until resolved or transitioned to ongoing care.
+7. The central product object: Care Episode
+Add an explicit CareEpisode object to the product architecture. Every interaction related to one health concern should attach to the same episode.
+Field
+ | Purpose
+ | episode_id
+ | Unique case identifier
+ | patient_id
+ | Patient
+ | initiated_by
+ | Patient / caregiver / provider
+ | concern
+ | Main reason
+ | created_at
+ | Start time
+ | status
+ | New / active / follow-up / resolved / escalated
+ | urgency
+ | Routine / priority / urgent
+ | assigned_clinician
+ | Responsible doctor
+ | assigned_provider
+ | Home/field professional
+ | summary
+ | Current case summary
+ | care_plan_id
+ | Linked care plan
+ | next_action
+ | Pending action
+ | follow_up_date
+ | Follow-up
+ | resolution
+ | Closure status
+ | 
+Attach AI interactions, appointments, home assessments, vitals, documents, consultations, prescriptions, tests, care plans, reminders, follow-ups and escalations to the CareEpisode.
+8. Final launch MVP
+Module
+ | Launch decision
+ | Priority / comment
+ | Registration / OTP
+ | Yes
+ | P0
+ | Consent
+ | Yes
+ | P0
+ | Patient profile
+ | Yes
+ | P0
+ | Family profiles
+ | Yes
+ | P0
+ | AI Care Assistant
+ | Yes
+ | P0
+ | Structured symptom intake
+ | Yes
+ | P0
+ | Safety/red-flag engine
+ | Yes
+ | P0
+ | Care Episodes
+ | Yes
+ | New P0
+ | Doctor discovery
+ | Yes
+ | P0
+ | Appointment booking
+ | Yes
+ | P0
+ | Teleconsultation
+ | Yes
+ | P0/P1 depending partner
+ | Home Checkup
+ | Yes
+ | P0
+ | Provider assignment
+ | Yes
+ | P0
+ | Vitals capture
+ | Yes
+ | P0
+ | Report upload
+ | Yes
+ | P0
+ | Health Timeline
+ | Yes
+ | P0
+ | Care Plan
+ | Yes
+ | New P0
+ | Medication reminders
+ | Yes
+ | P0
+ | Follow-up management
+ | Yes
+ | P0
+ | Caregiver access
+ | Yes
+ | P0
+ | Notifications
+ | Yes
+ | P0
+ | Emergency pathway
+ | Yes
+ | P0
+ | Clinician portal
+ | Yes
+ | P0
+ | Provider/field app
+ | Yes
+ | P0
+ | Operations/admin console
+ | Yes
+ | P0
+ | Medicines marketplace
+ | Partner
+ | P1
+ | Diagnostics marketplace
+ | Partner
+ | P1
+ | Hospital discovery
+ | Basic
+ | P1
+ | Wound AI diagnosis
+ | No
+ | Later
+ | Wound photo + doctor review
+ | Later
+ | P1
+ | Mental wellness AI
+ | No
+ | Later
+ | Fall detection
+ | No
+ | Later
+ | Wearables
+ | No
+ | Later
+ | Government schemes
+ | No
+ | Later
+ | AR/VR
+ | No
+ | Future
+ | 
+9. Patient application
+Keep five primary navigation items: Home | Care | Ask AI | Records | Profile.
+• Home: greeting, family switcher, notifications, primary AI entry, active care episodes, upcoming appointments, home-visit status and reminders.
+• Care: doctor consultation, home checkup, appointments and care plans.
+• Ask AI: structured conversational entry point to health concerns and service navigation.
+• Records: longitudinal Health Timeline and uploaded reports.
+• Profile: personal information, family access, consent, privacy, security and connected services.
+The home screen should reduce decision burden. Keep four major quick actions—Doctor, Home Checkup, Upload Report and My Family—and move secondary features deeper into the relevant care flows.
+10. AI Care Assistant
+The AI Care Assistant should perform eight jobs rather than behave like a generic chatbot.
+Job
+ | Function
+ | Understand
+ | Understand natural-language concern
+ | Collect
+ | Ask missing structured questions
+ | Contextualize
+ | Retrieve permitted history
+ | Screen
+ | Send data to the safety engine
+ | Navigate
+ | Recommend an appropriate service/pathway
+ | Summarize
+ | Create a structured clinician briefing
+ | Coordinate
+ | Trigger bookings and reminders
+ | Explain
+ | Explain reports/care information within safe scope
+ | 
+It should not independently diagnose disease, prescribe or change medicines, declare a patient medically safe, determine treatment, or replace clinician judgment.
+11. AI architecture
+User → input normalization → patient/context retrieval → structured intake engine → clinical safety rules → LLM/RAG assistance → policy/guardrail layer → response or escalation → audit
+ | 
+The clinical safety engine must operate independently of the generative model.
+• Conversation model
+• Medical terminology service
+• RAG service
+• Document extraction/summarization
+• Clinician-summary generator
+• Translation
+• Speech-to-text
+• Text-to-speech
+• Classification engine
+• Safety policy service
+• AI evaluation service
+• AI audit service
+Every AI event should retain model and version, prompt/policy version, input references, relevant patient context, output, risk classification, safety trigger, escalation outcome, user-visible response and timestamp.
+12. Clinical safety model
+Internal class
+ | System behaviour
+ | S0 — Information
+ | General educational response within defined scope
+ | S1 — Routine care
+ | Normal doctor/home-care scheduling pathway
+ | S2 — Priority
+ | Faster professional review recommended
+ | S3 — Emergency
+ | Normal chatbot flow becomes secondary; urgent pathway displayed
+ | 
+These classes are internal routing categories, not diagnoses. The red-flag engine should use clinician-approved rules and cover high-frequency/high-risk concerns such as fever, headache, dizziness, respiratory symptoms, BP/glucose concerns, abdominal symptoms, elderly weakness, post-discharge symptoms and defined emergency red flags.
+13. Doctor consultation product
+Doctor discovery should support specialty, availability, location, consultation type, verification, language and service capability, but it should not be the main differentiator.
+Before consultation, the clinician should see a compact Clinical Snapshot containing reason for visit, patient demographics, known conditions, current medicines, current vitals, recent records, structured AI summary, safety flags and source attribution.
+• Start consultation
+• Review timeline and reports
+• Record clinical notes
+• Create prescription where legally permitted
+• Create care plan
+• Schedule follow-up
+• Override or correct AI suggestions
+• Maintain audit trail
+14. Home Checkup product
+Home Checkup should become one of the strongest modules because it connects the digital layer to real physical care.
+Patient journey: Request home care → reason → address → slot → price → confirmation → provider assigned → provider identity/qualification → ETA → arrival → identity/consent verification → assessment → vitals → escalation if needed → visit completion → care summary → next step.
+Operations journey: Request → serviceability → provider matching → acceptance → dispatch → arrival → identity verification → checklist → measurements → clinical escalation → completion → quality control → settlement → follow-up.
+15. Provider categories
+Replace ambiguous operational labels such as “intern doctor” with explicit professional categories and a reviewed Scope-of-Service Matrix.
+Activity
+ | Doctor
+ | Nurse
+ | Phlebotomist
+ | Coordinator
+ | Collect BP
+ | Yes
+ | Yes
+ | As permitted
+ | No
+ | Collect blood sample
+ | If applicable
+ | If trained
+ | Yes
+ | No
+ | Diagnose
+ | Yes
+ | No
+ | No
+ | No
+ | Prescribe
+ | RMP as legally permitted
+ | No
+ | No
+ | No
+ | Capture structured history
+ | Yes
+ | Yes
+ | Limited
+ | Yes
+ | Escalate concern
+ | Yes
+ | Yes
+ | Yes
+ | Yes
+ | Change medicines
+ | RMP only
+ | No
+ | No
+ | No
+ | 
+Possible platform categories: Registered Medical Practitioner, registered nurse, phlebotomist, physiotherapist, qualified allied-health professional, care coordinator and home-care attendant where applicable. Final permissions require professional and legal review.
+16. Family Care
+Family Care should be a major commercial differentiator rather than a settings feature. Users can create or link profiles for self, father, mother, spouse, child or other authorized dependents.
+• Show active care episode, next appointment, medication reminders, recent reports, care plan, home visit and follow-up for each member.
+• Use granular permissions for booking, viewing appointments, receiving alerts, viewing medications and accessing selected records.
+• Allow access to be revoked.
+• Apply additional restrictions where particular health information requires more sensitive permission handling.
+17. Health Timeline
+Upgrade “Medical Records” from a document locker into a chronological Health Timeline containing visits, reports, prescriptions, consultations, vitals, care plans and follow-ups.
+• Patient entered
+• AI extracted
+• Imported
+• Provider recorded
+• Doctor verified
+• Lab issued
+• Hospital issued
+Every item should carry source/provenance, timestamp and verification status so clinicians and families can distinguish what is authoritative from what is user-provided or machine-extracted.
+18. Care Plan
+Care Plan should become a first-class product object after every significant consultation or clinical review.
+• Concern
+• Clinical assessment
+• Medicines
+• Tests
+• Lifestyle/instructions
+• Symptoms to watch
+• Restrictions
+• Next follow-up
+• Responsible provider
+• Completion state
+Convert each action into a trackable care task, such as medicine started, blood test pending, BP check due or doctor follow-up scheduled. Measure care-plan completion—not only consultation completion.
+19. Report upload
+Supported inputs: PDF, photo, lab report, prescription and imaging report.
+File safety scan → quality check → document classification → text extraction → structured-field extraction where appropriate → source preservation → AI explanation → doctor sharing
+ | 
+Never hide the source document. AI summaries and extracted values should always be traceable back to the original report.
+20. Medication module
+• Current medication list
+• Dose
+• Schedule
+• Start date
+• End date
+• Prescriber/source
+• Reminder
+• Taken/skipped status
+• Refill reminder
+The system must not independently recommend medication changes. For fulfilment, integrate with licensed pharmacy partners rather than building a pharmacy supply chain in the first version.
+21. Emergency experience
+Emergency behaviour must be precise and conservative. When emergency red flags are detected, normal chatbot interaction becomes secondary.
+• Display urgent-care instruction
+• Call configured emergency service
+• Call selected hospital/provider where supported
+• Notify permitted family contact
+• Share location where permitted
+• Display emergency medical profile including key allergies, conditions and medicines
+Do not promise ambulance dispatch unless a real contractual and technical dispatch integration exists.
+22. Wound functionality
+Do not launch “AI wound diagnosis.” A safer future version is Wound Tracking: image upload, image-quality check, timestamp, progress comparison, note attachment, clinician sharing and clinician review.
+AI may assist with image quality and structured comparison after appropriate validation. Diagnostic or monitoring claims must be reviewed for clinical and regulatory implications before release.
+23. Mental wellness
+Move mental wellness outside the MVP. A later version may include mood tracking, guided wellness activities, professional appointments, non-diagnostic AI support and safety escalation, but the core medical care journey should be proven first.
+24. Wearables
+Postpone wearable integration until the core care journey is operational. Future integrations may include Apple Health, Health Connect, Fitbit ecosystems and supported device partners.
+• Possible metrics: heart rate, activity, steps, sleep, SpO₂ where supported, and fall events.
+• Store source device, timestamp, measurement type, unit and reliability/verification metadata.
+• Do not treat a single consumer wearable measurement as a diagnosis.
+25. ABDM strategy
+Treat ABDM as infrastructure, not as something to replace. The product should act as the care-orchestration and operations layer sitting on top of interoperable national health infrastructure where appropriate.
+• ABHA architecture
+• HPR verification options
+• HFR verification options
+• ABDM sandbox
+• FHIR interoperability
+• Consent-based record exchange
+• HIP/HIU role analysis
+• UHI assessment
+Target architecture: Your care-orchestration platform <-> ABDM/interoperability layer <-> clinics, hospitals, labs and patient records.
+ | 
+26. Privacy architecture
+Privacy must be a product capability, not merely a legal document. Every sensitive data action should answer who can access it, for what purpose, for how long, whether the user can revoke access and what was accessed.
+• Consent ledger
+• Role-based access control
+• Least privilege
+• Encryption in transit and at rest
+• Access audit history
+• Purpose limitation
+• Retention and deletion policies
+• Sharing controls
+• Data export
+• Security monitoring
+• Incident and breach response
+The final data-flow design should be reviewed against the current Indian privacy framework before production launch.
+27. Provider credentialing
+• Identity
+• Qualification
+• Registration/license where applicable
+• Specialty
+• Experience
+• Facility affiliation
+• Bank/payment details
+• Service area
+• Language
+• Availability
+• Background validation where appropriate
+• Agreement
+• Training status
+• Quality status
+• Suspension status
+Provider statuses: Applied → Documents pending → Under review → Verified → Active → Temporarily inactive → Suspended / Rejected.
+Do not display “verified” simply because a provider entered a registration number. Verification must be based on defined evidence and review.
+28. Provider training
+• Platform usage
+• Patient consent
+• Identity verification
+• Documentation
+• Data privacy
+• Visit SOP
+• Clinical boundaries
+• Escalation procedure
+• Emergency workflow
+• Professional conduct
+• Incident reporting
+Training completion, assessments and refreshers should be recorded in the provider profile and tied to activation eligibility.
+29. Operations Control Tower
+The internal operations console should be treated as a core product, not a back-office afterthought.
+Area
+ | What to monitor
+ | Incoming demand
+ | New care requests
+ | Allocation
+ | Unassigned home visits
+ | Provider status
+ | Available / occupied / offline
+ | SLA
+ | Late assignments / arrivals
+ | Clinical
+ | Escalation queue
+ | Doctor
+ | Pending consultations
+ | Follow-up
+ | Due / overdue
+ | Safety
+ | High-risk events
+ | Quality
+ | Complaints / low ratings
+ | Finance
+ | Payments / refunds
+ | Support
+ | Open tickets
+ | AI
+ | Safety triggers / failures
+ | Platform
+ | Service status
+ | 
+30. Customer support
+Level
+ | Scope
+ | L1 — Customer operations
+ | Booking, payments, rescheduling, navigation, provider status
+ | L2 — Care coordination
+ | Care-plan follow-up, provider coordination, records, family coordination
+ | L3 — Clinical escalation
+ | Clinical questions and escalations handled only by appropriately qualified medical personnel
+ | 
+Support staff must never unintentionally cross into clinical advice outside their permitted role.
+31. Partner strategy
+Partner initially for infrastructure-heavy or highly regulated fulfilment categories, while owning the care journey and orchestration layer.
+Partner / integrate
+ | Own as core product
+ | Pharmacy
+ | Care journey
+ | Diagnostics
+ | Patient experience
+ | Ambulance/emergency transport
+ | Provider workflow
+ | Video infrastructure
+ | Clinical context
+ | SMS / WhatsApp
+ | Care Episodes
+ | Payments
+ | Family coordination
+ | Maps
+ | Health Timeline
+ | Cloud
+ | Follow-up
+ | Hospital referrals
+ | Operational intelligence
+ | 
+32. Revenue model
+Launch revenue should be tied to completed care and coordination value, not simply AI access.
+Revenue stream
+ | Launch stage
+ | Doctor consultation commission/fee
+ | MVP
+ | Home visit fee/margin
+ | MVP
+ | Family care plan
+ | Early post-pilot
+ | Clinic/provider SaaS
+ | After clinician workflow validation
+ | Corporate plan
+ | Phase 2
+ | Hospital follow-up programme
+ | Phase 2
+ | Remote monitoring
+ | Later
+ | API/integration
+ | Later
+ | 
+Do not make the business dependent on a paid AI-chat subscription.
+33. Proposed subscription product
+A later Family Care Plan can bundle multiple family profiles, care coordinator, shared reminders, care-plan tracking, priority booking, Health Timeline, periodic health review, caregiver alerts and preferential home-service pricing.
+Pricing must be validated with real willingness-to-pay research and pilot economics rather than copied from competitors.
+34. Unit economics model
+Home visit contribution
+Revenue − provider payout − transport contribution − consumables − payment gateway − communications − variable support − variable AI cost − refund/failed-visit provision = contribution margin.
+Consultation contribution
+Revenue − doctor payout − video/infrastructure − payment cost − support − AI cost = contribution margin.
+Subscription contribution
+Monthly revenue − included service cost − care coordinator cost − support − infrastructure − communications = contribution margin.
+Do not rely only on GMV or downloads. Track unit economics at the care-episode level.
+35. Core product KPIs
+Category
+ | KPI
+ | Acquisition
+ | CAC
+ | Activation
+ | Registration → first care action
+ | AI
+ | AI conversation completion
+ | Navigation
+ | AI → appropriate care conversion
+ | Doctor
+ | Booking and completion
+ | Home care
+ | Booking and completion
+ | SLA
+ | Assignment time
+ | SLA
+ | Provider arrival time
+ | Continuity
+ | Follow-up completion
+ | Care
+ | Care-plan completion
+ | Family
+ | Family profile activation
+ | Retention
+ | 30/60/90-day repeat use
+ | Economics
+ | Revenue per care episode
+ | Economics
+ | Contribution margin
+ | Quality
+ | Complaint rate
+ | Provider
+ | Acceptance / utilization
+ | Safety
+ | Escalation events
+ | AI safety
+ | False positive / false negative
+ | Clinical
+ | Doctor override rate
+ | B2B
+ | Provider retention
+ | 
+36. Technology architecture
+Client
+• Flutter patient app
+• Flutter provider app where appropriate
+• React/Next.js clinician web
+• React/Next.js admin/operations portal
+Backend
+• API gateway
+• Authentication service
+• User/patient service
+• Care-episode service
+• Appointment service
+• Home-care service
+• Records service
+• Medication service
+• Notification service
+• Billing service
+• Provider service
+• Consent service
+AI
+• LLM gateway
+• RAG service
+• Structured intake service
+• Document service
+• Speech service
+• Translation service
+• Safety policy service
+• Evaluation service
+Data / infrastructure
+• PostgreSQL
+• Object storage
+• Redis
+• Message queue
+• Vector store where required
+• Immutable/auditable event logs
+• AWS/Azure/GCP subject to final security/commercial decision
+37. Proposed expanded data model
+Recommended core entities:
+• User
+• Patient
+• FamilyRelationship
+• Consent
+• Doctor
+• Provider
+• ProviderCredential
+• Facility
+• CareEpisode
+• AIInteraction
+• ClinicalSafetyEvent
+• Appointment
+• HomeVisit
+• VitalMeasurement
+• MedicalRecord
+• Condition
+• Allergy
+• Medication
+• Prescription
+• CarePlan
+• CareTask
+• FollowUp
+• Notification
+• DeviceConnection
+• Payment
+• Refund
+• SupportTicket
+• Complaint
+• AuditLog
+38. Auditability
+For sensitive operations, record who acted, what was done, when, from where, on which patient, for what purpose, permission state, relevant before/after state and outcome.
+For AI, record model version, prompt/policy version, retrieved sources, risk rules triggered, output, human review and final clinical decision. Normal application logs should not be the only audit mechanism.
+39. Regulatory product boundary
+Create a Regulatory Feature Register so every AI/health capability has an explicit intended-use and regulatory assessment before marketing or release.
+Register field
+ | What to capture
+ | Feature
+ | Name and version
+ | Intended use
+ | What the feature is meant to do
+ | User
+ | Patient / clinician / provider / admin
+ | Input
+ | Data used
+ | Output
+ | What is produced
+ | Clinical consequence
+ | How output may affect care
+ | Claims
+ | Diagnostic / monitoring / treatment claim?
+ | Human review
+ | Required or not
+ | Regulatory assessment
+ | Counsel/regulatory conclusion
+ | Launch decision
+ | Release / restrict / defer
+ | 
+Features that create diagnostic, monitoring, prevention or treatment claims need specific regulatory review before release.
+40. Clinical Governance Board
+Create a standing governance body before launch.
+• Medical director
+• General physician
+• Relevant specialists as needed
+• Nursing/allied-health representative
+• Clinical operations representative
+• Privacy/security representative
+• Product lead
+• Regulatory/legal advisor
+Responsibilities: approve SOPs and safety rules, review incidents and complaints, review AI errors, approve clinical content and approve new clinical functionality.
+41. Product approval process
+Product proposal → risk classification → clinical review → legal/regulatory review if required → technical design → validation → controlled release → monitoring → full release
+ | 
+No clinically sensitive feature should move directly from Product → Engineering → Production.
+42. AI evaluation before launch
+Build a gold-standard evaluation set and have clinical reviewers define expected behaviour.
+• Common symptoms
+• High-risk symptoms
+• Multiple conditions
+• Children and elderly scenarios
+• Medication interaction questions
+• Missing information
+• Contradictory information
+• Unclear language
+• Colloquial speech
+• Regional-language tests when supported
+• Poor speech recognition
+• Wrong report upload
+• Fake document
+• Prompt injection
+• Attempts to force diagnosis
+• Emergency scenarios
+For every test case capture expected behaviour, AI behaviour, safety outcome, clinical review and pass/fail status.
+43. Security groundwork
+• Threat modelling
+• Secure architecture review
+• Dependency scanning
+• SAST
+• DAST
+• API testing
+• Authorization testing
+• File-upload security
+• Rate limiting
+• Secrets management
+• Logging
+• Backups
+• Restore testing
+• Incident-response drill
+Before public scale, complete an independent penetration test and close critical/high findings.
+44. Customer research plan
+Before full development, complete structured research with real users and providers. A practical starting target is approximately 40 patient/family interviews, 15 elderly-care interviews, 10 doctors, 5 nurses/allied providers and 5 clinic/hospital administrators, plus a few home-health operators.
+• Current solution
+• Frequency of problem
+• Pain and time lost
+• Money currently spent
+• Trust concerns
+• Willingness to pay
+• Family involvement
+• Preferred communication
+• Language needs
+• Home-care usage
+• Follow-up failures
+Focus on actual past behaviour rather than asking only whether users “like the idea.”
+45. Manual concierge pilot
+Before automating the entire platform, operate 30–50 real paid care episodes manually using lean tooling if necessary.
+Patient request → coordinator → doctor/home-provider allocation → service delivery → care summary → follow-up
+ | 
+Use this to learn where users become confused, provider response times, average visit duration, cancellations, payment behaviour, support workload, clinical escalation frequency and follow-up adherence.
+46. Prototype testing
+After manual workflow validation, build high-fidelity prototypes for the main patient, provider and clinician journeys.
+Patient journeys
+• New user
+• Add parent
+• Ask health concern
+• AI intake
+• Home checkup
+• Doctor consultation
+• Report upload
+• Care plan
+• Follow-up
+• Emergency
+Provider journeys
+• Accept job
+• Navigate
+• Verify patient
+• Capture vitals
+• Escalate
+• Complete visit
+Doctor journeys
+• Review case
+• Review AI summary
+• View records
+• Consult
+• Create care plan
+• Schedule follow-up
+Test without coaching the user. Confusion in the prototype is product feedback, not a training problem.
+47. Controlled MVP pilot
+Recommended starting scope: one geographic area, approximately 100–200 initial users, 3–5 clinical/provider partners, 10–20 healthcare professionals and an 8–12 week controlled pilot.
+Treat this as a clinical, operational and business validation exercise—not as a marketing-scale public launch.
+48. Pilot success criteria
+• Paid conversion
+• Care completion
+• Repeat usage
+• Home-provider acceptance
+• Provider arrival SLA
+• Doctor response
+• Follow-up completion
+• Complaint rate
+• Refund rate
+• Safety escalations
+• AI safety performance
+• Contribution margin
+Define numeric thresholds before the pilot starts. Do not move the goalposts after seeing results.
+49. Launch GO / NO-GO framework
+Area
+ | Go condition
+ | Problem
+ | Real users repeatedly demonstrate need
+ | Payment
+ | Real paid care episodes completed
+ | Clinical
+ | SOPs approved
+ | Regulatory
+ | Feature classification reviewed
+ | Providers
+ | Credentialed network functioning
+ | AI
+ | Safety evaluation passed
+ | Privacy
+ | Consent and access controls working
+ | Security
+ | Testing complete
+ | Operations
+ | SLA achievable
+ | Support
+ | Escalation structure operational
+ | Economics
+ | Unit economics known
+ | Retention
+ | Evidence of repeat use
+ | Technology
+ | End-to-end journey stable
+ | 
+If any critical safety, legal or privacy item is red, do not scale that functionality.
+50. 90-day execution plan
+Period
+ | Execution focus
+ | Days 1–15
+ | Freeze product definition; choose segment and geography; appoint clinical advisor; form governance group; start regulatory assessment, customer research, provider-category mapping, SOPs and ABDM assessment.
+ | Days 16–30
+ | Complete interviews and competitor matrix; define pricing hypotheses; recruit provider partners; define contracts, clinical workflows, privacy architecture and unit-economics model; begin manual concierge workflow.
+ | Days 31–45
+ | Complete first paid manual episodes; update SOPs; freeze MVP requirements; prototype patient app, clinician portal, provider app and control tower.
+ | Days 46–60
+ | User testing; technical/database/AI/security architecture; safety-engine design; RAG source policy; development sprint begins.
+ | Days 61–90
+ | MVP completion; clinical testing; AI evaluation; security testing; provider training; operational simulation; controlled pilot.
+ | 
+51. What should NOT be built before pilot success
+• AR/VR
+• Advanced wearables
+• Large hospital marketplace
+• Full pharmacy logistics
+• Large laboratory marketplace
+• Advanced wound diagnosis
+• AI mental-health diagnosis
+• Predictive disease scoring
+• Nationwide provider network
+• Complex gamification
+• Social community
+• Insurance claims engine
+These features may make a pitch look larger, but they can delay proof of the core care journey.
+52. What becomes the moat
+The moat should not be the UI, chatbot, LLM or health records alone.
+Trusted care orchestration + qualified provider network + clinical workflows + family relationships + longitudinal context + care-episode data + provider integrations + operational reliability.
+ | 
+These assets accumulate through execution and are substantially harder to reproduce than interface features.
+53. Final product hierarchy
+The finished product should feel like one continuous system rather than a collection of healthcare features.
+Layer
+ | Purpose
+ | AI CARE COMPANION
+ | Understands what is happening
+ | CARE NAVIGATION
+ | Determines the appropriate next pathway
+ | DOCTOR / HOME HEALTHCARE
+ | Professional care occurs
+ | CARE PLAN
+ | Defines what must happen next
+ | HEALTH TIMELINE
+ | Maintains longitudinal context
+ | FAMILY COORDINATION
+ | Keeps authorized caregivers connected
+ | FOLLOW-UP
+ | Checks whether care actually happened
+ | CONTINUOUS CARE
+ | Later adds wearables, chronic monitoring and validated advanced assistance
+ | 
+Product principle: Do not build an app that gives users more healthcare options. Build a system that reduces the number of decisions the patient has to make and helps complete the entire care journey safely.
+ | 
+Execution Summary
+The launch product is not a broad healthcare super-app. It is a focused care-orchestration platform built around AI-assisted intake, deterministic safety routing, doctor/home-care delivery, longitudinal records, family coordination and follow-up. The first commercial proof should come from a small number of paid, repeatable, clinically governed care episodes in one geography.
+Build now
+ | Build after proof
+ | AI Care Assistant
+ | Wound AI / advanced image analysis
+ | Care Episodes
+ | Wearables / remote monitoring
+ | Doctor consultation
+ | Mental wellness expansion
+ | Home Checkup
+ | Government scheme intelligence
+ | Family Care
+ | AR/VR
+ | Health Timeline
+ | Large marketplace layers
+ | Care Plan and follow-up
+ | Advanced predictive clinical AI
+ | Clinician/provider/admin systems
+ | National expansion
+ | 
+Reference & Validation Note
+This blueprint consolidates and refines the previously prepared Product Requirements Document (PRD), Business Requirements Document (BRD), Functional Requirements Document (FRD), complete product specification, product pitch deck and the 53-point launch analysis. Before production release, clinical SOPs, professional scopes, regulatory classification, privacy/data flows and external integrations must be reviewed by appropriately qualified clinical, legal, security and regulatory professionals using the latest applicable requirements.
+• National Medical Commission: telemedicine and Registered Medical Practitioner requirements.
+• CDSCO: Medical Device Software / MDR-2017 guidance and current device-software requirements.
+• Ayushman Bharat Digital Mission: ABHA, HPR, HFR, consent-based health information exchange and interoperability.
+• Digital Personal Data Protection Act/Rules: current privacy and data-processing obligations.

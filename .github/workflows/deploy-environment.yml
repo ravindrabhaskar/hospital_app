@@ -1,0 +1,223 @@
+# Reusable: build -> push -> migrate -> roll out -> smoke, for ONE environment.
+# Called by deploy.yml. Resource names follow infra/terraform (prefix carecompanion-<env>).
+name: Deploy environment
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      run_migrations:
+        type: boolean
+        default: true
+      smoke:
+        type: boolean
+        default: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: deploy (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment:
+      name: ${{ inputs.environment }}
+      url: ${{ vars.PORTAL_URL }}
+    concurrency:
+      group: deploy-${{ inputs.environment }}
+      cancel-in-progress: false
+    env:
+      ENVIRONMENT: ${{ inputs.environment }}
+      AWS_REGION: ${{ vars.AWS_REGION || 'ap-south-1' }}
+      PREFIX: carecompanion-${{ inputs.environment }}
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      PORTAL_URL: ${{ vars.PORTAL_URL }}
+      # Web build-time values (inlined into the bundle / CSP). Blank = app default.
+      NEXT_PUBLIC_LEGAL_DRAFT: ${{ vars.NEXT_PUBLIC_LEGAL_DRAFT || 'true' }}
+      NEXT_PUBLIC_JITSI_DOMAIN: ${{ vars.NEXT_PUBLIC_JITSI_DOMAIN }}
+      NEXT_PUBLIC_SUPPORT_EMAIL: ${{ vars.NEXT_PUBLIC_SUPPORT_EMAIL }}
+      NEXT_PUBLIC_SUPPORT_PHONE: ${{ vars.NEXT_PUBLIC_SUPPORT_PHONE }}
+      NEXT_PUBLIC_LEGAL_ENTITY_NAME: ${{ vars.NEXT_PUBLIC_LEGAL_ENTITY_NAME }}
+      NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME: ${{ vars.NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME }}
+      NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL: ${{ vars.NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check environment configuration
+        run: |
+          missing=0
+          for v in AWS_DEPLOY_ROLE_ARN API_BASE_URL PORTAL_URL; do
+            case "$v" in
+              AWS_DEPLOY_ROLE_ARN) val="${{ vars.AWS_DEPLOY_ROLE_ARN }}" ;;
+              API_BASE_URL) val="$API_BASE_URL" ;;
+              PORTAL_URL) val="$PORTAL_URL" ;;
+            esac
+            if [ -z "$val" ]; then echo "::error::GitHub environment '$ENVIRONMENT' is missing variable $v"; missing=1; fi
+          done
+          exit $missing
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          role-session-name: gha-deploy-${{ inputs.environment }}-${{ github.run_id }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Compute image names
+        run: |
+          SHA="${GITHUB_SHA::12}"
+          REG="${{ steps.ecr.outputs.registry }}"
+          # The web bundle depends on its build-time values: hash them into the tag so that
+          # changing an environment variable produces a new (immutable) image.
+          WEB_CFG=$(printf '%s|' "$API_BASE_URL" "$NEXT_PUBLIC_LEGAL_DRAFT" "$NEXT_PUBLIC_JITSI_DOMAIN"             "$NEXT_PUBLIC_SUPPORT_EMAIL" "$NEXT_PUBLIC_SUPPORT_PHONE" "$NEXT_PUBLIC_LEGAL_ENTITY_NAME"             "$NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME" "$NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL" | sha256sum | cut -c1-8)
+          echo "API_IMAGE=$REG/$PREFIX-api:$SHA" >> "$GITHUB_ENV"
+          echo "WEB_IMAGE=$REG/$PREFIX-web:$SHA-$ENVIRONMENT-$WEB_CFG" >> "$GITHUB_ENV"
+          echo "API_TAG=$SHA" >> "$GITHUB_ENV"
+          echo "WEB_TAG=$SHA-$ENVIRONMENT-$WEB_CFG" >> "$GITHUB_ENV"
+
+      # Tags are immutable in ECR: re-running a deploy for the same commit reuses the image.
+      - name: Does the API image exist?
+        id: api_exists
+        run: |
+          if aws ecr describe-images --repository-name "$PREFIX-api" --image-ids imageTag="$API_TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Build and push API image
+        if: steps.api_exists.outputs.exists != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: services/api
+          push: true
+          tags: ${{ env.API_IMAGE }}
+          provenance: false
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,mode=max,scope=api
+
+      - name: Does the web image exist?
+        id: web_exists
+        run: |
+          if aws ecr describe-images --repository-name "$PREFIX-web" --image-ids imageTag="$WEB_TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+
+      # NEXT_PUBLIC_* values and the CSP (API origin) are baked in at build time -> one web image per environment.
+      - name: Build and push web image
+        if: steps.web_exists.outputs.exists != 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: apps/web
+          push: true
+          tags: ${{ env.WEB_IMAGE }}
+          provenance: false
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ env.API_BASE_URL }}
+            NEXT_PUBLIC_LEGAL_DRAFT=${{ env.NEXT_PUBLIC_LEGAL_DRAFT }}
+            NEXT_PUBLIC_JITSI_DOMAIN=${{ env.NEXT_PUBLIC_JITSI_DOMAIN }}
+            NEXT_PUBLIC_SUPPORT_EMAIL=${{ env.NEXT_PUBLIC_SUPPORT_EMAIL }}
+            NEXT_PUBLIC_SUPPORT_PHONE=${{ env.NEXT_PUBLIC_SUPPORT_PHONE }}
+            NEXT_PUBLIC_LEGAL_ENTITY_NAME=${{ env.NEXT_PUBLIC_LEGAL_ENTITY_NAME }}
+            NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME=${{ env.NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME }}
+            NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL=${{ env.NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL }}
+          cache-from: type=gha,scope=web-${{ inputs.environment }}
+          cache-to: type=gha,mode=max,scope=web-${{ inputs.environment }}
+
+      - name: Register new task definition revisions
+        run: |
+          set -euo pipefail
+          register() { # family container image -> prints new ARN
+            aws ecs describe-task-definition --task-definition "$1" --query taskDefinition --output json \
+            | jq --arg C "$2" --arg IMG "$3" '
+                .containerDefinitions |= map(if .name == $C then .image = $IMG else . end)
+                | del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities,
+                      .registeredAt, .registeredBy, .deregisteredAt)' > td.json
+            aws ecs register-task-definition --cli-input-json file://td.json \
+              --query taskDefinition.taskDefinitionArn --output text
+          }
+          # describe-task-definition <family> returns the latest ACTIVE revision, i.e. the one
+          # Terraform registered most recently (so infra changes such as new secrets roll out too).
+          echo "API_TD=$(register "$PREFIX-api" api "$API_IMAGE")" >> "$GITHUB_ENV"
+          echo "WORKER_TD=$(register "$PREFIX-worker" api "$API_IMAGE")" >> "$GITHUB_ENV"
+          echo "WEB_TD=$(register "$PREFIX-web" web "$WEB_IMAGE")" >> "$GITHUB_ENV"
+          rm -f td.json
+
+      - name: Record previous task definitions (for rollback)
+        run: |
+          for s in api worker web; do
+            prev=$(aws ecs describe-services --cluster "$PREFIX" --services "$PREFIX-$s" --query 'services[0].taskDefinition' --output text)
+            echo "previous $s: $prev" | tee -a "$GITHUB_STEP_SUMMARY"
+          done
+
+      # The API also migrates at boot, but drizzle takes no lock: run once, alone, first.
+      - name: Run database migrations (one-off task)
+        if: inputs.run_migrations
+        run: |
+          set -euo pipefail
+          NET=$(aws ecs describe-services --cluster "$PREFIX" --services "$PREFIX-api" \
+                --query 'services[0].networkConfiguration' --output json)
+          TASK=$(aws ecs run-task --cluster "$PREFIX" --launch-type FARGATE \
+                --task-definition "$API_TD" \
+                --network-configuration "$NET" \
+                --overrides '{"containerOverrides":[{"name":"api","command":["node","dist/db/migrate.js"]}]}' \
+                --started-by "gha-migrate-${GITHUB_RUN_ID}" \
+                --query 'tasks[0].taskArn' --output text)
+          echo "migration task: $TASK"
+          aws ecs wait tasks-stopped --cluster "$PREFIX" --tasks "$TASK"
+          CODE=$(aws ecs describe-tasks --cluster "$PREFIX" --tasks "$TASK" --query 'tasks[0].containers[0].exitCode' --output text)
+          REASON=$(aws ecs describe-tasks --cluster "$PREFIX" --tasks "$TASK" --query 'tasks[0].stoppedReason' --output text)
+          echo "exit code: $CODE  reason: $REASON"
+          aws logs get-log-events --log-group-name "/ecs/$PREFIX-api" \
+            --log-stream-name "api/api/${TASK##*/}" --limit 50 --query 'events[].message' --output text || true
+          if [ "$CODE" != "0" ]; then
+            echo "::error::Migration failed (exit $CODE). Services were NOT updated; the previous version keeps running."
+            exit 1
+          fi
+
+      - name: Update ECS services
+        run: |
+          set -euo pipefail
+          aws ecs update-service --cluster "$PREFIX" --service "$PREFIX-api"    --task-definition "$API_TD"    --query 'service.serviceName' --output text
+          aws ecs update-service --cluster "$PREFIX" --service "$PREFIX-worker" --task-definition "$WORKER_TD" --query 'service.serviceName' --output text
+          aws ecs update-service --cluster "$PREFIX" --service "$PREFIX-web"    --task-definition "$WEB_TD"    --query 'service.serviceName' --output text
+
+      - name: Wait for services to become stable
+        timeout-minutes: 30
+        run: aws ecs wait services-stable --cluster "$PREFIX" --services "$PREFIX-api" "$PREFIX-worker" "$PREFIX-web"
+
+      - name: Verify the new revisions are running (circuit breaker did not roll back)
+        run: |
+          set -euo pipefail
+          for pair in "api:$API_TD" "worker:$WORKER_TD" "web:$WEB_TD"; do
+            s="${pair%%:*}"; want="${pair#*:}"
+            got=$(aws ecs describe-services --cluster "$PREFIX" --services "$PREFIX-$s" --query 'services[0].taskDefinition' --output text)
+            if [ "$got" != "$want" ]; then echo "::error::$s is running $got, expected $want (deployment rolled back)"; exit 1; fi
+          done
+
+      - name: Smoke tests
+        if: inputs.smoke
+        run: |
+          set -euo pipefail
+          check() { # url expected-status
+            code=$(curl -sS -o /tmp/body -w '%{http_code}' --max-time 15 --retry 5 --retry-delay 5 --retry-all-errors "$1")
+            echo "$1 -> $code $(head -c 300 /tmp/body)"
+            [ "$code" = "$2" ]
+          }
+          check "$API_BASE_URL/health" 200
+          # /ready is 503 until an APPROVED safety rule pack is active in production
+          # (fail-safe by design), so gate on the DB check and warn about the rest.
+          curl -sS --max-time 15 "$API_BASE_URL/ready" -o /tmp/ready || true
+          echo "ready: $(cat /tmp/ready)"
+          [ "$(jq -r '.checks.db' /tmp/ready)" = "ok" ] || { echo "::error::/ready reports the database is not ok"; exit 1; }
+          sr=$(jq -r '.checks.safetyRules' /tmp/ready)
+          [ "$sr" = "ok" ] || echo "::warning::safetyRules=$sr - no clinician-approved rule pack is active (AI routes everything to a doctor)"
+          check "$API_BASE_URL/config/public" 200 || echo "::warning::/config/public not available yet"
+          check "$PORTAL_URL/login" 200
+          echo "Deployed ${API_TAG} to ${ENVIRONMENT}" >> "$GITHUB_STEP_SUMMARY"

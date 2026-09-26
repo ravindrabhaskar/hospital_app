@@ -1,0 +1,19 @@
+{
+  "name": "care-companion",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CareCompanion — AI-powered care orchestration platform (API, web portal, patient & provider apps)",
+  "scripts": {
+    "setup": "npm --prefix services/api install && npm --prefix apps/web install && npm --prefix services/api run seed",
+    "seed": "npm --prefix services/api run seed -- --reset",
+    "dev:api": "npm --prefix services/api run dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "check:api": "npm --prefix services/api run check",
+    "check:web": "npm --prefix apps/web run typecheck && npm --prefix apps/web run lint && npm --prefix apps/web test",
+    "check": "npm run check:api && npm run check:web",
+    "test:e2e": "node tests/e2e/journey.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

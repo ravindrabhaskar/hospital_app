@@ -1,0 +1,9 @@
+# Terraform working files and real variable files (may reveal account details)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+*.tfvars
+!*.tfvars.example
+terraform/backend/*.s3.tfbackend

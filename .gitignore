@@ -1,0 +1,33 @@
+node_modules/
+dist/
+.next/
+out/
+coverage/
+.env
+.env.local
+*.log
+services/api/.data/
+# Flutter
+apps/*/build/
+apps/*/.dart_tool/
+apps/*/.flutter-plugins
+apps/*/.flutter-plugins-dependencies
+apps/*/android/.gradle/
+apps/*/android/local.properties
+apps/*/ios/Pods/
+.idea/
+.DS_Store
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl.bak
+
+# Secrets that must never be committed
+**/key.properties
+*.jks
+*.keystore
+.env.production

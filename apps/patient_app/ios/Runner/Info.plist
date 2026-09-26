@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+		<true/>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>CFBundleDisplayName</key>
+		<string>CareCompanion</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>CareCompanion</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(FLUTTER_BUILD_NAME)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
+		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>UIApplicationSceneManifest</key>
+		<dict>
+			<key>UIApplicationSupportsMultipleScenes</key>
+			<false/>
+			<key>UISceneConfigurations</key>
+			<dict>
+				<key>UIWindowSceneSessionRoleApplication</key>
+				<array>
+					<dict>
+						<key>UISceneClassName</key>
+						<string>UIWindowScene</string>
+						<key>UISceneConfigurationName</key>
+						<string>flutter</string>
+						<key>UISceneDelegateClassName</key>
+						<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+						<key>UISceneStoryboardFile</key>
+						<string>Main</string>
+					</dict>
+				</array>
+			</dict>
+		</dict>
+		<key>UIApplicationSupportsIndirectInputEvents</key>
+		<true/>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIMainStoryboardFile</key>
+		<string>Main</string>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UISupportedInterfaceOrientations~ipad</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationPortraitUpsideDown</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>NSHealthShareUsageDescription</key>
+		<string>With your permission, CareCompanion reads steps, heart rate, sleep, blood oxygen, blood pressure, blood glucose and weight from Apple Health so you and your care team can see trends. You choose each type, and you can turn access off at any time in Settings.</string>
+		<key>NSHealthUpdateUsageDescription</key>
+		<string>CareCompanion does not write to Apple Health. This permission is only requested by the Health framework and is never used to save data.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>CareCompanion uses the microphone only while you tap the mic button to speak your question to the AI health assistant. Audio is converted to text and is not recorded or stored.</string>
+		<key>NSSpeechRecognitionUsageDescription</key>
+		<string>CareCompanion converts what you say into text so you can ask the AI health assistant questions by voice. Speech is used only for that request.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>CareCompanion uses your location only when you press SOS (to share it with your emergency contacts) or search for nearby hospitals and clinics. Location is never tracked in the background.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>CareCompanion uses the camera when you choose to photograph a medical report, prescription or wound so it can be added to your health records.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>CareCompanion opens your photo library only when you choose a photo of a medical report, prescription or wound to add to your health records.</string>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>tel</string>
+			<string>https</string>
+			<string>mailto</string>
+			<string>whatsapp</string>
+			<string>org.jitsi.meet</string>
+		</array>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>remote-notification</string>
+		</array>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsLocalNetworking</key>
+			<true/>
+		</dict>
+		<key>UIStatusBarHidden</key>
+		<false/>
+	</dict>
+</plist>

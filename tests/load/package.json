@@ -1,0 +1,14 @@
+{
+  "name": "@carecompanion/load-tests",
+  "private": true,
+  "type": "module",
+  "description": "Load tests: k6-journey.js (k6) and smoke.mjs (Node; autocannon optional)",
+  "scripts": {
+    "smoke": "node smoke.mjs",
+    "k6:smoke": "k6 run k6-journey.js",
+    "k6:load": "k6 run -e PROFILE=load k6-journey.js"
+  },
+  "devDependencies": {
+    "autocannon": "^8.0.0"
+  }
+}

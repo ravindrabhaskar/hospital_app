@@ -1,0 +1,626 @@
+
+AI HEALTHCARE APP
+Launch GroundworkMaster Checklist
+From product concept to controlled pilot and public launch
+Document purpose
+ | Execution checklist for pre-launch groundwork
+ | Product
+ | AI-powered connected healthcare / care coordination app
+ | Primary market
+ | India - initial launch in one focused geography
+ | Basis
+ | Existing Pitch Deck, BRD, PRD, FRD and Complete Product Specification
+ | Core launch principle
+Do not start by building every feature in the concept. Validate one safe, paid, repeatable care journey first; then expand only after demand, clinical safety, provider delivery and unit economics are proven.
+
+How to use this checklist
+Treat each phase as a gate. A phase is not complete because a meeting happened; it is complete when the required evidence or deliverable exists. Where practical, assign a single accountable owner and a deadline for every task.
+Phase
+ | Workstream
+ | Primary result
+ | 01
+ | Product definition
+ | Freeze customer, problem, geography and flagship care journey
+ | 02
+ | Customer validation
+ | Prove pain, trust and willingness to pay
+ | 03
+ | Competitive research
+ | Map alternatives and define a defensible gap
+ | 04
+ | Clinical groundwork
+ | Create governance, responsibilities and escalation ownership
+ | 05
+ | Clinical SOPs
+ | Standardize common and high-risk care pathways
+ | 06
+ | Legal & regulatory
+ | Map telemedicine, clinical, software and liability obligations
+ | 07
+ | Privacy & data
+ | Design consent, security, access and retention controls
+ | 08
+ | ABDM & interoperability
+ | Plan ABHA/ABDM/FHIR integration and health-record exchange
+ | 09
+ | Provider network
+ | Prove care can actually be delivered
+ | 10
+ | Partner ecosystem
+ | Secure diagnostics, pharmacy, emergency and infrastructure partners
+ | 11
+ | MVP freeze
+ | Lock the minimum launchable product
+ | 12
+ | AI groundwork
+ | Build safety architecture, RAG, evaluation and traceability
+ | 13
+ | Business model
+ | Validate pricing and contribution economics
+ | 14
+ | Prototype testing
+ | Test core journeys before engineering
+ | 15
+ | Manual paid pilot
+ | Run real care episodes before full automation
+ | 16
+ | Controlled app pilot
+ | Measure safety, operations, retention and economics
+ | 17
+ | Go / no-go launch gates
+ | Scale only when the operating system is ready
+ | 
+PHASE 01  |  Freeze the Product Definition
+Objective: Decide exactly what the first commercial product is and what it is not.
+Recommended starting proposition: AI-powered family healthcare coordination - understand the concern, arrange the appropriate care, maintain the health record and continue follow-up.
+ | 
+[ ] Write a one-sentence product definition.
+[ ] Define the exact healthcare problem being solved.
+[ ] Define one primary customer segment.
+[ ] Define one secondary customer segment.
+[ ] Select one launch geography and service radius.
+[ ] Define one flagship care journey to prove first.
+[ ] Separate MVP, Phase 2 and future features.
+[ ] Define what AI is allowed to do.
+[ ] Define what AI is prohibited from doing.
+[ ] Define when human or doctor escalation is mandatory.
+[ ] Decide whether the business is a marketplace, care coordinator, healthcare provider, SaaS platform, or a defined combination.
+[ ] Decide which services will be operated directly and which will be delivered by partners.
+[ ] Define the product promise in language a patient can understand in 10 seconds.
+[ ] Freeze primary navigation and the major user journeys before design expands further.
+Required output
+2-3 page Product Definition Document
+MVP / Later feature matrix
+One flagship care-journey diagram
+
+PHASE 02  |  Customer and Problem Validation
+Objective: Prove the problem is painful enough, frequent enough and valuable enough for real users to change behavior or pay.
+[ ] Interview 30-50 patients and family caregivers.
+[ ] Include at least 10-15 people actively caring for elderly parents or dependents.
+[ ] Interview approximately 10 registered doctors.
+[ ] Interview nurses and relevant allied-health professionals.
+[ ] Interview hospital or clinic administrators.
+[ ] Interview home-healthcare operators.
+[ ] Interview diagnostic providers.
+[ ] Speak with potential employers, insurers or TPAs if B2B2C is part of the plan.
+[ ] Document how people currently decide what to do when symptoms begin.
+[ ] Document how reports, prescriptions and medication information are currently stored.
+[ ] Identify who in the family coordinates appointments, medicines and follow-ups.
+[ ] Test willingness to use home healthcare.
+[ ] Test willingness to share health information digitally.
+[ ] Test AI trust and the conditions that increase or reduce trust.
+[ ] Test whether voice and local-language interaction materially improve accessibility.
+[ ] Test actual willingness to pay rather than asking only whether users like the idea.
+[ ] Rank the top five repeated pain points by frequency and severity.
+[ ] Identify the trigger that would make users open this app instead of calling a doctor, relative or hospital.
+Required output
+Customer interview notes and recordings/consent where applicable
+Problem-frequency matrix
+Willingness-to-pay evidence
+Top three validated user journeys
+
+PHASE 03  |  Competitive and Market Groundwork
+Objective: Understand where existing healthcare products are strong and where your connected-care workflow can be meaningfully different.
+[ ] Benchmark Apollo 24/7.
+[ ] Benchmark Tata 1mg.
+[ ] Benchmark Practo.
+[ ] Benchmark MediBuddy.
+[ ] Benchmark MFine.
+[ ] Benchmark Portea and other home-care providers.
+[ ] Benchmark HealthPlix and provider-side workflow products.
+[ ] Benchmark eSanjeevani and relevant public digital-health services.
+[ ] Map the ABHA / ABDM ecosystem.
+[ ] Benchmark local home-healthcare providers in the launch geography.
+[ ] Capture target users, services, pricing, subscription model, languages, voice, provider network, family features and follow-up model for each competitor.
+[ ] Review app-store complaints and recurring customer pain points.
+[ ] Identify features that are already commodities and should not be treated as a moat.
+[ ] Identify operational capabilities that are difficult to replicate.
+[ ] Write a one-sentence market-gap statement and test it with users and partners.
+Required output
+Competitor comparison matrix
+Market-gap statement
+Differentiation / moat hypothesis
+
+PHASE 04  |  Clinical Governance Groundwork
+Objective: Create accountable medical oversight before product claims, workflows or AI behavior are finalized.
+[ ] Appoint a qualified medical / clinical advisor.
+[ ] Create a small clinical governance committee or review group.
+[ ] Define who approves clinical content.
+[ ] Define who can approve changes to red-flag rules.
+[ ] Define who reviews high-risk AI outputs during pilots.
+[ ] Define every provider role: RMP/doctor, nurse, phlebotomist, physiotherapist, allied-health professional, care coordinator, etc.
+[ ] Define the permitted scope of each provider role.
+[ ] Define what each provider role must never do.
+[ ] Define doctor escalation ownership.
+[ ] Define emergency escalation ownership.
+[ ] Define clinical incident reporting.
+[ ] Define adverse-event review where applicable.
+[ ] Define clinical documentation standards.
+[ ] Define prescription workflow and authorized prescribers.
+[ ] Define follow-up ownership.
+[ ] Define clinical quality audits and revalidation.
+[ ] Define malpractice/professional indemnity requirements with legal counsel.
+Required output
+Clinical Governance Charter
+Provider role-and-scope matrix
+Escalation ownership matrix
+Clinical incident policy
+
+PHASE 05  |  Clinical SOP and Safety Pathway Groundwork
+Objective: Standardize how common and high-risk care situations move through the system before AI or field operations automate them.
+[ ] Create SOP for fever.
+[ ] Create SOP for headache.
+[ ] Create SOP for dizziness.
+[ ] Create SOP for blood-pressure concerns.
+[ ] Create SOP for diabetes/glucose concerns.
+[ ] Create SOP for respiratory symptoms.
+[ ] Create SOP for abdominal symptoms.
+[ ] Create SOP for elderly weakness/fatigue.
+[ ] Create SOP for medication questions.
+[ ] Create SOP for post-discharge follow-up.
+[ ] Create SOP for wound concerns.
+[ ] Create SOP for falls.
+[ ] Create high-risk pathway for chest pain.
+[ ] Create high-risk pathway for severe breathlessness.
+[ ] Create high-risk pathway for altered consciousness/fainting.
+[ ] Create generic emergency escalation pathway.
+[ ] For each SOP, define required questions, red flags, permitted AI output, clinician escalation, emergency direction and follow-up.
+[ ] Validate SOPs with qualified clinicians before production use.
+[ ] Version-control SOPs and define who can change them.
+Required output
+Clinical SOP library
+Red-flag rule catalogue
+Emergency escalation playbook
+Version and approval log
+
+PHASE 06  |  Legal and Regulatory Groundwork
+Objective: Determine the legal classification and obligations of every clinical and software function before public launch.
+[ ] Obtain India-specific healthcare/regulatory legal review.
+[ ] Review telemedicine compliance obligations.
+[ ] Review doctor credentialing and verification process.
+[ ] Review allied-health and home-care role requirements.
+[ ] Review home-care service obligations.
+[ ] Review prescription workflow.
+[ ] Review pharmacy partner compliance requirements.
+[ ] Review diagnostic partner compliance requirements.
+[ ] Assess whether any software function may fall within Medical Device Software / MDR requirements based on intended use and claims.
+[ ] Review wound-image functionality before making diagnostic claims.
+[ ] Review emergency/SOS claims and operational promises.
+[ ] Define allocation of clinical liability between platform, providers and partners.
+[ ] Review professional indemnity requirements.
+[ ] Create provider agreements.
+[ ] Create clinic/hospital agreements.
+[ ] Prepare Terms of Service.
+[ ] Prepare Privacy Policy.
+[ ] Prepare informed-consent language for relevant workflows.
+[ ] Prepare AI disclosure and limitations language.
+[ ] Prepare medical disclaimer language without using it as a substitute for safe design.
+[ ] Prepare refund and cancellation policies.
+[ ] Create grievance and complaint process.
+[ ] Create clinical incident-response policy.
+[ ] Review advertising/marketing claims before launch.
+Required output
+Legal and Regulatory Applicability Matrix
+Executed provider/partner contract templates
+Launch Terms, Privacy and Consent pack
+Approved marketing-claims guide
+
+PHASE 07  |  Privacy, Security and Health-Data Groundwork
+Objective: Design privacy, access control and security as product architecture, not as a post-launch legal layer.
+[ ] Map every personal-data category collected.
+[ ] Map every health-data category collected.
+[ ] Record the purpose for collecting each field.
+[ ] Remove data that is not necessary for the defined care journey.
+[ ] Define purpose-specific consent.
+[ ] Define caregiver/family access consent.
+[ ] Define clinician access permissions.
+[ ] Define field-worker minimum-necessary access.
+[ ] Define partner data-sharing rules.
+[ ] Define record retention by data category.
+[ ] Define correction and deletion workflows.
+[ ] Define account closure and data-handling workflow.
+[ ] Implement role-based access control.
+[ ] Implement privileged-account protections / MFA.
+[ ] Encrypt data in transit.
+[ ] Encrypt data at rest.
+[ ] Create immutable or tamper-evident audit logs for sensitive access.
+[ ] Implement secrets management and key rotation.
+[ ] Define backup, restore and disaster-recovery procedures.
+[ ] Create breach detection and response plan.
+[ ] Review every third-party AI/API vendor for health-data handling.
+[ ] Prevent production health data from being used for unrelated model training unless legally valid and explicitly designed for that purpose.
+[ ] Create vulnerability scanning and dependency-management process.
+[ ] Complete independent penetration testing before public launch.
+[ ] Create security incident severity levels and escalation SLAs.
+Required output
+Data Inventory and Processing Map
+Consent matrix
+Security architecture document
+Incident response plan
+Pen-test report and remediation evidence
+
+PHASE 08  |  ABDM and Interoperability Groundwork
+Objective: Plan the product to interoperate with India's digital-health ecosystem instead of becoming an isolated health-record silo.
+[ ] Assess ABHA integration requirements.
+[ ] Register/evaluate ABDM sandbox access required for the intended integration.
+[ ] Assess Health Information Provider (HIP) role where relevant.
+[ ] Assess Health Information User (HIU) role where relevant.
+[ ] Design consent-based health-information exchange flows.
+[ ] Review Healthcare Professional Registry integration opportunities.
+[ ] Review Health Facility Registry integration opportunities.
+[ ] Map FHIR/interoperability requirements.
+[ ] Define health-record linking logic.
+[ ] Review UHI opportunities for future care discovery/booking.
+[ ] Document production certification/security requirements for planned ABDM integrations.
+[ ] Decide what data should remain operational platform data versus interoperable health records.
+[ ] Design failure/fallback behavior when external health networks are unavailable.
+Required output
+ABDM Integration Strategy
+FHIR data-mapping draft
+Consent-flow wireframes
+Sandbox and production-readiness plan
+
+PHASE 09  |  Provider Network Groundwork
+Objective: Prove that qualified care can be delivered consistently within the promised geography and SLA.
+[ ] Define required doctor specialties for launch.
+[ ] Estimate doctor capacity required by expected demand.
+[ ] Define required home-care professional categories.
+[ ] Define service areas and travel radius.
+[ ] Define operating hours.
+[ ] Define provider acceptance SLA.
+[ ] Define home-visit arrival SLA.
+[ ] Define doctor escalation SLA.
+[ ] Define weekend and holiday coverage.
+[ ] Decide whether night coverage is offered.
+[ ] Create replacement-provider procedure.
+[ ] Create provider no-show procedure.
+[ ] Create credential verification checklist.
+[ ] Define background-check process where appropriate.
+[ ] Create provider onboarding and training.
+[ ] Create provider revalidation schedule.
+[ ] Define quality scorecards.
+[ ] Define payout and settlement process.
+[ ] Define travel reimbursement.
+[ ] Define complaint and suspension procedures.
+[ ] Define professional indemnity / insurance evidence requirements.
+[ ] Create capacity dashboard by geography and time slot.
+Required output
+Provider Network Plan
+Credentialing checklist
+Provider SOP and training pack
+SLA matrix
+Provider commercial model
+
+PHASE 10  |  Partner Ecosystem Groundwork
+Objective: Avoid unnecessary vertical integration by securing reliable partners for services outside the product's core moat.
+[ ] Identify hospital partners.
+[ ] Identify clinic partners.
+[ ] Identify doctor networks.
+[ ] Identify nursing/home-healthcare partners.
+[ ] Identify phlebotomy providers.
+[ ] Identify diagnostic laboratories.
+[ ] Identify pharmacy/medicine-fulfilment partners.
+[ ] Identify ambulance/emergency-response integration options.
+[ ] Select payment gateway.
+[ ] Select SMS/WhatsApp/communication providers.
+[ ] Select maps/location provider.
+[ ] Select cloud infrastructure.
+[ ] Select teleconsultation/video infrastructure.
+[ ] Evaluate future insurer/TPA and employer partners.
+[ ] For every partner, capture API availability, coverage, SLA, pricing, revenue share, liability, data sharing, support, cancellation/refund process and integration complexity.
+[ ] Define partner outage/fallback procedures.
+[ ] Execute pilot agreements before promising partner services publicly.
+Required output
+Partner scorecard
+Commercial comparison
+Signed pilot agreements / LOIs
+Partner API and SLA register
+
+PHASE 11  |  Freeze the MVP
+Objective: Lock the minimum product that can deliver the complete flagship care journey safely and end-to-end.
+[ ] Patient: registration / OTP.
+[ ] Patient: consent and permissions.
+[ ] Patient: personal health profile.
+[ ] Patient: family/caregiver profiles.
+[ ] Patient: Ask AI entry point.
+[ ] Patient: structured symptom intake.
+[ ] Patient: safe care navigation.
+[ ] Patient: doctor discovery / booking.
+[ ] Patient: home-checkup request.
+[ ] Patient: provider status/ETA where supported.
+[ ] Patient: report upload.
+[ ] Patient: longitudinal Health Timeline.
+[ ] Patient: Care Plan.
+[ ] Patient: medication and follow-up reminders.
+[ ] Patient: notifications.
+[ ] Patient: emergency pathway.
+[ ] Patient: profile/privacy controls.
+[ ] Clinician: verified authentication.
+[ ] Clinician: patient queue and appointments.
+[ ] Clinician: authorized health timeline.
+[ ] Clinician: AI pre-consultation summary with source references.
+[ ] Clinician: home-visit vitals and observations.
+[ ] Clinician: reports/documents.
+[ ] Clinician: consultation and notes.
+[ ] Clinician: prescription workflow where legally permitted.
+[ ] Clinician: care plan and follow-up.
+[ ] Clinician: escalation inbox.
+[ ] Clinician: audit trail.
+[ ] Home-care provider: verified login.
+[ ] Home-care provider: assigned visits.
+[ ] Home-care provider: patient identity and consent confirmation.
+[ ] Home-care provider: structured visit checklist.
+[ ] Home-care provider: vitals capture.
+[ ] Home-care provider: notes/evidence where permitted.
+[ ] Home-care provider: doctor escalation.
+[ ] Home-care provider: visit completion.
+[ ] Admin: patient and provider management.
+[ ] Admin: credential verification.
+[ ] Admin: live care-request queue.
+[ ] Admin: unassigned visits.
+[ ] Admin: escalation queue.
+[ ] Admin: complaints/refunds.
+[ ] Admin: safety incident review.
+[ ] Admin: AI monitoring.
+[ ] Admin: audit logs and operational analytics.
+[ ] Remove/postpone advanced wound AI, automatic fall detection, wearables, AR/VR and other nonessential launch features.
+Required output
+Signed-off MVP scope
+Screen inventory
+Role-permission matrix
+End-to-end acceptance criteria
+
+PHASE 12  |  AI Product and Safety Groundwork
+Objective: Build a governed AI subsystem with traceability, deterministic safety controls and measurable performance.
+[ ] List every AI use case.
+[ ] Classify each AI use case as low, medium or high clinical risk.
+[ ] Define which AI outputs require clinician review.
+[ ] Create medical knowledge-source policy.
+[ ] Design RAG/knowledge retrieval architecture.
+[ ] Keep deterministic red-flag rules separate from the generative model.
+[ ] Define uncertainty and insufficient-information behavior.
+[ ] Define hallucination testing.
+[ ] Version prompts, policies and model configurations.
+[ ] Log model/version for every relevant AI interaction.
+[ ] Log supporting source references where applicable.
+[ ] Log safety triggers and escalation outcome.
+[ ] Build a clinician-reviewed AI evaluation dataset.
+[ ] Test common symptom conversations.
+[ ] Test high-risk symptoms.
+[ ] Test rare/edge cases.
+[ ] Test adversarial and misleading prompts.
+[ ] Test missing-information scenarios.
+[ ] Test contradictory patient information.
+[ ] Test medication and allergy context.
+[ ] Test elderly and caregiver-mediated conversations.
+[ ] Test multilingual workflows before enabling them publicly.
+[ ] Measure escalation false positives.
+[ ] Measure escalation false negatives.
+[ ] Define pass/fail thresholds before production deployment.
+[ ] Create a kill switch / feature-disable mechanism for unsafe AI functions.
+[ ] Establish post-launch model monitoring and review cadence.
+Required output
+AI Use-Case Risk Register
+AI Safety Architecture
+Evaluation dataset and test report
+Model/prompt versioning policy
+Production monitoring plan
+
+PHASE 13  |  Business Model and Unit-Economics Groundwork
+Objective: Prove that a completed care episode can generate sustainable economics before scaling demand.
+[ ] Create pricing hypothesis for doctor consultations.
+[ ] Create pricing hypothesis for home visits.
+[ ] Create pricing hypothesis for family/care coordination plans.
+[ ] Define provider payout per service.
+[ ] Estimate travel cost per home visit.
+[ ] Estimate consumables cost where applicable.
+[ ] Estimate payment-gateway cost.
+[ ] Estimate customer-support cost.
+[ ] Estimate communication/SMS/WhatsApp cost.
+[ ] Estimate AI/API cost per active user and per care episode.
+[ ] Estimate refund/no-show leakage.
+[ ] Calculate contribution margin per doctor consultation.
+[ ] Calculate contribution margin per home visit.
+[ ] Calculate contribution margin per subscription.
+[ ] Track CAC by channel.
+[ ] Track average order value.
+[ ] Track gross margin.
+[ ] Track contribution margin.
+[ ] Track repeat rate.
+[ ] Track AI-to-care conversion.
+[ ] Track home-care conversion.
+[ ] Track subscription conversion.
+[ ] Track provider utilization.
+[ ] Track cancellation and refund rates.
+[ ] Track support cost per user.
+[ ] Estimate LTV and LTV/CAC only after real retention data exists.
+[ ] Define economic thresholds that must be achieved before expanding geography.
+Required output
+Unit Economics Model
+Pricing sheet
+Pilot budget
+Scale threshold / financial go-no-go criteria
+
+PHASE 14  |  UX Prototype and Usability Groundwork
+Objective: Validate the critical care journeys with real users before engineering the full production interface.
+[ ] Prototype new-user onboarding.
+[ ] Prototype consent flow.
+[ ] Prototype “I am feeling unwell” journey.
+[ ] Prototype structured AI intake.
+[ ] Prototype doctor escalation.
+[ ] Prototype doctor booking.
+[ ] Prototype home-assessment booking.
+[ ] Prototype provider arrival/status.
+[ ] Prototype clinician summary view.
+[ ] Prototype Care Plan.
+[ ] Prototype report upload and source display.
+[ ] Prototype Health Timeline.
+[ ] Prototype family-member onboarding and permissions.
+[ ] Prototype follow-up completion.
+[ ] Prototype emergency pathway.
+[ ] Test prototypes with at least 15-20 target users.
+[ ] Include elderly users and caregivers in usability tests.
+[ ] Ask users to complete tasks without coaching.
+[ ] Capture points where users hesitate, misunderstand or abandon.
+[ ] Measure task-completion rate and time.
+[ ] Fix confusing language and unnecessary choices before coding.
+Required output
+Clickable prototype
+Usability-test findings
+Revised flows
+Final design-system direction for MVP
+
+PHASE 15  |  Manual Paid Pilot
+Objective: Prove the service and operations with real care episodes before automating every step in the app.
+[ ] Create a simple landing page or controlled intake channel.
+[ ] Set up WhatsApp/phone support for the pilot.
+[ ] Set up an internal operations tracker/dashboard.
+[ ] Onboard a small verified provider group.
+[ ] Run the core care journey manually where software is not yet built.
+[ ] Charge real users a controlled pilot price.
+[ ] Complete approximately 30-50 real paid care episodes before making major scale assumptions.
+[ ] Track provider delays.
+[ ] Track cancellation and no-show reasons.
+[ ] Track time spent by care coordinators.
+[ ] Track home-visit duration and travel cost.
+[ ] Track doctor response time.
+[ ] Track family involvement.
+[ ] Track complaints and support burden.
+[ ] Track emergency/high-risk cases and how they were handled.
+[ ] Track follow-up adherence.
+[ ] Document every manual workaround that should later become software.
+[ ] Do not automate low-frequency edge cases until they are understood.
+Required output
+Manual-pilot operations report
+30-50 care-episode dataset
+Operational failure log
+Revised MVP requirements
+
+PHASE 16  |  Controlled App Pilot
+Objective: Validate the real software, clinical workflow and provider operation together in one bounded environment.
+[ ] Pilot in one defined geography.
+[ ] Target approximately 100-200 controlled users rather than a national launch.
+[ ] Use 3-5 clinic/healthcare partners where practical.
+[ ] Ensure adequate provider capacity for the test volume.
+[ ] Run the pilot for a defined measurement period, e.g. 8-12 weeks.
+[ ] Measure registration-to-first-action conversion.
+[ ] Measure AI conversation completion.
+[ ] Measure AI-to-care conversion.
+[ ] Measure doctor-booking conversion.
+[ ] Measure home-checkup conversion.
+[ ] Measure provider acceptance time.
+[ ] Measure provider arrival time.
+[ ] Measure consultation and home-visit completion.
+[ ] Measure repeat usage.
+[ ] Measure follow-up completion.
+[ ] Measure safety escalations.
+[ ] Measure false alerts and missed escalation incidents.
+[ ] Measure complaints and refund rate.
+[ ] Measure customer satisfaction/NPS where useful.
+[ ] Measure cost and revenue per care episode.
+[ ] Measure contribution margin.
+[ ] Review security and privacy incidents.
+[ ] Conduct formal clinical safety review before expanding the pilot.
+Required output
+Controlled Pilot Dashboard
+Pilot safety report
+Economics report
+User-retention report
+Prioritized V1 improvement backlog
+
+PHASE 17  |  Go / No-Go Public Launch Gates
+Objective: Scale only when demand, care delivery, safety, compliance, technology and economics have all reached minimum acceptable thresholds.
+[ ] Customer gate: evidence shows a meaningful, recurring problem.
+[ ] Payment gate: target users have paid, not merely expressed interest.
+[ ] Retention gate: a meaningful portion of users return or continue their care journey.
+[ ] Clinical gate: workflows and SOPs are reviewed and operational.
+[ ] AI gate: safety and escalation behavior meets agreed thresholds.
+[ ] Provider gate: care can be reliably fulfilled within promised SLAs.
+[ ] Operations gate: support, complaints, refunds and escalation processes work under pilot load.
+[ ] Legal gate: launch scope and claims have completed regulatory/legal review.
+[ ] Privacy gate: consent, access, deletion and audit workflows are implemented.
+[ ] Security gate: high-severity vulnerabilities are closed and penetration testing is complete.
+[ ] Economic gate: contribution economics are understood and acceptable for the chosen growth stage.
+[ ] Technology gate: the critical end-to-end journey works reliably, including degraded/failure modes.
+[ ] Support gate: the team can handle incidents and customer escalation.
+[ ] Partner gate: third-party services have contractual/SLA coverage appropriate to public promises.
+[ ] Executive gate: founders approve a written launch-risk register and rollback plan.
+Required output
+Signed Launch Readiness Review
+Go/No-Go decision log
+Launch risk register
+Rollback and incident communication plan
+
+Recommended execution order
+01. Market and customer research
+02. Clinical advisory and governance
+03. Legal/regulatory review
+04. Clinical SOPs and red-flag rules
+05. Provider and partner network
+06. Business model and unit economics
+07. Manual paid pilot
+08. Freeze MVP
+09. UX prototype and usability testing
+10. Technical and AI safety architecture
+11. Development
+12. Security and clinical testing
+13. Controlled app pilot
+14. Iteration and readiness review
+15. Public launch
+16. Geographic / feature expansion only after evidence
+Recommended first 30-45 days
+The first 30-45 days should be dominated by groundwork rather than full-scale coding. The objective is to reduce clinical, regulatory, operational and commercial uncertainty before engineering cost accelerates.
+Window
+ | Primary focus
+ | Exit evidence
+ | Week 1
+ | Product freeze + research design
+ | Product definition, interview plan, risk register
+ | Week 2
+ | Customer + doctor + provider interviews
+ | Interview evidence, pain-point ranking
+ | Week 3
+ | Clinical + legal + privacy architecture
+ | Governance structure, scope matrix, draft SOPs
+ | Week 4
+ | Provider/partner sourcing + manual pilot setup
+ | Pilot partners, operating workflow, pricing hypothesis
+ | Weeks 5-6
+ | Manual paid pilot + MVP re-freeze
+ | Real care episodes, unit economics, validated MVP backlog
+ | Master tracker fields
+Maintain a single execution tracker for all tasks in this document. Each row should include the following fields:
+[ ] Workstream
+[ ] Task
+[ ] Priority
+[ ] Owner
+[ ] Required evidence / acceptance criterion
+[ ] Status
+[ ] Dependency
+[ ] Deadline
+[ ] Estimated cost
+[ ] Risk level
+[ ] Decision / blocker
+[ ] Go / No-Go impact
+Launch rule: Do not scale because the app is technically finished. Scale only when a safe care journey is repeatable, providers can fulfil it, users are willing to pay, operations can support it and unit economics are understood.
+ | 

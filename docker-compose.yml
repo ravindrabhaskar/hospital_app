@@ -1,0 +1,228 @@
+# =============================================================================
+# CareCompanion: local PRODUCTION-LIKE stack (Docker Compose v2)
+# =============================================================================
+#
+# Everyday development does NOT need Docker (the API uses embedded PGlite, see
+# README.md). Use this stack to rehearse the real topology before a deploy:
+#
+#   postgres:16   the real database engine (instead of PGlite)
+#   minio         S3-compatible object storage   (STORAGE_DRIVER=s3)
+#   minio-init    one-shot: creates the records bucket and enables versioning
+#   clamav        clamd malware scanner for uploads (CLAMAV_HOST, contract §27)
+#   redis         rate-limit store / future BullMQ queue (REDIS_URL)
+#   api           services/api image  -> http://localhost:4000/api/v1
+#   web           apps/web image      -> http://localhost:3000
+#   seed          one-shot synthetic demo seed (profile "seed", opt-in)
+#
+# QUICK START
+#   docker compose up -d --build                  # build + start everything
+#   docker compose --profile seed run --rm seed   # load the demo personas (OTP 123456)
+#   open http://localhost:3000                    # portal; login +919800000101 (doctor)
+#   docker compose logs -f api                    # follow API logs
+#   docker compose down                           # stop (keeps data volumes)
+#   docker compose down -v                        # stop AND wipe postgres/minio/redis data
+#
+#   Reset the demo data:  docker compose --profile seed run --rm seed node dist/db/seed.js --reset
+#   MinIO console:        http://localhost:9001  (user/password below)
+#   psql:                 docker compose exec postgres psql -U carecompanion carecompanion
+#
+# NOTES
+#   * Migrations: the API applies Drizzle migrations itself at startup, so no
+#     migrate service is needed. (One-off equivalent: `node dist/db/migrate.js`.)
+#   * NODE_ENV defaults to "development" so the dev OTP (123456) and the seed work.
+#     To rehearse production invariants (no devOtp, seed refused, fixture safety
+#     pack refused, MFA enforced) run:  CC_NODE_ENV=production docker compose up -d
+#     In production mode the API refuses to boot until real integrations are
+#     configured (services/api/src/config.ts productionReadinessIssues):
+#     SMS_PROVIDER=msg91|twilio + keys, PAYMENT_GATEWAY=razorpay + keys,
+#     MFA_ENCRYPTION_KEY, VIDEO_ROOM_SECRET. Put them in a git-ignored .env and
+#     add them to x-api-env, or use staging instead.
+#   * NEXT_PUBLIC_API_BASE_URL (and every NEXT_PUBLIC_* value, plus the CSP
+#     header that allows only the API origin) is baked into the web bundle at
+#     BUILD time. The browser runs on your host, so it must be a host-reachable URL
+#     (http://localhost:4000/api/v1), not http://api:4000. Change it with
+#     CC_PUBLIC_API_URL=... docker compose build web
+#   * The seed writes the demo record FILES with the local-disk adapter inside
+#     the seed container (src/db/seed.ts hard-codes LocalDiskStorage), so the
+#     seeded "Open original" files are not in MinIO. Newly uploaded files are.
+#     TODO(backend): let the seed use the configured storage driver.
+#   * ClamAV downloads its signature database on first start (2-5 minutes, about
+#     300 MB, needs ~3 GB RAM). Uploads are rejected/queued until clamd is up.
+#   * Every credential below is a LOCAL-ONLY placeholder. Override any of them
+#     through a root `.env` file (git-ignored) or your shell environment. Never
+#     reuse them anywhere else. Real environments use AWS Secrets Manager.
+#   * Env var names for S3/Redis/ClamAV follow docs/api/API_CONTRACT.md §27 and
+#     services/api/.env.example; if the backend renames one, update x-api-env.
+# =============================================================================
+
+name: carecompanion
+
+x-api-env: &api-env
+  NODE_ENV: ${CC_NODE_ENV:-development}
+  HOST: 0.0.0.0
+  PORT: "4000"
+  API_PREFIX: /api/v1
+  LOG_LEVEL: ${CC_LOG_LEVEL:-info}
+  # --- database (local-only credentials) ---
+  DATABASE_URL: postgres://${CC_DB_USER:-carecompanion}:${CC_DB_PASSWORD:-local-only-db-password}@postgres:5432/${CC_DB_NAME:-carecompanion}
+  # --- auth (local-only; >= 32 chars required) ---
+  JWT_SECRET: ${CC_JWT_SECRET:-local-only-compose-jwt-secret-000000000000}
+  PAYMENT_WEBHOOK_SECRET: ${CC_PAYMENT_WEBHOOK_SECRET:-local-only-compose-webhook-secret}
+  CORS_ORIGINS: http://localhost:3000
+  METRICS_TOKEN: ${CC_METRICS_TOKEN:-local-only-metrics-token}
+  # --- object storage -> MinIO ---
+  STORAGE_DRIVER: s3
+  S3_BUCKET: ${CC_S3_BUCKET:-carecompanion-records}
+  S3_REGION: ap-south-1
+  S3_ENDPOINT: http://minio:9000
+  S3_FORCE_PATH_STYLE: "true"
+  S3_ACCESS_KEY_ID: ${CC_MINIO_USER:-carecompanion}
+  S3_SECRET_ACCESS_KEY: ${CC_MINIO_PASSWORD:-local-only-minio-password}
+  # --- malware scanning -> clamd ---
+  CLAMAV_HOST: clamav
+  CLAMAV_PORT: "3310"
+  # --- redis (shared rate-limit counters) ---
+  REDIS_URL: redis://redis:6379
+  # --- video: unguessable room names (local-only value) ---
+  VIDEO_ROOM_SECRET: ${CC_VIDEO_ROOM_SECRET:-local-only-video-room-secret}
+  # --- AI: empty key => deterministic offline model ---
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  PAYMENT_GATEWAY: mock
+  WORKER_ENABLED: "true"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${CC_DB_USER:-carecompanion}
+      POSTGRES_PASSWORD: ${CC_DB_PASSWORD:-local-only-db-password}
+      POSTGRES_DB: ${CC_DB_NAME:-carecompanion}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio:
+    # MinIO community images are no longer actively published; pin a tag you trust.
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${CC_MINIO_USER:-carecompanion}
+      MINIO_ROOT_PASSWORD: ${CC_MINIO_PASSWORD:-local-only-minio-password}
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - miniodata:/data
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_started
+    environment:
+      MINIO_ROOT_USER: ${CC_MINIO_USER:-carecompanion}
+      MINIO_ROOT_PASSWORD: ${CC_MINIO_PASSWORD:-local-only-minio-password}
+      BUCKET: ${CC_S3_BUCKET:-carecompanion-records}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        i=0
+        until mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD" >/dev/null 2>&1; do
+          i=$$((i+1)); [ "$$i" -gt 60 ] && echo "minio not reachable" && exit 1
+          sleep 2
+        done
+        mc mb --ignore-existing "local/$$BUCKET"
+        mc version enable "local/$$BUCKET"
+        mc anonymous set none "local/$$BUCKET"
+        echo "bucket $$BUCKET ready (private, versioned)"
+    restart: "no"
+
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    # The image ships its own HEALTHCHECK (clamdcheck.sh); first start downloads signatures.
+    ports:
+      - "127.0.0.1:3310:3310"
+    volumes:
+      - clamdb:/var/lib/clamav
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    image: carecompanion/api:local
+    restart: unless-stopped
+    environment: *api-env
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+      clamav:
+        condition: service_started
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+      args:
+        # Baked into the bundle and the CSP at build time (rebuild after changing).
+        NEXT_PUBLIC_API_BASE_URL: ${CC_PUBLIC_API_URL:-http://localhost:4000/api/v1}
+        NEXT_PUBLIC_LEGAL_DRAFT: ${NEXT_PUBLIC_LEGAL_DRAFT:-true}
+        NEXT_PUBLIC_JITSI_DOMAIN: ${NEXT_PUBLIC_JITSI_DOMAIN:-meet.jit.si}
+        NEXT_PUBLIC_SUPPORT_EMAIL: ${NEXT_PUBLIC_SUPPORT_EMAIL:-}
+        NEXT_PUBLIC_SUPPORT_PHONE: ${NEXT_PUBLIC_SUPPORT_PHONE:-}
+    image: carecompanion/web:local
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_started
+
+  seed:
+    # Opt-in: docker compose --profile seed run --rm seed
+    profiles: ["seed"]
+    build:
+      context: ./services/api
+      dockerfile: Dockerfile
+    image: carecompanion/api:local
+    environment: *api-env
+    command: ["node", "dist/db/seed.js"]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  miniodata:
+  clamdb:
+  redisdata:

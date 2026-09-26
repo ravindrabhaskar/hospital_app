@@ -1,0 +1,533 @@
+{
+  "@@locale": "en",
+  "appTitle": "CareCompanion Pro",
+  "commonRetry": "Retry",
+  "commonCancel": "Cancel",
+  "commonConfirm": "Confirm",
+  "commonSubmit": "Submit",
+  "commonLogout": "Log out",
+  "commonRefresh": "Refresh",
+  "commonLoading": "Loading…",
+  "commonBack": "Back",
+  "commonNotAvailable": "Not available",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorNetwork": "You appear to be offline. Check your connection and try again.",
+  "errorSessionExpired": "Your session has expired. Please log in again.",
+  "loginTitle": "Provider sign in",
+  "loginSubtitle": "For verified nurses, technicians and field medical workers.",
+  "loginPhoneLabel": "Mobile number",
+  "loginPhoneHint": "10-digit mobile number",
+  "loginPhoneInvalid": "Enter a valid 10-digit mobile number",
+  "loginSendOtp": "Send OTP",
+  "loginOtpLabel": "6-digit OTP",
+  "loginOtpInvalid": "Enter the 6-digit OTP",
+  "loginOtpSentTo": "OTP sent to {phone}",
+  "@loginOtpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "loginVerify": "Verify and continue",
+  "loginChangeNumber": "Change number",
+  "loginDevOtpHint": "Development OTP: {otp}",
+  "@loginDevOtpHint": {
+    "placeholders": {
+      "otp": {
+        "type": "String"
+      }
+    }
+  },
+  "restrictedTitle": "Access restricted to verified care providers",
+  "restrictedBody": "This app is only for home-care providers registered with CareCompanion. If you are a patient or family member, please use the CareCompanion patient app.",
+  "blockedTitle": "You can't receive visits right now",
+  "blockedNoVisits": "No home visits can be assigned to you until your verification is active.",
+  "blockedPending": "Your professional verification is pending review by the CareCompanion operations team.",
+  "blockedExpired": "Your professional credential has expired. Please renew it and share the updated document with your coordinator.",
+  "blockedExpiredOn": "Credential expired on {date}.",
+  "@blockedExpiredOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "blockedSuspended": "Your provider account has been suspended. Please contact your care coordinator for details.",
+  "blockedRejected": "Your verification was not approved. Please contact your care coordinator.",
+  "blockedCheckAgain": "Check status again",
+  "homeGreeting": "Hello, {name}",
+  "@homeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeDutyOn": "On duty",
+  "homeDutyOff": "Off duty",
+  "homeDutyOnHint": "You can be matched to new home visits.",
+  "homeDutyOffHint": "Go on duty to receive new home visits.",
+  "homeDutyToggleLabel": "Duty status",
+  "homeDutyFailed": "Could not update duty status. You need to be online.",
+  "homeTodaySummary": "Today",
+  "homeSummaryTotal": "Visits",
+  "homeSummaryActive": "Active",
+  "homeSummaryDone": "Done",
+  "homeNextVisit": "Next: {time}",
+  "@homeNextVisit": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "tabToday": "Today",
+  "tabUpcoming": "Upcoming",
+  "tabCompleted": "Completed",
+  "visitsEmptyToday": "No visits for today.",
+  "visitsEmptyUpcoming": "No upcoming visits.",
+  "visitsEmptyCompleted": "No completed visits yet.",
+  "visitsShowingCached": "Offline – showing saved data",
+  "profileTooltip": "Profile",
+  "offlineBanner": "You are offline. Actions will be saved and synced later.",
+  "pendingSync": "Pending sync ({count})",
+  "@pendingSync": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "syncNow": "Sync now",
+  "syncAccessRevoked": "A visit is no longer assigned to you. Its unsynced changes were discarded and saved patient data was removed.",
+  "syncRejected": "The server did not accept a saved action: {message}",
+  "@syncRejected": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "actionQueued": "Saved offline. It will sync when you are back online.",
+  "actionDone": "Updated",
+  "statusRequested": "Requested",
+  "statusUnassigned": "Unassigned",
+  "statusAssigned": "New assignment",
+  "statusAccepted": "Accepted",
+  "statusEnRoute": "En route",
+  "statusArrived": "Arrived",
+  "statusInProgress": "In progress",
+  "statusCompleted": "Completed",
+  "statusCancelled": "Cancelled",
+  "statusEscalated": "Escalated",
+  "visitTitle": "Home visit",
+  "visitTimeWindow": "Time window",
+  "visitReason": "Reason for visit",
+  "visitAddress": "Address",
+  "visitAreaOnly": "{city} – {pincode}",
+  "@visitAreaOnly": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "pincode": {
+        "type": "String"
+      }
+    }
+  },
+  "visitAddressHidden": "Full address is shown after you accept the visit.",
+  "visitLandmark": "Landmark: {landmark}",
+  "@visitLandmark": {
+    "placeholders": {
+      "landmark": {
+        "type": "String"
+      }
+    }
+  },
+  "visitNavigate": "Navigate",
+  "visitNavigateFailed": "Could not open maps.",
+  "visitPatient": "Patient",
+  "visitPatientContext": "Patient context",
+  "visitAgeGender": "{age} yrs · {gender}",
+  "@visitAgeGender": {
+    "placeholders": {
+      "age": {
+        "type": "String"
+      },
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  "visitAllergies": "Allergies",
+  "visitNoAllergiesRecorded": "No allergies recorded",
+  "visitConditions": "Conditions",
+  "visitMedications": "Active medications",
+  "visitNoneRecorded": "None recorded",
+  "visitContextUnavailable": "Patient context is not available for this visit.",
+  "visitTimeline": "Status timeline",
+  "visitPendingSyncChip": "Pending sync",
+  "visitEta": "ETA {minutes} min",
+  "@visitEta": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "visitNotFound": "This visit is no longer available to you.",
+  "visitRecordedVitals": "Recorded vitals",
+  "visitSummary": "Visit summary",
+  "visitEscalation": "Escalation",
+  "stepAccept": "Accept",
+  "stepTravel": "Travel",
+  "stepArrive": "Arrive",
+  "stepVerify": "Verify",
+  "stepCare": "Checkup",
+  "stepComplete": "Complete",
+  "stepperLabel": "Visit progress: step {current} of {total}",
+  "@stepperLabel": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "actionAccept": "Accept visit",
+  "actionReject": "Reject",
+  "actionRejectTitle": "Reject this visit?",
+  "actionRejectReason": "Reason",
+  "actionRejectReasonRequired": "Please give a reason",
+  "actionStartTravel": "Start travel",
+  "actionEtaLabel": "Estimated arrival (minutes)",
+  "actionEtaInvalid": "Enter minutes between 1 and 240",
+  "actionArrived": "I have arrived",
+  "actionVerifyTitle": "Verify patient",
+  "actionVerifyBody": "Ask the patient or guardian to read out the 4-digit visit code shown in their app.",
+  "actionVisitCode": "Visit code",
+  "actionVisitCodeInvalid": "Enter the 4-digit code",
+  "actionConsent": "Patient/guardian consents to the checkup",
+  "actionConsentRequired": "Consent must be confirmed before starting",
+  "actionVerify": "Verify and start checkup",
+  "actionVerifyOfflineNote": "You are offline. The code will be checked when you reconnect.",
+  "actionComplete": "Complete visit",
+  "actionCompleteTitle": "Complete visit",
+  "actionSummaryLabel": "Visit summary",
+  "actionSummaryHint": "What was done, observations shared with the patient, any follow-up needed",
+  "actionSummaryRequired": "Please write a short summary",
+  "nextAwaitingAssignment": "Waiting for assignment.",
+  "nextNoAction": "No further action needed.",
+  "nextCancelled": "This visit was cancelled.",
+  "nextReassigned": "This visit is no longer assigned to you.",
+  "nextVerifyIntro": "Verify the patient's identity and consent before starting.",
+  "nextCareIntro": "Record vitals and observations, then complete the visit.",
+  "nextEscalatedIntro": "This visit has been escalated. You can still complete it.",
+  "escalateButton": "Escalate",
+  "escalateTitle": "Escalate to supervising doctor",
+  "escalateReason": "What is the concern?",
+  "escalateReasonRequired": "Please describe the concern",
+  "escalateSeverity": "Severity",
+  "escalateUrgent": "Urgent",
+  "escalateEmergency": "Emergency",
+  "escalateEmergencyHint": "For a life-threatening emergency, call 108 immediately.",
+  "escalateCall108": "Call 108",
+  "escalateConfirmTitle": "Confirm escalation",
+  "escalateConfirmBody": "This alerts the clinical team immediately with severity: {severity}. Continue?",
+  "@escalateConfirmBody": {
+    "placeholders": {
+      "severity": {
+        "type": "String"
+      }
+    }
+  },
+  "escalateSend": "Send escalation",
+  "vitalsTitle": "Vitals",
+  "vitalsSave": "Save vitals",
+  "vitalsSaved": "Vitals saved",
+  "vitalsBpSystolic": "BP systolic",
+  "vitalsBpDiastolic": "BP diastolic",
+  "vitalsPulse": "Pulse",
+  "vitalsSpo2": "SpO2",
+  "vitalsTemperature": "Temperature",
+  "vitalsBloodGlucose": "Blood glucose",
+  "vitalsWeight": "Weight",
+  "vitalsRespiratoryRate": "Respiratory rate",
+  "vitalsErrorNumber": "Enter a number",
+  "vitalsErrorRange": "Must be between {min} and {max}",
+  "@vitalsErrorRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "vitalsErrorBpPair": "Enter both systolic and diastolic",
+  "vitalsErrorBpOrder": "Diastolic must be lower than systolic",
+  "vitalsErrorEmpty": "Enter at least one vital",
+  "vitalsNoInterpretation": "Values are recorded as measured. Clinical review is done by the care team.",
+  "obsTitle": "Observations",
+  "obsAlertOriented": "Patient alert and oriented",
+  "obsMedicationsReviewed": "Medications reviewed",
+  "obsMobilityObserved": "Mobility observed",
+  "obsCaregiverPresent": "Caregiver present",
+  "obsHomeSafe": "Home environment safe",
+  "obsConcernsNoted": "Patient concerns noted",
+  "obsNotes": "Notes",
+  "obsNotesHint": "Factual observations only",
+  "obsSave": "Save observations",
+  "obsSaved": "Observations saved",
+  "profileTitle": "Profile",
+  "profileType": "Role",
+  "profileQualification": "Qualification",
+  "profileVerification": "Verification",
+  "profileCredentialExpiry": "Credential valid until",
+  "profileCredentialExpiring": "Your credential expires in {days} days. Renew it to keep receiving visits.",
+  "@profileCredentialExpiring": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "profileZones": "Service zones",
+  "profileCapabilities": "Capabilities",
+  "profileLanguage": "Language",
+  "profilePhone": "Phone",
+  "profileLogoutConfirm": "Log out?",
+  "profileLogoutPending": "{count} unsynced actions will be discarded if you log out now.",
+  "@profileLogoutPending": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileLogoutBody": "Saved visit data on this device will be removed.",
+  "typeNurse": "Nurse",
+  "typeTechnician": "Technician",
+  "typeIntern": "Intern",
+  "typePhysiotherapist": "Physiotherapist",
+  "verificationVerified": "Verified",
+  "verificationPending": "Pending",
+  "verificationRejected": "Rejected",
+  "verificationSuspended": "Suspended",
+  "verificationExpired": "Expired",
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "genderOther": "Other",
+  "errorMfaRequired": "This account needs two-step verification, which the provider app doesn't support. Please contact support.",
+  "mfaTitle": "Extra verification required",
+  "mfaBody": "Your account is set up to require two-step verification (MFA). CareCompanion Pro does not support this for provider accounts. Please contact your coordinator or support so they can correct your account. Your queued visit updates are kept on this device.",
+  "updateTitle": "Update required",
+  "updateBody": "This version of CareCompanion Pro is no longer supported. Please install the latest version to keep receiving visits.",
+  "updateVersions": "Installed {current} · Required {minimum}",
+  "@updateVersions": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "updateNow": "Update now",
+  "photoAdd": "Add photo",
+  "photoSectionTitle": "Visit photo (optional)",
+  "photoSectionHint": "Only if it helps care (for example a wound or a device). Requires the patient's consent.",
+  "photoConsentTitle": "Patient consent",
+  "photoConsentBody": "The photo will be saved to the patient's health record. Avoid faces and anything not needed for care.",
+  "photoConsent": "The patient (or their caregiver) has agreed to this photo being taken and saved to their record.",
+  "photoConsentRequired": "Patient consent is required before taking a photo.",
+  "photoOpenCamera": "Open camera",
+  "photoUploaded": "Photo uploaded to the patient's record.",
+  "photoQueued": "Photo saved. It will upload when you're back online.",
+  "photoNoPermission": "You don't have permission to add photos to this patient's record. Please contact your coordinator.",
+  "photoFileMissing": "A queued photo could not be uploaded because it is no longer on this device. Please take it again.",
+  "photoCameraFailed": "Couldn't open the camera.",
+  "profileSupport": "Help & support",
+  "profileSupportCall": "Call support",
+  "profileSupportEmail": "Email support",
+  "profileSupportWhatsapp": "WhatsApp support",
+  "profileSupportUnavailable": "Support contacts aren't available right now. Please contact your coordinator.",
+  "profilePrivacy": "Privacy policy",
+  "profileTerms": "Terms of service",
+  "profileAccount": "Account",
+  "profileCloseAccount": "Request account closure",
+  "profileCloseAccountBody": "Provider accounts are staff accounts and can't be deleted from the app. Contact support to request closure: an administrator will disable your account and handle your data under the retention policy.",
+  "profileCloseAccountSubject": "Provider account closure request",
+  "profileLinkFailed": "Couldn't open the link.",
+  "profileAppVersion": "Version {version}",
+  "@profileAppVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "commonDelete": "Delete",
+  "typeDoctor": "Doctor",
+  "onbTitle": "Apply to join as a care provider",
+  "onbIntro": "This account isn't registered as a care provider yet. Apply below: our team verifies every provider before any visit can be assigned.",
+  "onbEditTitle": "Edit your application",
+  "onbStepRole": "Role",
+  "onbStepDetails": "Qualification",
+  "onbStepAreas": "Languages and areas",
+  "onbStepReview": "Review",
+  "onbTypeLabel": "I am applying as",
+  "onbDoctorNote": "Doctors use the CareCompanion web portal after approval, not this app. You can still apply here.",
+  "onbFullName": "Full name (as on your registration)",
+  "onbQualification": "Qualification (e.g. GNM, B.Sc Nursing, DMLT)",
+  "onbRegNumber": "Registration number",
+  "onbRegCouncil": "Registration council (optional)",
+  "onbSpecialty": "Specialty",
+  "onbExperience": "Experience (years)",
+  "onbRequired": "Required",
+  "onbExperienceInvalid": "Enter a number of years from 0 to 60",
+  "onbLanguages": "Languages you speak",
+  "onbLanguagesRequired": "Select at least one language",
+  "onbAreas": "Preferred work areas",
+  "onbAreasHint": "Add the pincodes where you would like to work. Each pincode is matched to one of our service zones. Optional.",
+  "onbPincode": "Pincode",
+  "onbPincodeInvalid": "Enter a 6-digit pincode",
+  "onbAddArea": "Add",
+  "onbZoneSaved": "Saved area",
+  "onbAreaNotServiceable": "We don't serve pincode {pincode} yet. You can still apply.",
+  "@onbAreaNotServiceable": {
+    "placeholders": {
+      "pincode": {
+        "type": "String"
+      }
+    }
+  },
+  "onbReviewDocsNote": "After you submit, upload your documents. A registration certificate and an ID proof are required for approval.",
+  "onbNext": "Next",
+  "onbSubmit": "Submit application",
+  "onbResubmit": "Resubmit application",
+  "onbSubmitted": "Application submitted",
+  "onbCancelEdit": "Cancel editing",
+  "onbStatusSubmittedTitle": "Application under review",
+  "onbStatusSubmittedBody": "Our team is reviewing your application. You'll be notified when there is a decision.",
+  "onbStatusChangesTitle": "Changes requested",
+  "onbStatusChangesBody": "The reviewer asked for changes. Update your details or documents, then resubmit.",
+  "onbStatusRejectedTitle": "Application not approved",
+  "onbStatusRejectedBody": "Your application was not approved. Contact support if you have questions.",
+  "onbReviewerNote": "Reviewer's note",
+  "onbReviewerNoteBy": "Note from {name}",
+  "@onbReviewerNoteBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "onbEditResubmit": "Edit & resubmit",
+  "onbEditDetails": "Edit details",
+  "onbApprovedTitle": "You're approved",
+  "onbApprovedBody": "Your application has been approved. Sign out and sign in again to start.",
+  "onbApprovedDoctorBody": "Your doctor account is approved. Sign in to the CareCompanion web portal to set up your schedule.",
+  "onbSignOutAndIn": "Sign out and sign in again",
+  "onbCheckStatus": "Check status",
+  "onbUpdatedOn": "Last updated {date}",
+  "@onbUpdatedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "onbDocuments": "Documents",
+  "onbDocsMissing": "Still needed: {docs}",
+  "@onbDocsMissing": {
+    "placeholders": {
+      "docs": {
+        "type": "String"
+      }
+    }
+  },
+  "onbDocsComplete": "All required documents are uploaded.",
+  "onbDocsHint": "PDF, JPG or PNG, up to 10 MB each.",
+  "onbNoDocuments": "No documents uploaded yet.",
+  "onbAddDocument": "Add document",
+  "onbDocType": "Document type",
+  "docRegistrationCertificate": "Registration certificate",
+  "docDegree": "Degree or diploma",
+  "docIdProof": "ID proof",
+  "docExperienceLetter": "Experience letter",
+  "docOther": "Other",
+  "sourceCamera": "Take a photo",
+  "sourceGallery": "Choose from gallery",
+  "sourceFiles": "Choose a file (PDF, JPG, PNG)",
+  "onbUploading": "Uploading… {percent}%",
+  "@onbUploading": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "onbUploadFailed": "Upload failed: {error}",
+  "@onbUploadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "onbFileTooLarge": "This file is larger than 10 MB.",
+  "onbDeleteDocConfirm": "Delete this document?",
+  "earnTitle": "Earnings",
+  "earnEntrySubtitle": "Completed services and payouts",
+  "earnCompleted": "Completed services",
+  "earnGross": "Gross",
+  "earnPlatformFee": "Platform fee",
+  "earnRefunds": "Refunds",
+  "earnPayable": "Payable to you",
+  "earnLines": "Services",
+  "earnEmpty": "No completed and paid services in this month.",
+  "earnPrevMonth": "Previous month",
+  "earnNextMonth": "Next month",
+  "earnNote": "Only completed and paid services count. Payouts are settled by the operations team.",
+  "earnRefHomeVisit": "Home visit",
+  "earnRefAppointment": "Appointment",
+  "earnLineDetail": "Fee {fee} · Payable {payable}",
+  "@earnLineDetail": {
+    "placeholders": {
+      "fee": {
+        "type": "String"
+      },
+      "payable": {
+        "type": "String"
+      }
+    }
+  },
+  "avatarChange": "Change profile photo",
+  "avatarPreviewTitle": "Use this photo?",
+  "avatarPreviewBody": "Patients see this photo when you are assigned to their visit.",
+  "avatarUse": "Use photo",
+  "avatarUploaded": "Profile photo updated",
+  "avatarTooLarge": "The photo must be smaller than 5 MB.",
+  "profileRating": "{rating} ★ ({count} ratings)",
+  "@profileRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "voiceDictate": "Dictate notes",
+  "voiceStop": "Stop dictation",
+  "voiceListening": "Listening… speak now",
+  "voiceReview": "Dictated text was added to the notes. Review and correct it before saving.",
+  "voiceUnavailable": "Voice input isn't available on this device, or microphone permission was denied."
+}

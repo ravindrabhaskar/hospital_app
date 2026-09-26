@@ -1,0 +1,376 @@
+
+
+AI-POWERED
+Connected Healthcare
+From symptom to care to continuous follow-up — one intelligent healthcare companion.
+
+
+
+Product Pitch Deck • 2026
+AI + Home Care + Clinicians + Health Records + Remote Monitoring
+
+
+
+The problem
+Healthcare is fragmented at the exact moment people need clarity.
+People don't just need a doctor.
+They need help deciding what to do next.
+• Symptoms are difficult to interpret without context.
+• Medical records are scattered across hospitals, PDFs and apps.
+• Elderly and mobility-limited patients may struggle to access routine care.
+• Families coordinate doctors, medicines, reports and emergencies manually.
+• Teleconsultation alone does not solve physical examination or follow-up.
+• Language and health-literacy barriers make digital healthcare harder to use.
+
+
+The gap
+Symptom → uncertainty → delay → fragmented care → missed follow-up
+AI Healthcare Platform
+2
+
+
+
+The solution
+An AI care-orchestration layer that connects digital and physical healthcare.
+
+01
+Understand
+Voice/chat AI captures symptoms, history and intent.
+
+02
+Assess
+Safety rules + AI identify the appropriate care pathway.
+
+03
+Connect
+Home checkup, doctor, clinic or hospital is coordinated.
+
+04
+Continue
+Records, reminders, monitoring and follow-up stay connected.
+AI Healthcare Platform
+3
+
+
+
+Product ecosystem
+Designed around the patient's complete care journey.
+
+
+AI Health Assistant
+Voice + chat • multilingual • history-aware
+
+
+Home Checkups
+Verified field professionals • vitals • escalation
+
+
+Clinical Layer
+Doctors • teleconsultation • care plans
+
+
+Health Records
+Timeline • reports • medications • allergies
+
+
+Safety & Monitoring
+Fall detection • wound tracking • alerts
+
+
+Care Discovery
+Doctors • hospitals • transparent review signals
+AI Healthcare Platform
+4
+
+
+
+Why now
+Digital healthcare infrastructure and AI capabilities are converging.
+
+
+73.98 Cr
+ABHA accounts reported by ABDM in Feb 2025
+
+
+49.06 Cr
+Health records linked to ABHA
+
+
+$7.63B
+Estimated India digital-health market in 2025
+
+
+$791M
+Estimated India AI-healthcare market in 2025
+Market estimates vary by definition; figures are directional rather than additive.
+Sources: Government of India / ABDM; MarketsandMarkets 2026 market estimates.
+AI Healthcare Platform
+5
+
+
+
+Market opportunity
+Multiple adjacent markets create a large addressable opportunity.
+
+
+Digital Health
+$7.63B
+2025
+→
+$23.33B
+2030
+
+
+AI Healthcare
+$0.79B
+2025
+→
+$4.53B
+2030
+
+
+AI Telehealth
+$0.22B
+2025
+→
+$1.12B
+2030
+
+
+Telemedicine
+$3.64B
+2025
+→
+$12.63B
+2031
+These published estimates use different market definitions and should not be summed.
+AI Healthcare Platform
+6
+
+
+
+Who pays?
+Build revenue around care value, not just AI chat.
+
+
+Patients & families
+Home visits • consultations • premium care plans
+
+
+Clinics & doctors
+Provider SaaS • AI documentation • patient engagement
+
+
+Hospitals
+Digital follow-up • referrals • remote monitoring
+
+
+Employers & insurers
+Care navigation • employee health • monitoring
+AI Healthcare Platform
+7
+
+
+
+Competitive landscape
+The market is validated — but fragmented across categories.
+
+
+Apollo 24/7
+Full healthcare ecosystem
+
+
+Tata 1mg
+Consultation + diagnostics + pharmacy
+
+
+Practo
+Doctor discovery + provider platform
+
+
+MediBuddy
+Digital healthcare + employer ecosystem
+
+
+Portea
+Home healthcare
+
+
+MFine
+Digital consultation + health services
+
+
+HealthPlix
+Clinician workflow + AI
+
+
+eSanjeevani
+Large-scale public telemedicine
+
+
+Wysa
+AI mental wellness
+
+
+GoDavaii / Ada
+AI health assistance / symptom support
+AI Healthcare Platform
+8
+
+
+
+Our differentiation
+The moat is the connected workflow — not the chatbot.
+Most platforms solve one or two steps.
+We connect the whole care journey.
+
+Symptom
+→
+
+AI
+→
+
+Home Checkup
+→
+
+Doctor
+→
+
+Records
+→
+
+Treatment
+→
+
+Follow-up
+→
+
+Monitoring
+• Multilingual, voice-first access
+• AI + human clinical escalation
+• Physical home-care layer
+• Longitudinal health context
+• Safety monitoring and follow-up
+AI Healthcare Platform
+9
+
+
+
+Business model
+Start transaction-led; expand into recurring B2B/B2B2C revenue.
+
+
+Care
+Home visit + consultation fees
+
+
+Subscription
+Family / elderly-care plans
+
+
+Provider SaaS
+Per doctor / clinic monthly plans
+
+
+Enterprise
+Hospital / employer annual contracts
+
+
+Monitoring
+Recurring remote-care plans
+
+
+Integrations
+Enterprise/API pricing
+AI Healthcare Platform
+10
+
+
+
+Where the moat comes from
+Building an app is easy. Building trusted healthcare infrastructure is not.
+
+
+Software  •  LOW
+UI, chat and booking are replicable.
+
+
+Clinical AI  •  HIGH
+Validation, safety, data and clinical expertise.
+
+
+Provider network  •  HIGH
+Credentialing, supply density and trust.
+
+
+Home operations  •  HIGH
+People, routing, quality and geographic coverage.
+
+
+Health data  •  HIGH
+Consent, security, interoperability and trust.
+
+
+Brand  •  HIGH
+Healthcare requires sustained reputation.
+AI Healthcare Platform
+11
+
+
+
+Product roadmap
+Earn trust first, then expand the intelligence layer.
+
+
+MVP
+AI assistant • records • appointments • home-checkup workflow • multilingual foundation
+
+
+Phase 2
+Voice • mental wellness • wound workflow • fall detection • clinician AI summaries
+
+
+Phase 3
+Wearables • remote monitoring • hospital integrations • caregiver ecosystem
+
+
+Future
+VR/AR • authorized government integrations • advanced clinical AI
+AI Healthcare Platform
+12
+
+
+
+Go-to-market
+Prove one painful care journey before building the full ecosystem.
+
+1
+1. Narrow wedge
+Start with home checkup + AI history summary + doctor escalation.
+
+2
+2. Paid pilots
+Partner with 3–5 clinics/hospitals or employer groups.
+
+3
+3. Measure
+Track paid conversion, repeat use, clinician time saved and escalation quality.
+
+4
+4. Expand
+Add family care, monitoring, wearables and specialist workflows.
+AI Healthcare Platform
+13
+
+
+
+The opportunity
+Build the layer that connects
+people to the right care,
+at the right time.
+AI + human clinicians + home care + continuous monitoring
+Not an AI doctor.
+An AI-powered healthcare companion and care coordinator.
+Thank you
+AI Healthcare Platform
+14

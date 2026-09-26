@@ -1,0 +1,187 @@
+
+BUSINESS REQUIREMENTS DOCUMENT
+AI-Powered Connected Healthcare Platform
+AI-Powered Connected Healthcare Platform • Version 1.0 • 2026
+Document Item
+ | Value
+ | Purpose
+ | Define business need, objectives, stakeholders, scope, value and operating model.
+ | Business model
+ | B2C + B2B + B2B2C
+ | Initial market
+ | India
+ | Primary value proposition
+ | Help people navigate from health concern to appropriate care and follow-up.
+ | Core principle
+ | AI-assisted healthcare with qualified human oversight.
+ | 
+1. Executive Summary
+The platform is a connected healthcare ecosystem that combines AI health assistance, voice and multilingual access, doctor consultations, home checkups, medical records, wellness, safety monitoring and future wearable/government integrations. The business is designed to solve care fragmentation rather than compete only as a teleconsultation marketplace.
+2. Business Problem
+Patients often do not know what level of care they need.
+Health information is distributed across providers and documents.
+Routine home-based care can be inconvenient to arrange.
+Families manually coordinate appointments, medicines, reports and follow-ups.
+Language and health-literacy barriers reduce accessibility.
+Digital consultation often ends without an integrated follow-up journey.
+3. Business Opportunity
+The opportunity spans digital health, telemedicine, home healthcare, AI healthcare, remote monitoring and care coordination. The product should avoid relying on a single market-size estimate because research firms define these categories differently.
+Opportunity area
+ | Business relevance
+ | Digital health
+ | Large umbrella market and infrastructure opportunity.
+ | AI healthcare
+ | Fast-growing capability layer for assistance and workflow automation.
+ | Telemedicine
+ | Established digital care behavior and provider ecosystem.
+ | Home healthcare
+ | High-value physical service layer.
+ | Remote monitoring
+ | Potential recurring revenue through continuous care.
+ | B2B/B2B2C
+ | Potentially stronger contract economics than consumer-only subscriptions.
+ | 4. Business Objectives
+Objective
+ | Business outcome
+ | Acquire users
+ | Build trust through useful, simple care journeys.
+ | Monetize care
+ | Generate revenue through home visits, consultations and plans.
+ | Build recurring revenue
+ | Provider SaaS, family plans, monitoring and enterprise contracts.
+ | Create defensibility
+ | Combine provider network, workflows, longitudinal records and operational data.
+ | Improve continuity
+ | Connect consultation, treatment and follow-up.
+ | Maintain trust
+ | Strong privacy, safety and clinical governance.
+ | 5. Stakeholders
+Stakeholder
+ | Interest
+ | Patients
+ | Accessible, understandable healthcare.
+ | Families/Caregivers
+ | Coordination and safety.
+ | Doctors
+ | Better patient context and efficient workflows.
+ | Interns/Field workers
+ | Structured home-care operations.
+ | Hospitals/Clinics
+ | Patient engagement and continuity.
+ | Employers/Insurers
+ | Care navigation and monitoring.
+ | Admin
+ | Safe operations and quality.
+ | Regulators/Partners
+ | Compliance, privacy and interoperability.
+ | 6. Business Scope
+In Scope
+AI health assistant
+Voice and multilingual interaction
+Doctor discovery and consultation
+Home checkups
+Medical records
+Medication/follow-up reminders
+Mental wellness
+Wound workflow
+Fall detection
+Hospital discovery
+Wearable roadmap
+Admin and clinician portals
+Out of Scope for Initial MVP
+Autonomous diagnosis
+Unvalidated clinical treatment decisions
+Unapproved government-data access
+Unsupervised emergency dispatch
+Claims of clinical accuracy without validation
+7. Revenue Model
+Revenue stream
+ | Description
+ | Home care
+ | Per-visit fee and service margin.
+ | Consultations
+ | Per-consultation transaction.
+ | Family plans
+ | Monthly/annual care coordination.
+ | Provider SaaS
+ | Recurring subscription per doctor/clinic.
+ | Enterprise
+ | Annual hospital/employer contracts.
+ | Remote monitoring
+ | Recurring care-plan subscription.
+ | Integrations
+ | Enterprise/API pricing.
+ | 8. Customer Segments
+Urban and semi-urban patients
+Families caring for elderly/dependents
+Clinics and independent doctors
+Hospitals
+Employers
+Insurers/TPAs
+Home-care providers
+9. Competitive Context
+Competition exists across multiple categories rather than from one identical product: telemedicine, pharmacy/diagnostics, home healthcare, AI health assistance, mental wellness, provider software and remote monitoring. The business differentiation is the connected care workflow.
+Category
+ | Examples to benchmark
+ | Digital healthcare
+ | Apollo 24/7, Tata 1mg, Practo, MediBuddy, MFine
+ | Home healthcare
+ | Portea and other home-care providers
+ | AI wellness/health
+ | Wysa, Ada, GoDavaii and emerging AI-health products
+ | Public telemedicine
+ | eSanjeevani
+ | Provider workflow
+ | HealthPlix and similar clinical platforms
+ | 10. Business Value Proposition
+“From symptom to care to continuous follow-up — one connected healthcare companion.”
+Convenience
+Continuity
+Multilingual accessibility
+Home-based care
+Clinician-assisted AI
+Family coordination
+Longitudinal health context
+11. Success Metrics
+Monthly active users
+Paid conversion
+Home-visit bookings/completion
+Consultation completion
+Repeat usage
+Subscription retention
+Provider retention
+Clinician time saved
+Follow-up adherence
+Safety-event quality
+Enterprise renewal
+12. Business Risks
+Risk
+ | Business response
+ | Trust barrier
+ | Verified providers, transparent AI limitations, strong support.
+ | Clinical risk
+ | Human escalation and clinical governance.
+ | High operations cost
+ | Start geographically focused and partner with providers.
+ | Competition
+ | Differentiate through integrated care journeys.
+ | Regulation
+ | Jurisdiction-specific legal and compliance review.
+ | Low willingness to pay
+ | Test paid pilots and service-linked monetization early.
+ | 13. Go-to-Market
+Choose one initial geography and one high-frequency care problem.
+Partner with clinics/home-care providers.
+Launch paid pilot.
+Measure care conversion, repeat usage and provider efficiency.
+Expand to family care and monitoring.
+Build enterprise partnerships.
+14. Business Acceptance Criteria
+A defined target segment is willing to use the service.
+At least one paid care journey is repeatable.
+Providers can deliver the workflow safely.
+Unit economics are measurable.
+AI safety and privacy controls are in place.
+Customer support and escalation processes are operational.
+15. Strategic Direction
+The long-term business should be positioned as an AI-powered healthcare companion and care coordinator—not merely an AI chatbot or doctor marketplace. The defensibility should come from trusted care operations, provider relationships, longitudinal patient context and safe AI workflows.

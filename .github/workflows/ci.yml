@@ -1,0 +1,117 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: services/api } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm, cache-dependency-path: services/api/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: npm audit (high+, non-blocking)
+        run: npm audit --audit-level=high --omit=dev
+        continue-on-error: true
+
+  web:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: apps/web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: npm, cache-dependency-path: apps/web/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: npm audit (high+, non-blocking)
+        run: npm audit --audit-level=high --omit=dev
+        continue-on-error: true
+
+  flutter:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { app: [patient_app, provider_app] }
+    defaults:
+      run:
+        working-directory: apps/${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - run: flutter build web
+
+  # Builds the production images exactly as deploy.yml does, without pushing.
+  docker:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: api
+            context: services/api
+          - name: web
+            context: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build ${{ matrix.name }} image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          push: false
+          load: true
+          tags: carecompanion/${{ matrix.name }}:ci-${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=https://api.example.invalid/api/v1
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.name }}
+      - name: Image runs as non-root
+        run: |
+          user=$(docker image inspect --format '{{.Config.User}}' carecompanion/${{ matrix.name }}:ci-${{ github.sha }})
+          echo "image user: $user"
+          test -n "$user" && test "$user" != "root" && test "$user" != "0"
+      - name: Image size
+        run: docker image ls carecompanion/${{ matrix.name }}:ci-${{ github.sha }}
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: docker compose config is valid
+        run: docker compose -f docker-compose.yml --profile seed config --quiet
+
+  terraform:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: infra/terraform } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.16.4 }
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false -input=false
+      - run: terraform validate
+      - name: terraform test (mocked AWS provider, no credentials)
+        run: terraform test
+      - name: bootstrap module
+        working-directory: infra/terraform/bootstrap
+        run: terraform init -backend=false -input=false && terraform validate
