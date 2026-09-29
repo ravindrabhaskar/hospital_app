@@ -106,14 +106,25 @@ class HomeHeader extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${greetingFor(context, DateTime.now())},',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w500)),
-                        Text(
-                          firstName.isEmpty ? '👋' : '$firstName 👋',
-                          style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 32),
+                        // Single line each: shrink rather than wrap when the action icons leave little room.
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text('${greetingFor(context, DateTime.now())},',
+                              maxLines: 1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.w500)),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            firstName.isEmpty ? '👋' : '$firstName 👋',
+                            maxLines: 1,
+                            style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 32),
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(l.yourHealthOurPriority,
