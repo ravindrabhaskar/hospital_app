@@ -27,7 +27,7 @@ FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
 RUN apk add --no-cache libc6-compat
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci --no-audit --no-fund
 
 # ---- 2. build ------------------------------------------------------------------
 FROM ${NODE_IMAGE} AS build

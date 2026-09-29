@@ -79,7 +79,7 @@ jobs:
         if: env.SELECTED != 'true'
         run: echo "Skipping ${{ matrix.app }}"
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: env.SELECTED == 'true'
 
       - name: Preconditions
@@ -198,7 +198,7 @@ jobs:
       APP_DIR: apps/${{ matrix.app }}
       API_BASE_URL: ${{ vars.MOBILE_API_BASE_URL }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
 

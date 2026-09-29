@@ -27,7 +27,7 @@ ARG NODE_IMAGE=node:24-alpine
 FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci --no-audit --no-fund
 
 # ---- 2. compile ---------------------------------------------------------------
 FROM deps AS build
@@ -39,7 +39,7 @@ RUN npm run build
 FROM ${NODE_IMAGE} AS prod-deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev --no-audit --no-fund \
+RUN --mount=type=cache,target=/root/.npm,sharing=locked npm ci --omit=dev --no-audit --no-fund \
  && npm cache clean --force
 
 # ---- 4. runtime -----------------------------------------------------------------

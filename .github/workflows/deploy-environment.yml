@@ -45,7 +45,7 @@ jobs:
       NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME: ${{ vars.NEXT_PUBLIC_GRIEVANCE_OFFICER_NAME }}
       NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL: ${{ vars.NEXT_PUBLIC_GRIEVANCE_OFFICER_EMAIL }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Check environment configuration
         run: |
