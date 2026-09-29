@@ -71,6 +71,7 @@ Run `npm run seed` before `test:e2e` to reset the demo data.
 - AWS infrastructure (Mumbai) → `infra/terraform/`; first-deploy steps → `docs/runbooks/DEPLOYMENT_RUNBOOK.md`
 - Local production-like stack (Postgres, MinIO, ClamAV, Redis) → `docker compose up` (see `docker-compose.yml`)
 - CI/CD → `.github/workflows/` (`ci.yml`, `deploy.yml`, `mobile-release.yml`)
+- Building the Android & iOS apps for release → `docs/MOBILE_RELEASE.md`
 - Play Store / App Store submission → `docs/STORE_SUBMISSION.md`
 - First admin account → `npm --prefix services/api run create-admin -- --phone +91XXXXXXXXXX --name "Name"`
 

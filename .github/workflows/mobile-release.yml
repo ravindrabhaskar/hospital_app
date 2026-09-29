@@ -147,7 +147,7 @@ jobs:
 
       - name: Upload artifacts
         if: env.SELECTED == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.app }}-aab-${{ github.run_number }}
           path: |
@@ -238,7 +238,7 @@ jobs:
             --export-options-plist=ios/ExportOptions.plist \
             --dart-define=API_BASE_URL=$API_BASE_URL
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.app }}-ipa-${{ github.run_number }}
           path: ${{ env.APP_DIR }}/build/ios/ipa/*.ipa
