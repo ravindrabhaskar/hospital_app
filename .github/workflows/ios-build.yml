@@ -1,0 +1,80 @@
+# Unsigned iOS release builds for both apps on a macOS runner.
+#
+# iOS apps can only be compiled on macOS with Xcode, so this runs on GitHub's Mac
+# machines. It needs NO Apple credentials: it proves both apps compile for iPhone
+# (`flutter build ios --release --no-codesign`) and also produces iOS Simulator
+# builds you can drag onto a Simulator on any Mac to try the apps.
+#
+# For a signed .ipa you can submit to TestFlight / the App Store, use the `ios`
+# job in mobile-release.yml once you have an Apple Developer account
+# (see docs/STORE_SUBMISSION.md).
+name: iOS build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["apps/**", ".github/workflows/ios-build.yml"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    name: ios (${{ matrix.app }})
+    runs-on: macos-15
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [patient_app, provider_app]
+    env:
+      APP_DIR: apps/${{ matrix.app }}
+      # Until the production API exists this falls back to a placeholder; set the
+      # repository variable MOBILE_API_BASE_URL to build against your real API.
+      API_BASE_URL: ${{ vars.MOBILE_API_BASE_URL || 'https://api.example.invalid/api/v1' }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+
+      - name: Toolchain versions
+        run: |
+          flutter --version
+          xcodebuild -version
+          pod --version || true
+
+      - name: Install dependencies
+        working-directory: ${{ env.APP_DIR }}
+        run: flutter pub get
+
+      - name: Build iOS release (device, unsigned)
+        working-directory: ${{ env.APP_DIR }}
+        run: flutter build ios --release --no-codesign --dart-define=API_BASE_URL=$API_BASE_URL
+
+      - name: Build iOS Simulator app
+        working-directory: ${{ env.APP_DIR }}
+        run: flutter build ios --simulator --debug --dart-define=API_BASE_URL=http://localhost:4000/api/v1
+
+      - name: Package artifacts
+        working-directory: ${{ env.APP_DIR }}
+        run: |
+          set -e
+          mkdir -p ../../out
+          (cd build/ios/iphoneos && zip -qry ../../../../../out/${{ matrix.app }}-ios-device-unsigned.zip Runner.app)
+          (cd build/ios/iphonesimulator && zip -qry ../../../../../out/${{ matrix.app }}-ios-simulator.zip Runner.app)
+          # Flutter generates ios/Podfile(.lock) on the first macOS build; keep them for review.
+          cp ios/Podfile ../../out/${{ matrix.app }}-Podfile 2>/dev/null || true
+          cp ios/Podfile.lock ../../out/${{ matrix.app }}-Podfile.lock 2>/dev/null || true
+          ls -la ../../out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app }}-ios-${{ github.run_number }}
+          path: out/
+          retention-days: 30

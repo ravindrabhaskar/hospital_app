@@ -173,7 +173,7 @@ jobs:
   # iOS skeleton - DISABLED unless repository variable IOS_RELEASE_ENABLED=true.
   # Signing notes:
   #   * Needs an Apple Developer Program membership (organisation account, D-U-N-S).
-  #   * Create App IDs com.carecompanion.careCompanionPatient / ...Provider, an
+  #   * Create App IDs com.carecompanion.patient / com.carecompanion.provider, an
   #     "Apple Distribution" certificate and App Store provisioning profiles.
   #   * Secrets: IOS_DIST_CERT_P12_BASE64, IOS_DIST_CERT_PASSWORD,
   #     IOS_PROVISIONING_PROFILE_<PATIENT|PROVIDER>_BASE64, APPSTORE_API_KEY_ID,
