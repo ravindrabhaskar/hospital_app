@@ -184,7 +184,7 @@ jobs:
   ios:
     if: vars.IOS_RELEASE_ENABLED == 'true'
     name: ios (${{ matrix.app }})
-    runs-on: macos-latest
+    runs-on: macos-26
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -199,6 +199,13 @@ jobs:
       API_BASE_URL: ${{ vars.MOBILE_API_BASE_URL }}
     steps:
       - uses: actions/checkout@v5
+
+      - name: Select newest Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)
+          [ -n "$XCODE" ] && sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
+
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }
 

@@ -4,6 +4,7 @@
 # machines. It needs NO Apple credentials: it proves both apps compile for iPhone
 # (`flutter build ios --release --no-codesign`) and also produces iOS Simulator
 # builds you can drag onto a Simulator on any Mac to try the apps.
+# Current plugin versions use iOS 26 SDK APIs, so the job needs Xcode 26 (macOS 26 runner).
 #
 # For a signed .ipa you can submit to TestFlight / the App Store, use the `ios`
 # job in mobile-release.yml once you have an Apple Developer account
@@ -26,7 +27,7 @@ concurrency:
 jobs:
   ios:
     name: ios (${{ matrix.app }})
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -39,6 +40,12 @@ jobs:
       API_BASE_URL: ${{ vars.MOBILE_API_BASE_URL || 'https://api.example.invalid/api/v1' }}
     steps:
       - uses: actions/checkout@v5
+
+      - name: Select newest Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app 2>/dev/null | sort -V | tail -1)
+          [ -n "$XCODE" ] && sudo xcode-select -s "$XCODE/Contents/Developer"
+          xcodebuild -version
 
       - uses: subosito/flutter-action@v2
         with: { channel: stable, cache: true }

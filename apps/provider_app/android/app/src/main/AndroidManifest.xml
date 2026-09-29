@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <application
         android:label="CareCompanion Pro"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="false"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
