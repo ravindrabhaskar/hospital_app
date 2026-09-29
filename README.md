@@ -11,6 +11,16 @@ It is **not an AI doctor**. AI output is assistive, and emergencies are decided 
 | Provider app | `apps/provider_app` | Flutter, offline sync queue | home-care nurses, technicians, interns |
 | Docs | `docs/` | – | product, API contract, ADRs, runbooks, launch checklist |
 
+## Quick start on Windows (one click)
+
+Double-click **`START-CARECOMPANION.bat`** in this folder. It installs dependencies on first run, then:
+- opens the backend API window (http://localhost:4000/api/v1) and the staff web portal window (http://localhost:3100/login);
+- starts the Android emulator and installs both apps (CareCompanion and CareCompanion Pro);
+- prints every demo login.
+
+Close those windows to stop the servers. Run `START-CARECOMPANION.bat /reseed` to reset the demo data.
+The emulator needs about 2 GB of free memory, so close heavy programs first if it is slow or closes by itself.
+
 ## Run it locally (Windows / macOS / Linux)
 
 You need **Node 22+** and **Flutter 3.x**. No Docker or database install is needed, because dev uses embedded Postgres (PGlite).
