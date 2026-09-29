@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/config.dart';
 import '../../core/theme/tokens.dart';
@@ -38,6 +39,17 @@ class HelpSupportScreen extends ConsumerWidget {
               ],
             ),
           ),
+          if (ref.watch(featureFlagsProvider).supportDesk) ...[
+            const SizedBox(height: Space.lg),
+            ListRowTile(
+              key: const Key('support-tickets'),
+              icon: Icons.confirmation_number_outlined,
+              accent: Accent.sky,
+              title: l.myTickets,
+              subtitle: l.myTicketsSub,
+              onTap: () => context.push('/support/tickets'),
+            ),
+          ],
           const SizedBox(height: Space.lg),
           Text(l.helpSupportIntro, style: TextStyle(color: context.textMuted)),
           const SizedBox(height: Space.md),

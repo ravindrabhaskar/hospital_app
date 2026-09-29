@@ -3,7 +3,7 @@
 # default iOS skeleton. See docs/STORE_SUBMISSION.md for the store side.
 #
 # REPOSITORY SECRETS (Settings -> Secrets and variables -> Actions -> Secrets)
-#   Per app, PREFIX = PATIENT or PROVIDER (use a different upload key per app):
+#   Per app, PREFIX = PATIENT, PROVIDER or DOCTOR (use a different upload key per app):
 #     <PREFIX>_ANDROID_KEYSTORE_BASE64    base64 of the upload keystore (.jks)
 #                                        (Linux/macOS: base64 -w0 upload.jks ; Windows PowerShell:
 #                                         [Convert]::ToBase64String([IO.File]::ReadAllBytes("upload.jks")))
@@ -17,7 +17,7 @@
 # REPOSITORY VARIABLES (Settings -> Secrets and variables -> Actions -> Variables)
 #     MOBILE_API_BASE_URL                 e.g. https://api.carecompanion.in/api/v1  (--dart-define=API_BASE_URL)
 #     MOBILE_DART_DEFINES                 optional shared defines, space separated: "KEY1=v1 KEY2=v2"
-#     PATIENT_DART_DEFINES / PROVIDER_DART_DEFINES   optional per-app defines. The apps read:
+#     PATIENT_DART_DEFINES / PROVIDER_DART_DEFINES / DOCTOR_DART_DEFINES   optional per-app defines. The apps read:
 #                                         FIREBASE_API_KEY FIREBASE_APP_ID FIREBASE_MESSAGING_SENDER_ID
 #                                         FIREBASE_PROJECT_ID FIREBASE_IOS_BUNDLE_ID (push) and
 #                                         APP_STORE_URL (forced-update link). Values must not contain spaces.
@@ -35,9 +35,9 @@ on:
   workflow_dispatch:
     inputs:
       apps:
-        description: Which app(s) to build
+        description: Which app(s) to build (both = all apps)
         type: choice
-        options: [both, patient_app, provider_app]
+        options: [both, patient_app, provider_app, doctor_app]
         default: both
       upload_to_play:
         description: Upload to the Play internal track (needs PLAY_SERVICE_ACCOUNT_JSON)
@@ -67,6 +67,9 @@ jobs:
           - app: provider_app
             prefix: PROVIDER
             package: com.carecompanion.provider
+          - app: doctor_app
+            prefix: DOCTOR
+            package: com.carecompanion.doctor
     env:
       APP_DIR: apps/${{ matrix.app }}
       SELECTED: ${{ github.event_name == 'push' || inputs.apps == 'both' || inputs.apps == matrix.app }}
@@ -173,10 +176,10 @@ jobs:
   # iOS skeleton - DISABLED unless repository variable IOS_RELEASE_ENABLED=true.
   # Signing notes:
   #   * Needs an Apple Developer Program membership (organisation account, D-U-N-S).
-  #   * Create App IDs com.carecompanion.patient / com.carecompanion.provider, an
+  #   * Create App IDs com.carecompanion.patient / .provider / .doctor, an
   #     "Apple Distribution" certificate and App Store provisioning profiles.
   #   * Secrets: IOS_DIST_CERT_P12_BASE64, IOS_DIST_CERT_PASSWORD,
-  #     IOS_PROVISIONING_PROFILE_<PATIENT|PROVIDER>_BASE64, APPSTORE_API_KEY_ID,
+  #     IOS_PROVISIONING_PROFILE_<PATIENT|PROVIDER|DOCTOR>_BASE64, APPSTORE_API_KEY_ID,
   #     APPSTORE_API_ISSUER_ID, APPSTORE_API_PRIVATE_KEY (App Store Connect API key, .p8 contents).
   #   * Add ios/ExportOptions.plist (method app-store, teamID, provisioningProfiles).
   #   * Alternative: fastlane match + `fastlane pilot` for TestFlight.
@@ -194,6 +197,8 @@ jobs:
             prefix: PATIENT
           - app: provider_app
             prefix: PROVIDER
+          - app: doctor_app
+            prefix: DOCTOR
     env:
       APP_DIR: apps/${{ matrix.app }}
       API_BASE_URL: ${{ vars.MOBILE_API_BASE_URL }}

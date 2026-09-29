@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageTitle, Prose, PublicLayout } from "@/components/public-layout";
 import { SupportContacts } from "@/components/support-contacts";
+import { SupportEntry } from "@/components/support-entry";
 
 export const metadata: Metadata = {
   title: "Support · CareCompanion",
@@ -49,7 +50,12 @@ const FAQ: { q: string; a: React.ReactNode }[] = [
   },
 ];
 
+/** Public help page; signed-in support staff get the §61 support desk here instead (see SupportEntry). */
 export default function SupportPage() {
+  return <SupportEntry publicContent={<PublicSupport />} />;
+}
+
+function PublicSupport() {
   return (
     <PublicLayout>
       <PageTitle title="Support" />

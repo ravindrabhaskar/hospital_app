@@ -2,13 +2,13 @@ import { and, count, desc, eq, gte, inArray, lt, max, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { DbOrTx } from '../../db/client.js';
-import { careEpisodes, carePlans, careTasks, contactLogs, doseLogs, medications, patients, safetyEvents, users } from '../../db/schema.js';
+import { careEpisodes, carePlans, careTasks, checkins, contactLogs, doseLogs, medications, patients, programBreaches, programEnrollments, safetyEvents, users } from '../../db/schema.js';
 import { assertCanActForPatient } from '../../lib/access.js';
 import { audit } from '../../lib/audit.js';
 import { SYSTEM_ACTOR, hasRole, type Actor } from '../../lib/context.js';
 import { errors } from '../../lib/errors.js';
 import { pageFromQuery, paginateArray, envelope } from '../../lib/pagination.js';
-import { iso } from '../../lib/time.js';
+import { addDays, istDate, iso } from '../../lib/time.js';
 import { parse, zIso, zUuid } from '../../lib/validate.js';
 import { requireRoles } from '../../plugins/auth.js';
 import type { NotificationService } from '../notifications/service.js';
@@ -18,6 +18,9 @@ import { toPatientSummary } from '../patients/service.js';
 /** Contract section 35: care coordinator workspace. */
 type ContactRow = typeof contactLogs.$inferSelect;
 const COORDINATOR_VIEW = { relation: 'patient', isSelf: false, permissions: [] };
+/** Caseload risk ordering: more flags first, then by severity of the flags. */
+const FLAG_WEIGHT: Record<string, number> = { open_safety_event: 6, program_breach: 5, missed_checkin: 4, overdue_tasks: 3, missed_doses: 2, no_contact_7d: 1 };
+export const riskScore = (flags: string[]) => flags.length * 100 + flags.reduce((s, f) => s + (FLAG_WEIGHT[f] ?? 0), 0);
 
 export const toContactLog = (c: ContactRow) => ({
   id: c.id,
@@ -129,6 +132,17 @@ export async function coordinatorRoutes(app: FastifyInstance): Promise<void> {
         .where(and(inArray(medications.patientId, pids), eq(doseLogs.status, 'missed'), gte(doseLogs.scheduledAt, weekAgo), lt(doseLogs.scheduledAt, now))),
       toCareEpisodes(db, eps),
     ]);
+    // v1.3: a missed daily check-in in the last 3 days, and open program (remote monitoring) breaches.
+    const missedCheckins = await db
+      .selectDistinct({ patientId: checkins.patientId })
+      .from(checkins)
+      .where(and(inArray(checkins.patientId, pids), eq(checkins.status, 'missed'), gte(checkins.date, addDays(istDate(now), -3))));
+    const breaches = await db
+      .selectDistinct({ patientId: programEnrollments.patientId })
+      .from(programBreaches)
+      .innerJoin(programEnrollments, eq(programEnrollments.id, programBreaches.enrollmentId))
+      .innerJoin(safetyEvents, eq(safetyEvents.id, programBreaches.safetyEventId))
+      .where(and(inArray(programEnrollments.patientId, pids), inArray(safetyEvents.status, ['open', 'acknowledged'])));
     const lastContact = new Map(contacts.map((c) => [c.patientId, c.last ? new Date(c.last as unknown as string) : null]));
     const items = pats
       .map((p) => {
@@ -144,6 +158,8 @@ export async function coordinatorRoutes(app: FastifyInstance): Promise<void> {
         if (missed.some((m) => m.patientId === p.id)) flags.push('missed_doses');
         if (safety.some((s) => s.patientId === p.id)) flags.push('open_safety_event');
         if (!last || last < weekAgo) flags.push('no_contact_7d');
+        if (missedCheckins.some((m) => m.patientId === p.id)) flags.push('missed_checkin');
+        if (breaches.some((b) => b.patientId === p.id)) flags.push('program_breach');
         return {
           patient: toPatientSummary(p, COORDINATOR_VIEW),
           episodes: mapped.filter((e) => e.patientId === p.id),
@@ -154,7 +170,7 @@ export async function coordinatorRoutes(app: FastifyInstance): Promise<void> {
           flags,
         };
       })
-      .sort((a, b) => b.flags.length - a.flags.length || a.patient.name.localeCompare(b.patient.name));
+      .sort((a, b) => riskScore(b.flags) - riskScore(a.flags) || a.patient.name.localeCompare(b.patient.name));
     return paginateArray(items, page);
   });
 

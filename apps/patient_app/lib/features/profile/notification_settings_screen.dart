@@ -9,6 +9,7 @@ import '../../core/widgets/state_views.dart';
 import '../../models/misc.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
+import '../whatsapp/whatsapp_card.dart';
 
 class NotificationSettingsScreen extends ConsumerStatefulWidget {
   const NotificationSettingsScreen({super.key});
@@ -81,6 +82,8 @@ class _State extends ConsumerState<NotificationSettingsScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: Space.lg),
+              const WhatsappAssistantCard(),
               const SizedBox(height: Space.md),
               Text(l.notificationPrivacyNote,
                   style: TextStyle(fontSize: 12, color: context.textMuted)),

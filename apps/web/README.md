@@ -1,6 +1,6 @@
 # CareCompanion Web Portal (`apps/web`)
 
-Role-aware web portal for **clinicians**, **operations** (control tower) and **admins** of the CareCompanion care-orchestration platform.
+Role-aware web portal for **clinicians**, **operations** (control tower), **hospital discharge desks**, **support agents** and **admins** of the CareCompanion care-orchestration platform.
 Built against [`docs/api/API_CONTRACT.md`](../../docs/api/API_CONTRACT.md) only; it uses no endpoints or fields outside the contract.
 
 Stack: Next.js 15 (App Router, fully client-rendered pages), TypeScript strict, Tailwind CSS v4, TanStack Query, react-hook-form + zod, lucide-react, recharts, vitest + Testing Library.
@@ -23,7 +23,7 @@ The API (`services/api`) must be running (default `http://localhost:4000/api/v1`
 | `npm run start:standalone` | Serve the standalone build (`.next/standalone/server.js`) after copying `.next/static` (and `public/` if present) next to it. `PORT` (default 3100) and `BIND_HOST` (default `0.0.0.0`) are honoured |
 | `npm run lint` | ESLint (next/core-web-vitals + typescript) |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Vitest unit tests (API client 401/refresh + error parsing, role-based nav and guard incl. the v1.2 routes, domain helpers, MFA state machine + flow, MFA_REQUIRED redirect, idle timeout, account deletion states, video join window, security headers and env validation; v1.2: schedule overlap validation + editor, prescription form validation + payload shape, application decision rules, caseload flags/sorting, inbox thread polling hook) |
+| `npm test` | Vitest unit tests (API client 401/refresh + error parsing, role-based nav and guard incl. the v1.2 routes, domain helpers, MFA state machine + flow, MFA_REQUIRED redirect, idle timeout, account deletion states, video join window, security headers and env validation; v1.2: schedule overlap validation + editor, prescription form validation + payload shape, application decision rules, caseload flags/sorting, inbox thread polling hook; v1.3: AI-scribe consent gating + SOAP draft rendering, live interaction warnings with the major-warning acknowledge/override gate and the 400 `details.warnings` path, threshold editor validation, discharge form validation + multipart payload, ticket internal-note rendering + SLA countdown, hospital_staff/support_agent nav and guards, coupon rules) |
 
 ## Demo logins (seed data, contract §20)
 
@@ -35,6 +35,8 @@ All OTPs are **`123456`**. In non-production the login screen also shows `Dev OT
 | coordinator (Meera) | `+919800000301` | `/ops` |
 | ops_admin | `+919800000401` | `/ops` (+ read-only Audit logs and Analytics) |
 | super_admin | `+919800000501` | `/ops` + all of `/admin` |
+| hospital_staff (Hospital Discharge Desk) | `+919800000701` | `/hospital` |
+| support_agent (Support Desk) | `+919800000801` | `/support` |
 
 Patient-only (and provider-only) accounts are told to use the mobile app and are not kept signed in (they can still use `/account/delete`).
 
@@ -59,6 +61,16 @@ Patient-only (and provider-only) accounts are told to use the mobile app and are
 - **Inbox** `/inbox` (doctor, coordinator, ops_admin, super_admin): thread list with unread counts (also shown as a sidebar badge, refreshed every 30 s), thread view polling every 10 s with `?after=`, composer with an optional record attachment, distinct system messages.
 - **Admin**: `/admin/doctors` + `/admin/doctors/[id]/schedule` (super_admin, ops_admin; reuses the schedule editor, leaves are read-only because the contract has no admin leave endpoints); `/admin/plans` (subscription plans create/edit, retire with `active=false`); `/admin/schemes` (government schemes create/edit, draft/published toggle, content-review warning).
 
+## v1.3 pages (contract §41–§62)
+
+- **Clinician**: the consultation workspace has an **AI scribe** panel (§46) while the consultation is in progress: a patient-consent checkbox gates everything, then record in the browser (MediaRecorder → multipart `audio`) or paste a transcript; the SOAP draft appears in the lavender "AI-generated · advisory" style and **Insert into notes** only appends it to the editable notes (nothing auto-saves). The Permissions-Policy now allows the microphone for the portal itself (`microphone=(self <jitsi>)`). The **prescription writer** calls `/clinician/prescriptions/check` live (500 ms debounce) and lists warnings by severity; a `major` warning requires an acknowledgement tick + override reason (≥ 10 characters, sent as `acknowledgedWarnings`/`overrideReason`), and a 400 with `details.warnings` shows the same gate. The **clinical snapshot** adds care-program enrollments (adherence, open breaches, pause/resume/complete, 14/30-day trend chart with threshold lines + table view + breaches, and an enrol dialog with an editable threshold editor), a 30-day check-in strip, lab orders/reports, second opinions, exercise and diet plans (create dialogs from the exercise library / diet templates), the preventive schedule and insurance policies (masked). `/clinician/second-opinions`: open/claimed tabs, claim, and a respond form with a recommendations list.
+- **Operations**: `/ops/lab-orders` (status filter, report links), `/ops/ambulance` (5 s polling, plain OpenStreetMap links, "Call 108" reminder), `/ops/supplies` (low stock grouped by provider, restock dialog). The coordinator caseload understands `missed_checkin` and `program_breach` flags when the API returns them.
+- **Support desk** `/support` (support_agent, coordinator, ops_admin, super_admin): signed-in support staff get the desk at `/support` (everyone else still sees the public help page there). Metrics tiles, a queue with status and assignee filters and SLA countdown badges (breached first), and a ticket view (`?ticket=`) with the conversation, **internal notes** (amber, dashed, labelled "Internal, not visible to customer"), reply/internal-note composer, status, priority, "Assign to me" (super admins can also pick an agent).
+- **Hospital** (`hospital_staff`, lands on `/hospital`): discharge list with Day X/30 progress, tasks, missed check-ins and open alerts; `/hospital/new` a 4-step form (patient & family → discharge details → medications/tasks/follow-up days/program → summary PDF + review) posting multipart to `POST /discharges`; `/hospital/discharges/[id]`.
+- **Admin** (`super_admin`): `/admin/programs` (templates, reading + threshold editor saved as a new version, approve with a clinical-governance confirmation), `/admin/organizations` (create/edit, usage tiles, generate codes → CSV download), `/admin/tenants` (create/edit, colour picker, `logoMediaId` field, live branding preview with a contrast check), `/admin/coupons` (create/edit with rule validation).
+
+Contract interpretations: list endpoints described as "list" use the `{ items }` envelope; `Organization`, `Tenant` and `Coupon` are assumed to be their input fields plus `id` and are patched at `/…/:id`; editing a program template POSTs a new version (there is no PATCH) and approve is sent without a body; discharge `followUp.tasks`/`medications` reuse the §11 care-plan shapes; the agent ticket view reads `GET /support/tickets/:id` and falls back to the queue copy.
+
 ## Architecture notes
 
 - `src/lib/api/types.ts` mirrors the contract types; `endpoints.ts` holds one typed function per contract row; `http.ts` is the fetch wrapper.
@@ -73,7 +85,7 @@ Patient-only (and provider-only) accounts are told to use the mobile app and are
 
 - `next.config.ts` sets `output: "standalone"` (flat: `.next/standalone/server.js`, `outputFileTracingRoot` is this folder), `productionBrowserSourceMaps: false` and `poweredByHeader: false`.
 - To run it by hand: `npm run build`, then copy `.next/static` to `.next/standalone/.next/static` (and `public/` to `.next/standalone/public` if it exists) and run `node .next/standalone/server.js` with `PORT`/`HOSTNAME`. `npm run start:standalone` does exactly that.
-- **Security headers** (`src/lib/security-headers.ts`, every route): a Content-Security-Policy limited to `'self'`, the API origin from `NEXT_PUBLIC_API_BASE_URL` and `https://<NEXT_PUBLIC_JITSI_DOMAIN>` as the only frame source (fonts are self-hosted by next/font, so no Google Fonts origin); `frame-ancestors 'none'` + `X-Frame-Options: DENY`; `Referrer-Policy: strict-origin-when-cross-origin`; `Permissions-Policy` (camera/mic/screen share delegated only to the Jitsi frame); `X-Content-Type-Options: nosniff`; COOP; and in production `Strict-Transport-Security` (and `upgrade-insecure-requests` when the API is https). Pages are static, so scripts need `'unsafe-inline'` (no per-request nonce).
+- **Security headers** (`src/lib/security-headers.ts`, every route): a Content-Security-Policy limited to `'self'`, the API origin from `NEXT_PUBLIC_API_BASE_URL` and `https://<NEXT_PUBLIC_JITSI_DOMAIN>` as the only frame source (fonts are self-hosted by next/font, so no Google Fonts origin); `frame-ancestors 'none'` + `X-Frame-Options: DENY`; `Referrer-Policy: strict-origin-when-cross-origin`; `Permissions-Policy` (camera/screen share delegated only to the Jitsi frame; the microphone also for the portal itself, for the AI scribe); `X-Content-Type-Options: nosniff`; COOP; and in production `Strict-Transport-Security` (and `upgrade-insecure-requests` when the API is https). Pages are static, so scripts need `'unsafe-inline'` (no per-request nonce).
 - Headers and `NEXT_PUBLIC_*` values are fixed **at build time**: build the image per environment.
 - **Env validation**: `src/lib/env.ts` validates every `NEXT_PUBLIC_*` variable (see `.env.example`); an invalid value (or a non-https API URL in a production build, localhost excepted) fails `next build`.
 

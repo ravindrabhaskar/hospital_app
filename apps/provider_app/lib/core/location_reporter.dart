@@ -59,3 +59,24 @@ class LocationReporter {
     }
   }
 }
+
+/// Reads the current position once, or null (no permission, GPS off, error).
+typedef PositionReader = Future<({double lat, double lng})?> Function();
+
+/// One-shot, fail-soft location read (used for attendance check-in/out).
+Future<({double lat, double lng})?> readCurrentPosition() async {
+  try {
+    if (!await Geolocator.isLocationServiceEnabled()) return null;
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) return null;
+    final pos = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high, timeLimit: Duration(seconds: 10)),
+    );
+    return (lat: pos.latitude, lng: pos.longitude);
+  } catch (_) {
+    return null;
+  }
+}

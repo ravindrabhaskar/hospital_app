@@ -1,4 +1,4 @@
-import { and, eq, ilike, or } from 'drizzle-orm';
+import { and, eq, ilike, or, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { facilities, specialties } from '../../db/schema.js';
@@ -31,6 +31,7 @@ export function toFacility(f: FacilityRow, origin?: { lat: number; lng: number }
     services: f.services,
     emergency24x7: f.emergency24x7,
     verified: f.verified,
+    cashlessInsurers: f.cashlessInsurers ?? [],
   };
 }
 
@@ -50,6 +51,7 @@ export async function providerDirectoryRoutes(app: FastifyInstance): Promise<voi
         q: z.string().max(100).optional(),
         lat: z.coerce.number().min(-90).max(90).optional(),
         lng: z.coerce.number().min(-180).max(180).optional(),
+        cashlessInsurer: z.string().max(40).optional(),
       }),
       req.query,
     );
@@ -57,6 +59,7 @@ export async function providerDirectoryRoutes(app: FastifyInstance): Promise<voi
     const conds = [eq(facilities.verified, true)];
     if (q.type) conds.push(eq(facilities.type, q.type));
     if (q.q) conds.push(or(ilike(facilities.name, `%${q.q}%`), ilike(facilities.area, `%${q.q}%`))!);
+    if (q.cashlessInsurer) conds.push(sql`${facilities.cashlessInsurers} @> ${JSON.stringify([q.cashlessInsurer])}::jsonb`);
     const rows = await db.select().from(facilities).where(and(...conds)).orderBy(facilities.name);
     const origin = q.lat !== undefined && q.lng !== undefined ? { lat: q.lat, lng: q.lng } : undefined;
     const items = rows.map((f) => toFacility(f, origin));

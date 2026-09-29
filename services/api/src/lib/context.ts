@@ -30,12 +30,15 @@ export interface RequestCtx {
 
 export const SYSTEM_ACTOR: Actor = { userId: null, name: 'System', role: 'system', ip: null, correlationId: null };
 
-export const STAFF_ROLES: Role[] = ['doctor', 'coordinator', 'ops_admin', 'super_admin'];
+export const STAFF_ROLES: Role[] = ['doctor', 'coordinator', 'ops_admin', 'super_admin', 'hospital_staff', 'support_agent'];
 export const OPS_ROLES: Role[] = ['coordinator', 'ops_admin', 'super_admin'];
+/** Roles that may work the support desk (contract section 61). */
+export const SUPPORT_ROLES: Role[] = ['support_agent', 'coordinator', 'ops_admin', 'super_admin'];
+export const ALL_ROLES: Role[] = ['patient', 'doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin', 'hospital_staff', 'support_agent'];
 
 /** Primary role used in audit rows / event actorRole. */
 export function primaryRole(roles: Role[]): Role {
-  const order: Role[] = ['super_admin', 'ops_admin', 'coordinator', 'doctor', 'provider', 'patient'];
+  const order: Role[] = ['super_admin', 'ops_admin', 'coordinator', 'support_agent', 'hospital_staff', 'doctor', 'provider', 'patient'];
   return order.find((r) => roles.includes(r)) ?? 'patient';
 }
 

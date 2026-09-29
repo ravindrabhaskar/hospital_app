@@ -5,6 +5,7 @@ import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
 import '../../core/widgets/illustrations.dart';
 import '../emergency/fall_monitor.dart';
+import '../safety/safety.dart' show CompanionModeHost;
 import '../wearables/wearable_resume_sync.dart';
 
 class AppShell extends StatelessWidget {
@@ -17,7 +18,7 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // Foreground-only device features (fall detection, wearable resume-sync).
-      body: FallDetectionHost(child: WearableResumeSync(child: navigationShell)),
+      body: FallDetectionHost(child: WearableResumeSync(child: CompanionModeHost(child: navigationShell))),
       extendBody: false,
       bottomNavigationBar: CcBottomNav(index: navigationShell.currentIndex, onTap: _go),
     );

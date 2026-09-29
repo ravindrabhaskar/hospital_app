@@ -162,6 +162,9 @@ class Labels {
         'home_visit' => l.purposeHomeVisit,
         'pharmacy_order' => l.purposePharmacyOrder,
         'subscription' => l.purposeSubscription,
+        'lab_order' => l.purposeLabOrder,
+        'second_opinion' => l.purposeSecondOpinion,
+        'ambulance' => l.purposeAmbulance,
         _ => humanize(s),
       };
 

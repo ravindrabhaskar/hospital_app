@@ -14,6 +14,20 @@ class FeatureFlags {
     this.mentalWellness = true,
     this.govtSchemes = true, // §38: defaults on
     this.voiceInput = true,
+    this.labTests = true,
+    this.carePrograms = true,
+    this.secondOpinion = true,
+    this.insurance = true,
+    this.preventiveCare = true,
+    this.exercisePlans = true,
+    this.dietPlans = true,
+    this.dailyCheckin = true,
+    this.whatsappAssistant = true,
+    this.ambulanceBooking = true,
+    this.dementiaSafety = true,
+    this.walletOffers = true,
+    this.supportDesk = true,
+    this.abdm = true,
   });
 
   final bool aiAssistant;
@@ -24,6 +38,23 @@ class FeatureFlags {
   final bool mentalWellness;
   final bool govtSchemes;
   final bool voiceInput;
+
+  // v1.3 (§41–§61). The contract defines no flags for these; the app reads
+  // optional keys when the server sends them and otherwise treats them as on.
+  final bool labTests;
+  final bool carePrograms;
+  final bool secondOpinion;
+  final bool insurance;
+  final bool preventiveCare;
+  final bool exercisePlans;
+  final bool dietPlans;
+  final bool dailyCheckin;
+  final bool whatsappAssistant;
+  final bool ambulanceBooking;
+  final bool dementiaSafety;
+  final bool walletOffers;
+  final bool supportDesk;
+  final bool abdm;
 
   static const defaults = FeatureFlags();
 
@@ -36,6 +67,20 @@ class FeatureFlags {
         mentalWellness: boolOf(j, 'mental_wellness', defaults.mentalWellness),
         govtSchemes: boolOf(j, 'govt_schemes', defaults.govtSchemes),
         voiceInput: boolOf(j, 'voice_input', defaults.voiceInput),
+        labTests: boolOf(j, 'lab_tests', defaults.labTests),
+        carePrograms: boolOf(j, 'care_programs', defaults.carePrograms),
+        secondOpinion: boolOf(j, 'second_opinion', defaults.secondOpinion),
+        insurance: boolOf(j, 'insurance', defaults.insurance),
+        preventiveCare: boolOf(j, 'preventive_care', defaults.preventiveCare),
+        exercisePlans: boolOf(j, 'exercise_plans', defaults.exercisePlans),
+        dietPlans: boolOf(j, 'diet_plans', defaults.dietPlans),
+        dailyCheckin: boolOf(j, 'daily_checkin', defaults.dailyCheckin),
+        whatsappAssistant: boolOf(j, 'whatsapp_assistant', defaults.whatsappAssistant),
+        ambulanceBooking: boolOf(j, 'ambulance_booking', defaults.ambulanceBooking),
+        dementiaSafety: boolOf(j, 'dementia_safety', defaults.dementiaSafety),
+        walletOffers: boolOf(j, 'wallet_invites', boolOf(j, 'wallet_offers', defaults.walletOffers)),
+        supportDesk: boolOf(j, 'support_desk', defaults.supportDesk),
+        abdm: boolOf(j, 'abdm', defaults.abdm),
       );
 
   Json toJson() => {
@@ -47,6 +92,20 @@ class FeatureFlags {
         'mental_wellness': mentalWellness,
         'govt_schemes': govtSchemes,
         'voice_input': voiceInput,
+        'lab_tests': labTests,
+        'care_programs': carePrograms,
+        'second_opinion': secondOpinion,
+        'insurance': insurance,
+        'preventive_care': preventiveCare,
+        'exercise_plans': exercisePlans,
+        'diet_plans': dietPlans,
+        'daily_checkin': dailyCheckin,
+        'whatsapp_assistant': whatsappAssistant,
+        'ambulance_booking': ambulanceBooking,
+        'dementia_safety': dementiaSafety,
+        'wallet_invites': walletOffers,
+        'support_desk': supportDesk,
+        'abdm': abdm,
       };
 }
 
@@ -68,6 +127,54 @@ class LegalLinks {
   final String accountDeletionUrl;
 }
 
+/// Hospital white-label branding (§58), present when the app was built with
+/// `--dart-define=TENANT_CODE=...` and the server knows that tenant.
+class Branding {
+  const Branding({
+    required this.tenantCode,
+    required this.displayName,
+    required this.logoUrl,
+    required this.primaryColor,
+    required this.supportPhone,
+    required this.supportEmail,
+  });
+  final String tenantCode;
+  final String displayName;
+  final String? logoUrl;
+
+  /// "#RRGGBB" as sent by the server.
+  final String? primaryColor;
+  final String? supportPhone;
+  final String? supportEmail;
+
+  /// The parsed primary colour (opaque), or null when missing/malformed.
+  int? get primaryArgb => parseHexColor(primaryColor);
+
+  static Branding? tryParse(Object? v) {
+    if (v is! Map) return null;
+    final j = asJson(v);
+    final code = str(j, 'tenantCode');
+    final name = str(j, 'displayName');
+    if (code.isEmpty && name.isEmpty) return null;
+    return Branding(
+      tenantCode: code,
+      displayName: name,
+      logoUrl: strOrNull(j, 'logoUrl'),
+      primaryColor: strOrNull(j, 'primaryColor'),
+      supportPhone: strOrNull(j, 'supportPhone'),
+      supportEmail: strOrNull(j, 'supportEmail'),
+    );
+  }
+}
+
+/// Parses "#RRGGBB" (or "RRGGBB") into an opaque ARGB int.
+int? parseHexColor(String? hex) {
+  if (hex == null) return null;
+  final h = hex.trim().replaceFirst('#', '');
+  if (!RegExp(r'^[0-9a-fA-F]{6}$').hasMatch(h)) return null;
+  return 0xFF000000 | int.parse(h, radix: 16);
+}
+
 class MinAppVersion {
   const MinAppVersion({this.patientAndroid = '0.0.0', this.patientIos = '0.0.0'});
   final String patientAndroid;
@@ -87,7 +194,11 @@ class PublicConfig {
     this.legal = const LegalLinks(privacyUrl: '', termsUrl: '', accountDeletionUrl: ''),
     this.minAppVersion = const MinAppVersion(),
     this.raw = const {},
+    this.branding,
   });
+
+  /// White-label branding (§58); null for the default CareCompanion app.
+  final Branding? branding;
 
   final FeatureFlags flags;
   final String paymentGateway;
@@ -112,15 +223,19 @@ class PublicConfig {
     final support = asJson(j['support']);
     final legal = asJson(j['legal']);
     final minV = asJson(j['minAppVersion']);
+    final branding = Branding.tryParse(j['branding']);
+    String? nonEmpty(String? v) => v == null || v.trim().isEmpty ? null : v;
     return PublicConfig(
+      branding: branding,
       flags: FeatureFlags.fromJson(asJson(j['flags'])),
       paymentGateway: str(payment, 'gateway', 'mock'),
       razorpayKeyId: strOrNull(payment, 'razorpayKeyId'),
       videoProvider: str(video, 'provider', 'placeholder'),
       pushEnabled: boolOf(push, 'enabled'),
       support: SupportContact(
-        phone: str(support, 'phone'),
-        email: str(support, 'email'),
+        // A tenant's own support line wins over the platform default.
+        phone: nonEmpty(branding?.supportPhone) ?? str(support, 'phone'),
+        email: nonEmpty(branding?.supportEmail) ?? str(support, 'email'),
         whatsapp: strOrNull(support, 'whatsapp'),
       ),
       legal: LegalLinks(

@@ -82,6 +82,29 @@ import { scheduleRoutes } from './modules/schedules/routes.js';
 import { schemeRoutes } from './modules/schemes/routes.js';
 import { subscriptionRoutes } from './modules/subscriptions/routes.js';
 import { subscriptionPaymentEffects } from './modules/subscriptions/service.js';
+import { createPartners, type Partners } from './modules/partners/index.js';
+import { HttpDrugKnowledgeProvider, PackDrugKnowledgeProvider } from './modules/rxcheck/engine.js';
+import { WhatsAppChannel } from './modules/whatsapp/service.js';
+import { abdmRoutes, abdmWebhookRoutes } from './modules/abdm/routes.js';
+import { ambulanceRoutes } from './modules/ambulance/routes.js';
+import { checkinRoutes } from './modules/checkins/routes.js';
+import { dietRoutes } from './modules/diet/routes.js';
+import { dischargeRoutes } from './modules/discharges/routes.js';
+import { enterpriseRoutes } from './modules/enterprise/routes.js';
+import { fieldOpsRoutes } from './modules/fieldops/routes.js';
+import { geofenceRoutes, sosWebhookRoutes } from './modules/geofence/routes.js';
+import { insuranceRoutes } from './modules/insurance/routes.js';
+import { ivrRoutes, ivrWebhookRoutes } from './modules/ivr/routes.js';
+import { labRoutes, labWebhookRoutes } from './modules/lab/routes.js';
+import { labPaymentEffects } from './modules/lab/service.js';
+import { physioRoutes } from './modules/physio/routes.js';
+import { preventiveRoutes } from './modules/preventive/routes.js';
+import { programRoutes } from './modules/programs/routes.js';
+import { scribeRoutes } from './modules/scribe/routes.js';
+import { secondOpinionPaymentEffects, secondOpinionRoutes } from './modules/secondopinion/routes.js';
+import { supportRoutes } from './modules/support/routes.js';
+import { walletRoutes } from './modules/wallet/routes.js';
+import { whatsappRoutes, whatsappWebhookRoutes } from './modules/whatsapp/routes.js';
 import { makeAuthenticate } from './plugins/auth.js';
 import type { Services } from './services.js';
 import { createLeaderElector, type LeaderElector } from './worker/leader.js';
@@ -105,6 +128,8 @@ export interface BuildOptions {
   skipProductionReadiness?: boolean;
   /** Start the in-process worker (default: config.WORKER_ENABLED and not test). */
   startWorker?: boolean;
+  /** v1.3 partner adapters (tests inject fakes); defaults come from the config. */
+  partners?: Partial<Partners>;
 }
 
 export interface BuiltApp {
@@ -173,12 +198,14 @@ export async function buildApp(opts: BuildOptions = {}): Promise<BuiltApp> {
     (config.PAYMENT_GATEWAY === 'razorpay'
       ? new RazorpayGateway(config.RAZORPAY_KEY_ID, config.RAZORPAY_KEY_SECRET, { baseUrl: config.RAZORPAY_BASE_URL, timeoutMs: config.PAYMENT_TIMEOUT_MS }, fetchImpl)
       : new MockGateway());
-  const payments = new PaymentService(db, gateway, notify);
+  const payments = new PaymentService(db, gateway, notify, config);
   const auth = new AuthService(db, config, sms);
   auth.onSms = (provider, outcome) => metrics.smsSent.inc({ provider, outcome });
   const ai = new AiGateway(primary, db, flags, config);
   ai.prom = metrics;
   const video = opts.video ?? createVideoProvider(config);
+  const partners = createPartners(config, fetchImpl, quiet, opts.partners);
+  if (!opts.channels && partners.whatsapp.name === 'meta') channels.whatsapp = new WhatsAppChannel(partners.whatsapp, config.WHATSAPP_TEMPLATE_CARE_UPDATE);
   const svc: Services = {
     config,
     dbHandle,
@@ -196,6 +223,11 @@ export async function buildApp(opts: BuildOptions = {}): Promise<BuiltApp> {
     mfa: new MfaService(db, config, auth),
     video,
     metrics,
+    drugKnowledge:
+      config.DRUG_KNOWLEDGE_PROVIDER === 'http' && config.DRUG_KNOWLEDGE_BASE_URL && config.DRUG_KNOWLEDGE_API_KEY
+        ? new HttpDrugKnowledgeProvider(config.DRUG_KNOWLEDGE_BASE_URL, config.DRUG_KNOWLEDGE_API_KEY, fetchImpl)
+        : new PackDrugKnowledgeProvider(config),
+    partners,
   };
   metrics.collectors.push(async () => {
     const outbox = await db.select({ status: notificationOutbox.status, n: count() }).from(notificationOutbox).groupBy(notificationOutbox.status);
@@ -212,6 +244,8 @@ export async function buildApp(opts: BuildOptions = {}): Promise<BuiltApp> {
   payments.effects.home_visit = homeVisitPaymentEffects(notify);
   payments.effects.pharmacy_order = pharmacyPaymentEffects;
   payments.effects.subscription = subscriptionPaymentEffects(notify);
+  payments.effects.lab_order = labPaymentEffects(() => svc);
+  payments.effects.second_opinion = secondOpinionPaymentEffects(notify);
   // Contract section 32: every successful payment gets its sequential invoice number right away.
   payments.afterSucceeded.push(async (p) => {
     await ensureInvoice(db, config, p.id);
@@ -242,7 +276,7 @@ export async function buildApp(opts: BuildOptions = {}): Promise<BuiltApp> {
     origin: (origin, cb) => cb(null, corsOriginAllowed(config, origin)),
     credentials: true,
     exposedHeaders: ['X-Correlation-Id', 'X-Unread-Count', 'Idempotent-Replayed'],
-    allowedHeaders: ['Authorization', 'Content-Type', 'Idempotency-Key', 'X-Correlation-Id', 'Accept-Language', 'X-Signature', 'X-Event-Id', 'X-Razorpay-Signature', 'X-Razorpay-Event-Id'],
+    allowedHeaders: ['Authorization', 'Content-Type', 'Idempotency-Key', 'X-Correlation-Id', 'Accept-Language', 'X-Signature', 'X-Event-Id', 'X-Razorpay-Signature', 'X-Razorpay-Event-Id', 'X-Tenant-Code'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   });
   // REDIS_URL -> shared rate-limit counters across instances; otherwise per-process memory.
@@ -351,6 +385,12 @@ export async function buildApp(opts: BuildOptions = {}): Promise<BuiltApp> {
       await api.register(publicConfigRoutes);
       await api.register(paymentWebhookRoutes);
       await api.register(publicMediaRoutes);
+      // v1.3 partner webhooks (public; each verifies its own HMAC signature over the raw body)
+      await api.register(whatsappWebhookRoutes);
+      await api.register(labWebhookRoutes);
+      await api.register(abdmWebhookRoutes);
+      await api.register(sosWebhookRoutes);
+      await api.register(ivrWebhookRoutes);
 
       await api.register(async (priv) => {
         priv.addHook('onRequest', makeAuthenticate(svc));
@@ -401,6 +441,26 @@ export async function buildApp(opts: BuildOptions = {}): Promise<BuiltApp> {
           referralRoutes,
           subscriptionRoutes,
           schemeRoutes,
+          // v1.3 (contract sections 41-62)
+          checkinRoutes,
+          programRoutes,
+          whatsappRoutes,
+          labRoutes,
+          scribeRoutes,
+          fieldOpsRoutes,
+          secondOpinionRoutes,
+          abdmRoutes,
+          insuranceRoutes,
+          preventiveRoutes,
+          physioRoutes,
+          dietRoutes,
+          ambulanceRoutes,
+          geofenceRoutes,
+          enterpriseRoutes,
+          dischargeRoutes,
+          walletRoutes,
+          supportRoutes,
+          ivrRoutes,
         ]) {
           await priv.register(mod);
         }

@@ -161,7 +161,11 @@ class Subscription {
     required this.cancelAtPeriodEnd,
     required this.benefits,
     required this.createdAt,
+    this.sponsorName,
   });
+
+  /// Company (corporate) plan sponsor (§57); null for self-paid plans.
+  final String? sponsorName;
   final String id;
   final String planCode;
   final String planName;
@@ -187,5 +191,8 @@ class Subscription {
         cancelAtPeriodEnd: boolOf(j, 'cancelAtPeriodEnd'),
         benefits: strList(j, 'benefits'),
         createdAt: dateOrNull(j, 'createdAt'),
+        sponsorName: strOrNull(j, 'sponsorName'),
       );
+
+  bool get isSponsored => (sponsorName ?? '').isNotEmpty;
 }

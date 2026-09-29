@@ -8,6 +8,7 @@ import { list } from '../../lib/pagination.js';
 import { parse } from '../../lib/validate.js';
 import { requireRoles } from '../../plugins/auth.js';
 import { toPayment } from '../payments/service.js';
+import { zCouponCode } from '../wallet/routes.js';
 import { activeSubscriptionOf, cancelPending, latestSubscriptionOf, subscriptionView, toPlan } from './service.js';
 
 const zCode = z.string().trim().regex(/^[a-z0-9_]{2,40}$/, 'lowercase letters, digits and _ only');
@@ -40,7 +41,7 @@ export async function subscriptionRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post('/subscriptions', { config: { idempotent: true } }, async (req, reply) => {
-    const body = parse(z.object({ planCode: zCode, billing: z.enum(['monthly', 'yearly']) }), req.body);
+    const body = parse(z.object({ planCode: zCode, billing: z.enum(['monthly', 'yearly']), couponCode: zCouponCode.optional(), useWallet: z.boolean().optional() }), req.body);
     const [plan] = await db.select().from(subscriptionPlans).where(eq(subscriptionPlans.code, body.planCode));
     if (!plan || !plan.active) throw errors.validation('Unknown or inactive plan', { field: 'planCode' });
     const patientId = req.ctx.user.selfPatientId;
@@ -48,13 +49,24 @@ export async function subscriptionRoutes(app: FastifyInstance): Promise<void> {
     if (await activeSubscriptionOf(db, req.ctx.user.id)) throw errors.conflict('You already have an active Family Care Plan');
     const amount = body.billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
     const result = await db.transaction(async (tx) => {
-      await cancelPending(tx, req.ctx.user.id);
+      await cancelPending(tx, req.ctx.user.id, svc.payments);
       const [s] = await tx.insert(subscriptions).values({ userId: req.ctx.user.id, planCode: plan.code, billing: body.billing, status: 'pending' }).returning();
-      const payment = await svc.payments.create(tx, { purpose: 'subscription', refId: s.id, patientId, amount, userId: req.ctx.user.id });
+      const payment = await svc.payments.create(tx, {
+        purpose: 'subscription',
+        refId: s.id,
+        patientId,
+        amount,
+        userId: req.ctx.user.id,
+        couponCode: body.couponCode,
+        useWallet: body.useWallet,
+        actor: req.ctx.actor,
+      });
       await audit(tx, req.ctx.actor, { action: 'subscription.create', entityType: 'subscription', entityId: s.id, metadata: { planCode: plan.code, billing: body.billing } });
       return { s, payment };
     });
-    return reply.code(201).send({ subscription: await subscriptionView(db, result.s), payment: toPayment(result.payment) });
+    const payment = await svc.payments.settleIfCovered(result.payment, req.ctx.actor);
+    const fresh = payment === result.payment ? result.s : (await db.select().from(subscriptions).where(eq(subscriptions.id, result.s.id)))[0];
+    return reply.code(201).send({ subscription: await subscriptionView(db, fresh), payment: toPayment(payment) });
   });
 
   app.post('/subscriptions/me/cancel', async (req) => {
@@ -63,7 +75,7 @@ export async function subscriptionRoutes(app: FastifyInstance): Promise<void> {
     const row = await db.transaction(async (tx) => {
       let r;
       if (s.status === 'pending') {
-        await cancelPending(tx, req.ctx.user.id);
+        await cancelPending(tx, req.ctx.user.id, svc.payments);
         [r] = await tx.select().from(subscriptions).where(eq(subscriptions.id, s.id));
       } else {
         [r] = await tx.update(subscriptions).set({ cancelAtPeriodEnd: true, updatedAt: new Date() }).where(eq(subscriptions.id, s.id)).returning();

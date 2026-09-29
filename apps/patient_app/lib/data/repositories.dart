@@ -20,6 +20,12 @@ const pageLimit = 20;
 
 List<T> _items<T>(Object? body, T Function(Json) f) => Page.fromJson(body, f).items;
 
+/// `couponCode?` / `useWallet?` accepted by every booking endpoint (§60).
+Json offerFields(String? couponCode, bool useWallet) => {
+      if (couponCode != null && couponCode.trim().isNotEmpty) 'couponCode': couponCode.trim().toUpperCase(),
+      if (useWallet) 'useWallet': true,
+    };
+
 // ---------------------------------------------------------------- Auth
 
 class AuthRepository {
@@ -55,6 +61,11 @@ class ConfigRepository {
 
   /// `GET /config/public` (no auth). Returns the raw JSON so it can be cached.
   Future<Json> publicConfigJson() async => asJson(await api.get('/config/public', auth: false));
+
+  /// `GET /config/public?tenant=<code>`: adds the hospital's white-label
+  /// `branding` (§58).
+  Future<Json> publicConfigJsonForTenant(String tenant) async =>
+      asJson(await api.get('/config/public', query: {'tenant': tenant}, auth: false));
 
   Future<PublicConfig> publicConfig() async => PublicConfig.fromJson(await publicConfigJson());
 }
@@ -251,13 +262,15 @@ class DoctorRepository {
   Future<List<Slot>> slots(String doctorId, DateTime date) async =>
       _items(await api.get('/doctors/$doctorId/slots', query: {'date': ymd(date)}), Slot.fromJson);
 
-  Future<List<Facility>> facilities({String? type, String? q, double? lat, double? lng}) async =>
+  Future<List<Facility>> facilities(
+          {String? type, String? q, double? lat, double? lng, String? cashlessInsurer}) async =>
       _items(
           await api.get('/facilities', query: {
             'type': type,
             'q': q,
             'lat': lat,
             'lng': lng,
+            'cashlessInsurer': cashlessInsurer,
             'limit': _defaultLimit,
           }),
           Facility.fromJson);
@@ -277,6 +290,8 @@ class AppointmentRepository {
     required String reason,
     String? careEpisodeId,
     required String idempotencyKey,
+    String? couponCode,
+    bool useWallet = false,
   }) async {
     final j = asJson(await api.post('/appointments',
         idempotencyKey: idempotencyKey,
@@ -287,6 +302,7 @@ class AppointmentRepository {
           'mode': mode,
           'reason': reason,
           'careEpisodeId': ?careEpisodeId,
+          ...offerFields(couponCode, useWallet),
         }));
     return BookingResult(
         Appointment.fromJson(asJson(j['appointment'])), Payment.fromJson(asJson(j['payment'])));
@@ -344,6 +360,8 @@ class HomeVisitRepository {
     required String reason,
     String? careEpisodeId,
     required String idempotencyKey,
+    String? couponCode,
+    bool useWallet = false,
   }) async {
     final j = asJson(await api.post('/home-visits',
         idempotencyKey: idempotencyKey,
@@ -355,6 +373,7 @@ class HomeVisitRepository {
           'preferredEnd': preferredEnd.toUtc().toIso8601String(),
           'reason': reason,
           'careEpisodeId': ?careEpisodeId,
+          ...offerFields(couponCode, useWallet),
         }));
     return BookingResult(
         HomeVisit.fromJson(asJson(j['homeVisit'])), Payment.fromJson(asJson(j['payment'])));
@@ -625,6 +644,8 @@ class PharmacyRepository {
     String? prescriptionId,
     required Address address,
     required String idempotencyKey,
+    String? couponCode,
+    bool useWallet = false,
   }) async {
     final j = asJson(await api.post('/pharmacy/orders',
         idempotencyKey: idempotencyKey,
@@ -636,6 +657,7 @@ class PharmacyRepository {
           'prescriptionRecordId': ?prescriptionRecordId,
           'prescriptionId': ?prescriptionId,
           'address': address.toJson(),
+          ...offerFields(couponCode, useWallet),
         }));
     return BookingResult(
         PharmacyOrder.fromJson(asJson(j['order'])), Payment.fromJson(asJson(j['payment'])));
@@ -826,9 +848,10 @@ class SubscriptionRepository {
   }
 
   Future<({Subscription subscription, Payment payment})> subscribe(String planCode, Billing billing,
-      {required String idempotencyKey}) async {
+      {required String idempotencyKey, String? couponCode, bool useWallet = false}) async {
     final j = asJson(await api.post('/subscriptions',
-        idempotencyKey: idempotencyKey, body: {'planCode': planCode, 'billing': billing.name}));
+        idempotencyKey: idempotencyKey,
+        body: {'planCode': planCode, 'billing': billing.name, ...offerFields(couponCode, useWallet)}));
     return (
       subscription: Subscription.fromJson(asJson(j['subscription'])),
       payment: Payment.fromJson(asJson(j['payment'])),
@@ -837,6 +860,10 @@ class SubscriptionRepository {
 
   Future<Subscription> cancel() async =>
       Subscription.fromJson(asJson(await api.post('/subscriptions/me/cancel')));
+
+  /// `POST /subscriptions/redeem` (§57): a single-use company code.
+  Future<Subscription> redeem(String code) async =>
+      Subscription.fromJson(asJson(await api.post('/subscriptions/redeem', body: {'code': code.trim()})));
 }
 
 // ---------------------------------------------------------------- v1.2: Government schemes (§38)

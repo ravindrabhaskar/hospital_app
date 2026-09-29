@@ -8,6 +8,7 @@ It is **not an AI doctor**. AI output is assistive, and emergencies are decided 
 | Backend API | `services/api` | TypeScript, Fastify 5, Drizzle ORM, PostgreSQL (embedded PGlite in dev), vitest | everything |
 | Web portal | `apps/web` | Next.js 15, Tailwind 4, TanStack Query | doctors, care coordinators, operations, super admin |
 | Patient app | `apps/patient_app` | Flutter (Android/iOS/Web), Riverpod, go_router, en/hi/te | patients and family caregivers |
+| Doctor app | `apps/doctor_app` | Flutter, MFA, AI scribe, prescriptions with safety checks | doctors on the move |
 | Provider app | `apps/provider_app` | Flutter, offline sync queue | home-care nurses, technicians, interns |
 | Docs | `docs/` | – | product, API contract, ADRs, runbooks, launch checklist |
 
@@ -56,6 +57,9 @@ flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:4000/api/v1
 | 9800000301 | Care coordinator | web portal → Operations |
 | 9800000401 | Operations admin | web portal → Operations |
 | 9800000501 | Super admin | web portal → Admin |
+| 9800000701 | Hospital discharge desk (Deccan Sunrise) | web portal → Hospital |
+| 9800000801 | Support agent | web portal → Support desk |
+| 9800000101 | Dr. Ananya Rao | **doctor app** (same login as the portal) |
 
 Home visits are serviceable in Hyderabad pincodes 500001–500040 (500034 works well). 560001 demonstrates "not serviceable".
 
@@ -65,11 +69,12 @@ The assistant works offline with a deterministic rule-based model. To use Claude
 ## Quality checks
 
 ```bash
-npm run check        # API: typecheck + lint + 226 unit/integration tests; Web: typecheck + lint + 174 tests
-npm run test:e2e     # full cross-role care journey against a running, freshly seeded API (83 checks)
-npm --prefix services/api run verify:pg   # proves the real PostgreSQL (node-postgres) driver path (20 checks)
-cd apps/patient_app  && flutter analyze && flutter test   # 66 tests
-cd apps/provider_app && flutter analyze && flutter test   # 103 tests
+npm run check        # API: typecheck + lint + 348 unit/integration tests; Web: typecheck + lint + 226 tests
+npm run test:e2e     # full cross-role care journey against a running, freshly seeded API (110 checks)
+npm --prefix services/api run verify:pg   # proves the real PostgreSQL (node-postgres) driver path (26 checks)
+cd apps/patient_app  && flutter analyze && flutter test   # 89 tests
+cd apps/provider_app && flutter analyze && flutter test   # 132 tests
+cd apps/doctor_app   && flutter analyze && flutter test   # 59 tests
 node tests/load/smoke.mjs                                 # load smoke test
 ```
 CI runs all of these (`.github/workflows/ci.yml`).

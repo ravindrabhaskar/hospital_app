@@ -15,6 +15,7 @@ import '../../models/patient.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
 import '../doctors/doctor_detail_screen.dart' show DateChipRow;
+import '../offers/checkout_offers.dart';
 import '../payments/booking_success_screen.dart';
 import '../payments/payment_sheet.dart';
 
@@ -45,6 +46,7 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
   (int, int)? _window;
   bool _busy = false;
   final _action = IdempotentAction();
+  final _offers = CheckoutOffersController();
   HomeVisit? _visit;
   Payment? _payment;
 
@@ -56,10 +58,14 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
     for (final c in [_line1, _city, _reason]) {
       c.addListener(() => setState(() {}));
     }
+    _offers.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
+    _offers.dispose();
     for (final c in [_line1, _line2, _landmark, _city, _pincode, _reason]) {
       c.dispose();
     }
@@ -128,6 +134,8 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
             reason: _reason.text.trim(),
             careEpisodeId: widget.careEpisodeId,
             idempotencyKey: _action.key,
+            couponCode: _offers.couponCode,
+            useWallet: _offers.useWallet,
           );
       _action.complete();
       ref.invalidate(homeVisitsProvider('active'));
@@ -277,9 +285,9 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
                   if (_checking)
                     const LinearProgressIndicator()
                   else if (_svcError != null)
-                    _ServiceabilityNote(ok: false, text: _svcError!)
+                    ServiceabilityNote(ok: false, text: _svcError!)
                   else if (_svc != null)
-                    _ServiceabilityNote(
+                    ServiceabilityNote(
                       ok: _svc!.serviceable,
                       text: _svc!.serviceable
                           ? (_svc!.message.isNotEmpty ? _svc!.message : l.serviceable(_svc!.zoneName ?? ''))
@@ -331,6 +339,10 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
                     maxLength: 300,
                     decoration: InputDecoration(hintText: l.homeVisitReasonHint),
                   ),
+                  if (selected != null) ...[
+                    const SizedBox(height: Space.sm),
+                    CheckoutOffersCard(controller: _offers, purpose: 'home_visit', amount: selected.price),
+                  ],
                   if (!canBook && patient != null)
                     Text(l.noBookPermission, style: const TextStyle(color: AppColors.danger)),
                 ],
@@ -341,7 +353,9 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(Space.screen, Space.sm, Space.screen, Space.md),
                 child: PrimaryButton(
-                  label: selected == null ? l.bookHomeCheckup : l.bookAndPay(money(selected.price)),
+                  label: selected == null
+                      ? l.bookHomeCheckup
+                      : l.bookAndPay(money(_offers.breakdown(selected.price).payable)),
                   loading: _busy,
                   onPressed: (_ready && canBook && patient != null && _payment == null)
                       ? () => _book(patient, list)
@@ -356,8 +370,8 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
   }
 }
 
-class _ServiceabilityNote extends StatelessWidget {
-  const _ServiceabilityNote({required this.ok, required this.text});
+class ServiceabilityNote extends StatelessWidget {
+  const ServiceabilityNote({super.key, required this.ok, required this.text});
   final bool ok;
   final String text;
 

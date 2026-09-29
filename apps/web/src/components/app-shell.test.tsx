@@ -89,6 +89,30 @@ describe("PortalShell navigation", () => {
     expect(screen.getByText(/don.t have access/i)).toBeInTheDocument();
   });
 
+  it("gives hospital staff only the hospital section and blocks operations", () => {
+    renderShell(["hospital_staff"], "/hospital");
+    const nav = screen.getAllByRole("navigation", { name: "Main" })[0]!;
+    expect(within(nav).getByRole("link", { name: "Discharges" })).toHaveAttribute("aria-current", "page");
+    expect(within(nav).getByRole("link", { name: "New discharge" })).toBeInTheDocument();
+    expect(within(nav).queryByRole("link", { name: "Control tower" })).not.toBeInTheDocument();
+    expect(screen.getByText("page content")).toBeInTheDocument();
+    expect(within(screen.getByRole("list", { name: "Your roles" })).getByText("Hospital staff")).toBeInTheDocument();
+  });
+
+  it("gives a support agent the support desk and an unauthorized state elsewhere", () => {
+    renderShell(["support_agent"], "/support");
+    const nav = screen.getAllByRole("navigation", { name: "Main" })[0]!;
+    expect(within(nav).getAllByRole("link").map((l) => l.textContent)).toEqual(["Support desk"]);
+    expect(screen.getByText("page content")).toBeInTheDocument();
+  });
+
+  it("does not let a support agent into operations pages", () => {
+    renderShell(["support_agent"], "/ops/lab-orders");
+    expect(screen.queryByText("page content")).not.toBeInTheDocument();
+    expect(screen.getByText(/don.t have access/i)).toBeInTheDocument();
+    expect(replace).not.toHaveBeenCalled();
+  });
+
   it("redirects to login when there is no session", () => {
     hasSession = false;
     renderShell([], "/ops/incidents");

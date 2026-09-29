@@ -308,6 +308,98 @@ async function main() {
   const approved = await login('+919800000701');
   check('approved applicant now has provider role', approved.user.roles.includes('provider'), approved.user.roles);
 
+  console.log('\nv1.3: daily check-in, care programs, preventive care');
+  const ci = await call(P, 'POST', `/patients/${ramesh.id}/checkins`, { mood: 4 });
+  check('daily "I\'m OK" check-in recorded', [200, 201].includes(ci.status) && ['ok', 'late'].includes(ci.body.status), ci.body);
+  const enr = await call(P, 'GET', `/care-programs/enrollments?patientId=${ramesh.id}`);
+  const htn = enr.body.items?.find((e) => e.templateCode === 'hypertension');
+  check('hypertension program enrollment active', htn && htn.status === 'active', enr.body.items);
+  const bpHigh = await call(P, 'POST', '/vitals', { patientId: ramesh.id, type: 'bp_systolic', value: 172, unit: 'mmHg', measuredAt: new Date().toISOString() });
+  check('high BP reading accepted', bpHigh.status === 201, bpHigh.status);
+  const seProg = await call(O, 'GET', '/ops/safety-events?status=open');
+  check('program threshold breach raised a safety event', seProg.body.items?.some((e) => e.source === 'program'), seProg.body.items?.map((e) => e.source));
+  const prev = await call(P, 'GET', `/patients/${ramesh.id}/preventive-schedule`);
+  check('preventive schedule computed', prev.status === 200 && prev.body.items?.length > 0, prev.status);
+
+  console.log('\nv1.3: prescription safety, AI scribe, second opinion');
+  const fl = await call(P, 'POST', '/appointments', { patientId: ramesh.id, doctorId: ananya.id, slotId: (await (async () => { for (let i = 2; i <= 9; i++) { const s = await call(P, 'GET', `/doctors/${ananya.id}/slots?date=${istDate(i)}`); const f = s.body.items?.find((x) => x.status === 'available'); if (f) return f.id; } })()), mode: 'video', reason: 'BP review' }, { 'idempotency-key': randomUUID() });
+  await call(P, 'POST', `/payments/${fl.body.payment.id}/confirm-mock`, { outcome: 'success' }, { 'idempotency-key': randomUUID() });
+  await call(D, 'POST', `/clinician/appointments/${fl.body.appointment.id}/start`);
+  const chk = await call(D, 'POST', '/clinician/prescriptions/check', { patientId: ramesh.id, items: [{ drugName: 'Amoxicillin' }] });
+  check('penicillin allergy flagged for amoxicillin', chk.body.warnings?.some((w) => w.type === 'allergy'), chk.body);
+  const rxAllergy = { appointmentId: fl.body.appointment.id, items: [{ drugName: 'Amoxicillin', strength: '500mg', form: 'capsule', dose: '1 capsule', frequency: 'three times daily', durationDays: 5, times: ['08:00', '14:00', '20:00'] }] };
+  const rxBlocked = await call(D, 'POST', '/clinician/prescriptions', rxAllergy);
+  const majors = (rxBlocked.body?.error?.details?.warnings ?? []).filter((w) => w.severity === 'major').length;
+  check('major warning blocks prescription without acknowledgement', majors === 0 || rxBlocked.status === 400, { status: rxBlocked.status, majors });
+  const scribe = await call(D, 'POST', `/clinician/appointments/${fl.body.appointment.id}/scribe`, { transcript: 'Patient reports morning headaches. BP at home around 150 over 95. Taking amlodipine daily. Plan: continue, add home BP log.', consentConfirmed: true });
+  check('AI scribe returns advisory SOAP draft', scribe.status === 200 || scribe.status === 201 ? scribe.body.advisory === true && !!scribe.body.draft?.plan : false, scribe.body);
+  const noConsent = await call(D, 'POST', `/clinician/appointments/${fl.body.appointment.id}/scribe`, { transcript: 'x', consentConfirmed: false });
+  check('scribe refused without recording consent', noConsent.status === 400 || noConsent.status === 403, noConsent.status);
+  const pricing = await call(P, 'GET', '/second-opinions/pricing');
+  const so = await call(P, 'POST', '/second-opinions', { patientId: ramesh.id, specialty: pricing.body.items[0].specialty, question: 'Is the current BP medication adequate?', recordIds: [up.body.id] }, { 'idempotency-key': randomUUID() });
+  check('second opinion requested', so.status === 201 && !!so.body.request?.id, so.body);
+
+  console.log('\nv1.3: lab tests, coupons & wallet, insurance');
+  const tests = await call(P, 'GET', '/lab/tests?q=HbA1c');
+  const cpn = await call(P, 'POST', '/coupons/validate', { code: 'CARE10', purpose: 'lab_order', amount: 1000 });
+  check('coupon CARE10 validates for lab orders', cpn.body.valid === true && cpn.body.discount > 0, cpn.body);
+  const lab = await call(P, 'POST', '/lab/orders', { patientId: ramesh.id, testIds: [tests.body.items[0].id], address: { line1: 'Flat 302, Green Residency', city: 'Hyderabad', pincode: '500034' }, preferredStart: start.toISOString(), preferredEnd: new Date(start.getTime() + 3600e3).toISOString(), couponCode: 'CARE10' }, { 'idempotency-key': randomUUID() });
+  check('lab order created with coupon discount', lab.status === 201 && lab.body.order.discount > 0, lab.body);
+  if (lab.body.payment?.status !== 'succeeded') await call(P, 'POST', `/payments/${lab.body.payment.id}/confirm-mock`, { outcome: 'success' }, { 'idempotency-key': randomUUID() });
+  const labAfter = await call(P, 'GET', `/lab/orders/${lab.body.order.id}`);
+  check('paid lab order scheduled with sample-collection visit', labAfter.body.status === 'scheduled' && !!labAfter.body.collectionVisitId, labAfter.body);
+  const visitLab = await call(P, 'GET', `/home-visits/${labAfter.body.collectionVisitId}`);
+  check('collection visit carries the ordered tests', visitLab.body.labOrder?.tests?.length > 0, visitLab.body.labOrder);
+  const pol = await call(P, 'GET', `/patients/${ramesh.id}/insurance-policies`);
+  check('insurance policy number is masked', pol.body.items?.length > 0 && !/\d{6,}/.test(pol.body.items[0].policyNumberMasked), pol.body.items?.[0]);
+
+  console.log('\nv1.3: WhatsApp & phone line (mock partners)');
+  const waEm = await call(P, 'POST', '/dev/whatsapp/simulate', { text: 'my father has severe chest pain and cannot breathe' });
+  check('WhatsApp emergency gets 108 even before subscribing', waEm.body.replies?.some((r) => /108/.test(r)), waEm.body);
+  await call(P, 'PUT', '/me/whatsapp', { optedIn: true });
+  const wa = await call(P, 'POST', '/dev/whatsapp/simulate', { text: 'TODAY' });
+  check('WhatsApp TODAY returns reminders after opt-in', wa.status === 200 && /reminder/i.test(wa.body.replies?.[0] ?? ''), wa.body);
+  const ivr = await call(P, 'POST', '/dev/ivr/simulate', { fromPhone: '+919800000001' });
+  check('IVR greets a known caller with the menu', ivr.status === 200 && !!ivr.body.say, ivr.body);
+
+  console.log('\nv1.3: ambulance, safe zone, support desk');
+  const amb = await call(P, 'POST', '/ambulance/requests', { patientId: ramesh.id, pickup: { lat: 17.4065, lng: 78.4772, address: 'Green Residency, Hyderabad' }, type: 'bls', reason: 'Fall at home' }, { 'idempotency-key': randomUUID() });
+  const ambReq = amb.body.request ?? amb.body;
+  check('ambulance request searching for a vehicle', [200, 201].includes(amb.status) && ['searching', 'assigned'].includes(ambReq.status), amb.body);
+  let ambNow;
+  for (let i = 0; i < 12; i++) { ambNow = await call(P, 'GET', `/ambulance/requests/${ambReq.id}`); if (ambNow.body.status !== 'searching') break; await new Promise((r) => setTimeout(r, 3000)); }
+  check('mock partner assigns a vehicle', ambNow.body.status !== 'searching' && !!ambNow.body.vehicle, ambNow.body.status);
+  await call(P, 'POST', `/ambulance/requests/${ambReq.id}/cancel`, { reason: 'e2e cleanup' });
+  await call(P, 'PUT', `/patients/${ramesh.id}/safe-zone`, { enabled: true, centerLat: 17.4065, centerLng: 78.4772, radiusMeters: 300 });
+  const outside = await call(P, 'POST', `/patients/${ramesh.id}/location`, { lat: 17.45, lng: 78.52, accuracyM: 15, source: 'phone' });
+  check('leaving the safe zone is detected', outside.body.inside === false, outside.body);
+  const tk = await call(P, 'POST', '/support/tickets', { subject: 'Refund not received', category: 'refund', message: 'I cancelled a visit yesterday.' });
+  check('support ticket created', tk.status === 201 && /^T-/.test(tk.body.number), tk.body);
+  const agent = await login('+919800000801');
+  const note = await call(agent.accessToken, 'POST', `/ops/support/tickets/${tk.body.id}/reply`, { text: 'Internal: check gateway', internal: true });
+  await call(agent.accessToken, 'POST', `/ops/support/tickets/${tk.body.id}/reply`, { text: 'Your refund is on its way.' });
+  const tkMine = await call(P, 'GET', `/support/tickets/${tk.body.id}`);
+  check('customer sees agent reply but not internal note', note.status === 201 && tkMine.body.messages?.some((m) => /on its way/.test(m.text)) && !tkMine.body.messages?.some((m) => /Internal: check gateway/.test(m.text)), tkMine.body.messages?.map((m) => m.text));
+
+  console.log('\nv1.3: hospital discharge, company plan, provider route');
+  const hosp = await login('+919800000701');
+  const dfd = new FormData();
+  dfd.append('patient', JSON.stringify({ name: 'E2E Discharged Patient', phone: '+919800000901', dob: '1955-04-02', gender: 'female' }));
+  dfd.append('dischargeDate', istDate(0)); dfd.append('diagnosisSummary', 'Post knee replacement'); dfd.append('treatingDoctorName', 'Dr. E2E Ortho');
+  dfd.append('followUp', JSON.stringify({ tasks: [{ type: 'follow_up', title: 'Wound check', owner: 'patient' }], medications: [], followUpDays: [7, 14] }));
+  dfd.append('file', new Blob(['%PDF-1.4\n% discharge\n%%EOF'], { type: 'application/pdf' }), 'discharge.pdf');
+  const dis = await call(hosp.accessToken, 'POST', '/discharges', dfd);
+  check('hospital desk creates a 30-day discharge program', dis.status === 201 && !!dis.body.careEpisodeId, dis.body);
+  const hospOther = await call(hosp.accessToken, 'GET', '/clinician/queue');
+  check('hospital staff cannot reach clinician API', hospOther.status === 403, hospOther.status);
+  const org = await call(A, 'POST', '/admin/organizations', { name: 'E2E Corp', contactName: 'HR', contactEmail: 'hr@e2e.example', planCode: 'family_basic', seats: 5, validFrom: istDate(0), validTo: istDate(365) });
+  const codes = await call(A, 'POST', `/admin/organizations/${org.body.id}/codes`, { count: 1 });
+  const redeemer = await login('+919800000902');
+  const red = await call(redeemer.accessToken, 'POST', '/subscriptions/redeem', { code: codes.body.codes?.[0] });
+  check('employee redeems company plan code', red.body.status === 'active' && red.body.sponsorName === 'E2E Corp', red.body);
+  const route = await call(V, 'GET', `/provider/route?date=${istDate(0)}`);
+  check('nurse route planned for today', route.status === 200 && Array.isArray(route.body.stops), route.body);
+
   console.log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 }

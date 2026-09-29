@@ -10,6 +10,11 @@ import '../../../core/theme.dart';
 import '../../../models/home_visit.dart';
 import '../../../ui/l10n_helpers.dart';
 import '../../../ui/widgets.dart';
+import '../../../models/care_plans.dart';
+import '../../../models/field_ops.dart';
+import '../../care_plans/diet_plan_screen.dart';
+import '../../care_plans/exercise_plan_screen.dart';
+import '../../field/supplies_screen.dart';
 import '../../offline/offline_queue.dart';
 import '../data/visit_providers.dart';
 import '../domain/visit_lifecycle.dart';
@@ -17,6 +22,7 @@ import 'escalate_dialog.dart';
 import 'lifecycle_panel.dart';
 import 'observations_form.dart';
 import 'photo_capture.dart';
+import 'sample_collection.dart';
 import 'vitals_form.dart';
 
 class VisitDetailScreen extends ConsumerStatefulWidget {
@@ -138,6 +144,24 @@ class _VisitDetailScreenState extends ConsumerState<VisitDetailScreen> {
     }
   }
 
+  /// Supplies used during the visit -> `POST /provider/supplies/usage`
+  /// through the offline queue (same Idempotency-Key on every replay).
+  Future<void> _recordSupplies(HomeVisit visit) async {
+    final quantities = await showSuppliesUsageSheet(context);
+    if (quantities == null || quantities.isEmpty || !mounted) return;
+    final ok = await _perform(visit, VisitActionType.suppliesUsage, suppliesUsageBody(visit.id, quantities),
+        successMessage: context.l10n.supUsageSaved);
+    if (ok) ref.invalidate(suppliesProvider);
+  }
+
+  void _openPlan(HomeVisit visit, String kind) {
+    context.push(Uri(path: '/visits/${visit.id}/$kind', queryParameters: {
+      'patientId': visit.patientId,
+      'patientName': visit.patientName,
+      'careEpisodeId': ?visit.careEpisodeId,
+    }).toString());
+  }
+
   Future<void> _escalate(HomeVisit visit) async {
     final request = await showEscalationFlow(context);
     if (request == null || !mounted) return;
@@ -166,6 +190,8 @@ class _VisitDetailScreenState extends ConsumerState<VisitDetailScreen> {
       data: (result) {
         // Prefer the fresher copy returned by the last action while refetching.
         final visit = (_latest != null && async.isLoading) ? _latest! : result.visit;
+        final providerType = ref.watch(authControllerProvider).profile?.type;
+        final planStage = VisitLifecycle.canRecordCare(visit.status) || visit.status == VisitStatus.completed;
         final showEscalate = VisitLifecycle.canEscalate(visit.status);
         return Scaffold(
           appBar: AppBar(title: Text(visit.serviceName)),
@@ -220,6 +246,18 @@ class _VisitDetailScreenState extends ConsumerState<VisitDetailScreen> {
                       _AddressCard(visit: visit),
                       const SizedBox(height: 12),
                       PatientContextCard(visit: visit),
+                      if (visit.isSampleCollection) ...[
+                        const SizedBox(height: 12),
+                        LabTestsCard(visit: visit),
+                      ],
+                      if (planStage && canCreateExercisePlan(providerType)) ...[
+                        const SizedBox(height: 12),
+                        ExercisePlanCard(patientId: visit.patientId, onCreate: () => _openPlan(visit, 'exercise-plan')),
+                      ],
+                      if (planStage && canCreateDietPlan(providerType)) ...[
+                        const SizedBox(height: 12),
+                        DietPlanCard(onCreate: () => _openPlan(visit, 'diet-plan')),
+                      ],
                       if (VisitLifecycle.canRecordCare(visit.status)) ...[
                         const SizedBox(height: 12),
                         SectionCard(
@@ -234,6 +272,24 @@ class _VisitDetailScreenState extends ConsumerState<VisitDetailScreen> {
                           const SizedBox(height: 12),
                           VisitPhotoCard(busy: _busy, onAddPhoto: () => _addPhoto(visit)),
                         ],
+                        const SizedBox(height: 12),
+                        SectionCard(
+                          key: const Key('suppliesUsageCard'),
+                          title: l.supUsageTitle,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(l.supUsageCardBody, style: const TextStyle(color: AppColors.textSecondary)),
+                              const SizedBox(height: 8),
+                              OutlinedButton.icon(
+                                key: const Key('recordSupplies'),
+                                onPressed: _busy ? null : () => _recordSupplies(visit),
+                                icon: const Icon(Icons.inventory_2_outlined),
+                                label: Text(l.supUsageButton),
+                              ),
+                            ],
+                          ),
+                        ),
                         const SizedBox(height: 12),
                         SectionCard(
                           title: l.obsTitle,

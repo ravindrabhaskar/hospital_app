@@ -12,6 +12,8 @@ import type { PaymentService } from './modules/payments/service.js';
 import type { MalwareScanner, StorageAdapter } from './modules/records/storage.js';
 import type { SafetyService } from './modules/safety/service.js';
 import type { VideoProvider } from './modules/video/provider.js';
+import type { Partners } from './modules/partners/index.js';
+import type { DrugKnowledgeProvider } from './modules/rxcheck/engine.js';
 
 /** Dependency container shared by modules (decorated on the Fastify instance as `app.svc`). */
 export interface Services {
@@ -31,4 +33,7 @@ export interface Services {
   mfa: MfaService;
   video: VideoProvider;
   metrics: Metrics;
+  // v1.3 partner adapters (contract sections 41-62)
+  drugKnowledge: DrugKnowledgeProvider;
+  partners: Partners;
 }

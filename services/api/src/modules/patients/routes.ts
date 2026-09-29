@@ -180,6 +180,13 @@ export async function patientRoutes(app: FastifyInstance): Promise<void> {
     if (!svc.config.ABDM_ENABLED) throw errors.dependency(ABDM_PENDING_MESSAGE);
     const [p] = await db.select().from(patients).where(eq(patients.id, id));
     if (!p.abhaNumber && !p.abhaAddress) throw errors.validation('Add an ABHA number or address first');
+    // Contract section 50: the mock (sandbox-like) gateway verifies ABHA numbers and sandbox (@sbx) addresses only;
+    // production addresses (@abdm) need the certified production gateway.
+    if (svc.config.ABDM_MODE === 'mock' && !(p.abhaAddress ?? '').endsWith('@abdm')) {
+      const [row] = await db.update(patients).set({ abhaStatus: 'verified', updatedAt: new Date() }).where(eq(patients.id, id)).returning();
+      await audit(db, req.ctx.actor, { action: 'patient.abha_verified', entityType: 'patient', entityId: id, metadata: { mode: 'mock' } });
+      return { number: row.abhaNumber, address: row.abhaAddress, status: 'verified' as const };
+    }
     await abdm.verifyAbha({ abhaNumber: p.abhaNumber, abhaAddress: p.abhaAddress });
     throw errors.dependency(ABDM_PENDING_MESSAGE);
   });

@@ -12,7 +12,7 @@ import { toFacility } from '../providers/routes.js';
 export async function openEmergency(
   svc: Services,
   tx: DbOrTx,
-  p: { patientId: string; title: string; concern: string; source: 'fall' | 'sos' | 'mood'; rule: { ruleId: string; title: string }; actor: Actor },
+  p: { patientId: string; title: string; concern: string; source: 'fall' | 'sos' | 'mood' | 'sos_button'; rule: { ruleId: string; title: string }; actor: Actor },
 ) {
   const ep = await createEpisode(tx, { patientId: p.patientId, title: p.title, concern: p.concern, priority: 'emergency', actor: p.actor });
   await advanceEpisode(tx, ep.id, ['EMERGENCY'], p.title, p.actor, { priority: 'emergency', nextAction: 'Emergency response' });

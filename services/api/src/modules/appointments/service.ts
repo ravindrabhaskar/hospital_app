@@ -149,6 +149,7 @@ export async function cancelAppointment(
   a: AppointmentRow,
   reason: string,
   actor: Actor,
+  refundToWallet = false,
 ): Promise<AppointmentRow> {
   const [pay] = await db.select().from(payments).where(and(eq(payments.purpose, 'appointment'), eq(payments.refId, a.id)));
   const updated = await db.transaction(async (tx) => {
@@ -165,7 +166,7 @@ export async function cancelAppointment(
     return row;
   });
   if (pay?.status === 'succeeded') {
-    await paymentsSvc.refund(pay.id, { reason: 'appointment_cancelled', actor });
+    await paymentsSvc.refund(pay.id, { reason: 'appointment_cancelled', actor, toWallet: refundToWallet });
   }
   return updated;
 }

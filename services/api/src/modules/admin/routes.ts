@@ -1,7 +1,7 @@
 import { and, desc, eq, ilike, or, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { aiInteractions, auditLogs, providers, serviceZones, users } from '../../db/schema.js';
+import { aiInteractions, auditLogs, facilities, providers, serviceZones, users } from '../../db/schema.js';
 import { audit } from '../../lib/audit.js';
 import { errors } from '../../lib/errors.js';
 import { envelope, pageFromQuery, paginateArray } from '../../lib/pagination.js';
@@ -13,7 +13,7 @@ import { ensureUser, revokeAllSessions } from '../auth/service.js';
 import { DEFAULT_WEEKLY } from '../schedules/service.js';
 import { createProviderProfile } from './staff.js';
 
-const zRole = z.enum(['patient', 'doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin']);
+const zRole = z.enum(['patient', 'doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin', 'hospital_staff', 'support_agent']);
 
 const toAdminUser = (u: typeof users.$inferSelect) => ({
   id: u.id,
@@ -30,6 +30,11 @@ export async function adminRoutes(app: FastifyInstance): Promise<void> {
   const db = svc.db;
   const superOnly = requireRoles(svc, 'super_admin');
   const superOrOps = requireRoles(svc, 'super_admin', 'ops_admin');
+  const assertFacility = async (facilityId: string | null | undefined) => {
+    if (!facilityId) throw errors.validation('facilityId is required for hospital_staff', { field: 'facilityId' });
+    const [f] = await db.select({ id: facilities.id }).from(facilities).where(eq(facilities.id, facilityId));
+    if (!f) throw errors.validation('Unknown facility', { field: 'facilityId' });
+  };
 
   app.get('/admin/users', { preHandler: superOnly }, async (req) => {
     const q = parse(z.object({ q: z.string().max(100).optional(), role: zRole.optional() }), req.query);
@@ -49,12 +54,16 @@ export async function adminRoutes(app: FastifyInstance): Promise<void> {
 
   app.put('/admin/users/:id/roles', { preHandler: superOnly }, async (req) => {
     const { id } = parse(z.object({ id: zUuid }), req.params);
-    const body = parse(z.object({ roles: z.array(zRole).min(1).max(6) }), req.body);
+    const body = parse(z.object({ roles: z.array(zRole).min(1).max(8), facilityId: zUuid.nullable().optional() }), req.body);
     const roles = [...new Set(body.roles)];
     if (id === req.ctx.user.id && !roles.includes('super_admin')) throw errors.conflict('You cannot remove your own super_admin role');
-    const [row] = await db.update(users).set({ roles }).where(eq(users.id, id)).returning();
-    if (!row) throw errors.notFound('User');
-    await audit(db, req.ctx.actor, { action: 'user.roles', entityType: 'user', entityId: id, metadata: { roles } });
+    // hospital_staff is bound to exactly one facility (contract section 59).
+    const [current] = await db.select({ facilityId: users.facilityId }).from(users).where(eq(users.id, id));
+    if (!current) throw errors.notFound('User');
+    const facilityId = body.facilityId !== undefined ? body.facilityId : current.facilityId;
+    if (roles.includes('hospital_staff')) await assertFacility(facilityId);
+    const [row] = await db.update(users).set({ roles, facilityId: roles.includes('hospital_staff') ? facilityId : null }).where(eq(users.id, id)).returning();
+    await audit(db, req.ctx.actor, { action: 'user.roles', entityType: 'user', entityId: id, metadata: { roles, facilityId: row.facilityId } });
     return toAdminUser(row);
   });
 
@@ -85,10 +94,12 @@ export async function adminRoutes(app: FastifyInstance): Promise<void> {
       z.object({
         phone: zPhone,
         name: z.string().trim().min(1).max(100),
-        roles: z.array(zRole).min(1).max(6),
+        roles: z.array(zRole).min(1).max(8),
+        /** Required for hospital_staff: the facility the user is bound to. */
+        facilityId: zUuid.optional(),
         provider: z
           .object({
-            type: z.enum(['doctor', 'nurse', 'technician', 'intern', 'physiotherapist']),
+            type: z.enum(['doctor', 'nurse', 'technician', 'intern', 'physiotherapist', 'dietitian']),
             qualification: z.string().trim().min(1).max(200),
             specialty: z.string().max(40).optional(),
             registrationNumber: z.string().trim().min(1).max(60),
@@ -101,9 +112,14 @@ export async function adminRoutes(app: FastifyInstance): Promise<void> {
       req.body,
     );
     const roles = [...new Set(body.roles)];
+    if (roles.includes('hospital_staff')) await assertFacility(body.facilityId ?? null);
     const user = await db.transaction(async (tx) => {
       const u0 = await ensureUser(tx, body.phone, { name: body.name, roles });
-      const [u] = await tx.update(users).set({ name: body.name, roles }).where(eq(users.id, u0.id)).returning();
+      const [u] = await tx
+        .update(users)
+        .set({ name: body.name, roles, facilityId: roles.includes('hospital_staff') ? (body.facilityId ?? null) : null })
+        .where(eq(users.id, u0.id))
+        .returning();
       if (body.provider) {
         await createProviderProfile(tx, {
           userId: u.id,

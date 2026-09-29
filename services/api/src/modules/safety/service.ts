@@ -7,6 +7,18 @@ import { FAILSAFE_RULE, evaluateRules, type SafetyInput, type SafetyResult } fro
 
 export type SafetyPackRow = typeof safetyRulePacks.$inferSelect;
 export type SafetyEventRow = typeof safetyEvents.$inferSelect;
+/** SafetyEvent.source (v1.3 adds checkin, program, geofence, sos_button; support tickets and IVR/WhatsApp reuse existing ones). */
+export type SafetyEventSource =
+  | 'ai_intake'
+  | 'home_visit'
+  | 'mood'
+  | 'fall'
+  | 'sos'
+  | 'message'
+  | 'checkin'
+  | 'program'
+  | 'geofence'
+  | 'sos_button';
 
 export class SafetyService {
   constructor(
@@ -59,10 +71,12 @@ export class SafetyService {
       patientId: string;
       careEpisodeId: string | null;
       level: 'urgent' | 'emergency';
-      source: 'ai_intake' | 'home_visit' | 'mood' | 'fall' | 'sos' | 'message';
+      source: SafetyEventSource;
       rules: Array<{ ruleId: string; title: string }>;
       rulePackVersion: string | null;
       note?: string | null;
+      assignedToUserId?: string | null;
+      assignedToName?: string | null;
     },
   ): Promise<SafetyEventRow> {
     const [row] = await db
@@ -75,6 +89,8 @@ export class SafetyService {
         rules: e.rules.map((r) => ({ ruleId: r.ruleId, title: r.title })),
         rulePackVersion: e.rulePackVersion,
         note: e.note ?? null,
+        assignedToUserId: e.assignedToUserId ?? null,
+        assignedToName: e.assignedToName ?? null,
       })
       .returning();
     return row;

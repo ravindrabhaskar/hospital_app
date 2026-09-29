@@ -234,6 +234,9 @@ export function createEndpoints(http: HttpClient) {
     /* 31. e-Prescriptions */
     prescriptions: {
       create: (input: T.PrescriptionInput) => post<T.Prescription>("/clinician/prescriptions", input),
+      /* 47. Interaction & allergy check */
+      check: (input: { patientId: string; items: { drugName: string; strength?: string }[] }, signal?: AbortSignal) =>
+        http.request<T.RxCheckResponse>("/clinician/prescriptions/check", { method: "POST", body: input, signal }),
       list: (q: { patientId: string } & T.ListQuery) => get<T.ListResponse<T.Prescription>>("/prescriptions", q),
       get: (id: string) => get<T.Prescription>(`/prescriptions/${enc(id)}`),
       pdf: (id: string) => http.request<Blob>(`/prescriptions/${enc(id)}/pdf`, { responseType: "blob" }),
@@ -307,6 +310,153 @@ export function createEndpoints(http: HttpClient) {
       create: (input: T.SchemeInput) => post<T.Scheme>("/admin/schemes", input),
       update: (id: string, input: Partial<T.SchemeInput>) =>
         http.request<T.Scheme>(`/admin/schemes/${enc(id)}`, { method: "PATCH", body: input }),
+    },
+
+    /* ================= v1.3 (§41–§62) ================= */
+
+    /* 41. Daily check-in */
+    checkins: {
+      settings: (patientId: string) => get<T.CheckinSettings>(`/patients/${enc(patientId)}/checkin-settings`),
+      list: (patientId: string, days = 30) => get<T.ListResponse<T.CheckIn>>(`/patients/${enc(patientId)}/checkins`, { days }),
+    },
+
+    /* 42. Chronic care programs */
+    programs: {
+      templates: () => get<T.ListResponse<T.ProgramTemplate>>("/care-programs/templates"),
+      enrollments: (q: { patientId?: string } & T.ListQuery = {}) =>
+        get<T.ListResponse<T.Enrollment>>("/care-programs/enrollments", q),
+      enroll: (input: T.EnrollmentInput) => post<T.Enrollment>("/care-programs/enrollments", input),
+      updateEnrollment: (id: string, input: { status?: T.EnrollmentStatus; thresholds?: T.Threshold[] }) =>
+        http.request<T.Enrollment>(`/care-programs/enrollments/${enc(id)}`, { method: "PATCH", body: input }),
+      summary: (id: string, q: { from?: string; to?: string } = {}) =>
+        get<T.ProgramSummary>(`/care-programs/enrollments/${enc(id)}/summary`, q),
+    },
+    adminPrograms: {
+      templates: () => get<T.ListResponse<T.ProgramTemplate>>("/admin/care-programs/templates"),
+      /** Creates a template (or, with an existing code, a new version for review; it starts unapproved). */
+      create: (input: T.ProgramTemplateInput) => post<T.ProgramTemplate>("/admin/care-programs/templates", input),
+      approve: (code: string) => post<T.ProgramTemplate>(`/admin/care-programs/templates/${enc(code)}/approve`),
+    },
+
+    /* 44. Lab tests */
+    lab: {
+      orders: (q: { patientId?: string } & T.ListQuery = {}) => get<T.ListResponse<T.LabOrder>>("/lab/orders", q),
+      order: (id: string) => get<T.LabOrder>(`/lab/orders/${enc(id)}`),
+      opsOrders: (q: { status?: T.LabOrderStatus } & T.ListQuery = {}) => get<T.ListResponse<T.LabOrder>>("/ops/lab-orders", q),
+    },
+
+    /* 46. AI scribe */
+    scribe: {
+      fromTranscript: (appointmentId: string, transcript: string) =>
+        post<T.ScribeDraft>(`/clinician/appointments/${enc(appointmentId)}/scribe`, { transcript, consentConfirmed: true }),
+      fromAudio: (appointmentId: string, audio: Blob, fileName = "consultation.webm") => {
+        const fd = new FormData();
+        fd.append("audio", audio, fileName);
+        fd.append("consentConfirmed", "true");
+        return post<T.ScribeDraft>(`/clinician/appointments/${enc(appointmentId)}/scribe`, fd);
+      },
+    },
+
+    /* 48. Supplies (ops) */
+    supplies: {
+      lowStock: (q: T.ListQuery = {}) => get<T.ListResponse<T.LowStockItem>>("/ops/supplies/low-stock", q),
+      restock: (providerId: string, items: { code: string; qty: number }[]) =>
+        post<{ items: T.SupplyItem[] }>(`/ops/providers/${enc(providerId)}/supplies/restock`, { items }),
+    },
+
+    /* 49. Second opinions */
+    secondOpinions: {
+      forPatient: (patientId: string) => get<T.ListResponse<T.SecondOpinion>>("/second-opinions", { patientId }),
+      get: (id: string) => get<T.SecondOpinion>(`/second-opinions/${enc(id)}`),
+      clinicianList: (scope: "open" | "mine", q: T.ListQuery = {}) =>
+        get<T.ListResponse<T.SecondOpinion>>("/clinician/second-opinions", { scope, ...q }),
+      claim: (id: string) => post<T.SecondOpinion>(`/clinician/second-opinions/${enc(id)}/claim`),
+      respond: (id: string, input: T.SecondOpinionResponseInput) =>
+        post<T.SecondOpinion>(`/clinician/second-opinions/${enc(id)}/respond`, input),
+    },
+
+    /* 51. Insurance */
+    insurance: {
+      policies: (patientId: string) => get<T.ListResponse<T.InsurancePolicy>>(`/patients/${enc(patientId)}/insurance-policies`),
+    },
+
+    /* 52. Preventive */
+    preventive: {
+      schedule: (patientId: string) => get<T.PreventiveSchedule>(`/patients/${enc(patientId)}/preventive-schedule`),
+    },
+
+    /* 53. Exercise */
+    exercise: {
+      library: (q: { bodyArea?: string } = {}) => get<T.ListResponse<T.Exercise>>("/exercise-library", q),
+      plans: (patientId: string) => get<T.ListResponse<T.ExercisePlan>>("/exercise-plans", { patientId }),
+      create: (input: T.ExercisePlanInput) => post<T.ExercisePlan>("/exercise-plans", input),
+      progress: (id: string) => get<T.ExerciseProgress>(`/exercise-plans/${enc(id)}/progress`),
+    },
+
+    /* 54. Diet */
+    diet: {
+      templates: () => get<T.ListResponse<T.DietTemplate>>("/diet-templates"),
+      plans: (patientId: string) => get<T.ListResponse<T.DietPlan>>("/diet-plans", { patientId }),
+      create: (input: T.DietPlanInput) => post<T.DietPlan>("/diet-plans", input),
+      adherence: (id: string, days = 14) =>
+        get<{ days: { date: string; slotsLogged: number; slotsFollowed: number }[]; adherencePct: number }>(
+          `/diet-plans/${enc(id)}/adherence`,
+          { days },
+        ),
+    },
+
+    /* 55. Ambulance (ops) */
+    ambulance: {
+      opsList: (q: { status?: T.AmbulanceStatus } & T.ListQuery = {}) =>
+        get<T.ListResponse<T.AmbulanceRequest>>("/ops/ambulance-requests", q),
+      get: (id: string) => get<T.AmbulanceRequest>(`/ambulance/requests/${enc(id)}`),
+    },
+
+    /* 57. Organizations */
+    organizations: {
+      list: (q: T.ListQuery = {}) => get<T.ListResponse<T.Organization>>("/admin/organizations", q),
+      create: (input: T.OrganizationInput) => post<T.Organization>("/admin/organizations", input),
+      update: (id: string, input: Partial<T.OrganizationInput>) =>
+        http.request<T.Organization>(`/admin/organizations/${enc(id)}`, { method: "PATCH", body: input }),
+      generateCodes: (id: string, count: number) => post<{ codes: string[] }>(`/admin/organizations/${enc(id)}/codes`, { count }),
+      usage: (id: string) => get<T.OrganizationUsage>(`/admin/organizations/${enc(id)}/usage`),
+    },
+
+    /* 58. Tenants */
+    tenants: {
+      list: (q: T.ListQuery = {}) => get<T.ListResponse<T.Tenant>>("/admin/tenants", q),
+      create: (input: T.TenantInput) => post<T.Tenant>("/admin/tenants", input),
+      update: (id: string, input: Partial<T.TenantInput>) =>
+        http.request<T.Tenant>(`/admin/tenants/${enc(id)}`, { method: "PATCH", body: input }),
+    },
+
+    /* 59. Discharges (hospital_staff) */
+    discharges: {
+      list: (q: { status?: T.DischargeStatus } & T.ListQuery = {}) => get<T.ListResponse<T.Discharge>>("/discharges", q),
+      get: (id: string) => get<T.Discharge>(`/discharges/${enc(id)}`),
+      /** Multipart: build the FormData with `buildDischargeFormData` (src/lib/discharge.ts). */
+      create: (form: FormData) => post<T.Discharge>("/discharges", form),
+    },
+
+    /* 60. Coupons */
+    coupons: {
+      list: (q: T.ListQuery = {}) => get<T.ListResponse<T.Coupon>>("/admin/coupons", q),
+      create: (input: T.CouponInput) => post<T.Coupon>("/admin/coupons", input),
+      update: (id: string, input: Partial<T.CouponInput>) =>
+        http.request<T.Coupon>(`/admin/coupons/${enc(id)}`, { method: "PATCH", body: input }),
+    },
+
+    /* 61. Support desk (agent side) */
+    support: {
+      tickets: (q: { status?: T.TicketStatus; assignedTo?: "me" } & T.ListQuery = {}) =>
+        get<T.ListResponse<T.Ticket>>("/ops/support/tickets", q),
+      ticket: (id: string) => get<T.Ticket>(`/support/tickets/${enc(id)}`),
+      assign: (id: string, userId: string) => post<T.Ticket>(`/ops/support/tickets/${enc(id)}/assign`, { userId }),
+      reply: (id: string, input: { text: string; internal?: boolean }) =>
+        post<T.TicketMessage>(`/ops/support/tickets/${enc(id)}/reply`, input),
+      update: (id: string, input: { status?: T.TicketStatus; priority?: T.TicketPriority }) =>
+        http.request<T.Ticket>(`/ops/support/tickets/${enc(id)}`, { method: "PATCH", body: input }),
+      metrics: () => get<T.SupportMetrics>("/ops/support/metrics"),
     },
   };
 }

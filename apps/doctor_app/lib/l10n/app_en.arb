@@ -1,0 +1,640 @@
+{
+  "@@locale": "en",
+  "appTitle": "CareCompanion Doctor",
+  "commonLoading": "Loading",
+  "commonRetry": "Retry",
+  "commonRefresh": "Refresh",
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonConfirm": "Confirm",
+  "commonContinue": "Continue",
+  "commonDiscard": "Discard",
+  "commonAdd": "Add",
+  "commonRemove": "Remove",
+  "commonOk": "OK",
+  "commonLogout": "Log out",
+  "copied": "Copied",
+  "send": "Send",
+  "fieldRequired": "Required",
+  "linkFailed": "Couldn't open the link",
+  "offlineBanner": "You're offline. Showing the last loaded data.",
+  "statusLabel": "Status",
+  "priorityLabel": "Priority",
+  "severityLabel": "Severity",
+  "episodeLabel": "Care episode",
+  "reasonLabel": "Reason",
+  "noneRecorded": "None recorded",
+  "noneAdded": "Nothing added yet",
+  "onePerLine": "One per line",
+  "commaSeparated": "Separate with commas",
+  "ageYears": "{age} y",
+  "@ageYears": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "daysCount": "{count} days",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "genderMale": "Male",
+  "genderFemale": "Female",
+  "genderOther": "Other",
+  "errorNetwork": "Can't reach CareCompanion. Check your connection.",
+  "errorGeneric": "Something went wrong. Please try again.",
+  "errorServer": "The service is having trouble. Please try again shortly.",
+  "errorSessionExpired": "Your session expired. Please log in again.",
+  "errorForbidden": "You don't have access to this.",
+  "errorNotFound": "This item is no longer available.",
+  "errorRateLimited": "Too many attempts. Please wait and try again.",
+  "errorMfaRequired": "Two-step verification is required to continue.",
+  "loginTitle": "Doctor sign in",
+  "loginSubtitle": "Your queue, patients and care team in one place.",
+  "loginPhoneLabel": "Mobile number",
+  "loginPhoneHint": "10-digit number",
+  "loginPhoneInvalid": "Enter a valid 10-digit mobile number",
+  "loginSendOtp": "Send OTP",
+  "loginOtpSentTo": "Enter the code sent to {phone}",
+  "@loginOtpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "loginOtpLabel": "6-digit OTP",
+  "loginOtpInvalid": "Enter the 6-digit code",
+  "loginDevOtpHint": "Development OTP: {code}",
+  "@loginDevOtpHint": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "loginVerify": "Verify",
+  "loginChangeNumber": "Change number",
+  "mfaTitle": "Two-step verification",
+  "mfaEnrolIntro": "Doctor accounts are protected with an authenticator app code in addition to the SMS OTP.",
+  "mfaStep1": "1. Add CareCompanion to your authenticator",
+  "mfaStep2": "2. Enter the 6-digit code it shows",
+  "mfaOpenAppHint": "Tap the button to add the account automatically, or type the setup key into the app.",
+  "mfaOpenAuthenticator": "Open authenticator app",
+  "mfaSecretLabel": "Setup key",
+  "mfaCopySecret": "Copy setup key",
+  "mfaCodeLabel": "Authenticator code",
+  "mfaTurnOn": "Verify and turn on",
+  "mfaRecoveryIntro": "Save these recovery codes somewhere safe. Each works once if you lose your phone. They will not be shown again.",
+  "mfaCopyCodes": "Copy all codes",
+  "mfaSavedCodes": "I've saved my recovery codes",
+  "mfaVerifyPrompt": "Enter the 6-digit code from your authenticator app.",
+  "mfaRecoveryPrompt": "Enter one of your recovery codes. Each code works only once.",
+  "mfaRecoveryLabel": "Recovery code",
+  "mfaVerify": "Verify",
+  "mfaUseRecovery": "Use a recovery code instead",
+  "mfaUseAuthenticator": "Use the authenticator app",
+  "mfaWrongCode": "That code is incorrect.",
+  "mfaWrongCodeAttempts": "That code is incorrect. {count} attempts left.",
+  "@mfaWrongCodeAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mfaCodeInvalid": "Enter the 6-digit code",
+  "mfaRecoveryInvalid": "Enter a valid recovery code",
+  "mfaLocked": "Too many incorrect codes. Try again in 15 minutes.",
+  "mfaStatusOn": "On (authenticator app)",
+  "mfaStatusOff": "Not set up yet. You will be asked when your organisation requires it.",
+  "restrictedTitle": "This app is for doctors",
+  "restrictedBody": "Your account does not have a verified doctor profile.",
+  "restrictedPatient": "Please use the CareCompanion app for patients and families.",
+  "restrictedProvider": "Please use the CareCompanion Pro app for home-care visits.",
+  "restrictedStaff": "Please use the CareCompanion web portal for your role.",
+  "updateTitle": "Please update the app",
+  "updateBody": "This version is no longer supported. Update to keep seeing patients safely.",
+  "updateNow": "Update now",
+  "updateVersions": "Installed {current} · required {minimum}",
+  "@updateVersions": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "supportTitle": "Support",
+  "supportCall": "Call support",
+  "supportEmail": "Email support",
+  "supportWhatsapp": "WhatsApp support",
+  "navToday": "Today",
+  "navPatients": "Patients",
+  "navMessages": "Messages",
+  "navMore": "More",
+  "helloDoctor": "Hello, {name}",
+  "@helloDoctor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "queueEmpty": "No consultations on this day.",
+  "queueWaiting": "Waiting",
+  "queueInProgress": "In progress",
+  "queueDone": "Done",
+  "apptPendingPayment": "Payment pending",
+  "apptConfirmed": "Confirmed",
+  "apptInProgress": "In progress",
+  "apptCompleted": "Completed",
+  "apptCancelled": "Cancelled",
+  "apptNoShow": "No-show",
+  "priorityRoutine": "Routine",
+  "priorityUrgent": "Urgent",
+  "priorityEmergency": "Emergency",
+  "epNew": "New",
+  "epIntake": "Intake",
+  "epAwaitingCare": "Awaiting care",
+  "epCareScheduled": "Care scheduled",
+  "epUnderCare": "Under care",
+  "epFollowUp": "Follow-up",
+  "epResolved": "Resolved",
+  "epEscalated": "Escalated",
+  "epEmergency": "Emergency",
+  "epTransferred": "Transferred",
+  "epCancelled": "Cancelled",
+  "modeVideo": "Video",
+  "modeAudio": "Audio",
+  "modeChat": "Chat",
+  "modeInClinic": "In clinic",
+  "modeHomeVisit": "Home visit",
+  "consultTitle": "Consultation",
+  "openPatient": "Open patient record",
+  "startConsult": "Start consultation",
+  "completeConsult": "Complete consultation",
+  "consultStarted": "Consultation started",
+  "consultCompleted": "Consultation completed",
+  "savedNotes": "Saved notes",
+  "outcomeLabel": "Outcome",
+  "outcomeCarePlan": "Care plan",
+  "outcomeResolved": "Resolved",
+  "outcomeRefer": "Refer",
+  "outcomeHomeVisit": "Home visit",
+  "notesTitle": "Clinical notes",
+  "notesHint": "Type your notes, or use the AI scribe",
+  "notesSaveHint": "Notes are saved when you complete the consultation.",
+  "saveEpisodeNote": "Add to care episode now",
+  "noteSaved": "Note added to the care episode",
+  "toolsTitle": "Actions",
+  "careTeamThread": "Care-team messages",
+  "joinVideo": "Join video",
+  "videoTitle": "Video consultation",
+  "videoWindow": "Room open",
+  "videoAudioHint": "Audio consultation: keep your camera off.",
+  "videoOpensAt": "The room opens at {time} (10 minutes before the start).",
+  "@videoOpensAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "intakeTitle": "Presenting complaint (AI intake)",
+  "intakeComplaint": "Chief complaint",
+  "intakeDuration": "Duration",
+  "intakeSeverity": "Severity",
+  "intakeSymptoms": "Associated symptoms",
+  "allergiesTitle": "Allergies",
+  "allergiesNone": "No known allergies recorded",
+  "conditionsTitle": "Conditions",
+  "activeMedsTitle": "Active medications",
+  "recentVitalsTitle": "Recent vitals",
+  "homeVisitFindingsTitle": "Home-visit findings",
+  "escalatedLabel": "Escalated",
+  "aiSummaryTitle": "AI summary",
+  "aiAdvisoryLabel": "AI-generated · advisory, not a diagnosis",
+  "aiSource": "Source",
+  "aiFeedbackPrompt": "Was this summary accurate?",
+  "aiAccept": "Accurate",
+  "aiReject": "Not accurate",
+  "aiFeedbackThanks": "Thanks, your feedback was recorded.",
+  "aiRecordSummary": "AI record summary",
+  "srcRecord": "Record",
+  "srcVital": "Vital",
+  "srcIntake": "Intake",
+  "srcHomeVisit": "Home visit",
+  "srcPatientEntered": "Patient entered",
+  "scribeTitle": "AI scribe",
+  "scribeConsent": "The patient agreed to this consultation being recorded and transcribed",
+  "scribeConsentHint": "Required before recording or sending a transcript. This is audited.",
+  "scribeConsentRequired": "Confirm the patient's consent first.",
+  "scribeRecordTitle": "Record the consultation",
+  "scribeRecord": "Record",
+  "scribeRecording": "Recording…",
+  "scribeStopUpload": "Stop and create draft",
+  "scribeAudioNote": "Audio is uploaded once, transcribed and then discarded by the server.",
+  "scribeTranscriptTitle": "Or type / paste a transcript",
+  "scribeTranscriptHint": "Doctor: … Patient: …",
+  "scribeGenerate": "Create SOAP draft",
+  "scribeDraftTitle": "SOAP draft",
+  "scribeInsert": "Insert into notes",
+  "scribeInserted": "Draft inserted. Review and edit before completing.",
+  "scribeMicDenied": "Microphone permission is needed to record.",
+  "scribeTranscriptShort": "The transcript is too short.",
+  "scribeTooLarge": "The recording is larger than 25 MB. Record a shorter segment.",
+  "soapS": "Subjective",
+  "soapO": "Objective",
+  "soapA": "Assessment",
+  "soapP": "Plan",
+  "rxTitle": "Prescription",
+  "rxFor": "For {name}",
+  "@rxFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rxItems": "Medicines",
+  "rxNoItems": "Add at least one medicine.",
+  "rxNeedsStart": "Start the consultation first",
+  "rxItemTitle": "Medicine",
+  "rxDrugName": "Medicine name",
+  "rxStrength": "Strength",
+  "rxForm": "Form",
+  "rxDose": "Dose",
+  "rxFrequency": "Frequency",
+  "rxTiming": "Timing",
+  "rxTimingHint": "After food",
+  "rxDuration": "Days",
+  "rxDurationInvalid": "1–365 days",
+  "rxTimes": "Reminder times (HH:MM)",
+  "rxTimesInvalid": "Use 24-hour times like 08:00, 20:00",
+  "rxInstructions": "Instructions",
+  "rxChecksTitle": "Interaction & allergy check",
+  "rxCheckIdle": "Checks run automatically as you add medicines.",
+  "rxChecking": "Checking…",
+  "rxNoWarnings": "No interactions or allergy conflicts found.",
+  "rxPack": "Knowledge pack {pack}",
+  "@rxPack": {
+    "placeholders": {
+      "pack": {
+        "type": "String"
+      }
+    }
+  },
+  "sevMajor": "Major",
+  "sevModerate": "Moderate",
+  "sevInfo": "Info",
+  "warnAllergy": "Allergy",
+  "warnDuplicate": "Duplicate therapy",
+  "warnInteraction": "Interaction",
+  "warnDoseForm": "Dose / form",
+  "rxAcknowledge": "I have reviewed the major warnings and still want to prescribe",
+  "rxOverrideReason": "Clinical reason for overriding",
+  "rxOverrideReasonHint": "At least {min} characters. Audited.",
+  "@rxOverrideReasonHint": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "rxMajorBlocked": "Major warnings need your acknowledgement and a reason.",
+  "rxClinicalNote": "Clinical note (on the prescription)",
+  "rxAdvice": "Advice",
+  "rxFollowUpDays": "Follow up in (days)",
+  "rxSign": "Create prescription",
+  "rxCreated": "Prescription created and shared with the patient",
+  "rxPdfTitle": "Prescription · {name}",
+  "@rxPdfTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "formTablet": "Tablet",
+  "formCapsule": "Capsule",
+  "formSyrup": "Syrup",
+  "formInjection": "Injection",
+  "formOintment": "Ointment",
+  "formDrops": "Drops",
+  "formInhaler": "Inhaler",
+  "formOther": "Other",
+  "pdfDocument": "PDF document: {title}",
+  "@pdfDocument": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pageOf": "Page {page} of {total}",
+  "@pageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "fileReady": "The file is ready. Open it in your browser to view it.",
+  "openInBrowser": "Open in browser",
+  "carePlanTitle": "Care plan",
+  "carePlanSummary": "Summary",
+  "carePlanInstructions": "Instructions for the patient",
+  "carePlanTasks": "Tasks",
+  "carePlanMeds": "Medications",
+  "carePlanSaved": "Care plan saved",
+  "taskTitle": "Task",
+  "taskType": "Type",
+  "taskOwner": "Who",
+  "taskDueInDays": "Due in (days, optional)",
+  "taskMedication": "Medication",
+  "taskTest": "Test",
+  "taskFollowUp": "Follow-up",
+  "taskLifestyle": "Lifestyle",
+  "taskMonitoring": "Monitoring",
+  "taskGeneral": "General",
+  "ownerPatient": "Patient",
+  "ownerCaregiver": "Caregiver",
+  "ownerProvider": "Care provider",
+  "followUpTitle": "Follow-up",
+  "followUpAfterDays": "After (days)",
+  "followUpMode": "Mode",
+  "followUpNone": "No follow-up",
+  "referTitle": "Refer to hospital",
+  "referSearchHospital": "Search hospitals",
+  "referNoHospitals": "No hospitals found.",
+  "referSpecialty": "Specialty (optional)",
+  "referReason": "Reason for referral",
+  "referSummary": "Clinical summary (optional)",
+  "referSend": "Create referral letter",
+  "referSaved": "Referral created. The patient has been notified.",
+  "emergency24x7": "24×7 emergency",
+  "enrolTitle": "Enrol in care program",
+  "enrolThresholds": "Alert thresholds",
+  "enrolSave": "Enrol patient",
+  "enrolSaved": "Patient enrolled",
+  "fixtureWarning": "Template not yet clinically approved (fixture).",
+  "exerciseTitle": "Exercise plan",
+  "exerciseWeeks": "Weeks",
+  "exerciseSets": "Sets",
+  "exerciseReps": "Reps",
+  "exercisePerDay": "Per day",
+  "planSaved": "Plan shared with the patient",
+  "dietTitle": "Diet plan",
+  "dietTemplate": "Template",
+  "dietNoTemplate": "No template",
+  "dietConditions": "Conditions (comma separated)",
+  "dietCalories": "Calorie target (optional)",
+  "dietMeals": "Meals",
+  "dietMealsHint": "Separate items with commas.",
+  "dietMealsCount": "{count} meals filled",
+  "@dietMealsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dietNeedMeals": "Choose a template or fill at least one meal.",
+  "dietAvoid": "Avoid (comma separated)",
+  "dietNotes": "Notes",
+  "dietValidWeeks": "Valid for {weeks} weeks",
+  "@dietValidWeeks": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "slotEarlyMorning": "Early morning",
+  "slotBreakfast": "Breakfast",
+  "slotMidMorning": "Mid-morning",
+  "slotLunch": "Lunch",
+  "slotEvening": "Evening",
+  "slotDinner": "Dinner",
+  "slotBedtime": "Bedtime",
+  "patientTitle": "Patient",
+  "patientSearchHint": "Search your patients by name",
+  "patientsEmpty": "Patients you consult or who share records with you appear here.",
+  "patientsNoMatch": "No patients match your search.",
+  "bloodGroup": "Blood group",
+  "tabOverview": "Overview",
+  "tabRecords": "Records",
+  "tabVitals": "Vitals",
+  "tabPrograms": "Programs",
+  "tabPrescriptions": "Prescriptions",
+  "tabEpisodes": "Episodes",
+  "recordsEmpty": "No records shared.",
+  "openOriginal": "Open original file",
+  "recLab": "Lab report",
+  "recPrescription": "Prescription",
+  "recImaging": "Imaging",
+  "recDischarge": "Discharge summary",
+  "recVisitSummary": "Visit summary",
+  "recOther": "Other",
+  "vitalsEmpty": "No vitals recorded.",
+  "vitalRange": "Range {min}–{max}",
+  "@vitalRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "readingsCount": "{count} readings",
+  "@readingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vitalTrendSemantics": "{vital} trend: {count} readings between {min} and {max}",
+  "@vitalTrendSemantics": {
+    "placeholders": {
+      "vital": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vitalBpSystolic": "BP systolic",
+  "vitalBpDiastolic": "BP diastolic",
+  "vitalPulse": "Pulse",
+  "vitalSpo2": "SpO2",
+  "vitalTemperature": "Temperature",
+  "vitalGlucose": "Blood glucose",
+  "vitalWeight": "Weight",
+  "vitalRespiratoryRate": "Respiratory rate",
+  "programsEmpty": "Not enrolled in any care program.",
+  "programAdherence": "Adherence (7 days)",
+  "programLastReading": "Last reading",
+  "programOpenBreaches": "Open alerts",
+  "progActive": "Active",
+  "progPaused": "Paused",
+  "progCompleted": "Completed",
+  "prescriptionsEmpty": "No prescriptions yet.",
+  "episodesEmpty": "No care episodes.",
+  "inboxEmpty": "No care-team conversations yet.",
+  "noMessagesYet": "No messages yet",
+  "unreadCount": "{count} unread",
+  "@unreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "messageHint": "Message the care team",
+  "emergencyNotice": "Emergency safety notice",
+  "secondOpinionsTitle": "Second opinions",
+  "soTabOpen": "Open",
+  "soTabMine": "Mine",
+  "soEmpty": "No requests here.",
+  "soOpen": "Open",
+  "soClaimed": "Claimed",
+  "soAnswered": "Answered",
+  "soClaim": "Claim",
+  "soClaimedMsg": "Request claimed. Records are now shared with you.",
+  "soRespond": "Write opinion",
+  "soOpinion": "Opinion",
+  "soRecommendations": "Recommendations",
+  "soSuggestTele": "Suggest a teleconsultation",
+  "soSent": "Opinion sent to the patient",
+  "soDue": "Due {date}",
+  "@soDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "escalationsTitle": "Escalations",
+  "escalationsEmpty": "No escalations for your patients.",
+  "scheduleTitle": "Schedule & leaves",
+  "weeklyTab": "Weekly hours",
+  "leavesTab": "Leaves",
+  "scheduleHint": "Saving regenerates unbooked slots for the next {days} days. Booked slots are never changed.",
+  "@scheduleHint": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleEmpty": "No weekly hours yet.",
+  "addBlock": "Add hours",
+  "blockTitle": "Consultation hours",
+  "weekday": "Day",
+  "startTime": "Start",
+  "endTime": "End",
+  "slotLength": "Slot length",
+  "slotMinutes": "{minutes} min",
+  "@slotMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "blockInvalidTime": "Invalid time",
+  "blockEndBeforeStart": "End must be after start",
+  "blockTooShort": "Shorter than one slot",
+  "blockNoModes": "Choose at least one mode",
+  "blockOverlap": "Overlaps other hours on this day",
+  "saveSchedule": "Save weekly hours",
+  "fixProblems": "Fix the highlighted hours",
+  "scheduleSaved": "Schedule saved",
+  "leavesEmpty": "No leaves planned.",
+  "addLeave": "Add leave",
+  "leaveReason": "Reason (optional)",
+  "leaveAdded": "Leave added",
+  "leaveConflictsTitle": "{count} booked consultations on this day",
+  "@leaveConflictsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leaveConflictsBody": "They are not cancelled automatically. Please ask the care team to reschedule them.",
+  "earningsTitle": "Earnings",
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
+  "earnPayable": "Payable to you",
+  "earnServices": "{count} completed consultations",
+  "@earnServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earnGross": "Gross",
+  "earnPlatformFee": "Platform fee",
+  "earnRefunds": "Refunds",
+  "earnLines": "Details",
+  "earnEmpty": "No paid consultations this month.",
+  "profileTitle": "Profile",
+  "photoGallery": "Choose photo",
+  "photoCamera": "Take photo",
+  "photoUpdated": "Photo updated",
+  "photoTooLarge": "The photo must be under 5 MB.",
+  "regNo": "Reg. {number}",
+  "@regNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "ratingLine": "★ {rating} ({count} reviews)",
+  "@ratingLine": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptingBookings": "Accepting new bookings",
+  "acceptingBookingsHint": "When off, you are hidden from doctor search.",
+  "bookingsOn": "You are accepting bookings",
+  "bookingsOff": "Bookings paused",
+  "feesTitle": "Consultation fees",
+  "qualifications": "Qualifications",
+  "languagesSpoken": "Languages spoken",
+  "bio": "About you",
+  "profileSaved": "Profile saved",
+  "languageTitle": "Language",
+  "logoutConfirmTitle": "Log out?",
+  "logoutConfirmBody": "You will need your phone OTP and authenticator code to sign in again."
+}

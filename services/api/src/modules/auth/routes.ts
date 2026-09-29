@@ -1,7 +1,7 @@
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { patients, users } from '../../db/schema.js';
+import { patients, tenants, users } from '../../db/schema.js';
 import { audit } from '../../lib/audit.js';
 import { SYSTEM_ACTOR } from '../../lib/context.js';
 import { parse, zPhone } from '../../lib/validate.js';
@@ -26,6 +26,12 @@ export async function authPublicRoutes(app: FastifyInstance): Promise<void> {
         entityType: 'user',
         entityId: user.id,
       });
+      // Contract section 58: a white-label app build sends X-Tenant-Code; a self profile without a tenant adopts it.
+      const tenantHeader = req.headers['x-tenant-code'];
+      if (typeof tenantHeader === 'string' && /^[a-z0-9_-]{2,40}$/.test(tenantHeader) && user.selfPatientId) {
+        const [tn] = await svc.db.select({ code: tenants.code }).from(tenants).where(eq(tenants.code, tenantHeader));
+        if (tn) await svc.db.update(patients).set({ tenantCode: tn.code }).where(and(eq(patients.id, user.selfPatientId), isNull(patients.tenantCode)));
+      }
       return await svc.auth.issueSession(user.id, body.deviceName ?? null);
     } catch (err) {
       await audit(svc.db, { ...SYSTEM_ACTOR, ip: req.ip, correlationId: req.correlationId }, {

@@ -60,6 +60,20 @@ import 'features/profile/invoice_screen.dart';
 import 'features/schemes/schemes_screen.dart';
 import 'features/subscriptions/family_plan_screen.dart';
 import 'features/wearables/health_privacy_screen.dart';
+import 'features/abdm/abdm.dart';
+import 'features/ambulance/ambulance.dart';
+import 'features/checkin/checkin.dart';
+import 'features/diet/diet.dart';
+import 'features/exercise/exercise.dart';
+import 'features/insurance/insurance.dart';
+import 'features/lab/lab_screens.dart';
+import 'features/preventive/preventive.dart';
+import 'features/programs/programs.dart';
+import 'features/safety/safety.dart';
+import 'features/second_opinion/second_opinion.dart';
+import 'features/support/support.dart';
+import 'features/wallet/wallet.dart';
+import 'models/services.dart' show InsurancePolicy;
 import 'state/core_providers.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
@@ -127,6 +141,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       page('/onboarding/consents', (_) => const OnboardingConsentsScreen()),
       page('/onboarding/profile', (_) => const ProfileSetupScreen()),
       page('/onboarding/emergency', (_) => const EmergencyContactSetupScreen()),
+      page('/onboarding/invite', (_) => const OnboardingInviteScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => AppShell(navigationShell: shell),
         branches: [
@@ -220,6 +235,41 @@ final routerProvider = Provider<GoRouter>((ref) {
       page('/profile/consents', (_) => const ConsentsSettingsScreen()),
       page('/profile/emergency-contacts', (_) => const EmergencyContactsScreen()),
       page('/profile/payments', (_) => const PaymentsHistoryScreen()),
+      // v1.3 (API_CONTRACT §41–§61)
+      page('/checkin', (_) => const CheckinSettingsScreen()),
+      page('/programs', (_) => const ProgramsScreen()),
+      page('/programs/:id', (s) => ProgramDetailScreen(id: s.pathParameters['id']!)),
+      page('/lab', (_) => const LabScreen()),
+      page('/lab/checkout', (_) => const LabCheckoutScreen()),
+      page('/lab/orders', (_) => const LabOrdersScreen()),
+      page('/lab/orders/:id', (s) => LabOrderScreen(id: s.pathParameters['id']!)),
+      page('/second-opinion', (_) => const SecondOpinionScreen()),
+      page('/second-opinion/new', (_) => const NewSecondOpinionScreen()),
+      page('/second-opinion/:id', (s) => SecondOpinionDetailScreen(id: s.pathParameters['id']!)),
+      page('/abha/create', (_) => const AbhaFlowScreen(mode: AbhaFlowMode.create)),
+      page('/abha/link', (_) => const AbhaFlowScreen(mode: AbhaFlowMode.link)),
+      page('/abdm/consents', (_) => const AbdmConsentsScreen()),
+      page('/insurance', (_) => const InsuranceScreen()),
+      page('/insurance/edit', (s) => PolicyEditScreen(policy: s.extra is InsurancePolicy ? s.extra as InsurancePolicy : null)),
+      page('/insurance/checklist', (_) => const ClaimChecklistScreen()),
+      page(
+          '/insurance/cashless',
+          (s) => CashlessHospitalsScreen(
+              insurerCode: s.uri.queryParameters['insurer'] ?? '', insurerName: s.uri.queryParameters['name'])),
+      page('/preventive', (_) => const PreventiveCareScreen()),
+      page('/exercise', (_) => const ExerciseScreen()),
+      page('/diet', (_) => const DietScreen()),
+      page('/ambulance/book', (_) => const AmbulanceBookScreen()),
+      page('/ambulance/:id', (s) => AmbulanceTrackingScreen(id: s.pathParameters['id']!)),
+      page('/safety', (_) => const SafetyHubScreen()),
+      page('/safety/safe-zone', (_) => const SafeZoneScreen()),
+      page('/safety/companion', (_) => const CompanionModeScreen()),
+      page('/safety/sos-button', (_) => const SosButtonScreen()),
+      page('/wallet', (_) => const WalletScreen()),
+      page('/invite', (_) => const InviteScreen()),
+      page('/support/tickets', (_) => const TicketsScreen()),
+      page('/support/new', (_) => const NewTicketScreen()),
+      page('/support/tickets/:id', (s) => TicketScreen(id: s.pathParameters['id']!)),
     ],
   );
 });

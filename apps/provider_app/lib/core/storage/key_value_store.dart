@@ -62,6 +62,7 @@ class StoreKeys {
   static const offlineQueue = 'offline.queue';
   static const visitCache = 'visits.cache';
   static const photoUrl = 'provider.photoUrl';
+  static const supplies = 'provider.supplies';
 
   static const all = [
     accessToken,
@@ -71,5 +72,6 @@ class StoreKeys {
     offlineQueue,
     visitCache,
     photoUrl,
+    supplies,
   ];
 }

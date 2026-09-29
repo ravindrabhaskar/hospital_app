@@ -130,7 +130,9 @@ class PublicConfigNotifier extends Notifier<PublicConfig> {
   /// Fetches the latest config. Returns true when the server answered.
   Future<bool> refresh() async {
     try {
-      final json = await ref.read(configRepositoryProvider).publicConfigJson();
+      final repo = ref.read(configRepositoryProvider);
+      final tenant = ref.read(tenantCodeProvider);
+      final json = tenant.isEmpty ? await repo.publicConfigJson() : await repo.publicConfigJsonForTenant(tenant);
       state = PublicConfig.fromJson(json);
       try {
         await ref.read(sharedPrefsProvider).setString(cacheKey, jsonEncode(json));
@@ -144,6 +146,12 @@ class PublicConfigNotifier extends Notifier<PublicConfig> {
 
 final publicConfigProvider =
     NotifierProvider<PublicConfigNotifier, PublicConfig>(PublicConfigNotifier.new);
+
+/// The white-label tenant of this build (§58); empty for CareCompanion.
+final tenantCodeProvider = Provider<String>((ref) => AppConfig.tenantCode);
+
+/// Branding to apply (null = the default CareCompanion look).
+final brandingProvider = Provider<Branding?>((ref) => ref.watch(publicConfigProvider).branding);
 
 /// Server-backed feature flags (never hard-coded; see [FeatureFlags.defaults]).
 final featureFlagsProvider = Provider<FeatureFlags>((ref) => ref.watch(publicConfigProvider).flags);

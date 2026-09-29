@@ -3,7 +3,7 @@ import type { DbOrTx } from '../../db/client.js';
 import { doctorSchedules, providerZones, providers, serviceZones, type WeeklyBlockJson } from '../../db/schema.js';
 import { errors } from '../../lib/errors.js';
 
-export type ProviderType = 'doctor' | 'nurse' | 'technician' | 'intern' | 'physiotherapist';
+export type ProviderType = 'doctor' | 'nurse' | 'technician' | 'intern' | 'physiotherapist' | 'dietitian';
 
 /** Default consultation fees (rupees) for newly onboarded doctors; they can change them via PATCH /doctor/me/profile. */
 export const DEFAULT_DOCTOR_FEES = { video: 499, audio: 499, chat: 399, inClinic: 599 };

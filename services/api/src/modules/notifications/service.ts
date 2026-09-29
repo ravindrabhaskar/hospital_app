@@ -13,7 +13,22 @@ import type { Lang } from '../../lib/context.js';
 import { t } from '../../lib/i18n.js';
 import { PermanentDeliveryError, type Channel, type ChannelAdapter } from './channels.js';
 
-export type NotificationCategory = 'appointment' | 'home_visit' | 'medication' | 'care_plan' | 'safety' | 'record' | 'payment' | 'system';
+export type NotificationCategory =
+  | 'appointment'
+  | 'home_visit'
+  | 'medication'
+  | 'care_plan'
+  | 'safety'
+  | 'record'
+  | 'payment'
+  | 'system'
+  // v1.3 (contract preamble of sections 41-62)
+  | 'program'
+  | 'checkin'
+  | 'lab'
+  | 'support'
+  | 'insurance'
+  | 'preventive';
 
 export interface NotifyInput {
   template: string; // key prefix in i18n, e.g. 'appointment_confirmed'

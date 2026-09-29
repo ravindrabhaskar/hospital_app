@@ -9,6 +9,7 @@ import '../../core/widgets/common.dart';
 import '../../core/widgets/legal_links.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
+import '../../core/widgets/branding.dart';
 import 'appearance_screen.dart' show themeModeLabel;
 import 'avatar_upload.dart';
 
@@ -41,6 +42,7 @@ class ProfileScreen extends ConsumerWidget {
     final lang = ref.watch(localeProvider).languageCode;
     final themeMode = ref.watch(themeModeProvider);
     final plan = ref.watch(mySubscriptionProvider).value;
+    final flags = ref.watch(featureFlagsProvider);
     final name = me?.name ?? self?.name ?? '';
 
     final items = <(IconData, String, String?, String)>[
@@ -54,6 +56,11 @@ class ProfileScreen extends ConsumerWidget {
       (Icons.privacy_tip_outlined, l.privacyConsents, null, '/profile/consents'),
       (Icons.contact_phone_outlined, l.emergencyContacts, null, '/profile/emergency-contacts'),
       (Icons.receipt_long_outlined, l.payments, l.paymentsSub, '/profile/payments'),
+      if (flags.walletOffers) (Icons.account_balance_wallet_outlined, l.wallet, l.walletSub, '/wallet'),
+      if (flags.walletOffers) (Icons.card_giftcard, l.inviteFamilyFriends, l.inviteRewardSub, '/invite'),
+      if (flags.insurance) (Icons.shield_outlined, l.insurance, l.insuranceSub, '/insurance'),
+      if (flags.dailyCheckin) (Icons.wb_sunny_outlined, l.dailyCheckin, l.dailyCheckinSub, '/checkin'),
+      if (flags.dementiaSafety) (Icons.share_location, l.safetyLocation, l.safetyLocationSub, '/safety'),
       (
         Icons.workspace_premium_outlined,
         l.familyCarePlan,
@@ -142,6 +149,7 @@ class ProfileScreen extends ConsumerWidget {
           ),
           const SizedBox(height: Space.md),
           const LegalLinks(),
+          const PoweredByFooter(),
           Center(
             child: Text(l.appVersion(ref.watch(appVersionProvider)),
                 style: TextStyle(fontSize: 12, color: context.textMuted)),

@@ -232,12 +232,32 @@ export class PdfBuilder {
     return this;
   }
 
+  private watermarkText: string | null = null;
+
+  /** Stamp a large diagonal watermark on every page (e.g. "SAMPLE REPORT — NOT A REAL RESULT"). */
+  watermark(text: string): this {
+    this.watermarkText = text;
+    return this;
+  }
+
   /** Stamp the footer on every page and return the PDF bytes. */
   async finish(footerLines: string[]): Promise<Buffer> {
     const d = this.doc;
     const range = d.bufferedPageRange();
     for (let i = range.start; i < range.start + range.count; i++) {
       d.switchToPage(i);
+      if (this.watermarkText) {
+        const cx = d.page.width / 2;
+        const cy = d.page.height / 2;
+        d.save();
+        d.rotate(-35, { origin: [cx, cy] });
+        d.font('Helvetica-Bold').fontSize(30).fillColor('#DC2626').fillOpacity(0.22);
+        d.text(pdfSafe(this.watermarkText), cx - 330, cy - 18, { width: 660, align: 'center', lineBreak: false });
+        d.restore();
+        d.fillOpacity(1);
+        // Also state it in plain text at the top so it survives copy/paste and screen readers.
+        d.font('Helvetica-Bold').fontSize(8).fillColor('#DC2626').text(pdfSafe(this.watermarkText), this.left, 82, { width: this.width, align: 'center', lineBreak: false });
+      }
       // Writing inside the bottom margin would otherwise make pdfkit start a new page.
       d.page.margins.bottom = 0;
       const bottom = d.page.height - 50;

@@ -3151,6 +3151,1615 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeDark => 'Dark';
 
   @override
+  String get more => 'More';
+
+  @override
+  String get moreServices => 'More services';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get from => 'From';
+
+  @override
+  String get to => 'To';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get restart => 'Restart';
+
+  @override
+  String get redeem => 'Redeem';
+
+  @override
+  String get copied => 'Copied';
+
+  @override
+  String get copyCode => 'Copy code';
+
+  @override
+  String copyCommand(String command) {
+    return 'Copy $command';
+  }
+
+  @override
+  String get notSet => 'Not set';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get provider => 'Provider';
+
+  @override
+  String get subject => 'Subject';
+
+  @override
+  String get credit => 'Credit';
+
+  @override
+  String get debit => 'Debit';
+
+  @override
+  String updatedAt(String time) {
+    return 'Updated $time';
+  }
+
+  @override
+  String validUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String planBy(String name) {
+    return 'Plan by $name';
+  }
+
+  @override
+  String planDates(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get reasonOptional => 'Reason (optional)';
+
+  @override
+  String logoOf(String name) {
+    return '$name logo';
+  }
+
+  @override
+  String get poweredByCareCompanion => 'Powered by CareCompanion';
+
+  @override
+  String get adherence => 'Adherence';
+
+  @override
+  String get qxLabTests => 'Lab Tests';
+
+  @override
+  String get qxCarePrograms => 'Care Programs';
+
+  @override
+  String get qxPreventiveCare => 'Preventive Care';
+
+  @override
+  String get qxSecondOpinion => 'Second Opinion';
+
+  @override
+  String get qxInsurance => 'Insurance';
+
+  @override
+  String get qxExercise => 'Exercise';
+
+  @override
+  String get qxDiet => 'Diet';
+
+  @override
+  String get dailyCheckin => 'Daily check-in';
+
+  @override
+  String get dailyCheckinSub => 'An \"I\'m OK\" tap each morning';
+
+  @override
+  String get imOkToday => 'I\'m OK today';
+
+  @override
+  String get checkinPrompt =>
+      'One tap lets your family know you are fine today.';
+
+  @override
+  String get checkinMissedBody =>
+      'Today\'s check-in window has passed. Checking in now still tells your family you\'re OK.';
+
+  @override
+  String get checkinMoodOptional => 'How are you feeling? (optional)';
+
+  @override
+  String checkinWindow(String start, String end) {
+    return '$start–$end';
+  }
+
+  @override
+  String get checkinThanks =>
+      'Thank you! Your family has been told you are OK.';
+
+  @override
+  String checkinDoneAt(String time) {
+    return 'Checked in at $time';
+  }
+
+  @override
+  String checkinFamilyDone(String name, String time) {
+    return '$name checked in today at $time';
+  }
+
+  @override
+  String checkinFamilyMissed(String name) {
+    return '$name hasn\'t checked in today';
+  }
+
+  @override
+  String checkinFamilyPending(String name, String window) {
+    return '$name has not checked in yet (window $window)';
+  }
+
+  @override
+  String get checkinOk => 'On time';
+
+  @override
+  String get checkinLate => 'Late';
+
+  @override
+  String get checkinMissed => 'Missed';
+
+  @override
+  String get checkinPending => 'Pending';
+
+  @override
+  String checkinHistorySemantic(int ok, int late, int missed) {
+    return 'Last 30 days: $ok on time, $late late, $missed missed';
+  }
+
+  @override
+  String checkinIntro(String name) {
+    return 'A daily \"I\'m OK\" check-in for $name. If it is missed, family and the care coordinator are alerted.';
+  }
+
+  @override
+  String get checkinNoPermission =>
+      'Only family members with \"Manage care\" permission can change this.';
+
+  @override
+  String get checkinEnable => 'Daily check-in';
+
+  @override
+  String get checkinEnableSub =>
+      'Show the \"I\'m OK today\" card every morning';
+
+  @override
+  String get checkinWindowStart => 'Window opens';
+
+  @override
+  String get checkinWindowEnd => 'Window closes';
+
+  @override
+  String get checkinWindowInvalid => 'The window must end after it starts';
+
+  @override
+  String get checkinEscalateAfter => 'Alert the care team after';
+
+  @override
+  String minutesCount(int minutes) {
+    return '$minutes minutes';
+  }
+
+  @override
+  String get checkinNotifyFamily => 'Notify family if missed';
+
+  @override
+  String get checkinNotifyCoordinator => 'Notify the care coordinator';
+
+  @override
+  String get checkinHowItWorks =>
+      'If there is no check-in by the end of the window, family get a notification. If it is still missing after the set time, the care coordinator follows up. Times are in IST.';
+
+  @override
+  String get checkinLast30Days => 'Last 30 days';
+
+  @override
+  String get checkinNoHistory => 'No check-ins yet';
+
+  @override
+  String get carePrograms => 'Care programs';
+
+  @override
+  String get myPrograms => 'My programs';
+
+  @override
+  String get programsIntro =>
+      'Your doctor set these up to watch your readings between visits.';
+
+  @override
+  String get noProgramsTitle => 'No care programs yet';
+
+  @override
+  String get noProgramsBody =>
+      'Your doctor can enrol you in a BP, diabetes or heart-care program.';
+
+  @override
+  String get logReading => 'Log reading';
+
+  @override
+  String lastReadingAt(String time) {
+    return 'Last reading $time';
+  }
+
+  @override
+  String get adherence7d => 'Readings taken (7 days)';
+
+  @override
+  String get adherence30d => 'Readings taken (30 days)';
+
+  @override
+  String readingsDueToday(int count) {
+    return '$count readings due today';
+  }
+
+  @override
+  String get readingsDoneToday => 'Today\'s readings done';
+
+  @override
+  String readingsReceived(int received, int expected) {
+    return '$received of $expected readings';
+  }
+
+  @override
+  String openAlerts(int count) {
+    return '$count open alerts';
+  }
+
+  @override
+  String get openAlertsTitle => 'Alerts';
+
+  @override
+  String get noAlerts => 'No alerts in the last 30 days.';
+
+  @override
+  String get programPaused => 'Paused';
+
+  @override
+  String get programCompleted => 'Completed';
+
+  @override
+  String get trend => 'Trend';
+
+  @override
+  String get noReadingsYet => 'No readings yet';
+
+  @override
+  String trendSemantic(String type, int count, String latest, String date) {
+    return '$type trend: $count days, latest average $latest on $date';
+  }
+
+  @override
+  String get weeklyReports => 'Weekly reports';
+
+  @override
+  String get noWeeklyReports => 'Your first weekly report arrives on Monday.';
+
+  @override
+  String get programDisclaimer =>
+      'Alerts go to your care team. If you feel unwell, call your doctor or 108 in an emergency.';
+
+  @override
+  String get bloodPressure => 'Blood pressure';
+
+  @override
+  String get bloodPressureShort => 'BP';
+
+  @override
+  String get glucoseShort => 'Sugar';
+
+  @override
+  String get weightShort => 'Weight';
+
+  @override
+  String get readingOutOfRange =>
+      'That value looks unusual. Please check and re-enter.';
+
+  @override
+  String get readingSystolicBelowDiastolic =>
+      'The upper (systolic) number must be higher than the lower one.';
+
+  @override
+  String get readingSafetyNote =>
+      'Readings are shared with your care team. Feeling unwell? Call 108 in an emergency.';
+
+  @override
+  String get readingSaved => 'Reading saved';
+
+  @override
+  String get whatsappAssistant => 'WhatsApp assistant';
+
+  @override
+  String get whatsappExplain =>
+      'Get reminders on WhatsApp and reply to check in, log BP or sugar, or ask a question. No diagnosis is given.';
+
+  @override
+  String get whatsappOptIn => 'Use the WhatsApp assistant';
+
+  @override
+  String get whatsappPrivacyNote =>
+      'Messages go to your registered number. Send STOP at any time to opt out.';
+
+  @override
+  String get whatsappTryIt => 'Try it';
+
+  @override
+  String get whatsappTryIntro => 'Send these messages to our WhatsApp number:';
+
+  @override
+  String get whatsappOptedIn => 'WhatsApp assistant turned on';
+
+  @override
+  String get whatsappOptedOut => 'WhatsApp assistant turned off';
+
+  @override
+  String get waCmdToday => 'Today\'s medicine and visit reminders';
+
+  @override
+  String get waCmdCheckin => 'Daily \"I\'m OK\" check-in';
+
+  @override
+  String get waCmdBp => 'Record a blood pressure reading';
+
+  @override
+  String get waCmdSugar => 'Record a blood sugar reading';
+
+  @override
+  String get waCmdBook => 'Get links to book care';
+
+  @override
+  String get waCmdStop => 'Stop WhatsApp messages';
+
+  @override
+  String get waCmdStart => 'Start them again';
+
+  @override
+  String get whatsappNoDiagnosis =>
+      'Replies are general guidance, not a diagnosis. In an emergency call 108.';
+
+  @override
+  String get labTests => 'Lab tests at home';
+
+  @override
+  String get labIntro =>
+      'A trained technician collects the sample at home. Reports come to your records.';
+
+  @override
+  String get searchLabTests => 'Search tests (e.g. HbA1c, lipid)';
+
+  @override
+  String get healthPackages => 'Health packages';
+
+  @override
+  String get noPackages => 'No packages right now';
+
+  @override
+  String get allTests => 'All tests';
+
+  @override
+  String resultsFor(String query) {
+    return 'Results for \"$query\"';
+  }
+
+  @override
+  String get noLabTests => 'No tests found';
+
+  @override
+  String get labPricingNote =>
+      'Prices are indicative and confirmed at booking.';
+
+  @override
+  String testsIncluded(int count) {
+    return '$count tests';
+  }
+
+  @override
+  String get fastingRequired => 'Fasting';
+
+  @override
+  String fastingHoursShort(int hours) {
+    return 'Fasting $hours h';
+  }
+
+  @override
+  String reportInHours(int hours) {
+    return 'Report in $hours h';
+  }
+
+  @override
+  String get includedInPackage => 'In package';
+
+  @override
+  String removeFromCart(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String labCartBar(int count, String amount) {
+    return '$count selected · $amount · View cart';
+  }
+
+  @override
+  String get sampleBlood => 'Blood';
+
+  @override
+  String get sampleUrine => 'Urine';
+
+  @override
+  String get sampleSwab => 'Swab';
+
+  @override
+  String get sampleOther => 'Other sample';
+
+  @override
+  String get fastingNoticeTitle => 'Fasting needed';
+
+  @override
+  String fastingNoticeBody(int hours) {
+    return 'Please do not eat for $hours hours before the sample is collected. Water is fine. Take regular medicines unless your doctor said otherwise.';
+  }
+
+  @override
+  String get labCart => 'Your tests';
+
+  @override
+  String get labCartEmpty => 'No tests selected';
+
+  @override
+  String get browseTests => 'Browse tests';
+
+  @override
+  String get sampleCollectionAddress => 'Sample collection address';
+
+  @override
+  String get sampleCollectionTime => 'Collection time';
+
+  @override
+  String youSaveVsMrp(String amount) {
+    return 'You save $amount on MRP';
+  }
+
+  @override
+  String get labOrderTitle => 'Lab test order';
+
+  @override
+  String get labBooked => 'Sample collection booked';
+
+  @override
+  String get trackOrder => 'Track order';
+
+  @override
+  String get myLabOrders => 'My lab orders';
+
+  @override
+  String get noLabOrders => 'No lab orders yet';
+
+  @override
+  String get labPendingPayment => 'Payment pending';
+
+  @override
+  String get labScheduled => 'Collection scheduled';
+
+  @override
+  String get labSampleCollected => 'Sample collected';
+
+  @override
+  String get labProcessing => 'Processing at lab';
+
+  @override
+  String get labReportReady => 'Report ready';
+
+  @override
+  String get labCancelled => 'Cancelled';
+
+  @override
+  String get labPartner => 'Lab partner';
+
+  @override
+  String get viewReport => 'View report';
+
+  @override
+  String get labReport => 'Lab report';
+
+  @override
+  String get trackSampleCollection => 'Track sample collection';
+
+  @override
+  String get orderStatus => 'Order status';
+
+  @override
+  String get cancelOrder => 'Cancel order';
+
+  @override
+  String get labOrderCancelled =>
+      'Order cancelled. Any payment will be refunded.';
+
+  @override
+  String get labReportNote =>
+      'Your doctor will be able to see the report. Discuss the results with them.';
+
+  @override
+  String get cancelReasonTitle => 'Why are you cancelling?';
+
+  @override
+  String get secondOpinion => 'Second opinion';
+
+  @override
+  String get secondOpinionIntro =>
+      'Share your reports with a senior specialist and get a written opinion.';
+
+  @override
+  String get requestSecondOpinion => 'Request a second opinion';
+
+  @override
+  String get myRequests => 'My requests';
+
+  @override
+  String get noSecondOpinions => 'No requests yet';
+
+  @override
+  String get secondOpinionUnavailable =>
+      'Second opinions are not available right now';
+
+  @override
+  String get chooseSpecialty => 'Choose a specialty';
+
+  @override
+  String opinionWithinHours(int hours) {
+    return 'Written opinion within $hours hours';
+  }
+
+  @override
+  String get yourQuestion => 'Your question';
+
+  @override
+  String get yourQuestionHint =>
+      'What would you like the specialist to review? Include your main concern and current treatment.';
+
+  @override
+  String questionTooShort(int count) {
+    return 'Please write at least $count characters';
+  }
+
+  @override
+  String get recordsToShare => 'Records to share';
+
+  @override
+  String get noRecordsToShare =>
+      'No records yet. You can still ask your question.';
+
+  @override
+  String secondOpinionConsent(int count) {
+    return 'I agree to share my question and the $count selected records, read-only, with the specialist who takes up this request. Access is logged.';
+  }
+
+  @override
+  String get secondOpinionDisclaimer =>
+      'A second opinion is advice based on the records shared. It does not replace an examination. In an emergency call 108.';
+
+  @override
+  String get secondOpinionSubmitted => 'Request sent to specialists';
+
+  @override
+  String get soPendingPayment => 'Payment pending';
+
+  @override
+  String get soOpen => 'Waiting for a specialist';
+
+  @override
+  String get soClaimed => 'Specialist reviewing';
+
+  @override
+  String get soAnswered => 'Opinion ready';
+
+  @override
+  String get soCancelled => 'Cancelled';
+
+  @override
+  String get specialist => 'Specialist';
+
+  @override
+  String get expectedBy => 'Expected by';
+
+  @override
+  String get recordsShared => 'Records shared';
+
+  @override
+  String get specialistOpinion => 'Specialist\'s opinion';
+
+  @override
+  String opinionBy(String name) {
+    return 'By $name';
+  }
+
+  @override
+  String get recommendations => 'Recommendations';
+
+  @override
+  String get bookTeleconsult => 'Book a video consultation';
+
+  @override
+  String get opinionPendingBody =>
+      'We will notify you when the specialist has answered.';
+
+  @override
+  String get createAbha => 'Create ABHA';
+
+  @override
+  String get createAbhaSub => 'Get your Health ID with a mobile OTP';
+
+  @override
+  String get createAbhaIntro =>
+      'Enter the mobile number to verify. An OTP will be sent to it.';
+
+  @override
+  String get linkAbha => 'Link existing ABHA';
+
+  @override
+  String get linkAbhaSub => 'Already have a 14-digit ABHA number?';
+
+  @override
+  String get linkAbhaIntro =>
+      'Enter your ABHA number. An OTP will be sent to the mobile linked with it.';
+
+  @override
+  String get abhaMobileLabel => 'Mobile number';
+
+  @override
+  String get abhaOtpSent => 'Enter the 6-digit OTP we sent.';
+
+  @override
+  String get abhaCreated => 'Your ABHA is ready';
+
+  @override
+  String get abhaLinked => 'ABHA linked';
+
+  @override
+  String get abdmPrivacyNote =>
+      'ABHA is issued by the National Health Authority (ABDM). We never share your records without your consent.';
+
+  @override
+  String get fetchRecords => 'Fetch records from other hospitals';
+
+  @override
+  String get fetchRecordsSub => 'Via ABDM, with your consent';
+
+  @override
+  String get fetchRecordsIntro =>
+      'Ask hospitals linked to your ABHA to share your records. You approve the request in your ABHA app.';
+
+  @override
+  String get recordTypesToFetch => 'Record types';
+
+  @override
+  String get hiPrescription => 'Prescriptions';
+
+  @override
+  String get hiDiagnosticReport => 'Diagnostic reports';
+
+  @override
+  String get hiDischargeSummary => 'Discharge summaries';
+
+  @override
+  String get hiOpConsultation => 'OP consultations';
+
+  @override
+  String get dateRange => 'Date range';
+
+  @override
+  String get abdmConsentExplain =>
+      'Records are used only for your care (purpose CAREMGT). You can see every request below.';
+
+  @override
+  String get sendConsentRequest => 'Send consent request';
+
+  @override
+  String get abdmRequestSent => 'Request sent. Approve it in your ABHA app.';
+
+  @override
+  String get myConsentRequests => 'My requests';
+
+  @override
+  String get noConsentRequests => 'No requests yet';
+
+  @override
+  String get abdmRequested => 'Waiting for approval';
+
+  @override
+  String get abdmGranted => 'Approved';
+
+  @override
+  String get abdmDenied => 'Denied';
+
+  @override
+  String get abdmExpired => 'Expired';
+
+  @override
+  String get abdmDataReceived => 'Records received';
+
+  @override
+  String recordsImported(int count) {
+    return '$count records imported';
+  }
+
+  @override
+  String get importedViaAbdm => 'Imported via ABDM';
+
+  @override
+  String get insurance => 'Insurance';
+
+  @override
+  String get insuranceSub => 'Policies, cashless hospitals, claims';
+
+  @override
+  String get addPolicy => 'Add policy';
+
+  @override
+  String get editPolicy => 'Edit policy';
+
+  @override
+  String get deletePolicy => 'Remove policy';
+
+  @override
+  String get deletePolicyBody => 'Remove this policy from your profile?';
+
+  @override
+  String get noPolicies => 'No insurance policies';
+
+  @override
+  String get noPoliciesBody =>
+      'Add your health insurance to find cashless hospitals and get renewal reminders.';
+
+  @override
+  String get expiringSoon => 'Expiring soon';
+
+  @override
+  String sumInsuredValue(String amount) {
+    return 'Cover $amount';
+  }
+
+  @override
+  String get findCashlessHospitals => 'Find cashless hospitals';
+
+  @override
+  String get cashlessHospitals => 'Cashless hospitals';
+
+  @override
+  String get noCashlessHospitals =>
+      'No cashless hospitals listed for this insurer';
+
+  @override
+  String cashlessIntro(String insurer) {
+    return 'Hospitals with a cashless tie-up with $insurer.';
+  }
+
+  @override
+  String get cashlessVerifyNote =>
+      'Always confirm cashless eligibility with your insurer or TPA before admission.';
+
+  @override
+  String get claimHelp => 'Claims';
+
+  @override
+  String get claimChecklist => 'Claim checklist';
+
+  @override
+  String get claimChecklistSub =>
+      'Steps and documents for cashless and reimbursement';
+
+  @override
+  String get cashless => 'Cashless';
+
+  @override
+  String get reimbursement => 'Reimbursement';
+
+  @override
+  String get claimSteps => 'Steps';
+
+  @override
+  String get insurer => 'Insurer';
+
+  @override
+  String get policyNumber => 'Policy number';
+
+  @override
+  String policyNumberKeep(String masked) {
+    return 'Saved: $masked. Leave empty to keep it.';
+  }
+
+  @override
+  String get planNameOptional => 'Plan name (optional)';
+
+  @override
+  String get policyType => 'Policy type';
+
+  @override
+  String get policyIndividual => 'Individual';
+
+  @override
+  String get policyFamilyFloater => 'Family floater';
+
+  @override
+  String get policyCorporate => 'Corporate';
+
+  @override
+  String get policyGovernment => 'Government scheme';
+
+  @override
+  String get sumInsuredOptional => 'Sum insured (optional)';
+
+  @override
+  String get validFrom => 'Valid from';
+
+  @override
+  String get validTo => 'Valid to';
+
+  @override
+  String get tpaOptional => 'TPA name (optional)';
+
+  @override
+  String get uploadCardPhoto => 'Add insurance card photo';
+
+  @override
+  String get cardPhotoAdded => 'Card photo added';
+
+  @override
+  String get insuranceCardTitle => 'Insurance card';
+
+  @override
+  String get policyDatesInvalid =>
+      'Choose valid from and valid to dates (end after start)';
+
+  @override
+  String get policyPrivacyNote =>
+      'Policy numbers are stored encrypted and shown masked.';
+
+  @override
+  String get preventiveCare => 'Preventive care';
+
+  @override
+  String get pvOverdue => 'Overdue';
+
+  @override
+  String get pvDue => 'Due now';
+
+  @override
+  String get pvUpcoming => 'Upcoming';
+
+  @override
+  String get pvDone => 'Done';
+
+  @override
+  String get pvNotApplicable => 'Not applicable';
+
+  @override
+  String get noPreventiveItems => 'Nothing scheduled';
+
+  @override
+  String get markAsDone => 'Mark as done';
+
+  @override
+  String get markedDone => 'Marked as done';
+
+  @override
+  String whenWasItDone(String name) {
+    return 'When was \"$name\" done?';
+  }
+
+  @override
+  String lastDoneOn(String date) {
+    return 'Last done $date';
+  }
+
+  @override
+  String repeatsEveryMonths(int months) {
+    return 'Repeats every $months months';
+  }
+
+  @override
+  String get preventiveNote =>
+      'Based on age and sex. Your doctor may advise a different schedule.';
+
+  @override
+  String get preventiveNoteFixture =>
+      'A sample schedule based on age and sex, pending clinical review. Please confirm with your doctor.';
+
+  @override
+  String get exercisePlan => 'Exercise plan';
+
+  @override
+  String get noExercisePlan => 'No exercise plan yet';
+
+  @override
+  String get noExercisePlanBody =>
+      'A doctor or physiotherapist can create one for you.';
+
+  @override
+  String get bookPhysioVisit => 'Book a physiotherapy home visit';
+
+  @override
+  String get bookPhysioVisitSub => 'A physiotherapist visits your home';
+
+  @override
+  String get todaysExercises => 'Today\'s exercises';
+
+  @override
+  String setsReps(int sets, int reps) {
+    return '$sets sets × $reps reps';
+  }
+
+  @override
+  String holdSeconds(int seconds) {
+    return 'Hold $seconds s';
+  }
+
+  @override
+  String get startTimer => 'Start timer';
+
+  @override
+  String get precautions => 'Precautions';
+
+  @override
+  String markExerciseDone(String name) {
+    return 'Mark $name as done';
+  }
+
+  @override
+  String finishSession(int done, int total) {
+    return 'Finish session ($done/$total)';
+  }
+
+  @override
+  String sessionsDone(int done, int planned) {
+    return '$done of $planned sessions done';
+  }
+
+  @override
+  String get painTrend => 'Pain after sessions';
+
+  @override
+  String painTrendSemantic(int score) {
+    return 'Pain score trend, latest $score out of 10';
+  }
+
+  @override
+  String get howIsYourPain => 'How is your pain now?';
+
+  @override
+  String painScoreValue(int score) {
+    return 'Pain $score / 10';
+  }
+
+  @override
+  String get noPain => 'No pain';
+
+  @override
+  String get worstPain => 'Worst pain';
+
+  @override
+  String get highPainNote =>
+      'High pain: your therapist will be told. Stop exercising and rest.';
+
+  @override
+  String get sessionSaved => 'Session saved. Well done!';
+
+  @override
+  String get sessionSavedHighPain =>
+      'Session saved. Your therapist has been told about the pain.';
+
+  @override
+  String get exerciseSafetyNote =>
+      'Stop if you feel sharp pain, dizziness or breathlessness. Call 108 in an emergency.';
+
+  @override
+  String get dietPlan => 'Diet plan';
+
+  @override
+  String get noDietPlan => 'No diet plan yet';
+
+  @override
+  String get noDietPlanBody => 'A doctor or dietitian can create one for you.';
+
+  @override
+  String calorieTarget(int kcal) {
+    return 'Target $kcal kcal a day';
+  }
+
+  @override
+  String get adherence14d => 'Followed (14 days)';
+
+  @override
+  String dietAdherenceSemantic(int pct) {
+    return 'Diet followed $pct percent over 14 days';
+  }
+
+  @override
+  String get todaysMeals => 'Today\'s meals';
+
+  @override
+  String get followed => 'Followed';
+
+  @override
+  String get notFollowed => 'Not followed';
+
+  @override
+  String get foodsToAvoid => 'Foods to avoid';
+
+  @override
+  String get slotEarlyMorning => 'Early morning';
+
+  @override
+  String get slotBreakfast => 'Breakfast';
+
+  @override
+  String get slotMidMorning => 'Mid-morning';
+
+  @override
+  String get slotLunch => 'Lunch';
+
+  @override
+  String get slotEvening => 'Evening snack';
+
+  @override
+  String get slotDinner => 'Dinner';
+
+  @override
+  String get slotBedtime => 'Bedtime';
+
+  @override
+  String get dietDisclaimer =>
+      'Follow your doctor or dietitian if their advice differs. Tell them about any new symptoms.';
+
+  @override
+  String get bookPrivateAmbulance => 'Book private ambulance';
+
+  @override
+  String get bookPrivateAmbulanceSub =>
+      'Track the vehicle live. Call 108 first in an emergency.';
+
+  @override
+  String get privateAmbulance => 'Private ambulance';
+
+  @override
+  String get call108First =>
+      'Life-threatening emergency? Call 108 first. A private ambulance does not replace 108.';
+
+  @override
+  String get ambulanceType => 'Ambulance type';
+
+  @override
+  String get ambBls => 'Basic (BLS)';
+
+  @override
+  String get ambAls => 'Advanced (ALS)';
+
+  @override
+  String get ambBlsDesc =>
+      'Oxygen, stretcher and trained staff. For stable patients.';
+
+  @override
+  String get ambAlsDesc =>
+      'Cardiac monitor, advanced life support and a paramedic. For serious conditions.';
+
+  @override
+  String get pickupLocation => 'Pickup location';
+
+  @override
+  String get locating => 'Finding your location…';
+
+  @override
+  String gpsLocation(String lat, String lng) {
+    return 'GPS $lat, $lng';
+  }
+
+  @override
+  String get currentLocation => 'Current location';
+
+  @override
+  String get pickupAddressHint => 'House, street, landmark (helps the driver)';
+
+  @override
+  String get destinationHospital => 'Destination hospital';
+
+  @override
+  String get destinationOptional => 'Hospital (optional)';
+
+  @override
+  String get nearestSuitable => 'Nearest suitable hospital';
+
+  @override
+  String get requestAmbulance => 'Request ambulance';
+
+  @override
+  String get ambulanceDefaultReason => 'Transport to hospital';
+
+  @override
+  String get ambulanceNote =>
+      'Charges depend on the partner and distance. The care team is alerted too.';
+
+  @override
+  String get ambulanceTracking => 'Ambulance';
+
+  @override
+  String get ambSearching => 'Finding an ambulance';
+
+  @override
+  String get ambAssigned => 'Ambulance assigned';
+
+  @override
+  String get ambEnRoute => 'On the way';
+
+  @override
+  String get ambArrived => 'Arrived';
+
+  @override
+  String get ambTransporting => 'Going to hospital';
+
+  @override
+  String get ambCompleted => 'Reached hospital';
+
+  @override
+  String get ambCancelled => 'Cancelled';
+
+  @override
+  String get ambNoVehicle => 'No vehicle available';
+
+  @override
+  String get noVehicleBody =>
+      'No private ambulance is available nearby. Call 108 now.';
+
+  @override
+  String get vehicle => 'Vehicle';
+
+  @override
+  String get driver => 'Driver';
+
+  @override
+  String get openInMaps => 'Open in Maps';
+
+  @override
+  String get openStreetMap => 'OpenStreetMap';
+
+  @override
+  String locationUpdatedAt(String time) {
+    return 'Location updated $time';
+  }
+
+  @override
+  String get statusTimeline => 'Status';
+
+  @override
+  String get cancelAmbulance => 'Cancel ambulance';
+
+  @override
+  String get cancelAmbulanceBody => 'Cancel only if help is no longer needed.';
+
+  @override
+  String get cancelledByUser => 'Cancelled by the family';
+
+  @override
+  String get safetyLocation => 'Safety & location';
+
+  @override
+  String get safetyLocationSub => 'Safe zone, companion mode, SOS button';
+
+  @override
+  String get safetyIntro =>
+      'For people who may wander or get confused, such as with memory problems.';
+
+  @override
+  String get safeZone => 'Safe zone';
+
+  @override
+  String safeZoneSub(String name) {
+    return 'Get an alert if $name leaves the area';
+  }
+
+  @override
+  String get safeZoneSelfSub => 'Set up by family with care permission';
+
+  @override
+  String safeZoneIntro(String name) {
+    return 'If $name leaves this area while companion mode is on, family get an alert with a map link.';
+  }
+
+  @override
+  String get safeZoneAlerts => 'Safe zone alerts';
+
+  @override
+  String get safeZoneAlertsSub => 'Alert family when outside the zone';
+
+  @override
+  String get zoneCentre => 'Centre (home)';
+
+  @override
+  String get useCurrentLocation => 'Use current location';
+
+  @override
+  String get zoneLabelHint => 'Label (e.g. Home)';
+
+  @override
+  String get radius => 'Radius';
+
+  @override
+  String metersValue(int meters) {
+    return '$meters m';
+  }
+
+  @override
+  String get activeHoursOnly => 'Only during set hours';
+
+  @override
+  String get alwaysActive => 'Always active';
+
+  @override
+  String get safeZoneNeedsCenter =>
+      'Set the centre first (use current location)';
+
+  @override
+  String get safeZoneRadiusInvalid => 'Radius must be between 100 m and 5 km';
+
+  @override
+  String get safeZonePrivacy =>
+      'Only the latest location is kept; there is no location history.';
+
+  @override
+  String get lastKnownLocation => 'Last known location';
+
+  @override
+  String get noLocationYet =>
+      'No location shared yet. Turn on companion mode on their phone.';
+
+  @override
+  String get insideSafeZone => 'Inside the safe zone';
+
+  @override
+  String get outsideSafeZone => 'Outside the safe zone';
+
+  @override
+  String get companionMode => 'Companion mode';
+
+  @override
+  String get companionModeSub => 'Share this phone\'s location with family';
+
+  @override
+  String get companionIntro =>
+      'While CareCompanion is open, this phone shares its location every 5 minutes so family can check you are safe.';
+
+  @override
+  String get companionOn => 'On: sharing location while the app is open';
+
+  @override
+  String get companionOff => 'Off';
+
+  @override
+  String get companionOwnDevice =>
+      'Companion mode is turned on from the phone of the person being cared for.';
+
+  @override
+  String get companionForegroundOnly =>
+      'Works only while the app is open on screen; it does not track in the background.';
+
+  @override
+  String get withdrawConsent => 'Withdraw consent';
+
+  @override
+  String get companionConsentTitle => 'Share your location?';
+
+  @override
+  String get companionConsent1 =>
+      'Your location is sent every 5 minutes while the app is open.';
+
+  @override
+  String get companionConsent2 =>
+      'Family with alert permission and your care coordinator can see your latest location.';
+
+  @override
+  String get companionConsent3 =>
+      'Only the latest location is stored. No history is kept.';
+
+  @override
+  String get companionConsent4 =>
+      'You can turn it off or withdraw consent at any time.';
+
+  @override
+  String get companionConsentAgree =>
+      'I understand and agree to share my location';
+
+  @override
+  String get agreeAndTurnOn => 'Agree and turn on';
+
+  @override
+  String get sosButtonPairing => 'SOS button';
+
+  @override
+  String get sosButtonPairingSub => 'Pair a wearable emergency button';
+
+  @override
+  String get sosButtonIntro =>
+      'Pressing a paired SOS button alerts emergency contacts, the same as SOS in the app.';
+
+  @override
+  String get deviceId => 'Device ID';
+
+  @override
+  String get deviceIdHelp => 'Printed on the back of the button or its box';
+
+  @override
+  String get deviceModelOptional => 'Model (optional)';
+
+  @override
+  String get pairDevice => 'Pair button';
+
+  @override
+  String get pairedDevices => 'Paired on this phone';
+
+  @override
+  String get noPairedDevices => 'No buttons paired from this phone';
+
+  @override
+  String get sosButtonPaired => 'SOS button paired';
+
+  @override
+  String get unpair => 'Unpair';
+
+  @override
+  String get sosButtonNote => 'A supportive device, not a replacement for 108.';
+
+  @override
+  String get haveCompanyCode => 'Have a company code?';
+
+  @override
+  String get companyCodeHelp =>
+      'If your employer sponsors CareCompanion, enter the code they gave you.';
+
+  @override
+  String get companyCode => 'Company code';
+
+  @override
+  String get companyCodeInvalid => 'Enter the full code';
+
+  @override
+  String companyPlanActivated(String name) {
+    return 'Plan activated, sponsored by $name';
+  }
+
+  @override
+  String sponsoredBy(String name) {
+    return 'Sponsored by $name';
+  }
+
+  @override
+  String get offersAndWallet => 'Offers & wallet';
+
+  @override
+  String get couponCode => 'Coupon code';
+
+  @override
+  String couponApplied(String code) {
+    return '$code applied';
+  }
+
+  @override
+  String get couponDiscount => 'Coupon discount';
+
+  @override
+  String get useWalletBalance => 'Use wallet balance';
+
+  @override
+  String walletAvailable(String amount) {
+    return '$amount available';
+  }
+
+  @override
+  String get walletUsedLabel => 'Wallet';
+
+  @override
+  String get payableAmount => 'To pay';
+
+  @override
+  String get fullyCoveredNote => 'Fully covered: no payment needed.';
+
+  @override
+  String checkoutSummarySemantic(
+    String subtotal,
+    String discount,
+    String wallet,
+    String payable,
+  ) {
+    return 'Subtotal $subtotal, discount $discount, wallet $wallet, to pay $payable';
+  }
+
+  @override
+  String get wallet => 'Wallet';
+
+  @override
+  String get walletSub => 'Balance and rewards';
+
+  @override
+  String get walletBalance => 'Wallet balance';
+
+  @override
+  String walletBalanceSemantic(String amount) {
+    return 'Wallet balance $amount';
+  }
+
+  @override
+  String get walletNote =>
+      'Wallet credit can be used on bookings. It cannot be withdrawn and expires after 365 days.';
+
+  @override
+  String get transactions => 'Transactions';
+
+  @override
+  String get noTransactions => 'No transactions yet';
+
+  @override
+  String get inviteFamilyFriends => 'Invite family & friends';
+
+  @override
+  String get inviteRewardSub =>
+      'You both get wallet credit after their first paid service';
+
+  @override
+  String get inviteIntro =>
+      'Share your code. When they complete their first paid service, you both get wallet credit.';
+
+  @override
+  String get yourInviteCode => 'Your invite code';
+
+  @override
+  String get shareInvite => 'Share invite';
+
+  @override
+  String get friendsInvited => 'Joined with your code';
+
+  @override
+  String get rewardsEarned => 'Rewards earned';
+
+  @override
+  String get haveInviteCode => 'Have an invite code?';
+
+  @override
+  String get inviteCode => 'Invite code';
+
+  @override
+  String get inviteCodeInvalid => 'That code does not look right';
+
+  @override
+  String get inviteRedeemed =>
+      'Invite code applied. Your reward arrives after your first paid service.';
+
+  @override
+  String get inviteTerms =>
+      'Codes can be used once, within 7 days of signing up.';
+
+  @override
+  String get onboardingInviteBody =>
+      'Were you invited by family or a friend? Enter their code to get a welcome reward. You can skip this.';
+
+  @override
+  String get purposeLabOrder => 'Lab test';
+
+  @override
+  String get purposeSecondOpinion => 'Second opinion';
+
+  @override
+  String get purposeAmbulance => 'Ambulance';
+
+  @override
+  String get myTickets => 'My tickets';
+
+  @override
+  String get myTicketsSub => 'Questions about bookings, payments or the app';
+
+  @override
+  String get newTicket => 'New ticket';
+
+  @override
+  String get noTickets => 'No tickets';
+
+  @override
+  String get noTicketsBody =>
+      'Raise a ticket and our support team will reply here.';
+
+  @override
+  String get ticketCategory => 'What is it about?';
+
+  @override
+  String get tcBooking => 'Booking';
+
+  @override
+  String get tcPayment => 'Payment';
+
+  @override
+  String get tcRefund => 'Refund';
+
+  @override
+  String get tcAppIssue => 'App issue';
+
+  @override
+  String get tcClinicalConcern => 'Health concern';
+
+  @override
+  String get tcOther => 'Other';
+
+  @override
+  String get clinicalConcernTitle => 'Our care team will review this';
+
+  @override
+  String get clinicalConcernBody =>
+      'Health concerns go to a clinician, not only to support. If it is urgent or someone is very unwell, call 108 now.';
+
+  @override
+  String get describeIssue => 'Describe the issue';
+
+  @override
+  String get linkBooking => 'Link a booking (optional)';
+
+  @override
+  String get noBookingsToLink => 'No recent bookings';
+
+  @override
+  String get submitTicket => 'Submit';
+
+  @override
+  String ticketCreated(String number) {
+    return 'Ticket $number created';
+  }
+
+  @override
+  String get supportNotForEmergencies =>
+      'Support is not for emergencies. Call 108 in an emergency.';
+
+  @override
+  String get supportTicket => 'Support ticket';
+
+  @override
+  String get tsOpen => 'Open';
+
+  @override
+  String get tsPendingCustomer => 'Waiting for you';
+
+  @override
+  String get tsResolved => 'Resolved';
+
+  @override
+  String get tsClosed => 'Closed';
+
+  @override
+  String handledBy(String name) {
+    return 'Handled by $name';
+  }
+
+  @override
+  String get rateSupport => 'Rate our support';
+
+  @override
+  String youRated(int score) {
+    return 'You rated $score / 5. Thank you!';
+  }
+
+  @override
   String itemsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

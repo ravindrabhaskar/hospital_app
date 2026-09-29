@@ -188,6 +188,38 @@ class VisitEscalation {
   Json toJson() => {'reason': reason, 'severity': severity, 'at': at?.toUtc().toIso8601String()};
 }
 
+/// A lab test ordered for a `sample_collection` visit (§44). The §8 HomeVisit
+/// shape has no tests field, so this is read only if the server sends one
+/// (`labTests`, `tests` or `labOrder.tests`); otherwise the UI falls back to a
+/// generic collection checklist.
+class VisitLabTest {
+  const VisitLabTest({required this.name, this.sampleType, this.fastingRequired = false, this.fastingHours});
+  final String name;
+  final String? sampleType;
+  final bool fastingRequired;
+  final int? fastingHours;
+
+  factory VisitLabTest.fromJson(Json json) => VisitLabTest(
+        name: strOr(json['name'], strOr(json['code'])),
+        sampleType: str(json['sampleType']),
+        fastingRequired: boolOr(json['fastingRequired']),
+        fastingHours: intOrNull(json['fastingHours']),
+      );
+
+  Json toJson() => {
+        'name': name,
+        'sampleType': sampleType,
+        'fastingRequired': fastingRequired,
+        'fastingHours': fastingHours,
+      };
+
+  static List<VisitLabTest> listFrom(Json visit) {
+    final order = asJson(visit['labOrder']);
+    final raw = visit['labTests'] ?? visit['tests'] ?? order['tests'];
+    return jsonList(raw).map(VisitLabTest.fromJson).where((t) => t.name.isNotEmpty).toList();
+  }
+}
+
 /// `HomeVisit` from API contract §8. `visitCode` is intentionally not modelled:
 /// the API never returns it to providers.
 class HomeVisit {
@@ -212,6 +244,7 @@ class HomeVisit {
     this.summary,
     this.escalation,
     this.createdAt,
+    this.labTests = const [],
     this.pendingSync = false,
   });
 
@@ -235,6 +268,20 @@ class HomeVisit {
   final String? summary;
   final VisitEscalation? escalation;
   final DateTime? createdAt;
+
+  /// Ordered tests for sample-collection visits, when the server provides them.
+  final List<VisitLabTest> labTests;
+
+  bool get isSampleCollection => serviceCode == 'sample_collection';
+
+  /// Any ordered test needs fasting (null when the tests are unknown).
+  bool? get fastingRequired => labTests.isEmpty ? null : labTests.any((t) => t.fastingRequired);
+
+  /// Longest fasting period among the ordered tests.
+  int? get fastingHours {
+    final hours = labTests.map((t) => t.fastingHours).whereType<int>();
+    return hours.isEmpty ? null : hours.reduce((a, b) => a > b ? a : b);
+  }
 
   /// Local-only flag: this copy includes actions that are still queued.
   final bool pendingSync;
@@ -270,6 +317,7 @@ class HomeVisit {
         summary: str(json['summary']),
         escalation: json['escalation'] is Map ? VisitEscalation.fromJson(asJson(json['escalation'])) : null,
         createdAt: dateOrNull(json['createdAt']),
+        labTests: VisitLabTest.listFrom(json),
         pendingSync: boolOr(json['_pendingSync']),
       );
 
@@ -294,6 +342,7 @@ class HomeVisit {
         'summary': summary,
         'escalation': escalation?.toJson(),
         'createdAt': createdAt?.toUtc().toIso8601String(),
+        if (labTests.isNotEmpty) 'labTests': labTests.map((t) => t.toJson()).toList(),
         if (pendingSync) '_pendingSync': true,
       };
 
@@ -330,6 +379,7 @@ class HomeVisit {
         summary: summary ?? this.summary,
         escalation: escalation ?? this.escalation,
         createdAt: createdAt,
+        labTests: labTests,
         pendingSync: pendingSync ?? this.pendingSync,
       );
 }

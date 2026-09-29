@@ -21,6 +21,7 @@ export const toRecord = (r: RecordRow) => ({
   sizeBytes: r.sizeBytes,
   hasFile: !!r.storageKey,
   aiSummary: r.aiSummary ?? null,
+  importedVia: (r.importedVia as 'abdm' | 'hospital_discharge' | null) ?? null,
   createdAt: iso(r.createdAt),
 });
 
@@ -40,6 +41,7 @@ export async function storeRecord(
     mimeType: string;
     data: Buffer;
     homeVisitId?: string | null;
+    importedVia?: 'abdm' | 'hospital_discharge' | null;
   },
 ): Promise<RecordRow> {
   const id = randomUUID();
@@ -63,6 +65,7 @@ export async function storeRecord(
       storageKey,
       sha256: sha256(p.data),
       homeVisitId: p.homeVisitId ?? null,
+      importedVia: p.importedVia ?? null,
     })
     .returning();
   return row;

@@ -46,6 +46,8 @@ String providerTypeLabel(AppLocalizations l, String type) {
       return l.typeIntern;
     case 'physiotherapist':
       return l.typePhysiotherapist;
+    case 'dietitian':
+      return l.typeDietitian;
     case 'doctor':
       return l.typeDoctor;
     default:

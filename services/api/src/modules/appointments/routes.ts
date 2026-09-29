@@ -12,6 +12,7 @@ import { parse, zUuid } from '../../lib/validate.js';
 import { feeForMode, isBookableDoctor } from '../doctors/routes.js';
 import { ACTIVE_STATUSES, addEvent, createEpisode } from '../episodes/service.js';
 import { toPayment } from '../payments/service.js';
+import { zCouponCode, zRefundTo } from '../wallet/routes.js';
 import { cancelAppointment, releaseSlot, toAppointment, toAppointments } from './service.js';
 
 const isUniqueViolation = (err: unknown): boolean => {
@@ -33,6 +34,8 @@ export async function appointmentRoutes(app: FastifyInstance): Promise<void> {
         mode: z.enum(['video', 'audio', 'chat', 'in_clinic']),
         reason: z.string().trim().min(1).max(500),
         careEpisodeId: zUuid.optional(),
+        couponCode: zCouponCode.optional(),
+        useWallet: z.boolean().optional(),
       }),
       req.body,
     );
@@ -91,6 +94,9 @@ export async function appointmentRoutes(app: FastifyInstance): Promise<void> {
           patientId: body.patientId,
           amount: fee,
           userId: req.ctx.user.id,
+          couponCode: body.couponCode,
+          useWallet: body.useWallet,
+          actor: req.ctx.actor,
         });
         await addEvent(tx, episodeId, 'appointment_booked', `Appointment booked with ${doctor.name}`, req.ctx.actor, {
           appointmentId: appt.id,
@@ -103,7 +109,10 @@ export async function appointmentRoutes(app: FastifyInstance): Promise<void> {
       if (isUniqueViolation(err)) throw new AppError('SLOT_UNAVAILABLE', 'This slot is no longer available');
       throw err;
     }
-    return reply.code(201).send({ appointment: await toAppointment(db, result.appt), payment: toPayment(result.payment) });
+    // Contract section 60: a payment fully covered by coupon/wallet succeeds immediately (confirming the booking).
+    const payment = await svc.payments.settleIfCovered(result.payment, req.ctx.actor);
+    const appt = payment === result.payment ? result.appt : (await db.select().from(appointments).where(eq(appointments.id, result.appt.id)))[0];
+    return reply.code(201).send({ appointment: await toAppointment(db, appt), payment: toPayment(payment) });
   });
 
   app.get('/appointments', async (req) => {
@@ -151,10 +160,10 @@ export async function appointmentRoutes(app: FastifyInstance): Promise<void> {
 
   app.post('/appointments/:id/cancel', async (req) => {
     const { id } = parse(z.object({ id: zUuid }), req.params);
-    const body = parse(z.object({ reason: z.string().trim().min(1).max(500) }), req.body);
+    const body = parse(z.object({ reason: z.string().trim().min(1).max(500), refundTo: zRefundTo.optional() }), req.body);
     const a = await loadForPatient(id, 'book', 'appointment.cancel', req.ctx);
     if (!['pending_payment', 'confirmed'].includes(a.status)) throw errors.invalidTransition(a.status, 'cancelled');
-    const updated = await cancelAppointment(db, svc.payments, a, body.reason, req.ctx.actor);
+    const updated = await cancelAppointment(db, svc.payments, a, body.reason, req.ctx.actor, body.refundTo === 'wallet');
     const [d] = await db.select({ name: providers.name }).from(providers).where(eq(providers.id, a.doctorId));
     await svc.notify.notifyPatient(a.patientId, {
       template: 'appointment_cancelled',

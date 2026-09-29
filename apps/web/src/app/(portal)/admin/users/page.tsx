@@ -265,7 +265,7 @@ const staffSchema = z
   .object({
     phone: z.string().trim().regex(/^\+[1-9]\d{7,14}$/, "International format, e.g. +919800000601"),
     name: z.string().trim().min(2, "Name is required"),
-    roles: z.array(z.enum(["patient", "doctor", "provider", "coordinator", "ops_admin", "super_admin"])).min(1, "Pick at least one role"),
+    roles: z.array(z.enum(["patient", "doctor", "provider", "coordinator", "ops_admin", "super_admin", "hospital_staff", "support_agent"])).min(1, "Pick at least one role"),
     providerType: z.string().optional(),
     qualification: z.string().trim().optional(),
     specialty: z.string().optional(),

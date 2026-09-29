@@ -147,6 +147,16 @@ class _SosScreenState extends ConsumerState<SosScreen> with SingleTickerProvider
                   subtitle: l.helpline108,
                   onTap: () => callHelpline(),
                 ),
+                if (ref.watch(featureFlagsProvider).ambulanceBooking) ...[
+                  const SizedBox(height: Space.md),
+                  _ActionCard(
+                    key: const Key('book-private-ambulance'),
+                    icon: Icons.local_shipping_outlined,
+                    title: l.bookPrivateAmbulance,
+                    subtitle: l.bookPrivateAmbulanceSub,
+                    onTap: () => context.push('/ambulance/book'),
+                  ),
+                ],
               ],
             ),
           ),
@@ -233,7 +243,7 @@ class _SosScreenState extends ConsumerState<SosScreen> with SingleTickerProvider
 }
 
 class _ActionCard extends StatelessWidget {
-  const _ActionCard({required this.icon, required this.title, required this.subtitle, this.onTap});
+  const _ActionCard({super.key, required this.icon, required this.title, required this.subtitle, this.onTap});
   final IconData icon;
   final String title;
   final String subtitle;

@@ -56,6 +56,7 @@ class MedicalRecord {
     required this.hasFile,
     required this.aiSummary,
     required this.createdAt,
+    this.importedVia,
   });
   final String id;
   final String patientId;
@@ -70,6 +71,9 @@ class MedicalRecord {
   final bool hasFile;
   final AiSummary? aiSummary;
   final DateTime? createdAt;
+
+  /// `abdm` or `hospital_discharge` when the record came from an external system; null otherwise.
+  final String? importedVia;
 
   bool get isImage => mimeType.startsWith('image/');
   bool get isPdf => mimeType.contains('pdf') || fileName.toLowerCase().endsWith('.pdf');
@@ -89,6 +93,7 @@ class MedicalRecord {
         aiSummary:
             j['aiSummary'] is Map ? AiSummary.fromJson(asJson(j['aiSummary'])) : null,
         createdAt: dateOrNull(j, 'createdAt'),
+        importedVia: strOrNull(j, 'importedVia'),
       );
 }
 

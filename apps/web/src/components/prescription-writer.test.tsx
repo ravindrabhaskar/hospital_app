@@ -10,11 +10,12 @@ const mocks = vi.hoisted(() => ({
   list: vi.fn(),
   pdf: vi.fn(),
   profile: vi.fn(),
+  check: vi.fn(),
 }));
 
 vi.mock("@/lib/api", () => ({
   api: {
-    prescriptions: { create: mocks.create, list: mocks.list, pdf: mocks.pdf },
+    prescriptions: { create: mocks.create, list: mocks.list, pdf: mocks.pdf, check: mocks.check },
     doctorSelf: { profile: mocks.profile },
   },
 }));
@@ -54,6 +55,7 @@ describe("PrescriptionWriter", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.list.mockResolvedValue({ items: [] });
+    mocks.check.mockResolvedValue({ warnings: [], knowledgePack: { version: "interactions-fixture-0.1", status: "fixture_unapproved" } });
     mocks.profile.mockResolvedValue({ name: "Dr. Anil Rao", qualifications: "MBBS, MD", registrationNumber: "TSMC-12345" });
   });
 

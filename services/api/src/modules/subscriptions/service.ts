@@ -30,6 +30,7 @@ export const toPlan = (p: PlanRow) => ({
 
 export const toSubscription = (s: SubscriptionRow, plan: PlanRow) => ({
   id: s.id,
+  sponsorName: s.sponsorName ?? null,
   planCode: s.planCode,
   planName: plan.name,
   status: s.status,
@@ -182,11 +183,19 @@ export async function subscriptionLifecycle(db: Db, notify: NotificationService,
 }
 
 /** Cancel stale pending subscriptions of a user (and void their pending payments). */
-export async function cancelPending(tx: DbOrTx, userId: string): Promise<void> {
+export async function cancelPending(tx: DbOrTx, userId: string, paymentsSvc?: { voidPending(db: DbOrTx, id: string): Promise<void> }): Promise<void> {
   const pending = await tx.select({ id: subscriptions.id }).from(subscriptions).where(and(eq(subscriptions.userId, userId), eq(subscriptions.status, 'pending')));
   if (!pending.length) return;
   const ids = pending.map((p) => p.id);
   await tx.update(subscriptions).set({ status: 'cancelled', updatedAt: new Date() }).where(inArray(subscriptions.id, ids));
+  if (paymentsSvc) {
+    const pend = await tx
+      .select({ id: payments.id })
+      .from(payments)
+      .where(and(eq(payments.purpose, 'subscription'), inArray(payments.refId, ids), eq(payments.status, 'pending')));
+    for (const p of pend) await paymentsSvc.voidPending(tx, p.id);
+    return;
+  }
   await tx
     .update(payments)
     .set({ status: 'failed', updatedAt: new Date() })

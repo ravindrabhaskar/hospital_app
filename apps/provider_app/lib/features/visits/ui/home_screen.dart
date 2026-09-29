@@ -7,6 +7,8 @@ import '../../../core/theme.dart';
 import '../../../models/home_visit.dart';
 import '../../../ui/l10n_helpers.dart';
 import '../../../ui/widgets.dart';
+import '../../field/attendance_screen.dart';
+import '../../field/route_view.dart';
 import '../../profile/profile_photo.dart';
 import '../data/provider_repository.dart';
 import '../data/visit_providers.dart';
@@ -20,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
     final l = context.l10n;
     final auth = ref.watch(authControllerProvider);
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: ListenableBuilder(
@@ -60,7 +62,13 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(AppSpacing.screen, 12, AppSpacing.screen, 4),
+                padding: EdgeInsets.fromLTRB(AppSpacing.screen, 8, AppSpacing.screen, 0),
+                child: AttendanceCard(),
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(AppSpacing.screen, 8, AppSpacing.screen, 4),
                 child: _TodaySummary(),
               ),
             ),
@@ -70,6 +78,7 @@ class HomeScreen extends ConsumerWidget {
                   Tab(text: l.tabToday),
                   Tab(text: l.tabUpcoming),
                   Tab(text: l.tabCompleted),
+                  Tab(key: const Key('tabRoute'), text: l.tabRoute),
                 ],
               ),
             ),
@@ -79,6 +88,7 @@ class HomeScreen extends ConsumerWidget {
               _VisitList(scope: VisitScope.today),
               _VisitList(scope: VisitScope.upcoming),
               _VisitList(scope: VisitScope.completed),
+              RouteView(),
             ],
           ),
         ),
@@ -351,6 +361,8 @@ IconData _serviceIcon(String code) {
       return Icons.elderly;
     case 'post_report_consult':
       return Icons.assignment_outlined;
+    case 'physiotherapy':
+      return Icons.accessibility_new;
     default:
       return Icons.monitor_heart_outlined;
   }

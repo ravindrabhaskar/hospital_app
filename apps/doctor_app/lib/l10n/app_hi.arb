@@ -1,0 +1,760 @@
+{
+  "@@locale": "hi",
+  "appTitle": "केयरकम्पैनियन डॉक्टर",
+  "commonLoading": "लोड हो रहा है",
+  "commonRetry": "फिर से कोशिश करें",
+  "commonRefresh": "रीफ़्रेश करें",
+  "commonSave": "सहेजें",
+  "commonCancel": "रद्द करें",
+  "commonConfirm": "पुष्टि करें",
+  "commonContinue": "जारी रखें",
+  "commonDiscard": "हटाएँ",
+  "commonAdd": "जोड़ें",
+  "commonRemove": "हटाएँ",
+  "commonOk": "ठीक है",
+  "commonLogout": "लॉग आउट",
+  "copied": "कॉपी हो गया",
+  "send": "भेजें",
+  "fieldRequired": "आवश्यक",
+  "linkFailed": "लिंक नहीं खुल सका",
+  "offlineBanner": "आप ऑफ़लाइन हैं। पिछला लोड किया गया डेटा दिख रहा है।",
+  "statusLabel": "स्थिति",
+  "priorityLabel": "प्राथमिकता",
+  "severityLabel": "गंभीरता",
+  "episodeLabel": "केयर एपिसोड",
+  "reasonLabel": "कारण",
+  "noneRecorded": "कुछ दर्ज नहीं",
+  "noneAdded": "अभी कुछ नहीं जोड़ा गया",
+  "onePerLine": "हर पंक्ति में एक",
+  "commaSeparated": "कॉमा से अलग करें",
+  "ageYears": "{age} वर्ष",
+  "@ageYears": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "daysCount": "{count} दिन",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "genderMale": "पुरुष",
+  "genderFemale": "महिला",
+  "genderOther": "अन्य",
+  "errorNetwork": "केयरकम्पैनियन से जुड़ नहीं पा रहे। कनेक्शन जाँचें।",
+  "errorGeneric": "कुछ गलत हो गया। फिर से कोशिश करें।",
+  "errorServer": "सेवा में समस्या है। थोड़ी देर बाद कोशिश करें।",
+  "errorSessionExpired": "आपका सत्र समाप्त हो गया। फिर से लॉग इन करें।",
+  "errorForbidden": "आपको इसकी अनुमति नहीं है।",
+  "errorNotFound": "यह अब उपलब्ध नहीं है।",
+  "errorRateLimited": "बहुत सारे प्रयास। कुछ देर रुककर कोशिश करें।",
+  "errorMfaRequired": "जारी रखने के लिए दो-चरणीय सत्यापन ज़रूरी है।",
+  "loginTitle": "डॉक्टर साइन इन",
+  "loginSubtitle": "आपकी कतार, मरीज़ और केयर टीम एक जगह।",
+  "loginPhoneLabel": "मोबाइल नंबर",
+  "loginPhoneHint": "10 अंकों का नंबर",
+  "loginPhoneInvalid": "सही 10 अंकों का मोबाइल नंबर डालें",
+  "loginSendOtp": "OTP भेजें",
+  "loginOtpSentTo": "{phone} पर भेजा गया कोड डालें",
+  "@loginOtpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "loginOtpLabel": "6 अंकों का OTP",
+  "loginOtpInvalid": "6 अंकों का कोड डालें",
+  "loginDevOtpHint": "डेवलपमेंट OTP: {code}",
+  "@loginDevOtpHint": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "loginVerify": "सत्यापित करें",
+  "loginChangeNumber": "नंबर बदलें",
+  "mfaTitle": "दो-चरणीय सत्यापन",
+  "mfaEnrolIntro": "डॉक्टर खाते SMS OTP के साथ ऑथेंटिकेटर ऐप कोड से सुरक्षित होते हैं।",
+  "mfaStep1": "1. अपने ऑथेंटिकेटर में केयरकम्पैनियन जोड़ें",
+  "mfaStep2": "2. वहाँ दिखा 6 अंकों का कोड डालें",
+  "mfaOpenAppHint": "खाता अपने-आप जोड़ने के लिए बटन दबाएँ, या सेटअप कुंजी ऐप में टाइप करें।",
+  "mfaOpenAuthenticator": "ऑथेंटिकेटर ऐप खोलें",
+  "mfaSecretLabel": "सेटअप कुंजी",
+  "mfaCopySecret": "सेटअप कुंजी कॉपी करें",
+  "mfaCodeLabel": "ऑथेंटिकेटर कोड",
+  "mfaTurnOn": "सत्यापित करें और चालू करें",
+  "mfaRecoveryIntro": "ये रिकवरी कोड सुरक्षित रखें। फ़ोन खोने पर हर कोड एक बार काम करेगा। ये दोबारा नहीं दिखेंगे।",
+  "mfaCopyCodes": "सभी कोड कॉपी करें",
+  "mfaSavedCodes": "मैंने रिकवरी कोड सहेज लिए हैं",
+  "mfaVerifyPrompt": "अपने ऑथेंटिकेटर ऐप से 6 अंकों का कोड डालें।",
+  "mfaRecoveryPrompt": "अपना एक रिकवरी कोड डालें। हर कोड एक ही बार काम करता है।",
+  "mfaRecoveryLabel": "रिकवरी कोड",
+  "mfaVerify": "सत्यापित करें",
+  "mfaUseRecovery": "इसके बजाय रिकवरी कोड इस्तेमाल करें",
+  "mfaUseAuthenticator": "ऑथेंटिकेटर ऐप इस्तेमाल करें",
+  "mfaWrongCode": "यह कोड गलत है।",
+  "mfaWrongCodeAttempts": "यह कोड गलत है। {count} प्रयास बाकी।",
+  "@mfaWrongCodeAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mfaCodeInvalid": "6 अंकों का कोड डालें",
+  "mfaRecoveryInvalid": "सही रिकवरी कोड डालें",
+  "mfaLocked": "बहुत सारे गलत कोड। 15 मिनट बाद कोशिश करें।",
+  "mfaStatusOn": "चालू (ऑथेंटिकेटर ऐप)",
+  "mfaStatusOff": "अभी सेट नहीं है। संस्था के कहने पर पूछा जाएगा।",
+  "restrictedTitle": "यह ऐप डॉक्टरों के लिए है",
+  "restrictedBody": "आपके खाते में सत्यापित डॉक्टर प्रोफ़ाइल नहीं है।",
+  "restrictedPatient": "कृपया मरीज़ों और परिवारों के लिए केयरकम्पैनियन ऐप इस्तेमाल करें।",
+  "restrictedProvider": "होम-केयर विज़िट के लिए कृपया केयरकम्पैनियन प्रो ऐप इस्तेमाल करें।",
+  "restrictedStaff": "अपनी भूमिका के लिए कृपया केयरकम्पैनियन वेब पोर्टल इस्तेमाल करें।",
+  "updateTitle": "कृपया ऐप अपडेट करें",
+  "updateBody": "यह संस्करण अब समर्थित नहीं है। सुरक्षित रूप से काम जारी रखने के लिए अपडेट करें।",
+  "updateNow": "अभी अपडेट करें",
+  "updateVersions": "इंस्टॉल {current} · आवश्यक {minimum}",
+  "@updateVersions": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "supportTitle": "सहायता",
+  "supportCall": "सहायता को कॉल करें",
+  "supportEmail": "सहायता को ईमेल करें",
+  "supportWhatsapp": "व्हाट्सऐप सहायता",
+  "navToday": "आज",
+  "navPatients": "मरीज़",
+  "navMessages": "संदेश",
+  "navMore": "और",
+  "helloDoctor": "नमस्ते, {name}",
+  "@helloDoctor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "queueEmpty": "इस दिन कोई परामर्श नहीं।",
+  "queueWaiting": "प्रतीक्षा में",
+  "queueInProgress": "जारी",
+  "queueDone": "पूरा",
+  "apptPendingPayment": "भुगतान बाकी",
+  "apptConfirmed": "पुष्ट",
+  "apptInProgress": "जारी",
+  "apptCompleted": "पूरा",
+  "apptCancelled": "रद्द",
+  "apptNoShow": "नहीं आए",
+  "priorityRoutine": "सामान्य",
+  "priorityUrgent": "तत्काल",
+  "priorityEmergency": "आपातकाल",
+  "epNew": "नया",
+  "epIntake": "इनटेक",
+  "epAwaitingCare": "देखभाल की प्रतीक्षा",
+  "epCareScheduled": "देखभाल तय",
+  "epUnderCare": "देखभाल में",
+  "epFollowUp": "फ़ॉलो-अप",
+  "epResolved": "हल",
+  "epEscalated": "एस्केलेट किया गया",
+  "epEmergency": "आपातकाल",
+  "epTransferred": "स्थानांतरित",
+  "epCancelled": "रद्द",
+  "modeVideo": "वीडियो",
+  "modeAudio": "ऑडियो",
+  "modeChat": "चैट",
+  "modeInClinic": "क्लिनिक में",
+  "modeHomeVisit": "होम विज़िट",
+  "consultTitle": "परामर्श",
+  "openPatient": "मरीज़ का रिकॉर्ड खोलें",
+  "startConsult": "परामर्श शुरू करें",
+  "completeConsult": "परामर्श पूरा करें",
+  "consultStarted": "परामर्श शुरू हुआ",
+  "consultCompleted": "परामर्श पूरा हुआ",
+  "savedNotes": "सहेजे गए नोट्स",
+  "outcomeLabel": "परिणाम",
+  "outcomeCarePlan": "केयर प्लान",
+  "outcomeResolved": "हल",
+  "outcomeRefer": "रेफ़र",
+  "outcomeHomeVisit": "होम विज़िट",
+  "notesTitle": "क्लिनिकल नोट्स",
+  "notesHint": "नोट्स लिखें या AI स्क्राइब इस्तेमाल करें",
+  "notesSaveHint": "परामर्श पूरा करने पर नोट्स सहेजे जाते हैं।",
+  "saveEpisodeNote": "अभी केयर एपिसोड में जोड़ें",
+  "noteSaved": "नोट केयर एपिसोड में जुड़ गया",
+  "toolsTitle": "कार्य",
+  "careTeamThread": "केयर टीम संदेश",
+  "joinVideo": "वीडियो से जुड़ें",
+  "videoTitle": "वीडियो परामर्श",
+  "videoWindow": "रूम खुला",
+  "videoAudioHint": "ऑडियो परामर्श: कैमरा बंद रखें।",
+  "videoOpensAt": "रूम {time} पर खुलेगा (शुरू होने से 10 मिनट पहले)।",
+  "@videoOpensAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "intakeTitle": "मुख्य शिकायत (AI इनटेक)",
+  "intakeComplaint": "मुख्य शिकायत",
+  "@intakeComplaint": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "intakeDuration": "अवधि",
+  "intakeSeverity": "गंभीरता",
+  "@intakeSeverity": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "intakeSymptoms": "संबंधित लक्षण",
+  "@intakeSymptoms": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "allergiesTitle": "एलर्जी",
+  "@allergiesTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "allergiesNone": "कोई ज्ञात एलर्जी दर्ज नहीं",
+  "@allergiesNone": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "conditionsTitle": "स्थितियाँ",
+  "@conditionsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "activeMedsTitle": "चालू दवाइयाँ",
+  "@activeMedsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "recentVitalsTitle": "हाल के वाइटल्स",
+  "@recentVitalsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "homeVisitFindingsTitle": "होम विज़िट निष्कर्ष",
+  "@homeVisitFindingsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "escalatedLabel": "एस्केलेट किया गया",
+  "aiSummaryTitle": "AI सारांश",
+  "aiAdvisoryLabel": "AI द्वारा बनाया गया · केवल सलाह, निदान नहीं",
+  "aiSource": "स्रोत",
+  "aiFeedbackPrompt": "क्या यह सारांश सही था?",
+  "aiAccept": "सही",
+  "aiReject": "सही नहीं",
+  "aiFeedbackThanks": "धन्यवाद, आपकी प्रतिक्रिया दर्ज हुई।",
+  "aiRecordSummary": "AI रिकॉर्ड सारांश",
+  "srcRecord": "रिकॉर्ड",
+  "srcVital": "वाइटल",
+  "srcIntake": "इनटेक",
+  "srcHomeVisit": "होम विज़िट",
+  "srcPatientEntered": "मरीज़ द्वारा दर्ज",
+  "scribeTitle": "AI स्क्राइब",
+  "scribeConsent": "मरीज़ ने इस परामर्श की रिकॉर्डिंग और लिप्यंतरण के लिए सहमति दी है",
+  "scribeConsentHint": "रिकॉर्डिंग या ट्रांसक्रिप्ट भेजने से पहले ज़रूरी। इसका ऑडिट होता है।",
+  "scribeConsentRequired": "पहले मरीज़ की सहमति की पुष्टि करें।",
+  "scribeRecordTitle": "परामर्श रिकॉर्ड करें",
+  "scribeRecord": "रिकॉर्ड करें",
+  "scribeRecording": "रिकॉर्डिंग…",
+  "scribeStopUpload": "रोकें और ड्राफ़्ट बनाएँ",
+  "scribeAudioNote": "ऑडियो एक बार अपलोड होता है, लिप्यंतरण के बाद सर्वर उसे हटा देता है।",
+  "scribeTranscriptTitle": "या ट्रांसक्रिप्ट लिखें / चिपकाएँ",
+  "scribeTranscriptHint": "डॉक्टर: … मरीज़: …",
+  "scribeGenerate": "SOAP ड्राफ़्ट बनाएँ",
+  "scribeDraftTitle": "SOAP ड्राफ़्ट",
+  "scribeInsert": "नोट्स में जोड़ें",
+  "scribeInserted": "ड्राफ़्ट जोड़ा गया। पूरा करने से पहले जाँचें और बदलें।",
+  "scribeMicDenied": "रिकॉर्ड करने के लिए माइक्रोफ़ोन अनुमति चाहिए।",
+  "scribeTranscriptShort": "ट्रांसक्रिप्ट बहुत छोटा है।",
+  "scribeTooLarge": "रिकॉर्डिंग 25 MB से बड़ी है। छोटा हिस्सा रिकॉर्ड करें।",
+  "soapS": "सब्जेक्टिव",
+  "@soapS": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "soapO": "ऑब्जेक्टिव",
+  "@soapO": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "soapA": "आकलन",
+  "@soapA": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "soapP": "योजना",
+  "@soapP": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxTitle": "प्रिस्क्रिप्शन",
+  "rxFor": "{name} के लिए",
+  "@rxFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rxItems": "दवाइयाँ",
+  "rxNoItems": "कम से कम एक दवा जोड़ें।",
+  "rxNeedsStart": "पहले परामर्श शुरू करें",
+  "rxItemTitle": "दवा",
+  "rxDrugName": "दवा का नाम",
+  "rxStrength": "शक्ति",
+  "rxForm": "रूप",
+  "rxDose": "खुराक",
+  "@rxDose": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxFrequency": "आवृत्ति",
+  "@rxFrequency": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxTiming": "समय",
+  "rxTimingHint": "खाने के बाद",
+  "rxDuration": "दिन",
+  "@rxDuration": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxDurationInvalid": "1–365 दिन",
+  "rxTimes": "रिमाइंडर समय (HH:MM)",
+  "rxTimesInvalid": "08:00, 20:00 जैसे 24-घंटे का समय लिखें",
+  "rxInstructions": "निर्देश",
+  "rxChecksTitle": "इंटरैक्शन और एलर्जी जाँच",
+  "rxCheckIdle": "दवाएँ जोड़ते ही जाँच अपने-आप होती है।",
+  "rxChecking": "जाँच हो रही है…",
+  "rxNoWarnings": "कोई इंटरैक्शन या एलर्जी टकराव नहीं मिला।",
+  "@rxNoWarnings": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxPack": "नॉलेज पैक {pack}",
+  "@rxPack": {
+    "placeholders": {
+      "pack": {
+        "type": "String"
+      }
+    }
+  },
+  "sevMajor": "गंभीर",
+  "@sevMajor": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "sevModerate": "मध्यम",
+  "@sevModerate": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "sevInfo": "जानकारी",
+  "warnAllergy": "एलर्जी",
+  "@warnAllergy": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "warnDuplicate": "दोहरा उपचार",
+  "@warnDuplicate": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "warnInteraction": "इंटरैक्शन",
+  "@warnInteraction": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "warnDoseForm": "खुराक / रूप",
+  "@warnDoseForm": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxAcknowledge": "मैंने गंभीर चेतावनियाँ देख ली हैं और फिर भी लिखना चाहता/चाहती हूँ",
+  "@rxAcknowledge": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxOverrideReason": "ओवरराइड का क्लिनिकल कारण",
+  "rxOverrideReasonHint": "कम से कम {min} अक्षर। ऑडिट होता है।",
+  "@rxOverrideReasonHint": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "rxMajorBlocked": "गंभीर चेतावनियों के लिए स्वीकृति और कारण ज़रूरी है।",
+  "@rxMajorBlocked": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxClinicalNote": "क्लिनिकल नोट (प्रिस्क्रिप्शन पर)",
+  "rxAdvice": "सलाह",
+  "rxFollowUpDays": "फ़ॉलो-अप (दिन में)",
+  "rxSign": "प्रिस्क्रिप्शन बनाएँ",
+  "rxCreated": "प्रिस्क्रिप्शन बना और मरीज़ से साझा हुआ",
+  "rxPdfTitle": "प्रिस्क्रिप्शन · {name}",
+  "@rxPdfTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "formTablet": "टैबलेट",
+  "@formTablet": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formCapsule": "कैप्सूल",
+  "@formCapsule": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formSyrup": "सिरप",
+  "@formSyrup": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formInjection": "इंजेक्शन",
+  "@formInjection": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formOintment": "मरहम",
+  "@formOintment": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formDrops": "ड्रॉप्स",
+  "@formDrops": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formInhaler": "इनहेलर",
+  "@formInhaler": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formOther": "अन्य",
+  "pdfDocument": "PDF दस्तावेज़: {title}",
+  "@pdfDocument": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pageOf": "पेज {page} / {total}",
+  "@pageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "fileReady": "फ़ाइल तैयार है। देखने के लिए ब्राउज़र में खोलें।",
+  "openInBrowser": "ब्राउज़र में खोलें",
+  "carePlanTitle": "केयर प्लान",
+  "carePlanSummary": "सारांश",
+  "carePlanInstructions": "मरीज़ के लिए निर्देश",
+  "carePlanTasks": "कार्य",
+  "carePlanMeds": "दवाइयाँ",
+  "carePlanSaved": "केयर प्लान सहेजा गया",
+  "taskTitle": "कार्य",
+  "taskType": "प्रकार",
+  "taskOwner": "कौन",
+  "taskDueInDays": "कितने दिन में (वैकल्पिक)",
+  "taskMedication": "दवा",
+  "taskTest": "जाँच",
+  "taskFollowUp": "फ़ॉलो-अप",
+  "taskLifestyle": "जीवनशैली",
+  "taskMonitoring": "निगरानी",
+  "taskGeneral": "सामान्य",
+  "ownerPatient": "मरीज़",
+  "ownerCaregiver": "देखभालकर्ता",
+  "ownerProvider": "केयर प्रोवाइडर",
+  "followUpTitle": "फ़ॉलो-अप",
+  "followUpAfterDays": "कितने दिन बाद",
+  "followUpMode": "तरीका",
+  "followUpNone": "कोई फ़ॉलो-अप नहीं",
+  "referTitle": "अस्पताल रेफ़र करें",
+  "referSearchHospital": "अस्पताल खोजें",
+  "referNoHospitals": "कोई अस्पताल नहीं मिला।",
+  "referSpecialty": "विशेषज्ञता (वैकल्पिक)",
+  "referReason": "रेफ़रल का कारण",
+  "referSummary": "क्लिनिकल सारांश (वैकल्पिक)",
+  "referSend": "रेफ़रल पत्र बनाएँ",
+  "referSaved": "रेफ़रल बना। मरीज़ को सूचित किया गया।",
+  "emergency24x7": "24×7 आपातकालीन",
+  "enrolTitle": "केयर प्रोग्राम में नामांकन",
+  "enrolThresholds": "अलर्ट सीमाएँ",
+  "enrolSave": "मरीज़ का नामांकन करें",
+  "enrolSaved": "मरीज़ का नामांकन हुआ",
+  "fixtureWarning": "टेम्पलेट अभी क्लिनिकल रूप से स्वीकृत नहीं (फ़िक्स्चर)।",
+  "exerciseTitle": "व्यायाम योजना",
+  "exerciseWeeks": "सप्ताह",
+  "exerciseSets": "सेट",
+  "exerciseReps": "रेप्स",
+  "exercisePerDay": "प्रतिदिन",
+  "planSaved": "योजना मरीज़ से साझा की गई",
+  "dietTitle": "आहार योजना",
+  "dietTemplate": "टेम्पलेट",
+  "dietNoTemplate": "कोई टेम्पलेट नहीं",
+  "dietConditions": "स्थितियाँ (कॉमा से अलग)",
+  "dietCalories": "कैलोरी लक्ष्य (वैकल्पिक)",
+  "dietMeals": "भोजन",
+  "dietMealsHint": "आइटम कॉमा से अलग करें।",
+  "dietMealsCount": "{count} भोजन भरे गए",
+  "@dietMealsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dietNeedMeals": "टेम्पलेट चुनें या कम से कम एक भोजन भरें।",
+  "dietAvoid": "परहेज़ (कॉमा से अलग)",
+  "dietNotes": "नोट्स",
+  "dietValidWeeks": "{weeks} सप्ताह तक मान्य",
+  "@dietValidWeeks": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "slotEarlyMorning": "सुबह जल्दी",
+  "slotBreakfast": "नाश्ता",
+  "slotMidMorning": "दोपहर से पहले",
+  "slotLunch": "दोपहर का भोजन",
+  "slotEvening": "शाम",
+  "slotDinner": "रात का भोजन",
+  "slotBedtime": "सोने से पहले",
+  "patientTitle": "मरीज़",
+  "patientSearchHint": "नाम से अपने मरीज़ खोजें",
+  "patientsEmpty": "जिन मरीज़ों से आप परामर्श करते हैं या जो रिकॉर्ड साझा करते हैं, वे यहाँ दिखेंगे।",
+  "patientsNoMatch": "खोज से कोई मरीज़ नहीं मिला।",
+  "bloodGroup": "रक्त समूह",
+  "tabOverview": "सारांश",
+  "tabRecords": "रिकॉर्ड",
+  "tabVitals": "वाइटल्स",
+  "tabPrograms": "प्रोग्राम",
+  "tabPrescriptions": "प्रिस्क्रिप्शन",
+  "tabEpisodes": "एपिसोड",
+  "recordsEmpty": "कोई रिकॉर्ड साझा नहीं।",
+  "openOriginal": "मूल फ़ाइल खोलें",
+  "recLab": "लैब रिपोर्ट",
+  "recPrescription": "प्रिस्क्रिप्शन",
+  "recImaging": "इमेजिंग",
+  "recDischarge": "डिस्चार्ज सारांश",
+  "recVisitSummary": "विज़िट सारांश",
+  "recOther": "अन्य",
+  "vitalsEmpty": "कोई वाइटल्स दर्ज नहीं।",
+  "vitalRange": "सीमा {min}–{max}",
+  "@vitalRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "readingsCount": "{count} रीडिंग",
+  "@readingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vitalTrendSemantics": "{vital} रुझान: {min} से {max} के बीच {count} रीडिंग",
+  "@vitalTrendSemantics": {
+    "placeholders": {
+      "vital": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vitalBpSystolic": "BP सिस्टोलिक",
+  "@vitalBpSystolic": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalBpDiastolic": "BP डायस्टोलिक",
+  "@vitalBpDiastolic": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalPulse": "नाड़ी",
+  "@vitalPulse": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalSpo2": "SpO2",
+  "@vitalSpo2": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalTemperature": "तापमान",
+  "@vitalTemperature": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalGlucose": "ब्लड ग्लूकोज़",
+  "@vitalGlucose": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalWeight": "वज़न",
+  "vitalRespiratoryRate": "श्वसन दर",
+  "@vitalRespiratoryRate": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "programsEmpty": "किसी केयर प्रोग्राम में नामांकन नहीं।",
+  "programAdherence": "पालन (7 दिन)",
+  "programLastReading": "अंतिम रीडिंग",
+  "programOpenBreaches": "खुले अलर्ट",
+  "progActive": "सक्रिय",
+  "progPaused": "रुका हुआ",
+  "progCompleted": "पूरा",
+  "prescriptionsEmpty": "अभी कोई प्रिस्क्रिप्शन नहीं।",
+  "episodesEmpty": "कोई केयर एपिसोड नहीं।",
+  "inboxEmpty": "अभी कोई केयर टीम बातचीत नहीं।",
+  "noMessagesYet": "अभी कोई संदेश नहीं",
+  "unreadCount": "{count} अपठित",
+  "@unreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "messageHint": "केयर टीम को संदेश भेजें",
+  "emergencyNotice": "आपातकालीन सुरक्षा सूचना",
+  "@emergencyNotice": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "secondOpinionsTitle": "सेकंड ओपिनियन",
+  "soTabOpen": "खुले",
+  "soTabMine": "मेरे",
+  "soEmpty": "यहाँ कोई अनुरोध नहीं।",
+  "soOpen": "खुला",
+  "soClaimed": "लिया गया",
+  "soAnswered": "उत्तर दिया",
+  "soClaim": "लें",
+  "soClaimedMsg": "अनुरोध लिया गया। रिकॉर्ड अब आपसे साझा हैं।",
+  "soRespond": "राय लिखें",
+  "soOpinion": "राय",
+  "soRecommendations": "सिफ़ारिशें",
+  "soSuggestTele": "टेलीकंसल्टेशन सुझाएँ",
+  "soSent": "राय मरीज़ को भेजी गई",
+  "soDue": "नियत {date}",
+  "@soDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "escalationsTitle": "एस्केलेशन",
+  "escalationsEmpty": "आपके मरीज़ों के लिए कोई एस्केलेशन नहीं।",
+  "scheduleTitle": "शेड्यूल और छुट्टियाँ",
+  "weeklyTab": "साप्ताहिक समय",
+  "leavesTab": "छुट्टियाँ",
+  "scheduleHint": "सहेजने पर अगले {days} दिनों के खाली स्लॉट फिर से बनते हैं। बुक स्लॉट नहीं बदलते।",
+  "@scheduleHint": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleEmpty": "अभी कोई साप्ताहिक समय नहीं।",
+  "addBlock": "समय जोड़ें",
+  "blockTitle": "परामर्श का समय",
+  "weekday": "दिन",
+  "startTime": "शुरू",
+  "endTime": "समाप्त",
+  "slotLength": "स्लॉट अवधि",
+  "slotMinutes": "{minutes} मिनट",
+  "@slotMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "blockInvalidTime": "अमान्य समय",
+  "blockEndBeforeStart": "समाप्ति शुरुआत के बाद होनी चाहिए",
+  "blockTooShort": "एक स्लॉट से छोटा",
+  "blockNoModes": "कम से कम एक तरीका चुनें",
+  "blockOverlap": "इस दिन के दूसरे समय से टकराता है",
+  "saveSchedule": "साप्ताहिक समय सहेजें",
+  "fixProblems": "हाइलाइट किए गए समय ठीक करें",
+  "scheduleSaved": "शेड्यूल सहेजा गया",
+  "leavesEmpty": "कोई छुट्टी तय नहीं।",
+  "addLeave": "छुट्टी जोड़ें",
+  "leaveReason": "कारण (वैकल्पिक)",
+  "leaveAdded": "छुट्टी जोड़ी गई",
+  "leaveConflictsTitle": "इस दिन {count} बुक परामर्श",
+  "@leaveConflictsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leaveConflictsBody": "ये अपने-आप रद्द नहीं होते। कृपया केयर टीम से इन्हें फिर से तय करवाएँ।",
+  "earningsTitle": "कमाई",
+  "previousMonth": "पिछला महीना",
+  "nextMonth": "अगला महीना",
+  "earnPayable": "आपको देय",
+  "earnServices": "{count} पूरे परामर्श",
+  "@earnServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earnGross": "कुल",
+  "earnPlatformFee": "प्लेटफ़ॉर्म शुल्क",
+  "earnRefunds": "रिफ़ंड",
+  "earnLines": "विवरण",
+  "earnEmpty": "इस महीने कोई भुगतान वाला परामर्श नहीं।",
+  "profileTitle": "प्रोफ़ाइल",
+  "photoGallery": "फ़ोटो चुनें",
+  "photoCamera": "फ़ोटो लें",
+  "photoUpdated": "फ़ोटो अपडेट हुई",
+  "photoTooLarge": "फ़ोटो 5 MB से कम होनी चाहिए।",
+  "regNo": "पंजीकरण {number}",
+  "@regNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "ratingLine": "★ {rating} ({count} समीक्षाएँ)",
+  "@ratingLine": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptingBookings": "नई बुकिंग ले रहे हैं",
+  "acceptingBookingsHint": "बंद होने पर आप डॉक्टर खोज में नहीं दिखेंगे।",
+  "bookingsOn": "आप बुकिंग ले रहे हैं",
+  "bookingsOff": "बुकिंग रुकी हुई",
+  "feesTitle": "परामर्श शुल्क",
+  "qualifications": "योग्यताएँ",
+  "languagesSpoken": "बोली जाने वाली भाषाएँ",
+  "bio": "आपके बारे में",
+  "profileSaved": "प्रोफ़ाइल सहेजी गई",
+  "languageTitle": "भाषा",
+  "logoutConfirmTitle": "लॉग आउट करें?",
+  "logoutConfirmBody": "दोबारा साइन इन करने के लिए फ़ोन OTP और ऑथेंटिकेटर कोड चाहिए होगा।"
+}

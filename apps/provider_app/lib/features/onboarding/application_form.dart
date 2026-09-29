@@ -236,6 +236,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
                 RadioListTile<String>(
                   key: Key('onbType.$t'),
                   contentPadding: EdgeInsets.zero,
+                  // Six roles since v1.3 (dietitian): keep the list compact.
+                  visualDensity: VisualDensity.compact,
                   value: t,
                   title: Text(providerTypeLabel(l, t)),
                 ),

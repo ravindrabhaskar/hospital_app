@@ -19,6 +19,10 @@ class AppConfig {
   static String _stripSlash(String v) =>
       v.endsWith('/') ? v.substring(0, v.length - 1) : v;
 
+  /// Hospital white-label build (§58): `--dart-define=TENANT_CODE=...`.
+  /// Empty for the default CareCompanion app.
+  static const String tenantCode = String.fromEnvironment('TENANT_CODE');
+
   static const String emergencyHelpline = '108';
 
   static const Duration requestTimeout = Duration(seconds: 25);

@@ -58,7 +58,16 @@ function CoordinatorView() {
 
   const items = useMemo(() => query.data?.items ?? [], [query.data]);
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: items.length, flagged: 0, overdue_tasks: 0, missed_doses: 0, open_safety_event: 0, no_contact_7d: 0 };
+    const c: Record<Filter, number> = {
+      all: items.length,
+      flagged: 0,
+      overdue_tasks: 0,
+      missed_doses: 0,
+      open_safety_event: 0,
+      no_contact_7d: 0,
+      missed_checkin: 0,
+      program_breach: 0,
+    };
     for (const it of items) {
       const f = orderedFlags(it.flags);
       if (f.length) c.flagged++;

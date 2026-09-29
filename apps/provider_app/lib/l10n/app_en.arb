@@ -529,5 +529,313 @@
   "voiceStop": "Stop dictation",
   "voiceListening": "Listening… speak now",
   "voiceReview": "Dictated text was added to the notes. Review and correct it before saving.",
-  "voiceUnavailable": "Voice input isn't available on this device, or microphone permission was denied."
+  "voiceUnavailable": "Voice input isn't available on this device, or microphone permission was denied.",
+  "typeDietitian": "Dietitian",
+  "tabRoute": "Route",
+  "optionalHint": "Optional",
+  "planFor": "For {name}",
+  "@planFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "routeEmpty": "No stops on your route today.",
+  "routeSummary": "{count, plural, =1{1 stop} other{{count} stops}} · {km} km in total",
+  "@routeSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "routeFromLastLocation": "Distances start from your last reported location.",
+  "routeFromCurrentLocation": "Distances start from your service zone centre.",
+  "routeStartNavigation": "Start navigation",
+  "routeTooManyStops": "Google Maps shows the first {count} stops. Open navigation again after them.",
+  "@routeTooManyStops": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "routeFromStart": "{km} km from start",
+  "@routeFromStart": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "routeFromPrev": "{km} km from previous stop",
+  "@routeFromPrev": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "routeEta": "ETA {time}",
+  "@routeEta": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "routeStopLabel": "Stop {index}: {service}, {window}. {details}",
+  "@routeStopLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "service": {
+        "type": "String"
+      },
+      "window": {
+        "type": "String"
+      },
+      "details": {
+        "type": "String"
+      }
+    }
+  },
+  "attTitle": "Attendance",
+  "attUnknown": "Attendance status unavailable",
+  "attNotCheckedIn": "Not checked in today",
+  "attNotCheckedInHint": "Check in when you start your shift.",
+  "attCheckedInAt": "Checked in at {time}",
+  "@attCheckedInAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "attCheckedOutAt": "Checked out at {time}",
+  "@attCheckedOutAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "attCheckIn": "Check in",
+  "attCheckOut": "Check out",
+  "attCheckedInToast": "Checked in.",
+  "attCheckedOutToast": "Checked out.",
+  "attNoLocation": "(Location was not available.)",
+  "attDaysPresent": "Days present",
+  "attHours": "Hours",
+  "attVisits": "Visits",
+  "attDaily": "Day by day",
+  "attEmpty": "No attendance recorded this month.",
+  "attAbsent": "No check-in",
+  "attOpen": "not checked out",
+  "attHoursShort": "{hours} h",
+  "@attHoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "String"
+      }
+    }
+  },
+  "attVisitsCount": "{count, plural, =0{No visits} =1{1 visit} other{{count} visits}}",
+  "@attVisitsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supTitle": "Supplies",
+  "supEmpty": "No supplies are assigned to you.",
+  "supLowBanner": "{count, plural, =1{1 item is running low. Ask your coordinator to restock.} other{{count} items are running low. Ask your coordinator to restock.}}",
+  "@supLowBanner": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "supLow": "Low stock",
+  "supOut": "Out of stock",
+  "supReorderAt": "Reorder at {qty}",
+  "@supReorderAt": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "supOnHand": "On hand: {qty}",
+  "@supOnHand": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "supUsageTitle": "Supplies used",
+  "supUsageHint": "Enter what you used at this visit. It is saved even when you are offline.",
+  "supUsageCardBody": "Record gloves, strips, swabs and other items used at this visit.",
+  "supUsageButton": "Record supplies used",
+  "supUsageSave": "Save usage",
+  "supUsageSaved": "Supplies usage saved",
+  "supIncrease": "Add one {name}",
+  "@supIncrease": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "supDecrease": "Remove one {name}",
+  "@supDecrease": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sampleTestsTitle": "Lab tests to collect",
+  "sampleGeneric": "Collect samples as per the lab order.",
+  "sampleFastingShort": "Fasting",
+  "sampleFastingRequired": "Fasting required. Confirm with the patient before collecting.",
+  "sampleFastingHours": "Fasting required ({hours} h). Confirm with the patient before collecting.",
+  "@sampleFastingHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "sampleNoFasting": "No fasting needed for these tests.",
+  "sampleChecklistTitle": "Before completing: sample checklist",
+  "samplePatientId": "Patient ID verified",
+  "sampleFastingConfirmed": "Fasting status confirmed with the patient",
+  "sampleFastingNotNeeded": "Fasting not needed (checked with the patient)",
+  "sampleTubesLabelled": "All tubes labelled",
+  "sampleCount": "Number of samples",
+  "sampleCollectedConfirm": "Samples collected",
+  "sampleCompleteHint": "Confirm every item to complete the visit.",
+  "sampleSummary": "{count, plural, =1{1 sample collected.} other{{count} samples collected.}} Tubes labelled, patient ID verified, fasting status confirmed.",
+  "@sampleSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "exCardTitle": "Exercise plan",
+  "exCreateTitle": "Create exercise plan",
+  "exChooseTitle": "1. Choose exercises",
+  "exAllAreas": "All",
+  "exLibraryEmpty": "No exercises for this body area.",
+  "exDosageTitle": "2. Sets and repetitions",
+  "exNoneSelected": "Pick at least one exercise above.",
+  "exSets": "Sets",
+  "exReps": "Reps",
+  "exHold": "Hold (s)",
+  "exPerDay": "Per day",
+  "exNotes": "Notes (optional)",
+  "exScheduleTitle": "3. Schedule",
+  "exStartDate": "Start date",
+  "exWeeks": "Weeks",
+  "exSave": "Save exercise plan",
+  "exCreated": "Exercise plan created",
+  "exErrNoExercises": "Choose at least one exercise.",
+  "exErrRange": "{field} must be between {min} and {max}.",
+  "@exErrRange": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "exErrStartDate": "The start date cannot be in the past.",
+  "exNoPlans": "No exercise plans for this patient yet.",
+  "exProgressUnavailable": "Plan progress isn't available to you.",
+  "exPlanLine": "{count, plural, =1{1 exercise} other{{count} exercises}} · {author}",
+  "@exPlanLine": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "exProgressLine": "{done}/{planned} sessions · {pct}% adherence",
+  "@exProgressLine": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      },
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "exLatestPain": "latest pain {score}/10",
+  "@exLatestPain": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "dietCardTitle": "Diet plan",
+  "dietCardBody": "Create a meal plan for this patient.",
+  "dietCreateTitle": "Create diet plan",
+  "dietTemplate": "Template",
+  "dietNoTemplate": "No template",
+  "dietGovernance": "[REQUIRES CLINICAL GOVERNANCE] This template is not yet clinically approved. Review every item.",
+  "dietConditions": "Conditions and target",
+  "dietAddCondition": "Add condition",
+  "dietCalories": "Calorie target (kcal/day)",
+  "dietMeals": "Meals",
+  "dietMealsHint": "Separate items with commas.",
+  "dietAvoid": "Avoid and notes",
+  "dietAvoidHint": "Foods to avoid (comma separated)",
+  "dietNotes": "Notes (optional)",
+  "dietValidUntil": "Valid until",
+  "dietSave": "Save diet plan",
+  "dietCreated": "Diet plan created",
+  "dietErrNoMeals": "Add food items to at least one meal.",
+  "dietErrNoConditions": "Add at least one condition.",
+  "dietErrCalories": "Calorie target must be between {min} and {max}.",
+  "@dietErrCalories": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "dietErrValidUntil": "\"Valid until\" must be after today.",
+  "slotEarlyMorning": "Early morning",
+  "slotBreakfast": "Breakfast",
+  "slotMidMorning": "Mid-morning",
+  "slotLunch": "Lunch",
+  "slotEvening": "Evening snack",
+  "slotDinner": "Dinner",
+  "slotBedtime": "Bedtime"
 }

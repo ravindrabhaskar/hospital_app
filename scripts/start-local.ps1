@@ -96,4 +96,5 @@ CareCompanion is running.  Close the API / portal windows (or the emulator) to s
     Patient  9800000001 Vaibhav (switch to father Ramesh via the avatar)   9800000002 Lakshmi (family)
     Doctor   9800000101   Coordinator 9800000301   Ops admin 9800000401   Super admin 9800000501
     Nurse    9800000201   Applicant 9800000601     Expired credential 9800000203
+    Hospital desk 9800000701   Support agent 9800000801   (doctor app: 9800000101)
 "@ -ForegroundColor Cyan

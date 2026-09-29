@@ -139,6 +139,36 @@ dart run flutter_native_splash:create
 - **Photos** (§29): doctor/provider photos via `cached_network_image` with initials fallback; tap your avatar in Profile to take/choose a photo, centre-cropped to a square PNG and uploaded to `POST /me/photo`.
 - **Dark mode**: Profile → Appearance (System / Light / Dark, persisted as `cc_theme_mode`). Hard-coded light colours on the main screens now use theme-aware tokens (`context.textMuted`, `context.surface`, `context.mintSurface`, … in `core/theme/tokens.dart`).
 
+## v1.3 features (API_CONTRACT §41–§62)
+
+Code lives in `lib/models/{monitoring,services,engagement_v13}.dart`, `lib/data/v13_repositories.dart`, `lib/state/v13_providers.dart` and `lib/features/<feature>/`. The strings are in `tool/arb_v13.py`, which `tool/gen_arb.py` imports. No new packages were added: the charts are drawn with a CustomPainter (`core/widgets/trend_chart.dart`), and map links open Google Maps or OpenStreetMap.
+
+- **Daily check-in** (§41): the Home card offers one tap to check in, plus an optional mood. It has pending, missed and done states, and a status-only view when acting for a family member. It is hidden while disabled or on error. `/checkin` holds the settings (window, escalation, notify toggles; `manage_care`) and a 30-day history strip.
+- **Care programs** (§42): `/programs` shows each enrollment with its 7-day adherence, the readings due today (from template metrics and today's vitals) and its open alerts. A "My programs" section on Home appears when enrolled. `/programs/:id` has the 30-day summary, a trend chart per vital with dashed threshold lines, the alerts, and the weekly report PDFs in the in-app viewer. **Log reading** posts BP, sugar or weight to `POST /vitals`, with range validation.
+- **WhatsApp** (§43): Profile → Notifications has the opt-in toggle and a **Try it** sheet listing the commands.
+- **Lab tests** (§44): Home tile → `/lab` has search, category chips, packages and a cart. A test already in a selected package is not charged twice. The checkout shows a fasting notice, reuses the address, serviceability and window fields (`home_checkup/address_slot_section.dart`), and has coupon + wallet and payment. `/lab/orders/:id` shows a timeline and **View report**.
+- **Second opinion** (§49): specialty pricing, the question, a picker for records to share with explicit consent text, coupon + wallet, payment, status and the opinion view (PDF, teleconsult link).
+- **ABDM** (§50): Health Profile has **Create ABHA** (mobile OTP) and **Link existing ABHA** (`AbhaFlowController`). **Fetch records** covers record types, a date range and a list of requests. Imported records show an "Imported via ABDM" badge in Records.
+- **Insurance** (§51): Profile → Insurance lets you add, edit and delete policies. A card photo is uploaded via `/records`. Policies show an expiring badge. There is a cashless hospitals list and a claim checklist (cashless / reimbursement).
+- **Preventive care** (§52): due, overdue, upcoming and done lists per family member, with **Mark as done**.
+- **Exercise** (§53): today's exercises with sets, reps and hold timers, instructions and precautions. After a session you give a pain score (0–10), and progress includes a pain trend. You can book a `physiotherapy` home visit.
+- **Diet** (§54): meals by slot, followed / not-followed logging (today's choices are cached locally), foods to avoid, and a 14-day adherence chart.
+- **Ambulance** (§55): the SOS screen keeps **Call 108** as the primary action and adds **Book private ambulance** (BLS/ALS, GPS pickup, destination hospital). Tracking polls every 5 s and shows the vehicle, ETA, timeline and map links. Every ambulance screen has a Call 108 banner.
+- **Dementia safety** (§56): Profile → Safety & location covers:
+  - a safe zone: current location as centre, 100 m–5 km radius, active hours, last known location with a map link;
+  - **Companion mode**: explicit consent screen, then a foreground-only location every 5 min (`CompanionModeHost` in the shell);
+  - SOS button pairing.
+- **Company plan** (§57): **Have a company code?** on the Family Care Plan screen, plus a "Sponsored by" badge.
+- **White-label** (§58): build with `--dart-define=TENANT_CODE=<code>`. The app then calls `/config/public?tenant=` and applies the display name (app title), the primary colour (seeded ColorScheme, light and dark) and the logo (Home header, Profile). Profile shows a "Powered by CareCompanion" footer. Nothing changes without a tenant.
+- **Offers, wallet, invites** (§60): every checkout has a coupon field (`/coupons/validate`) and a "Use wallet balance" switch, with discount / wallet / payable lines. This covers appointments, home visits, lab, pharmacy, subscriptions (a plan checkout sheet) and second opinions. A fully covered payment skips the payment sheet. Profile → Wallet shows the balance and transactions. **Invite family & friends** shows your code and a share sheet. An optional onboarding step (`/onboarding/invite`) and the Invite screen both redeem codes.
+- **Support** (§61): Help & Support → **My tickets** lets you create a ticket (category, subject, message, an attached record, a linked booking). The conversation polls every 15 s and hides internal notes, and you can rate after it is resolved. **Health concern** tickets show a care-team note with Call 108.
+- **Home grid**: new tiles for Lab Tests, Care Programs, Preventive Care and Second Opinion. SOS stays visible, and Insurance, Exercise, Diet and the older tiles move to a **More** sheet.
+- **Flags**: optional keys (`lab_tests`, `care_programs`, `second_opinion`, `insurance`, `preventive_care`, `exercise_plans`, `diet_plans`, `daily_checkin`, `whatsapp_assistant`, `ambulance_booking`, `dementia_safety`, `wallet_offers`, `support_desk`, `abdm`) are read from `/config/public` and default to on.
+
+| Define | Purpose |
+|---|---|
+| `TENANT_CODE` | Hospital white-label build (§58); empty = CareCompanion |
+
 ## Structure
 
 ```
@@ -179,3 +209,4 @@ lib/
 - The emergency template in a care-team thread is recognised as a `system` message that mentions 108 (the contract has no explicit flag).
 - iOS HealthKit and the entitlement edit could not be verified on this Windows machine (no Xcode build).
 - The doctor "favourite" heart is local only, because the contract has no favourites endpoint.
+- v1.3: the contract has no list endpoint for paired SOS buttons, so paired buttons are remembered on the device. It also has no read-back of one day's diet logs, so today's choices are cached locally. The "Imported via ABDM" badge needs source `imported` and "ABDM" in the title (§59 discharge PDFs also use `imported`). Weekly program reports are found by "weekly" in the record title. Companion mode runs only while the app is open.

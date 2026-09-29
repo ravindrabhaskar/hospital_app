@@ -29,6 +29,20 @@
       "when": 1790427289233,
       "tag": "0003_v1_2_functional",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790678625500,
+      "tag": "0004_v1_3_growth",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790678632420,
+      "tag": "0005_v1_3_reference_data",
+      "breakpoints": true
     }
   ]
 }

@@ -73,3 +73,37 @@ Initial MVP scaffold for the Hyderabad controlled-pilot track. **Not clinically 
 - Ops admins could not load service zones when approving applications.
 - The Prescriptions tab listed e-prescription PDFs twice and mislabelled doctor documents as "Uploaded by you".
 - The Leaves form overflowed its panel.
+
+## [0.4.0] - 2026-09-29: growth & care programs (API contract v1.3, §41–§62)
+### Added
+- **Care for elders at home**:
+  - daily "I'm OK" check-in with family alerts and escalation to the coordinator;
+  - chronic care programs (hypertension, diabetes, heart failure) with threshold alerts and weekly PDF reports;
+  - dementia safe zone and SOS button;
+  - ambulance booking with live tracking (108 always stays the primary action).
+- **Reaching families**:
+  - WhatsApp assistant (reminders, check-in, BP/sugar logging, AI with safety screening);
+  - phone line (IVR) for elders without smartphones.
+- **Clinical**:
+  - lab tests at home with sample collection and reports;
+  - AI consultation notes (scribe, with consent; audio discarded);
+  - drug-interaction and allergy checks with audited overrides;
+  - specialist second opinion;
+  - vaccination and screening schedules;
+  - physiotherapy exercise plans;
+  - diet plans.
+- **Health records & insurance**:
+  - ABDM ABHA creation/linking and consent-based record import (mock/sandbox/production adapter);
+  - insurance policy wallet with cashless-hospital search and claim checklists.
+- **Business**:
+  - hospital post-discharge programs (new `hospital_staff` role);
+  - company health plans with redeem codes;
+  - hospital white-label branding;
+  - coupons, wallet and invite rewards on every checkout;
+  - support desk with SLAs and internal notes (new `support_agent` role).
+- **Field operations**: nurse route planning, attendance, supplies tracking; dietitian provider type.
+- **New Doctor mobile app** (`apps/doctor_app`, Android + iOS) with MFA, queue, consultations, AI scribe, e-prescriptions with safety checks, messages, second opinions, schedule and earnings.
+- Mock partners for WhatsApp, lab, ambulance, ABDM, drug database, speech-to-text, IVR and SOS button. Real adapters switch on with credentials.
+### Fixed
+- An emergency WhatsApp message from an unsubscribed or unknown number now always gets the 108 guidance, and alerts ops for known users.
+- Patient app aligned with the final `wallet_invites` flag and the `importedVia` record field.

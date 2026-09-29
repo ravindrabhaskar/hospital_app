@@ -31,6 +31,17 @@ String? resolveDeepLink(String? link) {
     '/inbox',
     '/schemes',
     '/profile/family-plan',
+    // v1.3 notification categories (program, checkin, lab, support, insurance, preventive)
+    '/programs',
+    '/checkin',
+    '/lab/orders/',
+    '/second-opinion/',
+    '/support/tickets/',
+    '/insurance',
+    '/preventive',
+    '/ambulance/',
+    '/safety',
+    '/wallet',
   ];
   for (final k in known) {
     if (link.startsWith(k)) {

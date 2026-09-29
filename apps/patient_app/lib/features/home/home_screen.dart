@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
 import '../../core/utils/labels.dart';
+import '../../core/widgets/branding.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/illustrations.dart';
 import '../../core/widgets/state_views.dart';
@@ -14,7 +15,10 @@ import '../../models/misc.dart';
 import '../../models/patient.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
+import '../../state/v13_providers.dart';
+import '../checkin/checkin.dart';
 import '../messages/inbox_screen.dart' show UnreadBadge;
+import '../programs/programs.dart' show MyProgramsSection;
 import '../reviews/review_prompt.dart';
 import 'family_switcher.dart';
 
@@ -29,6 +33,9 @@ class HomeScreen extends ConsumerWidget {
     ref.invalidate(notificationsProvider);
     ref.invalidate(inboxProvider);
     ref.invalidate(pendingReviewsProvider);
+    ref.invalidate(checkinSettingsProvider);
+    ref.invalidate(checkinHistoryProvider);
+    ref.invalidate(enrollmentsProvider);
     try {
       await ref.read(activePatientProvider.future);
     } catch (_) {}
@@ -47,6 +54,7 @@ class HomeScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: Space.screen),
               sliver: SliverList.list(children: [
                 const AiHeroCard(),
+                const DailyCheckinCard(),
                 const SizedBox(height: Space.xl),
                 const QuickActionsRow(),
                 const SizedBox(height: Space.xl),
@@ -57,6 +65,7 @@ class HomeScreen extends ConsumerWidget {
                       compact: true, error: active.error!, onRetry: () => _refresh(ref))
                 else ...const [
                   ReviewPromptHost(),
+                  MyProgramsSection(),
                   RemindersSection(),
                   ActiveEpisodesSection(),
                   InsightsSection(),
@@ -106,6 +115,7 @@ class HomeHeader extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const TenantLogo(size: 28),
                         // Single line each: shrink rather than wrap when the action icons leave little room.
                         FittedBox(
                           fit: BoxFit.scaleDown,
@@ -594,18 +604,87 @@ List<QuickAccessItem> quickAccessItems(BuildContext context, FeatureFlags flags)
   final l = context.l10n;
   QuickAccessItem gated(IconData icon, Accent accent, String label, String route, bool on) =>
       on ? QuickAccessItem(icon, accent, label, route) : QuickAccessItem(icon, accent, label, unavailableRoute(label), comingSoon: true);
+  // The first [quickAccessPrimaryCount] items fill the grid (SOS always
+  // visible); the rest open from the "More" tile.
   return [
     gated(Icons.monitor_heart_outlined, Accent.rose, l.qxSymptoms, '/ai', flags.aiAssistant),
-    gated(Icons.spa_outlined, Accent.lavender, l.qxMentalWellness, '/wellness', flags.mentalWellness),
-    QuickAccessItem(Icons.photo_camera_outlined, Accent.teal, l.qxWound, '/wound'),
+    gated(Icons.biotech_outlined, Accent.lavender, l.qxLabTests, '/lab', flags.labTests),
+    gated(Icons.insights_outlined, Accent.teal, l.qxCarePrograms, '/programs', flags.carePrograms),
     QuickAccessItem(Icons.notifications_active_outlined, Accent.peach, l.qxMedicineReminders, '/medications'),
     QuickAccessItem(Icons.description_outlined, Accent.sky, l.qxHealthRecords, '/records'),
+    gated(Icons.vaccines_outlined, Accent.teal, l.qxPreventiveCare, '/preventive', flags.preventiveCare),
+    gated(Icons.rate_review_outlined, Accent.lavender, l.qxSecondOpinion, '/second-opinion', flags.secondOpinion),
+    QuickAccessItem(Icons.location_on_outlined, Accent.rose, l.qxFindHospitals, '/facilities'),
+    QuickAccessItem(Icons.sos_outlined, Accent.rose, l.qxEmergencySos, '/sos', danger: true),
+    // "More" sheet
+    gated(Icons.spa_outlined, Accent.lavender, l.qxMentalWellness, '/wellness', flags.mentalWellness),
+    QuickAccessItem(Icons.photo_camera_outlined, Accent.teal, l.qxWound, '/wound'),
+    gated(Icons.shield_outlined, Accent.sky, l.qxInsurance, '/insurance', flags.insurance),
+    gated(Icons.fitness_center, Accent.peach, l.qxExercise, '/exercise', flags.exercisePlans),
+    gated(Icons.restaurant_menu, Accent.teal, l.qxDiet, '/diet', flags.dietPlans),
     gated(Icons.directions_run, Accent.teal, l.qxFallDetection, '/fall-detection', flags.fallDetection),
     gated(Icons.account_balance_outlined, Accent.peach, l.qxGovtSchemes, '/schemes', flags.govtSchemes),
-    QuickAccessItem(Icons.location_on_outlined, Accent.rose, l.qxFindHospitals, '/facilities'),
     gated(Icons.watch_outlined, Accent.lavender, l.qxWearables, '/wearables', flags.wearables),
-    QuickAccessItem(Icons.sos_outlined, Accent.rose, l.qxEmergencySos, '/sos', danger: true),
   ];
+}
+
+/// Tiles shown directly in the Home grid; the rest go to the "More" sheet.
+const quickAccessPrimaryCount = 9;
+
+void showMoreQuickAccess(BuildContext context, List<QuickAccessItem> items) {
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (c) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(Space.screen, 0, Space.screen, Space.lg),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(c.l10n.moreServices, style: Theme.of(c).textTheme.titleLarge),
+            const SizedBox(height: Space.md),
+            QuickAccessWrap(items: items, onTapped: () => Navigator.of(c).pop()),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+/// The tile grid (5 columns, 4 on narrow phones).
+const quickAccessMoreRoute = '#more';
+
+class QuickAccessWrap extends StatelessWidget {
+  const QuickAccessWrap({super.key, required this.items, this.onTapped, this.onMore});
+  final List<QuickAccessItem> items;
+  final VoidCallback? onTapped;
+  final VoidCallback? onMore;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      final cols = c.maxWidth < 330 ? 4 : 5;
+      const gap = 8.0;
+      final w = (c.maxWidth - gap * (cols - 1)) / cols;
+      return Wrap(
+        spacing: gap,
+        runSpacing: gap,
+        children: [
+          for (final it in items)
+            SizedBox(
+              width: w,
+              child: QuickAccessTile(
+                key: Key('qa-${it.route}'),
+                item: it,
+                onTapped: onTapped,
+                onOverride: it.route == quickAccessMoreRoute ? onMore : null,
+              ),
+            ),
+        ],
+      );
+    });
+  }
 }
 
 class QuickAccessGrid extends ConsumerWidget {
@@ -614,31 +693,32 @@ class QuickAccessGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
-    final items = quickAccessItems(context, ref.watch(featureFlagsProvider));
+    final all = quickAccessItems(context, ref.watch(featureFlagsProvider));
+    final hasMore = all.length > quickAccessPrimaryCount + 1;
+    final primary = hasMore ? all.take(quickAccessPrimaryCount).toList() : all;
+    final rest = hasMore ? all.skip(quickAccessPrimaryCount).toList() : const <QuickAccessItem>[];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(title: l.quickAccess),
-        LayoutBuilder(builder: (context, c) {
-          final cols = c.maxWidth < 330 ? 4 : 5;
-          const gap = 8.0;
-          final w = (c.maxWidth - gap * (cols - 1)) / cols;
-          return Wrap(
-            spacing: gap,
-            runSpacing: gap,
-            children: [
-              for (final it in items) SizedBox(width: w, child: QuickAccessTile(item: it)),
-            ],
-          );
-        }),
+        QuickAccessWrap(items: [
+          ...primary,
+          if (hasMore) QuickAccessItem(Icons.apps_rounded, Accent.sky, l.more, quickAccessMoreRoute),
+        ], onMore: () => showMoreQuickAccess(context, rest)),
       ],
     );
   }
 }
 
 class QuickAccessTile extends StatelessWidget {
-  const QuickAccessTile({super.key, required this.item});
+  const QuickAccessTile({super.key, required this.item, this.onTapped, this.onOverride});
   final QuickAccessItem item;
+
+  /// Called after navigating (e.g. to close the "More" sheet).
+  final VoidCallback? onTapped;
+
+  /// Replaces navigation (the "More" tile).
+  final VoidCallback? onOverride;
 
   @override
   Widget build(BuildContext context) {
@@ -653,6 +733,8 @@ class QuickAccessTile extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(Radii.tile),
           onTap: () {
+            if (onOverride != null) return onOverride!();
+            onTapped?.call();
             if (item.route == '/records') {
               context.go(item.route);
             } else if (item.route == '/ai') {

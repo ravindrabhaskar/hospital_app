@@ -43,8 +43,26 @@ export interface ListQuery {
   cursor?: string;
 }
 
-export type Role = "patient" | "doctor" | "provider" | "coordinator" | "ops_admin" | "super_admin";
-export const ALL_ROLES: Role[] = ["patient", "doctor", "provider", "coordinator", "ops_admin", "super_admin"];
+export type Role =
+  | "patient"
+  | "doctor"
+  | "provider"
+  | "coordinator"
+  | "ops_admin"
+  | "super_admin"
+  /* v1.3 */
+  | "hospital_staff"
+  | "support_agent";
+export const ALL_ROLES: Role[] = [
+  "patient",
+  "doctor",
+  "provider",
+  "coordinator",
+  "ops_admin",
+  "super_admin",
+  "hospital_staff",
+  "support_agent",
+];
 
 export type FamilyPermission = "view_records" | "manage_care" | "book" | "receive_alerts";
 export type Language = "en" | "hi" | "te";
@@ -466,9 +484,28 @@ export interface CarePlan {
 /* ---------- 13. Payments ---------- */
 export type PaymentStatus = "pending" | "succeeded" | "failed" | "refunded" | "partially_refunded";
 
+export type PaymentPurpose =
+  | "appointment"
+  | "home_visit"
+  | "pharmacy_order"
+  | "subscription"
+  /* v1.3 */
+  | "lab_order"
+  | "second_opinion"
+  | "ambulance";
+export const PAYMENT_PURPOSES: PaymentPurpose[] = [
+  "appointment",
+  "home_visit",
+  "pharmacy_order",
+  "subscription",
+  "lab_order",
+  "second_opinion",
+  "ambulance",
+];
+
 export interface Payment {
   id: UUID;
-  purpose: "appointment" | "home_visit" | "pharmacy_order" | "subscription";
+  purpose: PaymentPurpose;
   refId: UUID;
   patientId: UUID;
   amount: number;
@@ -545,7 +582,7 @@ export interface SafetyEvent {
   patientName: string;
   careEpisodeId: UUID;
   level: "urgent" | "emergency";
-  source: "ai_intake" | "home_visit" | "mood" | "fall" | "sos";
+  source: "ai_intake" | "home_visit" | "mood" | "fall" | "sos" | "checkin" | "program" | "geofence" | "sos_button";
   rules: { ruleId: string; title: string }[];
   status: "open" | "acknowledged" | "resolved";
   assignedToName: string | null;
@@ -578,7 +615,7 @@ export interface OpsOverview {
 
 export type OpsHomeVisit = HomeVisit & { slaBreached: boolean };
 
-export type ProviderType = "nurse" | "technician" | "intern" | "physiotherapist";
+export type ProviderType = "nurse" | "technician" | "intern" | "physiotherapist" | "dietitian";
 export type VerificationStatus = "pending" | "verified" | "rejected" | "suspended" | "expired";
 
 export interface OpsProvider {
@@ -1022,6 +1059,9 @@ export interface PrescriptionInput {
   items: RxItem[];
   advice?: string;
   followUpInDays?: number;
+  /** §47: required (with `overrideReason`) when the check returns a `major` warning. */
+  acknowledgedWarnings?: boolean;
+  overrideReason?: string;
 }
 
 export interface Prescription {
@@ -1042,6 +1082,8 @@ export interface Prescription {
   followUpInDays: number | null;
   recordId: UUID;
   createdAt: ISODateTime;
+  /** §47: the create call also returns the check's warnings. */
+  warnings?: RxWarning[];
 }
 
 /* ---------- 32. Invoices, earnings & settlements ---------- */
@@ -1129,7 +1171,17 @@ export interface ChatMessage {
 }
 
 /* ---------- 35. Coordinator ---------- */
-export type CaseloadFlag = "overdue_tasks" | "missed_doses" | "open_safety_event" | "no_contact_7d";
+/**
+ * §35 flags. `missed_checkin` and `program_breach` are the v1.3 flags the portal understands when the API returns them
+ * (the contract does not enumerate new flags; unknown flags are ignored).
+ */
+export type CaseloadFlag =
+  | "overdue_tasks"
+  | "missed_doses"
+  | "open_safety_event"
+  | "no_contact_7d"
+  | "missed_checkin"
+  | "program_breach";
 
 export interface CaseloadItem {
   patient: PatientSummary;
@@ -1227,3 +1279,482 @@ export interface Scheme {
 
 /** Body for POST/PATCH /admin/schemes (the contract lists "Scheme" fields; the server owns id and lastReviewedAt). */
 export type SchemeInput = Omit<Scheme, "id" | "lastReviewedAt">;
+
+/* ================= v1.3 additions (§41–§62) ================= */
+
+/* ---------- 41. Daily check-in ---------- */
+export interface CheckinSettings {
+  patientId: UUID;
+  enabled: boolean;
+  windowStart: string;
+  windowEnd: string;
+  escalateAfterMins: number;
+  notifyFamily: boolean;
+  notifyCoordinator: boolean;
+}
+export type CheckInStatus = "ok" | "late" | "missed" | "pending";
+export interface CheckIn {
+  id: UUID;
+  patientId: UUID;
+  date: ISODate;
+  status: CheckInStatus;
+  checkedInAt: ISODateTime | null;
+  mood: number | null;
+  note: string | null;
+}
+
+/* ---------- 42. Chronic care programs ---------- */
+export type MetricFrequency = "daily" | "twice_daily" | "weekly";
+export type ThresholdLevel = "routine" | "urgent" | "emergency";
+export interface Threshold {
+  type: VitalType;
+  op: "lt" | "gt";
+  value: number;
+  level: ThresholdLevel;
+  message: string;
+}
+export type ContentStatus = "fixture_unapproved" | "approved";
+export interface ProgramTemplate {
+  code: string;
+  name: string;
+  description: string;
+  metrics: { type: VitalType; frequency: MetricFrequency; unit: string }[];
+  defaultThresholds: Threshold[];
+  status: ContentStatus;
+  version: string;
+}
+/** Body for POST /admin/care-programs/templates (the server owns `status`). */
+export type ProgramTemplateInput = Omit<ProgramTemplate, "status">;
+export type EnrollmentStatus = "active" | "paused" | "completed";
+export interface Enrollment {
+  id: UUID;
+  patientId: UUID;
+  patientName: string;
+  templateCode: string;
+  templateName: string;
+  status: EnrollmentStatus;
+  thresholds: Threshold[];
+  thresholdsApprovedByName: string | null;
+  startDate: ISODate;
+  endDate: ISODate | null;
+  careEpisodeId: string | null;
+  adherencePct7d: number | null;
+  lastReadingAt: ISODateTime | null;
+  openBreaches: number;
+  createdAt: ISODateTime;
+}
+export interface EnrollmentInput {
+  patientId: UUID;
+  templateCode: string;
+  thresholds?: Threshold[];
+  startDate: ISODate;
+  endDate?: ISODate;
+  careEpisodeId?: UUID;
+}
+export interface ProgramSummary {
+  enrollmentId: UUID;
+  from: ISODate;
+  to: ISODate;
+  expectedReadings: number;
+  receivedReadings: number;
+  adherencePct: number;
+  breaches: { at: ISODateTime; type: VitalType; value: number; threshold: Threshold; safetyEventId: string }[];
+  trend: { date: ISODate; type: VitalType; avg: number; min: number; max: number }[];
+}
+
+/* ---------- 44. Lab tests at home ---------- */
+export type LabOrderStatus = "pending_payment" | "scheduled" | "sample_collected" | "processing" | "report_ready" | "cancelled";
+export const LAB_ORDER_STATUSES: LabOrderStatus[] = [
+  "pending_payment",
+  "scheduled",
+  "sample_collected",
+  "processing",
+  "report_ready",
+  "cancelled",
+];
+export interface LabOrder {
+  id: UUID;
+  patientId: UUID;
+  patientName: string;
+  tests: { id: UUID; name: string }[];
+  total: number;
+  discount: number;
+  status: LabOrderStatus;
+  collectionVisitId: string | null;
+  preferredStart: ISODateTime;
+  preferredEnd: ISODateTime;
+  reportRecordId: string | null;
+  partnerName: string;
+  partnerOrderId: string | null;
+  timeline: { status: LabOrderStatus | string; at: ISODateTime }[];
+  careEpisodeId: string | null;
+  createdAt: ISODateTime;
+}
+
+/* ---------- 46. AI scribe ---------- */
+export interface SoapDraft {
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
+}
+export interface ScribeDraft {
+  id: UUID;
+  appointmentId: UUID;
+  transcript: string;
+  draft: SoapDraft;
+  model: string;
+  advisory: true;
+  generatedAt: ISODateTime;
+  audioRetained: false;
+}
+
+/* ---------- 47. Drug interaction & allergy checks ---------- */
+export type RxWarningSeverity = "info" | "moderate" | "major";
+export interface RxWarning {
+  severity: RxWarningSeverity;
+  type: "allergy" | "duplicate_therapy" | "interaction" | "dose_form";
+  drugs: string[];
+  message: string;
+  source: string;
+}
+export interface RxCheckResponse {
+  warnings: RxWarning[];
+  knowledgePack: { version: string; status: ContentStatus | string };
+}
+
+/* ---------- 48. Supplies (ops side) ---------- */
+export interface SupplyItem {
+  code: string;
+  name: string;
+  unit: string;
+  onHand: number;
+  reorderLevel: number;
+}
+export interface LowStockItem {
+  providerId: UUID;
+  providerName: string;
+  code: string;
+  name: string;
+  onHand: number;
+  reorderLevel: number;
+}
+
+/* ---------- 49. Second opinion ---------- */
+export type SecondOpinionStatus = "pending_payment" | "open" | "claimed" | "answered" | "cancelled";
+export interface SecondOpinion {
+  id: UUID;
+  patientId: UUID;
+  patientName: string;
+  specialty: string;
+  question: string;
+  records: { id: UUID; title: string }[];
+  status: SecondOpinionStatus;
+  price: number;
+  doctorName: string | null;
+  opinion: string | null;
+  recommendations: string[];
+  opinionRecordId: string | null;
+  dueAt: ISODateTime | null;
+  createdAt: ISODateTime;
+  answeredAt: ISODateTime | null;
+}
+export interface SecondOpinionResponseInput {
+  opinion: string;
+  recommendations: string[];
+  suggestTeleconsult: boolean;
+}
+
+/* ---------- 51. Insurance ---------- */
+export interface InsurancePolicy {
+  id: UUID;
+  patientId: UUID;
+  insurerCode: string;
+  insurerName: string;
+  policyNumberMasked: string;
+  planName: string | null;
+  type: "individual" | "family_floater" | "corporate" | "government";
+  sumInsured: number | null;
+  validFrom: ISODate;
+  validTo: ISODate;
+  tpaName: string | null;
+  cardRecordId: string | null;
+  status: "active" | "expiring_soon" | "expired";
+  createdAt: ISODateTime;
+}
+
+/* ---------- 52. Preventive ---------- */
+export type PreventiveStatus = "upcoming" | "due" | "overdue" | "done" | "not_applicable";
+export interface PreventiveItem {
+  code: string;
+  name: string;
+  category: "vaccine" | "screening";
+  description: string;
+  dueDate: ISODate | null;
+  status: PreventiveStatus;
+  lastDoneAt: ISODateTime | ISODate | null;
+  repeatEveryMonths: number | null;
+}
+export interface PreventiveSchedule {
+  items: PreventiveItem[];
+  scheduleVersion: string;
+  scheduleStatus: ContentStatus | string;
+}
+
+/* ---------- 53. Exercise ---------- */
+export interface Exercise {
+  id: UUID;
+  title: string;
+  bodyArea: string;
+  level: string;
+  durationSecs: number;
+  videoUrl: string | null;
+  imageUrl: string | null;
+  instructions: string[];
+  precautions: string[];
+}
+export interface ExercisePlanItem {
+  exerciseId: UUID;
+  sets: number;
+  reps: number;
+  holdSecs?: number;
+  perDay: number;
+  notes?: string;
+}
+export interface ExercisePlanInput {
+  patientId: UUID;
+  careEpisodeId?: UUID;
+  items: ExercisePlanItem[];
+  startDate: ISODate;
+  weeks: number;
+}
+export interface ExercisePlan {
+  id: UUID;
+  patientId: UUID;
+  authorName: string;
+  authorRole: string;
+  /** The contract writes `items: [...]`; entries follow the create shape (a title may be included). */
+  items: (ExercisePlanItem & { title?: string })[];
+  startDate: ISODate;
+  endDate: ISODate;
+  status: "active" | "completed";
+  createdAt: ISODateTime;
+}
+export interface ExerciseProgress {
+  sessionsPlanned: number;
+  sessionsDone: number;
+  adherencePct: number;
+  painTrend: { date: ISODate; painScore: number }[];
+}
+
+/* ---------- 54. Diet ---------- */
+export type MealSlot = "early_morning" | "breakfast" | "mid_morning" | "lunch" | "evening" | "dinner" | "bedtime";
+export const MEAL_SLOTS: MealSlot[] = ["early_morning", "breakfast", "mid_morning", "lunch", "evening", "dinner", "bedtime"];
+export interface DietTemplate {
+  code: string;
+  name: string;
+  conditions: string[];
+  status: ContentStatus | string;
+}
+export interface Meal {
+  slot: MealSlot;
+  items: string[];
+  notes?: string;
+}
+export interface DietPlanInput {
+  patientId: UUID;
+  templateCode?: string;
+  conditions: string[];
+  calorieTarget?: number;
+  meals: Meal[];
+  avoid: string[];
+  notes?: string;
+  validUntil: ISODate;
+}
+export interface DietPlan {
+  id: UUID;
+  patientId: UUID;
+  authorName: string;
+  authorRole: string;
+  conditions: string[];
+  calorieTarget: number | null;
+  meals: Meal[];
+  avoid: string[];
+  notes: string | null;
+  validUntil: ISODate;
+  status: "active" | "expired";
+  createdAt: ISODateTime;
+}
+
+/* ---------- 55. Ambulance ---------- */
+export type AmbulanceStatus =
+  | "searching"
+  | "assigned"
+  | "en_route"
+  | "arrived"
+  | "transporting"
+  | "completed"
+  | "cancelled"
+  | "no_vehicle";
+export const AMBULANCE_STATUSES: AmbulanceStatus[] = [
+  "searching",
+  "assigned",
+  "en_route",
+  "arrived",
+  "transporting",
+  "completed",
+  "cancelled",
+  "no_vehicle",
+];
+export interface AmbulanceRequest {
+  id: UUID;
+  patientId: UUID;
+  patientName: string;
+  type: "bls" | "als";
+  status: AmbulanceStatus;
+  vehicle: { number: string; driverName: string; phoneMasked: string } | null;
+  etaMinutes: number | null;
+  location: { lat: number; lng: number; updatedAt: ISODateTime } | null;
+  pickup: { lat: number; lng: number; address: string };
+  destination: Facility | null;
+  partnerName: string;
+  timeline: { status: AmbulanceStatus | string; at: ISODateTime }[];
+  createdAt: ISODateTime;
+}
+
+/* ---------- 57. Organizations ---------- */
+export interface OrganizationInput {
+  name: string;
+  contactName: string;
+  contactEmail: string;
+  planCode: string;
+  seats: number;
+  validFrom: ISODate;
+  validTo: ISODate;
+  billingNote?: string;
+}
+/** The contract does not spell out `Organization`; we assume the input fields plus `id`. */
+export interface Organization extends Omit<OrganizationInput, "billingNote"> {
+  id: UUID;
+  billingNote?: string | null;
+  createdAt?: ISODateTime;
+}
+export interface OrganizationUsage {
+  seats: number;
+  redeemed: number;
+  activeMembers: number;
+  servicesUsed: { appointments: number; homeVisits: number; labOrders: number };
+}
+
+/* ---------- 58. Tenants ---------- */
+export interface TenantInput {
+  code: string;
+  displayName: string;
+  primaryColor: string;
+  logoMediaId?: string;
+  facilityIds: string[];
+  supportPhone?: string;
+  supportEmail?: string;
+}
+/** The contract does not spell out `Tenant`; we assume the input fields plus `id` (and `logoUrl` when the API resolves it). */
+export interface Tenant extends Omit<TenantInput, "logoMediaId" | "supportPhone" | "supportEmail"> {
+  id: UUID;
+  logoMediaId?: string | null;
+  logoUrl?: string | null;
+  supportPhone?: string | null;
+  supportEmail?: string | null;
+}
+
+/* ---------- 59. Discharges ---------- */
+export type DischargeStatus = "active" | "completed" | "readmitted" | "withdrawn";
+export interface Discharge {
+  id: UUID;
+  facility: Facility;
+  patientId: UUID;
+  patientName: string;
+  dischargeDate: ISODate;
+  diagnosisSummary: string;
+  treatingDoctorName: string;
+  status: DischargeStatus;
+  careEpisodeId: UUID;
+  carePlanId: UUID;
+  enrollmentId: string | null;
+  day: number;
+  tasksDone: number;
+  tasksTotal: number;
+  missedCheckins: number;
+  openAlerts: number;
+  invitedPhones: string[];
+  createdAt: ISODateTime;
+}
+/** The `followUp` JSON part of POST /discharges. Tasks and medications reuse the §11 care-plan shapes. */
+export interface DischargeFollowUp {
+  tasks: { type: CareTaskType; title: string; description?: string; owner: CareTaskOwner }[];
+  medications: CarePlanInput["medications"];
+  followUpDays: number[];
+}
+
+/* ---------- 60. Coupons ---------- */
+export interface CouponInput {
+  code: string;
+  description: string;
+  type: "percent" | "flat";
+  value: number;
+  maxDiscount?: number;
+  minAmount?: number;
+  appliesTo: PaymentPurpose[];
+  validFrom: ISODate;
+  validTo: ISODate;
+  usageLimit?: number;
+  perUserLimit: number;
+  active: boolean;
+}
+/** The contract does not spell out `Coupon`; we assume the input fields plus `id` (and a usage count when present). */
+export interface Coupon extends Omit<CouponInput, "maxDiscount" | "minAmount" | "usageLimit"> {
+  id: UUID;
+  maxDiscount?: number | null;
+  minAmount?: number | null;
+  usageLimit?: number | null;
+  usedCount?: number;
+}
+
+/* ---------- 61. Support desk ---------- */
+export type TicketCategory = "booking" | "payment" | "refund" | "app_issue" | "clinical_concern" | "other";
+export type TicketStatus = "open" | "pending_customer" | "resolved" | "closed";
+export type TicketPriority = "low" | "normal" | "high" | "urgent";
+export const TICKET_STATUSES: TicketStatus[] = ["open", "pending_customer", "resolved", "closed"];
+export const TICKET_PRIORITIES: TicketPriority[] = ["low", "normal", "high", "urgent"];
+export interface TicketMessage {
+  id: UUID;
+  ticketId: UUID;
+  authorName: string;
+  authorRole: "customer" | "agent" | "system";
+  text: string;
+  internal: boolean;
+  at: ISODateTime;
+}
+export interface Ticket {
+  id: UUID;
+  number: string;
+  userId: UUID;
+  userName: string;
+  subject: string;
+  category: TicketCategory;
+  status: TicketStatus;
+  priority: TicketPriority;
+  assignedToName: string | null;
+  refType: string | null;
+  refId: string | null;
+  messages: TicketMessage[];
+  rating: { score: number; comment: string | null } | null;
+  slaDueAt: ISODateTime | null;
+  createdAt: ISODateTime;
+  updatedAt: ISODateTime;
+}
+export interface SupportMetrics {
+  open: number;
+  avgFirstResponseMins: number | null;
+  avgResolutionHours: number | null;
+  csatAvg: number | null;
+  byCategory: Record<string, number>;
+}

@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 
 import '../features/auth/auth_controller.dart';
 import '../features/auth/auth_repository.dart';
+import '../features/care_plans/care_plan_repository.dart';
+import '../features/field/attendance_controller.dart';
+import '../features/field/field_repository.dart';
 import '../features/offline/offline_queue.dart';
 import '../features/onboarding/application_repository.dart';
 import '../features/onboarding/document_picker.dart';
@@ -32,6 +35,7 @@ final photoCaptureProvider = Provider<PhotoCapture>((ref) => captureWithCamera);
 final documentPickerProvider = Provider<DocumentPicker>((ref) => pickDocument);
 final voiceDictationProvider = Provider<VoiceDictation>((ref) => SpeechToTextDictation());
 final appVersionReaderProvider = Provider<AppVersionReader>((ref) => readPackageVersion);
+final positionReaderProvider = Provider<PositionReader>((ref) => readCurrentPosition);
 final firebaseSettingsProvider = Provider<FirebaseSettings>((ref) => FirebaseSettings.fromEnvironment());
 
 final scaffoldMessengerKeyProvider =
@@ -49,6 +53,22 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) => AuthRepository(
 
 final providerRepositoryProvider = Provider<ProviderRepository>(
     (ref) => ProviderRepository(ref.watch(apiClientProvider), photos: ref.watch(photoFileStoreProvider)));
+
+final fieldRepositoryProvider = Provider<FieldRepository>(
+    (ref) => FieldRepository(ref.watch(apiClientProvider), store: ref.watch(keyValueStoreProvider)));
+
+final carePlanRepositoryProvider = Provider<CarePlanRepository>((ref) => CarePlanRepository(ref.watch(apiClientProvider)));
+
+/// Today's check-in state (§48), shared by Home and the attendance screen.
+final attendanceControllerProvider = Provider<AttendanceController>((ref) {
+  final c = AttendanceController(
+    repo: ref.watch(fieldRepositoryProvider),
+    readPosition: ref.watch(positionReaderProvider),
+    clock: ref.watch(clockProvider),
+  );
+  ref.onDispose(c.dispose);
+  return c;
+});
 
 final applicationRepositoryProvider =
     Provider<ApplicationRepository>((ref) => ApplicationRepository(ref.watch(apiClientProvider)));

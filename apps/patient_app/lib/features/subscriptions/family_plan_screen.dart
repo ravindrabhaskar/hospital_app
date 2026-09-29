@@ -10,6 +10,7 @@ import '../../core/widgets/state_views.dart';
 import '../../models/billing.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
+import '../offers/checkout_offers.dart';
 import '../payments/payment_sheet.dart';
 
 /// Profile → Family Care Plan (§37).
@@ -28,11 +29,17 @@ class _FamilyPlanScreenState extends ConsumerState<FamilyPlanScreen> {
 
   Future<void> _subscribe(Plan plan) async {
     final l = context.l10n;
+    // Checkout sheet: coupon + wallet before creating the subscription (§60).
+    final offers = await showModalBottomSheet<CheckoutOffersController>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => PlanCheckoutSheet(plan: plan, billing: _billing),
+    );
+    if (offers == null || !mounted) return;
     setState(() => _busyCode = plan.code);
     try {
-      final res = await ref
-          .read(subscriptionRepositoryProvider)
-          .subscribe(plan.code, _billing, idempotencyKey: _action.key);
+      final res = await ref.read(subscriptionRepositoryProvider).subscribe(plan.code, _billing,
+          idempotencyKey: _action.key, couponCode: offers.couponCode, useWallet: offers.useWallet);
       _action.complete();
       if (!mounted) return;
       final paid = await showPaymentSheet(context, payment: res.payment, title: l.planPaymentTitle(plan.name));
@@ -125,6 +132,8 @@ class _FamilyPlanScreenState extends ConsumerState<FamilyPlanScreen> {
                   padding: const EdgeInsets.all(Space.screen),
                   children: [
                     Text(l.familyPlanIntro, style: TextStyle(color: context.textMuted)),
+                    const SizedBox(height: Space.md),
+                    const CompanyCodeCard(),
                     if (s != null && s.isPending) ...[
                       const SizedBox(height: Space.md),
                       CcCard(
@@ -279,6 +288,15 @@ class ActiveSubscriptionCard extends StatelessWidget {
                   StatusPill(label: l.planActive, icon: Icons.check),
                 ],
               ),
+              if (s.isSponsored) ...[
+                const SizedBox(height: Space.sm),
+                StatusPill(
+                  key: const Key('plan-sponsored'),
+                  label: l.sponsoredBy(s.sponsorName!),
+                  color: AppColors.skyFg,
+                  icon: Icons.business_outlined,
+                ),
+              ],
               const SizedBox(height: Space.sm),
               Text(s.billing == 'yearly' ? l.billingYearly : l.billingMonthly,
                   style: TextStyle(color: context.textMuted)),
@@ -320,6 +338,137 @@ class ActiveSubscriptionCard extends StatelessWidget {
             child: Text(l.cancelAtPeriodEnd),
           ),
       ],
+    );
+  }
+}
+
+/// Confirms a plan purchase with coupon / wallet; pops the controller.
+class PlanCheckoutSheet extends StatefulWidget {
+  const PlanCheckoutSheet({super.key, required this.plan, required this.billing});
+  final Plan plan;
+  final Billing billing;
+
+  @override
+  State<PlanCheckoutSheet> createState() => _PlanCheckoutSheetState();
+}
+
+class _PlanCheckoutSheetState extends State<PlanCheckoutSheet> {
+  final _offers = CheckoutOffersController();
+
+  @override
+  void initState() {
+    super.initState();
+    _offers.addListener(() {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final price = PlanPricing.of(widget.plan, widget.billing).price;
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(Space.screen, 0, Space.screen, Space.lg + MediaQuery.viewInsetsOf(context).bottom),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l.planPaymentTitle(widget.plan.name), style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: Space.md),
+              CheckoutOffersCard(controller: _offers, purpose: 'subscription', amount: price),
+              const SizedBox(height: Space.lg),
+              PrimaryButton(
+                key: const Key('plan-checkout-continue'),
+                label: l.payAmount(money(_offers.breakdown(price).payable)),
+                onPressed: () => Navigator.pop(context, _offers),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Have a company code?" (§57): redeems a sponsored plan.
+class CompanyCodeCard extends ConsumerStatefulWidget {
+  const CompanyCodeCard({super.key});
+
+  @override
+  ConsumerState<CompanyCodeCard> createState() => _CompanyCodeCardState();
+}
+
+class _CompanyCodeCardState extends ConsumerState<CompanyCodeCard> {
+  final _c = TextEditingController();
+  bool _open = false;
+  bool _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  Future<void> _redeem() async {
+    final l = context.l10n;
+    final code = _c.text.replaceAll(RegExp(r'\s'), '').toUpperCase();
+    if (code.length < 6) {
+      setState(() => _error = l.companyCodeInvalid);
+      return;
+    }
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final s = await ref.read(subscriptionRepositoryProvider).redeem(code);
+      ref.invalidate(mySubscriptionProvider);
+      if (mounted) showSnack(context, l.companyPlanActivated(s.sponsorName ?? s.planName));
+    } on ApiException catch (e) {
+      if (mounted) setState(() => _error = errorMessage(context, e));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    return CcCard(
+      key: const Key('company-code'),
+      color: context.skySurface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InkWell(
+            onTap: () => setState(() => _open = !_open),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 48),
+              child: Row(children: [
+                const Icon(Icons.business_outlined, color: AppColors.skyFg),
+                const SizedBox(width: Space.sm),
+                Expanded(child: Text(l.haveCompanyCode, style: const TextStyle(fontWeight: FontWeight.w600))),
+                Icon(_open ? Icons.expand_less : Icons.expand_more),
+              ]),
+            ),
+          ),
+          if (_open) ...[
+            Text(l.companyCodeHelp, style: TextStyle(fontSize: 12.5, color: context.textMuted)),
+            const SizedBox(height: Space.sm),
+            TextField(
+              key: const Key('company-code-field'),
+              controller: _c,
+              textCapitalization: TextCapitalization.characters,
+              decoration: InputDecoration(labelText: l.companyCode, errorText: _error),
+            ),
+            const SizedBox(height: Space.sm),
+            PrimaryButton(key: const Key('company-code-redeem'), label: l.redeem, loading: _busy, onPressed: _redeem),
+          ],
+        ],
+      ),
     );
   }
 }

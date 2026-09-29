@@ -93,7 +93,7 @@ export async function timelineRoutes(app: FastifyInstance): Promise<void> {
         id: `care_plan:${p.id}`,
         kind: 'care_plan' as const,
         title: 'Care plan',
-        subtitle: `${dn.get(p.doctorId) ?? ''} · ${p.status}`,
+        subtitle: `${(p.doctorId ? dn.get(p.doctorId) : p.issuedBy) ?? ''} · ${p.status}`,
         occurredAt: p.createdAt.toISOString(),
         refId: p.id,
         source: 'clinician_verified',

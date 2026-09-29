@@ -197,7 +197,11 @@ class Facility {
     required this.services,
     required this.emergency24x7,
     required this.verified,
+    this.cashlessInsurers = const [],
   });
+
+  /// Insurer codes with cashless tie-ups (§51).
+  final List<String> cashlessInsurers;
   final String id;
   final String name;
   final String type;
@@ -226,5 +230,6 @@ class Facility {
         services: strList(j, 'services'),
         emergency24x7: boolOf(j, 'emergency24x7'),
         verified: boolOf(j, 'verified'),
+        cashlessInsurers: strList(j, 'cashlessInsurers'),
       );
 }

@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../core/api/api_exception.dart';
 import '../../core/connectivity.dart';
+import '../../models/field_ops.dart';
 import '../../models/home_visit.dart';
 import '../visits/data/photo_store.dart';
 import '../visits/domain/visit_lifecycle.dart';
@@ -142,6 +143,11 @@ class VisitActionService {
       photoUploadBody(filePath: path, patientId: visit.patientId, takenAt: _clock()),
     );
   }
+
+  /// Queues `POST /provider/supplies/usage` (§48) for this visit, with the
+  /// same Idempotency-Key for every replay. Zero quantities are left out.
+  Future<ActionOutcome> recordSuppliesUsage(HomeVisit visit, Map<String, int> quantities) =>
+      perform(visit, VisitActionType.suppliesUsage, suppliesUsageBody(visit.id, quantities));
 
   /// Re-applies still-queued actions on top of a fresh server copy so the UI
   /// doesn't jump backwards while replays are pending.

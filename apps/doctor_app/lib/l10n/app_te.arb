@@ -1,0 +1,760 @@
+{
+  "@@locale": "te",
+  "appTitle": "కేర్‌కంపానియన్ డాక్టర్",
+  "commonLoading": "లోడ్ అవుతోంది",
+  "commonRetry": "మళ్లీ ప్రయత్నించండి",
+  "commonRefresh": "రిఫ్రెష్ చేయండి",
+  "commonSave": "సేవ్ చేయండి",
+  "commonCancel": "రద్దు చేయండి",
+  "commonConfirm": "నిర్ధారించండి",
+  "commonContinue": "కొనసాగించండి",
+  "commonDiscard": "విస్మరించండి",
+  "commonAdd": "జోడించండి",
+  "commonRemove": "తొలగించండి",
+  "commonOk": "సరే",
+  "commonLogout": "లాగ్ అవుట్",
+  "copied": "కాపీ అయింది",
+  "send": "పంపండి",
+  "fieldRequired": "అవసరం",
+  "linkFailed": "లింక్ తెరవలేకపోయాం",
+  "offlineBanner": "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు. చివరిగా లోడ్ చేసిన డేటా చూపిస్తున్నాం.",
+  "statusLabel": "స్థితి",
+  "priorityLabel": "ప్రాధాన్యత",
+  "severityLabel": "తీవ్రత",
+  "episodeLabel": "కేర్ ఎపిసోడ్",
+  "reasonLabel": "కారణం",
+  "noneRecorded": "ఏదీ నమోదు కాలేదు",
+  "noneAdded": "ఇంకా ఏదీ జోడించలేదు",
+  "onePerLine": "ఒక్కో లైన్‌కు ఒకటి",
+  "commaSeparated": "కామాలతో వేరు చేయండి",
+  "ageYears": "{age} సం",
+  "@ageYears": {
+    "placeholders": {
+      "age": {
+        "type": "int"
+      }
+    }
+  },
+  "daysCount": "{count} రోజులు",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "genderMale": "పురుషుడు",
+  "genderFemale": "స్త్రీ",
+  "genderOther": "ఇతర",
+  "errorNetwork": "కేర్‌కంపానియన్‌ను చేరలేకపోతున్నాం. కనెక్షన్ తనిఖీ చేయండి.",
+  "errorGeneric": "ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.",
+  "errorServer": "సేవలో సమస్య ఉంది. కొద్దిసేపటి తర్వాత ప్రయత్నించండి.",
+  "errorSessionExpired": "మీ సెషన్ ముగిసింది. మళ్లీ లాగిన్ అవ్వండి.",
+  "errorForbidden": "దీనికి మీకు అనుమతి లేదు.",
+  "errorNotFound": "ఇది ఇక అందుబాటులో లేదు.",
+  "errorRateLimited": "చాలా ప్రయత్నాలు. కొంతసేపు ఆగి ప్రయత్నించండి.",
+  "errorMfaRequired": "కొనసాగడానికి రెండు-దశల ధృవీకరణ అవసరం.",
+  "loginTitle": "డాక్టర్ సైన్ ఇన్",
+  "loginSubtitle": "మీ క్యూ, రోగులు, కేర్ టీమ్ ఒకే చోట.",
+  "loginPhoneLabel": "మొబైల్ నంబర్",
+  "loginPhoneHint": "10 అంకెల నంబర్",
+  "loginPhoneInvalid": "సరైన 10 అంకెల మొబైల్ నంబర్ నమోదు చేయండి",
+  "loginSendOtp": "OTP పంపండి",
+  "loginOtpSentTo": "{phone}కి పంపిన కోడ్ నమోదు చేయండి",
+  "@loginOtpSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "loginOtpLabel": "6 అంకెల OTP",
+  "loginOtpInvalid": "6 అంకెల కోడ్ నమోదు చేయండి",
+  "loginDevOtpHint": "డెవలప్‌మెంట్ OTP: {code}",
+  "@loginDevOtpHint": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "loginVerify": "ధృవీకరించండి",
+  "loginChangeNumber": "నంబర్ మార్చండి",
+  "mfaTitle": "రెండు-దశల ధృవీకరణ",
+  "mfaEnrolIntro": "డాక్టర్ ఖాతాలు SMS OTPతో పాటు ఆథెంటికేటర్ యాప్ కోడ్‌తో రక్షించబడతాయి.",
+  "mfaStep1": "1. మీ ఆథెంటికేటర్‌లో కేర్‌కంపానియన్ జోడించండి",
+  "mfaStep2": "2. అక్కడ చూపిన 6 అంకెల కోడ్ నమోదు చేయండి",
+  "mfaOpenAppHint": "ఖాతాను ఆటోమేటిక్‌గా జోడించడానికి బటన్ నొక్కండి, లేదా సెటప్ కీని యాప్‌లో టైప్ చేయండి.",
+  "mfaOpenAuthenticator": "ఆథెంటికేటర్ యాప్ తెరవండి",
+  "mfaSecretLabel": "సెటప్ కీ",
+  "mfaCopySecret": "సెటప్ కీ కాపీ చేయండి",
+  "mfaCodeLabel": "ఆథెంటికేటర్ కోడ్",
+  "mfaTurnOn": "ధృవీకరించి ఆన్ చేయండి",
+  "mfaRecoveryIntro": "ఈ రికవరీ కోడ్‌లను సురక్షితంగా ఉంచండి. ఫోన్ పోతే ఒక్కో కోడ్ ఒకసారి పనిచేస్తుంది. ఇవి మళ్లీ చూపబడవు.",
+  "mfaCopyCodes": "అన్ని కోడ్‌లు కాపీ చేయండి",
+  "mfaSavedCodes": "నేను రికవరీ కోడ్‌లను సేవ్ చేశాను",
+  "mfaVerifyPrompt": "మీ ఆథెంటికేటర్ యాప్ నుండి 6 అంకెల కోడ్ నమోదు చేయండి.",
+  "mfaRecoveryPrompt": "మీ రికవరీ కోడ్‌లలో ఒకటి నమోదు చేయండి. ఒక్కో కోడ్ ఒకసారే పనిచేస్తుంది.",
+  "mfaRecoveryLabel": "రికవరీ కోడ్",
+  "mfaVerify": "ధృవీకరించండి",
+  "mfaUseRecovery": "బదులుగా రికవరీ కోడ్ ఉపయోగించండి",
+  "mfaUseAuthenticator": "ఆథెంటికేటర్ యాప్ ఉపయోగించండి",
+  "mfaWrongCode": "ఆ కోడ్ తప్పు.",
+  "mfaWrongCodeAttempts": "ఆ కోడ్ తప్పు. ఇంకా {count} ప్రయత్నాలు.",
+  "@mfaWrongCodeAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "mfaCodeInvalid": "6 అంకెల కోడ్ నమోదు చేయండి",
+  "mfaRecoveryInvalid": "సరైన రికవరీ కోడ్ నమోదు చేయండి",
+  "mfaLocked": "చాలా తప్పు కోడ్‌లు. 15 నిమిషాల తర్వాత ప్రయత్నించండి.",
+  "mfaStatusOn": "ఆన్ (ఆథెంటికేటర్ యాప్)",
+  "mfaStatusOff": "ఇంకా సెట్ చేయలేదు. మీ సంస్థ అడిగినప్పుడు అడుగుతాం.",
+  "restrictedTitle": "ఈ యాప్ డాక్టర్ల కోసం",
+  "restrictedBody": "మీ ఖాతాకు ధృవీకరించిన డాక్టర్ ప్రొఫైల్ లేదు.",
+  "restrictedPatient": "దయచేసి రోగులు, కుటుంబాల కోసం కేర్‌కంపానియన్ యాప్ ఉపయోగించండి.",
+  "restrictedProvider": "హోమ్-కేర్ విజిట్‌ల కోసం దయచేసి కేర్‌కంపానియన్ ప్రో యాప్ ఉపయోగించండి.",
+  "restrictedStaff": "మీ పాత్ర కోసం దయచేసి కేర్‌కంపానియన్ వెబ్ పోర్టల్ ఉపయోగించండి.",
+  "updateTitle": "దయచేసి యాప్‌ను అప్‌డేట్ చేయండి",
+  "updateBody": "ఈ వెర్షన్‌కు ఇక మద్దతు లేదు. సురక్షితంగా కొనసాగడానికి అప్‌డేట్ చేయండి.",
+  "updateNow": "ఇప్పుడే అప్‌డేట్ చేయండి",
+  "updateVersions": "ఇన్‌స్టాల్ {current} · అవసరం {minimum}",
+  "@updateVersions": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "supportTitle": "సహాయం",
+  "supportCall": "సహాయానికి కాల్ చేయండి",
+  "supportEmail": "సహాయానికి ఈమెయిల్ చేయండి",
+  "supportWhatsapp": "వాట్సాప్ సహాయం",
+  "navToday": "ఈరోజు",
+  "navPatients": "రోగులు",
+  "navMessages": "సందేశాలు",
+  "navMore": "మరిన్ని",
+  "helloDoctor": "నమస్తే, {name}",
+  "@helloDoctor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "queueEmpty": "ఈ రోజు సంప్రదింపులు లేవు.",
+  "queueWaiting": "వేచి ఉన్నవి",
+  "queueInProgress": "జరుగుతున్నవి",
+  "queueDone": "పూర్తయినవి",
+  "apptPendingPayment": "చెల్లింపు పెండింగ్",
+  "apptConfirmed": "నిర్ధారించబడింది",
+  "apptInProgress": "జరుగుతోంది",
+  "apptCompleted": "పూర్తయింది",
+  "apptCancelled": "రద్దు",
+  "apptNoShow": "హాజరు కాలేదు",
+  "priorityRoutine": "సాధారణం",
+  "priorityUrgent": "అత్యవసరం",
+  "priorityEmergency": "అత్యవసర పరిస్థితి",
+  "epNew": "కొత్తది",
+  "epIntake": "ఇన్‌టేక్",
+  "epAwaitingCare": "సంరక్షణ కోసం వేచి",
+  "epCareScheduled": "సంరక్షణ షెడ్యూల్",
+  "epUnderCare": "సంరక్షణలో",
+  "epFollowUp": "ఫాలో-అప్",
+  "epResolved": "పరిష్కరించబడింది",
+  "epEscalated": "ఎస్కలేట్ చేయబడింది",
+  "epEmergency": "అత్యవసర పరిస్థితి",
+  "epTransferred": "బదిలీ చేయబడింది",
+  "epCancelled": "రద్దు",
+  "modeVideo": "వీడియో",
+  "modeAudio": "ఆడియో",
+  "modeChat": "చాట్",
+  "modeInClinic": "క్లినిక్‌లో",
+  "modeHomeVisit": "హోమ్ విజిట్",
+  "consultTitle": "సంప్రదింపు",
+  "openPatient": "రోగి రికార్డు తెరవండి",
+  "startConsult": "సంప్రదింపు ప్రారంభించండి",
+  "completeConsult": "సంప్రదింపు పూర్తి చేయండి",
+  "consultStarted": "సంప్రదింపు ప్రారంభమైంది",
+  "consultCompleted": "సంప్రదింపు పూర్తయింది",
+  "savedNotes": "సేవ్ చేసిన నోట్స్",
+  "outcomeLabel": "ఫలితం",
+  "outcomeCarePlan": "కేర్ ప్లాన్",
+  "outcomeResolved": "పరిష్కరించబడింది",
+  "outcomeRefer": "రిఫర్",
+  "outcomeHomeVisit": "హోమ్ విజిట్",
+  "notesTitle": "క్లినికల్ నోట్స్",
+  "notesHint": "నోట్స్ టైప్ చేయండి లేదా AI స్క్రైబ్ ఉపయోగించండి",
+  "notesSaveHint": "సంప్రదింపు పూర్తి చేసినప్పుడు నోట్స్ సేవ్ అవుతాయి.",
+  "saveEpisodeNote": "ఇప్పుడే కేర్ ఎపిసోడ్‌కు జోడించండి",
+  "noteSaved": "నోట్ కేర్ ఎపిసోడ్‌కు జోడించబడింది",
+  "toolsTitle": "చర్యలు",
+  "careTeamThread": "కేర్ టీమ్ సందేశాలు",
+  "joinVideo": "వీడియోలో చేరండి",
+  "videoTitle": "వీడియో సంప్రదింపు",
+  "videoWindow": "రూమ్ తెరిచి ఉంటుంది",
+  "videoAudioHint": "ఆడియో సంప్రదింపు: కెమెరా ఆఫ్‌లో ఉంచండి.",
+  "videoOpensAt": "రూమ్ {time}కి తెరుచుకుంటుంది (ప్రారంభానికి 10 నిమిషాల ముందు).",
+  "@videoOpensAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "intakeTitle": "ప్రధాన ఫిర్యాదు (AI ఇన్‌టేక్)",
+  "intakeComplaint": "ప్రధాన ఫిర్యాదు",
+  "@intakeComplaint": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "intakeDuration": "వ్యవధి",
+  "intakeSeverity": "తీవ్రత",
+  "@intakeSeverity": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "intakeSymptoms": "సంబంధిత లక్షణాలు",
+  "@intakeSymptoms": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "allergiesTitle": "అలెర్జీలు",
+  "@allergiesTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "allergiesNone": "తెలిసిన అలెర్జీలు నమోదు కాలేదు",
+  "@allergiesNone": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "conditionsTitle": "పరిస్థితులు",
+  "@conditionsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "activeMedsTitle": "ప్రస్తుత మందులు",
+  "@activeMedsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "recentVitalsTitle": "ఇటీవలి వైటల్స్",
+  "@recentVitalsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "homeVisitFindingsTitle": "హోమ్ విజిట్ ఫలితాలు",
+  "@homeVisitFindingsTitle": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "escalatedLabel": "ఎస్కలేట్ చేయబడింది",
+  "aiSummaryTitle": "AI సారాంశం",
+  "aiAdvisoryLabel": "AI రూపొందించినది · సలహా మాత్రమే, నిర్ధారణ కాదు",
+  "aiSource": "మూలం",
+  "aiFeedbackPrompt": "ఈ సారాంశం ఖచ్చితంగా ఉందా?",
+  "aiAccept": "ఖచ్చితం",
+  "aiReject": "ఖచ్చితం కాదు",
+  "aiFeedbackThanks": "ధన్యవాదాలు, మీ అభిప్రాయం నమోదైంది.",
+  "aiRecordSummary": "AI రికార్డు సారాంశం",
+  "srcRecord": "రికార్డు",
+  "srcVital": "వైటల్",
+  "srcIntake": "ఇన్‌టేక్",
+  "srcHomeVisit": "హోమ్ విజిట్",
+  "srcPatientEntered": "రోగి నమోదు చేసినది",
+  "scribeTitle": "AI స్క్రైబ్",
+  "scribeConsent": "ఈ సంప్రదింపును రికార్డ్ చేసి లిప్యంతరీకరించడానికి రోగి అంగీకరించారు",
+  "scribeConsentHint": "రికార్డింగ్ లేదా ట్రాన్స్‌క్రిప్ట్ పంపే ముందు అవసరం. ఇది ఆడిట్ అవుతుంది.",
+  "scribeConsentRequired": "ముందుగా రోగి అంగీకారాన్ని నిర్ధారించండి.",
+  "scribeRecordTitle": "సంప్రదింపును రికార్డ్ చేయండి",
+  "scribeRecord": "రికార్డ్ చేయండి",
+  "scribeRecording": "రికార్డ్ అవుతోంది…",
+  "scribeStopUpload": "ఆపి డ్రాఫ్ట్ సృష్టించండి",
+  "scribeAudioNote": "ఆడియో ఒకసారి అప్‌లోడ్ అవుతుంది, లిప్యంతరీకరణ తర్వాత సర్వర్ తొలగిస్తుంది.",
+  "scribeTranscriptTitle": "లేదా ట్రాన్స్‌క్రిప్ట్ టైప్ / పేస్ట్ చేయండి",
+  "scribeTranscriptHint": "డాక్టర్: … రోగి: …",
+  "scribeGenerate": "SOAP డ్రాఫ్ట్ సృష్టించండి",
+  "scribeDraftTitle": "SOAP డ్రాఫ్ట్",
+  "scribeInsert": "నోట్స్‌లో చేర్చండి",
+  "scribeInserted": "డ్రాఫ్ట్ చేర్చబడింది. పూర్తి చేసే ముందు సమీక్షించి సవరించండి.",
+  "scribeMicDenied": "రికార్డ్ చేయడానికి మైక్రోఫోన్ అనుమతి అవసరం.",
+  "scribeTranscriptShort": "ట్రాన్స్‌క్రిప్ట్ చాలా చిన్నది.",
+  "scribeTooLarge": "రికార్డింగ్ 25 MB కంటే పెద్దది. చిన్న భాగాన్ని రికార్డ్ చేయండి.",
+  "soapS": "సబ్జెక్టివ్",
+  "@soapS": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "soapO": "ఆబ్జెక్టివ్",
+  "@soapO": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "soapA": "అంచనా",
+  "@soapA": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "soapP": "ప్రణాళిక",
+  "@soapP": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxTitle": "ప్రిస్క్రిప్షన్",
+  "rxFor": "{name} కోసం",
+  "@rxFor": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rxItems": "మందులు",
+  "rxNoItems": "కనీసం ఒక మందు జోడించండి.",
+  "rxNeedsStart": "ముందుగా సంప్రదింపు ప్రారంభించండి",
+  "rxItemTitle": "మందు",
+  "rxDrugName": "మందు పేరు",
+  "rxStrength": "బలం",
+  "rxForm": "రూపం",
+  "rxDose": "మోతాదు",
+  "@rxDose": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxFrequency": "ఫ్రీక్వెన్సీ",
+  "@rxFrequency": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxTiming": "సమయం",
+  "rxTimingHint": "భోజనం తర్వాత",
+  "rxDuration": "రోజులు",
+  "@rxDuration": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxDurationInvalid": "1–365 రోజులు",
+  "rxTimes": "రిమైండర్ సమయాలు (HH:MM)",
+  "rxTimesInvalid": "08:00, 20:00 వంటి 24 గంటల సమయాలు వాడండి",
+  "rxInstructions": "సూచనలు",
+  "rxChecksTitle": "ఇంటరాక్షన్ & అలెర్జీ తనిఖీ",
+  "rxCheckIdle": "మందులు జోడించగానే తనిఖీలు ఆటోమేటిక్‌గా జరుగుతాయి.",
+  "rxChecking": "తనిఖీ చేస్తోంది…",
+  "rxNoWarnings": "ఇంటరాక్షన్‌లు లేదా అలెర్జీ విభేదాలు కనబడలేదు.",
+  "@rxNoWarnings": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxPack": "నాలెడ్జ్ ప్యాక్ {pack}",
+  "@rxPack": {
+    "placeholders": {
+      "pack": {
+        "type": "String"
+      }
+    }
+  },
+  "sevMajor": "తీవ్రమైనది",
+  "@sevMajor": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "sevModerate": "మధ్యస్థం",
+  "@sevModerate": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "sevInfo": "సమాచారం",
+  "warnAllergy": "అలెర్జీ",
+  "@warnAllergy": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "warnDuplicate": "నకిలీ చికిత్స",
+  "@warnDuplicate": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "warnInteraction": "ఇంటరాక్షన్",
+  "@warnInteraction": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "warnDoseForm": "మోతాదు / రూపం",
+  "@warnDoseForm": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxAcknowledge": "నేను తీవ్ర హెచ్చరికలను సమీక్షించాను, అయినా రాయాలనుకుంటున్నాను",
+  "@rxAcknowledge": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxOverrideReason": "ఓవర్‌రైడ్ చేయడానికి క్లినికల్ కారణం",
+  "rxOverrideReasonHint": "కనీసం {min} అక్షరాలు. ఆడిట్ అవుతుంది.",
+  "@rxOverrideReasonHint": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "rxMajorBlocked": "తీవ్ర హెచ్చరికలకు మీ అంగీకారం, కారణం అవసరం.",
+  "@rxMajorBlocked": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "rxClinicalNote": "క్లినికల్ నోట్ (ప్రిస్క్రిప్షన్‌పై)",
+  "rxAdvice": "సలహా",
+  "rxFollowUpDays": "ఫాలో-అప్ (రోజుల్లో)",
+  "rxSign": "ప్రిస్క్రిప్షన్ సృష్టించండి",
+  "rxCreated": "ప్రిస్క్రిప్షన్ సృష్టించి రోగితో పంచుకున్నాం",
+  "rxPdfTitle": "ప్రిస్క్రిప్షన్ · {name}",
+  "@rxPdfTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "formTablet": "టాబ్లెట్",
+  "@formTablet": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formCapsule": "క్యాప్సూల్",
+  "@formCapsule": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formSyrup": "సిరప్",
+  "@formSyrup": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formInjection": "ఇంజెక్షన్",
+  "@formInjection": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formOintment": "లేపనం",
+  "@formOintment": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formDrops": "డ్రాప్స్",
+  "@formDrops": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formInhaler": "ఇన్‌హేలర్",
+  "@formInhaler": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "formOther": "ఇతర",
+  "pdfDocument": "PDF పత్రం: {title}",
+  "@pdfDocument": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pageOf": "పేజీ {page} / {total}",
+  "@pageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "fileReady": "ఫైల్ సిద్ధంగా ఉంది. చూడటానికి బ్రౌజర్‌లో తెరవండి.",
+  "openInBrowser": "బ్రౌజర్‌లో తెరవండి",
+  "carePlanTitle": "కేర్ ప్లాన్",
+  "carePlanSummary": "సారాంశం",
+  "carePlanInstructions": "రోగికి సూచనలు",
+  "carePlanTasks": "పనులు",
+  "carePlanMeds": "మందులు",
+  "carePlanSaved": "కేర్ ప్లాన్ సేవ్ అయింది",
+  "taskTitle": "పని",
+  "taskType": "రకం",
+  "taskOwner": "ఎవరు",
+  "taskDueInDays": "ఎన్ని రోజుల్లో (ఐచ్ఛికం)",
+  "taskMedication": "మందు",
+  "taskTest": "పరీక్ష",
+  "taskFollowUp": "ఫాలో-అప్",
+  "taskLifestyle": "జీవనశైలి",
+  "taskMonitoring": "పర్యవేక్షణ",
+  "taskGeneral": "సాధారణం",
+  "ownerPatient": "రోగి",
+  "ownerCaregiver": "సంరక్షకులు",
+  "ownerProvider": "కేర్ ప్రొవైడర్",
+  "followUpTitle": "ఫాలో-అప్",
+  "followUpAfterDays": "ఎన్ని రోజుల తర్వాత",
+  "followUpMode": "విధానం",
+  "followUpNone": "ఫాలో-అప్ లేదు",
+  "referTitle": "ఆసుపత్రికి రిఫర్ చేయండి",
+  "referSearchHospital": "ఆసుపత్రులను వెతకండి",
+  "referNoHospitals": "ఆసుపత్రులు కనబడలేదు.",
+  "referSpecialty": "స్పెషాలిటీ (ఐచ్ఛికం)",
+  "referReason": "రిఫరల్ కారణం",
+  "referSummary": "క్లినికల్ సారాంశం (ఐచ్ఛికం)",
+  "referSend": "రిఫరల్ లేఖ సృష్టించండి",
+  "referSaved": "రిఫరల్ సృష్టించబడింది. రోగికి తెలియజేశాం.",
+  "emergency24x7": "24×7 అత్యవసర",
+  "enrolTitle": "కేర్ ప్రోగ్రామ్‌లో నమోదు",
+  "enrolThresholds": "అలర్ట్ పరిమితులు",
+  "enrolSave": "రోగిని నమోదు చేయండి",
+  "enrolSaved": "రోగి నమోదయ్యారు",
+  "fixtureWarning": "టెంప్లేట్ ఇంకా క్లినికల్‌గా ఆమోదించబడలేదు (ఫిక్స్చర్).",
+  "exerciseTitle": "వ్యాయామ ప్రణాళిక",
+  "exerciseWeeks": "వారాలు",
+  "exerciseSets": "సెట్లు",
+  "exerciseReps": "రెప్స్",
+  "exercisePerDay": "రోజుకు",
+  "planSaved": "ప్రణాళిక రోగితో పంచుకున్నాం",
+  "dietTitle": "ఆహార ప్రణాళిక",
+  "dietTemplate": "టెంప్లేట్",
+  "dietNoTemplate": "టెంప్లేట్ లేదు",
+  "dietConditions": "పరిస్థితులు (కామాలతో)",
+  "dietCalories": "కేలరీ లక్ష్యం (ఐచ్ఛికం)",
+  "dietMeals": "భోజనాలు",
+  "dietMealsHint": "అంశాలను కామాలతో వేరు చేయండి.",
+  "dietMealsCount": "{count} భోజనాలు నింపారు",
+  "@dietMealsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dietNeedMeals": "టెంప్లేట్ ఎంచుకోండి లేదా కనీసం ఒక భోజనం నింపండి.",
+  "dietAvoid": "నివారించాల్సినవి (కామాలతో)",
+  "dietNotes": "నోట్స్",
+  "dietValidWeeks": "{weeks} వారాలు చెల్లుబాటు",
+  "@dietValidWeeks": {
+    "placeholders": {
+      "weeks": {
+        "type": "int"
+      }
+    }
+  },
+  "slotEarlyMorning": "తెల్లవారుజామున",
+  "slotBreakfast": "అల్పాహారం",
+  "slotMidMorning": "మధ్యాహ్నం ముందు",
+  "slotLunch": "మధ్యాహ్న భోజనం",
+  "slotEvening": "సాయంత్రం",
+  "slotDinner": "రాత్రి భోజనం",
+  "slotBedtime": "నిద్రకు ముందు",
+  "patientTitle": "రోగి",
+  "patientSearchHint": "పేరుతో మీ రోగులను వెతకండి",
+  "patientsEmpty": "మీరు సంప్రదించిన లేదా రికార్డులు పంచుకున్న రోగులు ఇక్కడ కనిపిస్తారు.",
+  "patientsNoMatch": "మీ శోధనకు రోగులు సరిపోలలేదు.",
+  "bloodGroup": "రక్త గ్రూప్",
+  "tabOverview": "అవలోకనం",
+  "tabRecords": "రికార్డులు",
+  "tabVitals": "వైటల్స్",
+  "tabPrograms": "ప్రోగ్రామ్‌లు",
+  "tabPrescriptions": "ప్రిస్క్రిప్షన్లు",
+  "tabEpisodes": "ఎపిసోడ్‌లు",
+  "recordsEmpty": "రికార్డులు పంచుకోలేదు.",
+  "openOriginal": "అసలు ఫైల్ తెరవండి",
+  "recLab": "ల్యాబ్ రిపోర్ట్",
+  "recPrescription": "ప్రిస్క్రిప్షన్",
+  "recImaging": "ఇమేజింగ్",
+  "recDischarge": "డిశ్చార్జ్ సారాంశం",
+  "recVisitSummary": "విజిట్ సారాంశం",
+  "recOther": "ఇతర",
+  "vitalsEmpty": "వైటల్స్ నమోదు కాలేదు.",
+  "vitalRange": "పరిధి {min}–{max}",
+  "@vitalRange": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  },
+  "readingsCount": "{count} రీడింగ్‌లు",
+  "@readingsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vitalTrendSemantics": "{vital} ధోరణి: {min} నుండి {max} మధ్య {count} రీడింగ్‌లు",
+  "@vitalTrendSemantics": {
+    "placeholders": {
+      "vital": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vitalBpSystolic": "BP సిస్టోలిక్",
+  "@vitalBpSystolic": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalBpDiastolic": "BP డయాస్టోలిక్",
+  "@vitalBpDiastolic": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalPulse": "నాడి",
+  "@vitalPulse": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalSpo2": "SpO2",
+  "@vitalSpo2": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalTemperature": "ఉష్ణోగ్రత",
+  "@vitalTemperature": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalGlucose": "రక్తంలో గ్లూకోజ్",
+  "@vitalGlucose": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "vitalWeight": "బరువు",
+  "vitalRespiratoryRate": "శ్వాస రేటు",
+  "@vitalRespiratoryRate": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "programsEmpty": "ఏ కేర్ ప్రోగ్రామ్‌లోనూ నమోదు కాలేదు.",
+  "programAdherence": "పాటించడం (7 రోజులు)",
+  "programLastReading": "చివరి రీడింగ్",
+  "programOpenBreaches": "తెరిచిన అలర్ట్‌లు",
+  "progActive": "సక్రియం",
+  "progPaused": "నిలిపివేయబడింది",
+  "progCompleted": "పూర్తయింది",
+  "prescriptionsEmpty": "ఇంకా ప్రిస్క్రిప్షన్లు లేవు.",
+  "episodesEmpty": "కేర్ ఎపిసోడ్‌లు లేవు.",
+  "inboxEmpty": "ఇంకా కేర్ టీమ్ సంభాషణలు లేవు.",
+  "noMessagesYet": "ఇంకా సందేశాలు లేవు",
+  "unreadCount": "{count} చదవనివి",
+  "@unreadCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "messageHint": "కేర్ టీమ్‌కు సందేశం పంపండి",
+  "emergencyNotice": "అత్యవసర భద్రతా సూచన",
+  "@emergencyNotice": {
+    "description": "GLOSSARY-REVIEW: clinical term, verify against the approved glossary"
+  },
+  "secondOpinionsTitle": "సెకండ్ ఒపీనియన్",
+  "soTabOpen": "తెరిచినవి",
+  "soTabMine": "నావి",
+  "soEmpty": "ఇక్కడ అభ్యర్థనలు లేవు.",
+  "soOpen": "తెరిచి ఉంది",
+  "soClaimed": "తీసుకోబడింది",
+  "soAnswered": "సమాధానం ఇచ్చారు",
+  "soClaim": "తీసుకోండి",
+  "soClaimedMsg": "అభ్యర్థన తీసుకున్నారు. రికార్డులు ఇప్పుడు మీతో పంచుకోబడ్డాయి.",
+  "soRespond": "అభిప్రాయం రాయండి",
+  "soOpinion": "అభిప్రాయం",
+  "soRecommendations": "సిఫార్సులు",
+  "soSuggestTele": "టెలికన్సల్టేషన్ సూచించండి",
+  "soSent": "అభిప్రాయం రోగికి పంపబడింది",
+  "soDue": "గడువు {date}",
+  "@soDue": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "escalationsTitle": "ఎస్కలేషన్‌లు",
+  "escalationsEmpty": "మీ రోగులకు ఎస్కలేషన్‌లు లేవు.",
+  "scheduleTitle": "షెడ్యూల్ & సెలవులు",
+  "weeklyTab": "వారపు గంటలు",
+  "leavesTab": "సెలవులు",
+  "scheduleHint": "సేవ్ చేస్తే తదుపరి {days} రోజుల ఖాళీ స్లాట్‌లు మళ్లీ సృష్టించబడతాయి. బుక్ అయిన స్లాట్‌లు మారవు.",
+  "@scheduleHint": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "scheduleEmpty": "ఇంకా వారపు గంటలు లేవు.",
+  "addBlock": "గంటలు జోడించండి",
+  "blockTitle": "సంప్రదింపు గంటలు",
+  "weekday": "రోజు",
+  "startTime": "ప్రారంభం",
+  "endTime": "ముగింపు",
+  "slotLength": "స్లాట్ వ్యవధి",
+  "slotMinutes": "{minutes} నిమి",
+  "@slotMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "blockInvalidTime": "చెల్లని సమయం",
+  "blockEndBeforeStart": "ముగింపు ప్రారంభం తర్వాత ఉండాలి",
+  "blockTooShort": "ఒక స్లాట్ కంటే చిన్నది",
+  "blockNoModes": "కనీసం ఒక విధానం ఎంచుకోండి",
+  "blockOverlap": "ఈ రోజు ఇతర గంటలతో అతివ్యాప్తి చెందుతుంది",
+  "saveSchedule": "వారపు గంటలు సేవ్ చేయండి",
+  "fixProblems": "హైలైట్ చేసిన గంటలను సరిచేయండి",
+  "scheduleSaved": "షెడ్యూల్ సేవ్ అయింది",
+  "leavesEmpty": "సెలవులు ప్లాన్ చేయలేదు.",
+  "addLeave": "సెలవు జోడించండి",
+  "leaveReason": "కారణం (ఐచ్ఛికం)",
+  "leaveAdded": "సెలవు జోడించబడింది",
+  "leaveConflictsTitle": "ఈ రోజు {count} బుక్ అయిన సంప్రదింపులు",
+  "@leaveConflictsTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "leaveConflictsBody": "ఇవి ఆటోమేటిక్‌గా రద్దు కావు. దయచేసి వీటిని మళ్లీ షెడ్యూల్ చేయమని కేర్ టీమ్‌ను అడగండి.",
+  "earningsTitle": "ఆదాయం",
+  "previousMonth": "మునుపటి నెల",
+  "nextMonth": "తదుపరి నెల",
+  "earnPayable": "మీకు చెల్లించవలసినది",
+  "earnServices": "{count} పూర్తయిన సంప్రదింపులు",
+  "@earnServices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earnGross": "స్థూలం",
+  "earnPlatformFee": "ప్లాట్‌ఫామ్ ఫీజు",
+  "earnRefunds": "రీఫండ్‌లు",
+  "earnLines": "వివరాలు",
+  "earnEmpty": "ఈ నెల చెల్లించిన సంప్రదింపులు లేవు.",
+  "profileTitle": "ప్రొఫైల్",
+  "photoGallery": "ఫోటో ఎంచుకోండి",
+  "photoCamera": "ఫోటో తీయండి",
+  "photoUpdated": "ఫోటో అప్‌డేట్ అయింది",
+  "photoTooLarge": "ఫోటో 5 MB కంటే తక్కువ ఉండాలి.",
+  "regNo": "రిజి. {number}",
+  "@regNo": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "ratingLine": "★ {rating} ({count} సమీక్షలు)",
+  "@ratingLine": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "acceptingBookings": "కొత్త బుకింగ్‌లు స్వీకరిస్తున్నారు",
+  "acceptingBookingsHint": "ఆఫ్‌లో ఉంటే డాక్టర్ శోధనలో మీరు కనిపించరు.",
+  "bookingsOn": "మీరు బుకింగ్‌లు స్వీకరిస్తున్నారు",
+  "bookingsOff": "బుకింగ్‌లు నిలిపివేయబడ్డాయి",
+  "feesTitle": "సంప్రదింపు ఫీజులు",
+  "qualifications": "అర్హతలు",
+  "languagesSpoken": "మాట్లాడే భాషలు",
+  "bio": "మీ గురించి",
+  "profileSaved": "ప్రొఫైల్ సేవ్ అయింది",
+  "languageTitle": "భాష",
+  "logoutConfirmTitle": "లాగ్ అవుట్ చేయాలా?",
+  "logoutConfirmBody": "మళ్లీ సైన్ ఇన్ చేయడానికి ఫోన్ OTP, ఆథెంటికేటర్ కోడ్ అవసరం."
+}

@@ -11,6 +11,7 @@ import { addEvent, advanceEpisode } from '../episodes/service.js';
 import type { NotificationService } from '../notifications/service.js';
 import { clinicalContext } from '../patients/service.js';
 import type { PaymentEffects, PaymentRow } from '../payments/service.js';
+import { labContextForVisits } from '../lab/service.js';
 import { toVital, vitalsForVisits } from '../vitals/service.js';
 
 export type HomeVisitRow = typeof homeVisits.$inferSelect;
@@ -127,7 +128,7 @@ export async function visitViewFor(db: DbOrTx, ctx: RequestCtx, row: HomeVisitRo
 
 export async function toHomeVisits(db: DbOrTx, rows: HomeVisitRow[], viewOf: (r: HomeVisitRow) => VisitView) {
   if (!rows.length) return [];
-  const [services, pats, provs, vit] = await Promise.all([
+  const [services, pats, provs, vit, labCtx] = await Promise.all([
     db.select().from(homeVisitServices),
     db.select({ id: patients.id, name: patients.name }).from(patients).where(inArray(patients.id, [...new Set(rows.map((r) => r.patientId))])),
     (async () => {
@@ -142,6 +143,10 @@ export async function toHomeVisits(db: DbOrTx, rows: HomeVisitRow[], viewOf: (r:
     vitalsForVisits(
       db,
       rows.map((r) => r.id),
+    ),
+    labContextForVisits(
+      db,
+      rows.filter((r) => r.serviceCode === 'sample_collection').map((r) => r.id),
     ),
   ]);
   const sm = new Map(services.map((s) => [s.code, s]));
@@ -183,6 +188,8 @@ export async function toHomeVisits(db: DbOrTx, rows: HomeVisitRow[], viewOf: (r:
       observations: r.observations ?? null,
       summary: r.summary,
       escalation: r.escalation ?? null,
+      /** Contract section 44 (additive): minimum-necessary lab context for sample-collection visits; no prices. */
+      labOrder: labCtx.get(r.id) ?? null,
       createdAt: iso(r.createdAt),
     });
   }

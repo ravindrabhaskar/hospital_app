@@ -1967,6 +1967,1093 @@
   "themeSystemSub": "Follows your phone's setting",
   "themeLight": "Light",
   "themeDark": "Dark",
+  "more": "More",
+  "moreServices": "More services",
+  "apply": "Apply",
+  "done": "Done",
+  "from": "From",
+  "to": "To",
+  "refresh": "Refresh",
+  "restart": "Restart",
+  "redeem": "Redeem",
+  "copied": "Copied",
+  "copyCode": "Copy code",
+  "copyCommand": "Copy {command}",
+  "@copyCommand": {
+    "placeholders": {
+      "command": {
+        "type": "String"
+      }
+    }
+  },
+  "notSet": "Not set",
+  "expired": "Expired",
+  "provider": "Provider",
+  "subject": "Subject",
+  "credit": "Credit",
+  "debit": "Debit",
+  "updatedAt": "Updated {time}",
+  "@updatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "validUntil": "Valid until {date}",
+  "@validUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "planBy": "Plan by {name}",
+  "@planBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "planDates": "{start} – {end}",
+  "@planDates": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "reasonOptional": "Reason (optional)",
+  "logoOf": "{name} logo",
+  "@logoOf": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "poweredByCareCompanion": "Powered by CareCompanion",
+  "adherence": "Adherence",
+  "@adherence": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxLabTests": "Lab Tests",
+  "@qxLabTests": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxCarePrograms": "Care Programs",
+  "qxPreventiveCare": "Preventive Care",
+  "@qxPreventiveCare": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxSecondOpinion": "Second Opinion",
+  "@qxSecondOpinion": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qxInsurance": "Insurance",
+  "qxExercise": "Exercise",
+  "qxDiet": "Diet",
+  "dailyCheckin": "Daily check-in",
+  "dailyCheckinSub": "An \"I'm OK\" tap each morning",
+  "imOkToday": "I'm OK today",
+  "checkinPrompt": "One tap lets your family know you are fine today.",
+  "checkinMissedBody": "Today's check-in window has passed. Checking in now still tells your family you're OK.",
+  "checkinMoodOptional": "How are you feeling? (optional)",
+  "checkinWindow": "{start}–{end}",
+  "@checkinWindow": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "checkinThanks": "Thank you! Your family has been told you are OK.",
+  "checkinDoneAt": "Checked in at {time}",
+  "@checkinDoneAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "checkinFamilyDone": "{name} checked in today at {time}",
+  "@checkinFamilyDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "checkinFamilyMissed": "{name} hasn't checked in today",
+  "@checkinFamilyMissed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "checkinFamilyPending": "{name} has not checked in yet (window {window})",
+  "@checkinFamilyPending": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "window": {
+        "type": "String"
+      }
+    }
+  },
+  "checkinOk": "On time",
+  "checkinLate": "Late",
+  "checkinMissed": "Missed",
+  "checkinPending": "Pending",
+  "checkinHistorySemantic": "Last 30 days: {ok} on time, {late} late, {missed} missed",
+  "@checkinHistorySemantic": {
+    "placeholders": {
+      "ok": {
+        "type": "int"
+      },
+      "late": {
+        "type": "int"
+      },
+      "missed": {
+        "type": "int"
+      }
+    }
+  },
+  "checkinIntro": "A daily \"I'm OK\" check-in for {name}. If it is missed, family and the care coordinator are alerted.",
+  "@checkinIntro": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "checkinNoPermission": "Only family members with \"Manage care\" permission can change this.",
+  "checkinEnable": "Daily check-in",
+  "checkinEnableSub": "Show the \"I'm OK today\" card every morning",
+  "checkinWindowStart": "Window opens",
+  "checkinWindowEnd": "Window closes",
+  "checkinWindowInvalid": "The window must end after it starts",
+  "checkinEscalateAfter": "Alert the care team after",
+  "minutesCount": "{minutes} minutes",
+  "@minutesCount": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "checkinNotifyFamily": "Notify family if missed",
+  "checkinNotifyCoordinator": "Notify the care coordinator",
+  "checkinHowItWorks": "If there is no check-in by the end of the window, family get a notification. If it is still missing after the set time, the care coordinator follows up. Times are in IST.",
+  "checkinLast30Days": "Last 30 days",
+  "checkinNoHistory": "No check-ins yet",
+  "carePrograms": "Care programs",
+  "myPrograms": "My programs",
+  "programsIntro": "Your doctor set these up to watch your readings between visits.",
+  "noProgramsTitle": "No care programs yet",
+  "noProgramsBody": "Your doctor can enrol you in a BP, diabetes or heart-care program.",
+  "@noProgramsBody": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "logReading": "Log reading",
+  "lastReadingAt": "Last reading {time}",
+  "@lastReadingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "adherence7d": "Readings taken (7 days)",
+  "adherence30d": "Readings taken (30 days)",
+  "readingsDueToday": "{count} readings due today",
+  "@readingsDueToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "readingsDoneToday": "Today's readings done",
+  "readingsReceived": "{received} of {expected} readings",
+  "@readingsReceived": {
+    "placeholders": {
+      "received": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      }
+    }
+  },
+  "openAlerts": "{count} open alerts",
+  "@openAlerts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openAlertsTitle": "Alerts",
+  "noAlerts": "No alerts in the last 30 days.",
+  "programPaused": "Paused",
+  "programCompleted": "Completed",
+  "trend": "Trend",
+  "noReadingsYet": "No readings yet",
+  "trendSemantic": "{type} trend: {count} days, latest average {latest} on {date}",
+  "@trendSemantic": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      },
+      "latest": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyReports": "Weekly reports",
+  "noWeeklyReports": "Your first weekly report arrives on Monday.",
+  "programDisclaimer": "Alerts go to your care team. If you feel unwell, call your doctor or 108 in an emergency.",
+  "@programDisclaimer": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bloodPressure": "Blood pressure",
+  "@bloodPressure": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bloodPressureShort": "BP",
+  "@bloodPressureShort": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "glucoseShort": "Sugar",
+  "@glucoseShort": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "weightShort": "Weight",
+  "readingOutOfRange": "That value looks unusual. Please check and re-enter.",
+  "readingSystolicBelowDiastolic": "The upper (systolic) number must be higher than the lower one.",
+  "@readingSystolicBelowDiastolic": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "readingSafetyNote": "Readings are shared with your care team. Feeling unwell? Call 108 in an emergency.",
+  "readingSaved": "Reading saved",
+  "whatsappAssistant": "WhatsApp assistant",
+  "whatsappExplain": "Get reminders on WhatsApp and reply to check in, log BP or sugar, or ask a question. No diagnosis is given.",
+  "whatsappOptIn": "Use the WhatsApp assistant",
+  "whatsappPrivacyNote": "Messages go to your registered number. Send STOP at any time to opt out.",
+  "whatsappTryIt": "Try it",
+  "whatsappTryIntro": "Send these messages to our WhatsApp number:",
+  "whatsappOptedIn": "WhatsApp assistant turned on",
+  "whatsappOptedOut": "WhatsApp assistant turned off",
+  "waCmdToday": "Today's medicine and visit reminders",
+  "waCmdCheckin": "Daily \"I'm OK\" check-in",
+  "waCmdBp": "Record a blood pressure reading",
+  "@waCmdBp": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "waCmdSugar": "Record a blood sugar reading",
+  "@waCmdSugar": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "waCmdBook": "Get links to book care",
+  "waCmdStop": "Stop WhatsApp messages",
+  "waCmdStart": "Start them again",
+  "whatsappNoDiagnosis": "Replies are general guidance, not a diagnosis. In an emergency call 108.",
+  "labTests": "Lab tests at home",
+  "@labTests": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "labIntro": "A trained technician collects the sample at home. Reports come to your records.",
+  "searchLabTests": "Search tests (e.g. HbA1c, lipid)",
+  "@searchLabTests": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "healthPackages": "Health packages",
+  "noPackages": "No packages right now",
+  "allTests": "All tests",
+  "resultsFor": "Results for \"{query}\"",
+  "@resultsFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "noLabTests": "No tests found",
+  "labPricingNote": "Prices are indicative and confirmed at booking.",
+  "testsIncluded": "{count} tests",
+  "@testsIncluded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fastingRequired": "Fasting",
+  "@fastingRequired": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "fastingHoursShort": "Fasting {hours} h",
+  "@fastingHoursShort": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "reportInHours": "Report in {hours} h",
+  "@reportInHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "includedInPackage": "In package",
+  "removeFromCart": "Remove {name}",
+  "@removeFromCart": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "labCartBar": "{count} selected · {amount} · View cart",
+  "@labCartBar": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "sampleBlood": "Blood",
+  "@sampleBlood": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "sampleUrine": "Urine",
+  "@sampleUrine": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "sampleSwab": "Swab",
+  "@sampleSwab": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "sampleOther": "Other sample",
+  "@sampleOther": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "fastingNoticeTitle": "Fasting needed",
+  "@fastingNoticeTitle": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "fastingNoticeBody": "Please do not eat for {hours} hours before the sample is collected. Water is fine. Take regular medicines unless your doctor said otherwise.",
+  "@fastingNoticeBody": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "labCart": "Your tests",
+  "labCartEmpty": "No tests selected",
+  "browseTests": "Browse tests",
+  "sampleCollectionAddress": "Sample collection address",
+  "sampleCollectionTime": "Collection time",
+  "youSaveVsMrp": "You save {amount} on MRP",
+  "@youSaveVsMrp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "labOrderTitle": "Lab test order",
+  "labBooked": "Sample collection booked",
+  "trackOrder": "Track order",
+  "myLabOrders": "My lab orders",
+  "noLabOrders": "No lab orders yet",
+  "labPendingPayment": "Payment pending",
+  "labScheduled": "Collection scheduled",
+  "labSampleCollected": "Sample collected",
+  "labProcessing": "Processing at lab",
+  "labReportReady": "Report ready",
+  "labCancelled": "Cancelled",
+  "labPartner": "Lab partner",
+  "viewReport": "View report",
+  "labReport": "Lab report",
+  "@labReport": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "trackSampleCollection": "Track sample collection",
+  "orderStatus": "Order status",
+  "cancelOrder": "Cancel order",
+  "labOrderCancelled": "Order cancelled. Any payment will be refunded.",
+  "labReportNote": "Your doctor will be able to see the report. Discuss the results with them.",
+  "cancelReasonTitle": "Why are you cancelling?",
+  "secondOpinion": "Second opinion",
+  "@secondOpinion": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "secondOpinionIntro": "Share your reports with a senior specialist and get a written opinion.",
+  "@secondOpinionIntro": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "requestSecondOpinion": "Request a second opinion",
+  "@requestSecondOpinion": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "myRequests": "My requests",
+  "noSecondOpinions": "No requests yet",
+  "secondOpinionUnavailable": "Second opinions are not available right now",
+  "chooseSpecialty": "Choose a specialty",
+  "opinionWithinHours": "Written opinion within {hours} hours",
+  "@opinionWithinHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "yourQuestion": "Your question",
+  "yourQuestionHint": "What would you like the specialist to review? Include your main concern and current treatment.",
+  "questionTooShort": "Please write at least {count} characters",
+  "@questionTooShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recordsToShare": "Records to share",
+  "noRecordsToShare": "No records yet. You can still ask your question.",
+  "secondOpinionConsent": "I agree to share my question and the {count} selected records, read-only, with the specialist who takes up this request. Access is logged.",
+  "@secondOpinionConsent": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "secondOpinionDisclaimer": "A second opinion is advice based on the records shared. It does not replace an examination. In an emergency call 108.",
+  "@secondOpinionDisclaimer": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "secondOpinionSubmitted": "Request sent to specialists",
+  "soPendingPayment": "Payment pending",
+  "soOpen": "Waiting for a specialist",
+  "soClaimed": "Specialist reviewing",
+  "soAnswered": "Opinion ready",
+  "soCancelled": "Cancelled",
+  "specialist": "Specialist",
+  "expectedBy": "Expected by",
+  "recordsShared": "Records shared",
+  "specialistOpinion": "Specialist's opinion",
+  "@specialistOpinion": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "opinionBy": "By {name}",
+  "@opinionBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "recommendations": "Recommendations",
+  "bookTeleconsult": "Book a video consultation",
+  "opinionPendingBody": "We will notify you when the specialist has answered.",
+  "createAbha": "Create ABHA",
+  "createAbhaSub": "Get your Health ID with a mobile OTP",
+  "createAbhaIntro": "Enter the mobile number to verify. An OTP will be sent to it.",
+  "linkAbha": "Link existing ABHA",
+  "linkAbhaSub": "Already have a 14-digit ABHA number?",
+  "linkAbhaIntro": "Enter your ABHA number. An OTP will be sent to the mobile linked with it.",
+  "abhaMobileLabel": "Mobile number",
+  "abhaOtpSent": "Enter the 6-digit OTP we sent.",
+  "abhaCreated": "Your ABHA is ready",
+  "abhaLinked": "ABHA linked",
+  "abdmPrivacyNote": "ABHA is issued by the National Health Authority (ABDM). We never share your records without your consent.",
+  "fetchRecords": "Fetch records from other hospitals",
+  "fetchRecordsSub": "Via ABDM, with your consent",
+  "fetchRecordsIntro": "Ask hospitals linked to your ABHA to share your records. You approve the request in your ABHA app.",
+  "recordTypesToFetch": "Record types",
+  "hiPrescription": "Prescriptions",
+  "@hiPrescription": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "hiDiagnosticReport": "Diagnostic reports",
+  "@hiDiagnosticReport": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "hiDischargeSummary": "Discharge summaries",
+  "@hiDischargeSummary": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "hiOpConsultation": "OP consultations",
+  "@hiOpConsultation": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "dateRange": "Date range",
+  "abdmConsentExplain": "Records are used only for your care (purpose CAREMGT). You can see every request below.",
+  "sendConsentRequest": "Send consent request",
+  "abdmRequestSent": "Request sent. Approve it in your ABHA app.",
+  "myConsentRequests": "My requests",
+  "noConsentRequests": "No requests yet",
+  "abdmRequested": "Waiting for approval",
+  "abdmGranted": "Approved",
+  "abdmDenied": "Denied",
+  "abdmExpired": "Expired",
+  "abdmDataReceived": "Records received",
+  "recordsImported": "{count} records imported",
+  "@recordsImported": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importedViaAbdm": "Imported via ABDM",
+  "insurance": "Insurance",
+  "insuranceSub": "Policies, cashless hospitals, claims",
+  "addPolicy": "Add policy",
+  "editPolicy": "Edit policy",
+  "deletePolicy": "Remove policy",
+  "deletePolicyBody": "Remove this policy from your profile?",
+  "noPolicies": "No insurance policies",
+  "noPoliciesBody": "Add your health insurance to find cashless hospitals and get renewal reminders.",
+  "expiringSoon": "Expiring soon",
+  "sumInsuredValue": "Cover {amount}",
+  "@sumInsuredValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "findCashlessHospitals": "Find cashless hospitals",
+  "cashlessHospitals": "Cashless hospitals",
+  "noCashlessHospitals": "No cashless hospitals listed for this insurer",
+  "cashlessIntro": "Hospitals with a cashless tie-up with {insurer}.",
+  "@cashlessIntro": {
+    "placeholders": {
+      "insurer": {
+        "type": "String"
+      }
+    }
+  },
+  "cashlessVerifyNote": "Always confirm cashless eligibility with your insurer or TPA before admission.",
+  "claimHelp": "Claims",
+  "claimChecklist": "Claim checklist",
+  "claimChecklistSub": "Steps and documents for cashless and reimbursement",
+  "cashless": "Cashless",
+  "reimbursement": "Reimbursement",
+  "claimSteps": "Steps",
+  "insurer": "Insurer",
+  "policyNumber": "Policy number",
+  "policyNumberKeep": "Saved: {masked}. Leave empty to keep it.",
+  "@policyNumberKeep": {
+    "placeholders": {
+      "masked": {
+        "type": "String"
+      }
+    }
+  },
+  "planNameOptional": "Plan name (optional)",
+  "policyType": "Policy type",
+  "policyIndividual": "Individual",
+  "policyFamilyFloater": "Family floater",
+  "policyCorporate": "Corporate",
+  "policyGovernment": "Government scheme",
+  "sumInsuredOptional": "Sum insured (optional)",
+  "validFrom": "Valid from",
+  "validTo": "Valid to",
+  "tpaOptional": "TPA name (optional)",
+  "uploadCardPhoto": "Add insurance card photo",
+  "cardPhotoAdded": "Card photo added",
+  "insuranceCardTitle": "Insurance card",
+  "policyDatesInvalid": "Choose valid from and valid to dates (end after start)",
+  "policyPrivacyNote": "Policy numbers are stored encrypted and shown masked.",
+  "preventiveCare": "Preventive care",
+  "@preventiveCare": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "pvOverdue": "Overdue",
+  "pvDue": "Due now",
+  "pvUpcoming": "Upcoming",
+  "pvDone": "Done",
+  "pvNotApplicable": "Not applicable",
+  "noPreventiveItems": "Nothing scheduled",
+  "markAsDone": "Mark as done",
+  "markedDone": "Marked as done",
+  "whenWasItDone": "When was \"{name}\" done?",
+  "@whenWasItDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "lastDoneOn": "Last done {date}",
+  "@lastDoneOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "repeatsEveryMonths": "Repeats every {months} months",
+  "@repeatsEveryMonths": {
+    "placeholders": {
+      "months": {
+        "type": "int"
+      }
+    }
+  },
+  "preventiveNote": "Based on age and sex. Your doctor may advise a different schedule.",
+  "@preventiveNote": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "preventiveNoteFixture": "A sample schedule based on age and sex, pending clinical review. Please confirm with your doctor.",
+  "@preventiveNoteFixture": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "exercisePlan": "Exercise plan",
+  "noExercisePlan": "No exercise plan yet",
+  "noExercisePlanBody": "A doctor or physiotherapist can create one for you.",
+  "bookPhysioVisit": "Book a physiotherapy home visit",
+  "bookPhysioVisitSub": "A physiotherapist visits your home",
+  "todaysExercises": "Today's exercises",
+  "setsReps": "{sets} sets × {reps} reps",
+  "@setsReps": {
+    "placeholders": {
+      "sets": {
+        "type": "int"
+      },
+      "reps": {
+        "type": "int"
+      }
+    }
+  },
+  "holdSeconds": "Hold {seconds} s",
+  "@holdSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "startTimer": "Start timer",
+  "precautions": "Precautions",
+  "markExerciseDone": "Mark {name} as done",
+  "@markExerciseDone": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "finishSession": "Finish session ({done}/{total})",
+  "@finishSession": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sessionsDone": "{done} of {planned} sessions done",
+  "@sessionsDone": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "planned": {
+        "type": "int"
+      }
+    }
+  },
+  "painTrend": "Pain after sessions",
+  "@painTrend": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "painTrendSemantic": "Pain score trend, latest {score} out of 10",
+  "@painTrendSemantic": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "howIsYourPain": "How is your pain now?",
+  "@howIsYourPain": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "painScoreValue": "Pain {score} / 10",
+  "@painScoreValue": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    },
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "noPain": "No pain",
+  "@noPain": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "worstPain": "Worst pain",
+  "@worstPain": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "highPainNote": "High pain: your therapist will be told. Stop exercising and rest.",
+  "@highPainNote": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "sessionSaved": "Session saved. Well done!",
+  "sessionSavedHighPain": "Session saved. Your therapist has been told about the pain.",
+  "exerciseSafetyNote": "Stop if you feel sharp pain, dizziness or breathlessness. Call 108 in an emergency.",
+  "@exerciseSafetyNote": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "dietPlan": "Diet plan",
+  "noDietPlan": "No diet plan yet",
+  "noDietPlanBody": "A doctor or dietitian can create one for you.",
+  "calorieTarget": "Target {kcal} kcal a day",
+  "@calorieTarget": {
+    "placeholders": {
+      "kcal": {
+        "type": "int"
+      }
+    }
+  },
+  "adherence14d": "Followed (14 days)",
+  "dietAdherenceSemantic": "Diet followed {pct} percent over 14 days",
+  "@dietAdherenceSemantic": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "todaysMeals": "Today's meals",
+  "followed": "Followed",
+  "notFollowed": "Not followed",
+  "foodsToAvoid": "Foods to avoid",
+  "slotEarlyMorning": "Early morning",
+  "slotBreakfast": "Breakfast",
+  "slotMidMorning": "Mid-morning",
+  "slotLunch": "Lunch",
+  "slotEvening": "Evening snack",
+  "slotDinner": "Dinner",
+  "slotBedtime": "Bedtime",
+  "dietDisclaimer": "Follow your doctor or dietitian if their advice differs. Tell them about any new symptoms.",
+  "@dietDisclaimer": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "bookPrivateAmbulance": "Book private ambulance",
+  "bookPrivateAmbulanceSub": "Track the vehicle live. Call 108 first in an emergency.",
+  "privateAmbulance": "Private ambulance",
+  "call108First": "Life-threatening emergency? Call 108 first. A private ambulance does not replace 108.",
+  "ambulanceType": "Ambulance type",
+  "ambBls": "Basic (BLS)",
+  "@ambBls": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "ambAls": "Advanced (ALS)",
+  "@ambAls": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "ambBlsDesc": "Oxygen, stretcher and trained staff. For stable patients.",
+  "@ambBlsDesc": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "ambAlsDesc": "Cardiac monitor, advanced life support and a paramedic. For serious conditions.",
+  "@ambAlsDesc": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "pickupLocation": "Pickup location",
+  "locating": "Finding your location…",
+  "gpsLocation": "GPS {lat}, {lng}",
+  "@gpsLocation": {
+    "placeholders": {
+      "lat": {
+        "type": "String"
+      },
+      "lng": {
+        "type": "String"
+      }
+    }
+  },
+  "currentLocation": "Current location",
+  "pickupAddressHint": "House, street, landmark (helps the driver)",
+  "destinationHospital": "Destination hospital",
+  "destinationOptional": "Hospital (optional)",
+  "nearestSuitable": "Nearest suitable hospital",
+  "requestAmbulance": "Request ambulance",
+  "ambulanceDefaultReason": "Transport to hospital",
+  "ambulanceNote": "Charges depend on the partner and distance. The care team is alerted too.",
+  "ambulanceTracking": "Ambulance",
+  "ambSearching": "Finding an ambulance",
+  "ambAssigned": "Ambulance assigned",
+  "ambEnRoute": "On the way",
+  "ambArrived": "Arrived",
+  "ambTransporting": "Going to hospital",
+  "ambCompleted": "Reached hospital",
+  "ambCancelled": "Cancelled",
+  "ambNoVehicle": "No vehicle available",
+  "noVehicleBody": "No private ambulance is available nearby. Call 108 now.",
+  "vehicle": "Vehicle",
+  "driver": "Driver",
+  "openInMaps": "Open in Maps",
+  "openStreetMap": "OpenStreetMap",
+  "locationUpdatedAt": "Location updated {time}",
+  "@locationUpdatedAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "statusTimeline": "Status",
+  "cancelAmbulance": "Cancel ambulance",
+  "cancelAmbulanceBody": "Cancel only if help is no longer needed.",
+  "cancelledByUser": "Cancelled by the family",
+  "safetyLocation": "Safety & location",
+  "safetyLocationSub": "Safe zone, companion mode, SOS button",
+  "safetyIntro": "For people who may wander or get confused, such as with memory problems.",
+  "safeZone": "Safe zone",
+  "safeZoneSub": "Get an alert if {name} leaves the area",
+  "@safeZoneSub": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safeZoneSelfSub": "Set up by family with care permission",
+  "safeZoneIntro": "If {name} leaves this area while companion mode is on, family get an alert with a map link.",
+  "@safeZoneIntro": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "safeZoneAlerts": "Safe zone alerts",
+  "safeZoneAlertsSub": "Alert family when outside the zone",
+  "zoneCentre": "Centre (home)",
+  "useCurrentLocation": "Use current location",
+  "zoneLabelHint": "Label (e.g. Home)",
+  "radius": "Radius",
+  "metersValue": "{meters} m",
+  "@metersValue": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "activeHoursOnly": "Only during set hours",
+  "alwaysActive": "Always active",
+  "safeZoneNeedsCenter": "Set the centre first (use current location)",
+  "safeZoneRadiusInvalid": "Radius must be between 100 m and 5 km",
+  "safeZonePrivacy": "Only the latest location is kept; there is no location history.",
+  "lastKnownLocation": "Last known location",
+  "noLocationYet": "No location shared yet. Turn on companion mode on their phone.",
+  "insideSafeZone": "Inside the safe zone",
+  "outsideSafeZone": "Outside the safe zone",
+  "companionMode": "Companion mode",
+  "companionModeSub": "Share this phone's location with family",
+  "companionIntro": "While CareCompanion is open, this phone shares its location every 5 minutes so family can check you are safe.",
+  "companionOn": "On: sharing location while the app is open",
+  "companionOff": "Off",
+  "companionOwnDevice": "Companion mode is turned on from the phone of the person being cared for.",
+  "companionForegroundOnly": "Works only while the app is open on screen; it does not track in the background.",
+  "withdrawConsent": "Withdraw consent",
+  "companionConsentTitle": "Share your location?",
+  "companionConsent1": "Your location is sent every 5 minutes while the app is open.",
+  "companionConsent2": "Family with alert permission and your care coordinator can see your latest location.",
+  "companionConsent3": "Only the latest location is stored. No history is kept.",
+  "companionConsent4": "You can turn it off or withdraw consent at any time.",
+  "companionConsentAgree": "I understand and agree to share my location",
+  "agreeAndTurnOn": "Agree and turn on",
+  "sosButtonPairing": "SOS button",
+  "sosButtonPairingSub": "Pair a wearable emergency button",
+  "sosButtonIntro": "Pressing a paired SOS button alerts emergency contacts, the same as SOS in the app.",
+  "deviceId": "Device ID",
+  "deviceIdHelp": "Printed on the back of the button or its box",
+  "deviceModelOptional": "Model (optional)",
+  "pairDevice": "Pair button",
+  "pairedDevices": "Paired on this phone",
+  "noPairedDevices": "No buttons paired from this phone",
+  "sosButtonPaired": "SOS button paired",
+  "unpair": "Unpair",
+  "sosButtonNote": "A supportive device, not a replacement for 108.",
+  "haveCompanyCode": "Have a company code?",
+  "companyCodeHelp": "If your employer sponsors CareCompanion, enter the code they gave you.",
+  "companyCode": "Company code",
+  "companyCodeInvalid": "Enter the full code",
+  "companyPlanActivated": "Plan activated, sponsored by {name}",
+  "@companyPlanActivated": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sponsoredBy": "Sponsored by {name}",
+  "@sponsoredBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "offersAndWallet": "Offers & wallet",
+  "couponCode": "Coupon code",
+  "couponApplied": "{code} applied",
+  "@couponApplied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "couponDiscount": "Coupon discount",
+  "useWalletBalance": "Use wallet balance",
+  "walletAvailable": "{amount} available",
+  "@walletAvailable": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletUsedLabel": "Wallet",
+  "payableAmount": "To pay",
+  "fullyCoveredNote": "Fully covered: no payment needed.",
+  "checkoutSummarySemantic": "Subtotal {subtotal}, discount {discount}, wallet {wallet}, to pay {payable}",
+  "@checkoutSummarySemantic": {
+    "placeholders": {
+      "subtotal": {
+        "type": "String"
+      },
+      "discount": {
+        "type": "String"
+      },
+      "wallet": {
+        "type": "String"
+      },
+      "payable": {
+        "type": "String"
+      }
+    }
+  },
+  "wallet": "Wallet",
+  "walletSub": "Balance and rewards",
+  "walletBalance": "Wallet balance",
+  "walletBalanceSemantic": "Wallet balance {amount}",
+  "@walletBalanceSemantic": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletNote": "Wallet credit can be used on bookings. It cannot be withdrawn and expires after 365 days.",
+  "transactions": "Transactions",
+  "noTransactions": "No transactions yet",
+  "inviteFamilyFriends": "Invite family & friends",
+  "inviteRewardSub": "You both get wallet credit after their first paid service",
+  "inviteIntro": "Share your code. When they complete their first paid service, you both get wallet credit.",
+  "yourInviteCode": "Your invite code",
+  "shareInvite": "Share invite",
+  "friendsInvited": "Joined with your code",
+  "rewardsEarned": "Rewards earned",
+  "haveInviteCode": "Have an invite code?",
+  "inviteCode": "Invite code",
+  "inviteCodeInvalid": "That code does not look right",
+  "inviteRedeemed": "Invite code applied. Your reward arrives after your first paid service.",
+  "inviteTerms": "Codes can be used once, within 7 days of signing up.",
+  "onboardingInviteBody": "Were you invited by family or a friend? Enter their code to get a welcome reward. You can skip this.",
+  "purposeLabOrder": "Lab test",
+  "purposeSecondOpinion": "Second opinion",
+  "purposeAmbulance": "Ambulance",
+  "myTickets": "My tickets",
+  "myTicketsSub": "Questions about bookings, payments or the app",
+  "newTicket": "New ticket",
+  "noTickets": "No tickets",
+  "noTicketsBody": "Raise a ticket and our support team will reply here.",
+  "ticketCategory": "What is it about?",
+  "tcBooking": "Booking",
+  "tcPayment": "Payment",
+  "tcRefund": "Refund",
+  "tcAppIssue": "App issue",
+  "tcClinicalConcern": "Health concern",
+  "tcOther": "Other",
+  "clinicalConcernTitle": "Our care team will review this",
+  "clinicalConcernBody": "Health concerns go to a clinician, not only to support. If it is urgent or someone is very unwell, call 108 now.",
+  "describeIssue": "Describe the issue",
+  "linkBooking": "Link a booking (optional)",
+  "noBookingsToLink": "No recent bookings",
+  "submitTicket": "Submit",
+  "ticketCreated": "Ticket {number} created",
+  "@ticketCreated": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "supportNotForEmergencies": "Support is not for emergencies. Call 108 in an emergency.",
+  "supportTicket": "Support ticket",
+  "tsOpen": "Open",
+  "tsPendingCustomer": "Waiting for you",
+  "tsResolved": "Resolved",
+  "tsClosed": "Closed",
+  "handledBy": "Handled by {name}",
+  "@handledBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rateSupport": "Rate our support",
+  "youRated": "You rated {score} / 5. Thank you!",
+  "@youRated": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
   "itemsCount": "{count, plural, =1{1 item} other{{count} items}}",
   "@itemsCount": {
     "placeholders": {

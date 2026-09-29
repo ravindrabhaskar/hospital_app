@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/app_theme.dart';
+import 'core/widgets/branding.dart';
 import 'core/utils/format.dart';
 import 'features/home/notifications_screen.dart' show resolveDeepLink;
 import 'l10n/app_localizations.dart';
@@ -82,11 +83,16 @@ class _CareCompanionAppState extends ConsumerState<CareCompanionApp> {
     final router = ref.watch(routerProvider);
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
+    // White-label (§58): the tenant's name and primary colour.
+    final branding = ref.watch(brandingProvider);
+    final seed = brandSeedColor(branding);
     return MaterialApp.router(
-      onGenerateTitle: (c) => AppLocalizations.of(c).appName,
+      onGenerateTitle: (c) => (branding?.displayName.isNotEmpty ?? false)
+          ? branding!.displayName
+          : AppLocalizations.of(c).appName,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(seed: seed),
+      darkTheme: AppTheme.dark(seed: seed),
       themeMode: themeMode,
       locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,

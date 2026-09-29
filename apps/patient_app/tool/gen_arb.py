@@ -1080,6 +1080,13 @@ k('themeLight', 'Light', 'लाइट', 'లైట్')
 k('themeDark', 'Dark', 'डार्क', 'డార్క్')
 
 
+# v1.3 (§41–§61) strings live in tool/arb_v13.py.
+import sys  # noqa: E402
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from arb_v13 import register  # noqa: E402
+register(k, P, MED)
+
+
 def build():
     base = os.path.join(os.path.dirname(__file__), '..', 'lib', 'l10n')
     os.makedirs(base, exist_ok=True)

@@ -11,6 +11,8 @@ import { CarePlanBuilder } from "@/components/care-plan-builder";
 import { MessageThread } from "@/components/message-thread";
 import { PrescriptionWriter } from "@/components/prescription-writer";
 import { ReferralButton } from "@/components/referral-dialog";
+import { ScribePanel } from "@/components/scribe-panel";
+import { insertIntoNotes } from "@/lib/scribe";
 import { EpisodeTimelineCard } from "@/components/episode-timeline";
 import { AppointmentStatusBadge } from "@/components/status";
 import { useToast } from "@/components/toast";
@@ -43,6 +45,7 @@ function Workspace({ appt }: { appt: Appointment }) {
   const [notes, setNotes] = useState(appt.clinicianNotes ?? "");
   const [outcome, setOutcome] = useState<ConsultOutcome>("care_plan");
   const [notesError, setNotesError] = useState<string | null>(null);
+  const notesRef = useRef<HTMLTextAreaElement>(null);
 
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["appointment", appt.id] });
@@ -112,6 +115,16 @@ function Workspace({ appt }: { appt: Appointment }) {
               label: "Consultation",
               content: (
                 <div className="flex flex-col gap-5">
+                  {inProgress && (
+                    <ScribePanel
+                      appointmentId={appt.id}
+                      onInsert={(d) => {
+                        setNotes((n) => insertIntoNotes(n, d.draft));
+                        toast.info("Draft inserted into the notes", "Edit it before completing the consultation. Nothing is saved yet.");
+                        window.setTimeout(() => notesRef.current?.focus(), 0);
+                      }}
+                    />
+                  )}
                   <Card title="Consultation">
                     {canStart && (
                       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-mint-50 p-3">
@@ -140,10 +153,11 @@ function Workspace({ appt }: { appt: Appointment }) {
                         <Field label="Clinical notes" required error={notesError ?? undefined}>
                           {(id, d) => (
                             <Textarea
+                              ref={notesRef}
                               id={id}
                               aria-describedby={d}
                               aria-invalid={!!notesError}
-                              rows={6}
+                              rows={inProgress ? 10 : 6}
                               value={notes}
                               readOnly={done}
                               onChange={(e) => setNotes(e.target.value)}

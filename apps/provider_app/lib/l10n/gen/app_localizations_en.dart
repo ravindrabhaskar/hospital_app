@@ -1091,4 +1091,445 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get voiceUnavailable =>
       'Voice input isn\'t available on this device, or microphone permission was denied.';
+
+  @override
+  String get typeDietitian => 'Dietitian';
+
+  @override
+  String get tabRoute => 'Route';
+
+  @override
+  String get optionalHint => 'Optional';
+
+  @override
+  String planFor(String name) {
+    return 'For $name';
+  }
+
+  @override
+  String get routeEmpty => 'No stops on your route today.';
+
+  @override
+  String routeSummary(int count, String km) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count stops',
+      one: '1 stop',
+    );
+    return '$_temp0 · $km km in total';
+  }
+
+  @override
+  String get routeFromLastLocation =>
+      'Distances start from your last reported location.';
+
+  @override
+  String get routeFromCurrentLocation =>
+      'Distances start from your service zone centre.';
+
+  @override
+  String get routeStartNavigation => 'Start navigation';
+
+  @override
+  String routeTooManyStops(int count) {
+    return 'Google Maps shows the first $count stops. Open navigation again after them.';
+  }
+
+  @override
+  String routeFromStart(String km) {
+    return '$km km from start';
+  }
+
+  @override
+  String routeFromPrev(String km) {
+    return '$km km from previous stop';
+  }
+
+  @override
+  String routeEta(String time) {
+    return 'ETA $time';
+  }
+
+  @override
+  String routeStopLabel(
+    int index,
+    String service,
+    String window,
+    String details,
+  ) {
+    return 'Stop $index: $service, $window. $details';
+  }
+
+  @override
+  String get attTitle => 'Attendance';
+
+  @override
+  String get attUnknown => 'Attendance status unavailable';
+
+  @override
+  String get attNotCheckedIn => 'Not checked in today';
+
+  @override
+  String get attNotCheckedInHint => 'Check in when you start your shift.';
+
+  @override
+  String attCheckedInAt(String time) {
+    return 'Checked in at $time';
+  }
+
+  @override
+  String attCheckedOutAt(String time) {
+    return 'Checked out at $time';
+  }
+
+  @override
+  String get attCheckIn => 'Check in';
+
+  @override
+  String get attCheckOut => 'Check out';
+
+  @override
+  String get attCheckedInToast => 'Checked in.';
+
+  @override
+  String get attCheckedOutToast => 'Checked out.';
+
+  @override
+  String get attNoLocation => '(Location was not available.)';
+
+  @override
+  String get attDaysPresent => 'Days present';
+
+  @override
+  String get attHours => 'Hours';
+
+  @override
+  String get attVisits => 'Visits';
+
+  @override
+  String get attDaily => 'Day by day';
+
+  @override
+  String get attEmpty => 'No attendance recorded this month.';
+
+  @override
+  String get attAbsent => 'No check-in';
+
+  @override
+  String get attOpen => 'not checked out';
+
+  @override
+  String attHoursShort(String hours) {
+    return '$hours h';
+  }
+
+  @override
+  String attVisitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count visits',
+      one: '1 visit',
+      zero: 'No visits',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get supTitle => 'Supplies';
+
+  @override
+  String get supEmpty => 'No supplies are assigned to you.';
+
+  @override
+  String supLowBanner(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items are running low. Ask your coordinator to restock.',
+      one: '1 item is running low. Ask your coordinator to restock.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get supLow => 'Low stock';
+
+  @override
+  String get supOut => 'Out of stock';
+
+  @override
+  String supReorderAt(String qty) {
+    return 'Reorder at $qty';
+  }
+
+  @override
+  String supOnHand(String qty) {
+    return 'On hand: $qty';
+  }
+
+  @override
+  String get supUsageTitle => 'Supplies used';
+
+  @override
+  String get supUsageHint =>
+      'Enter what you used at this visit. It is saved even when you are offline.';
+
+  @override
+  String get supUsageCardBody =>
+      'Record gloves, strips, swabs and other items used at this visit.';
+
+  @override
+  String get supUsageButton => 'Record supplies used';
+
+  @override
+  String get supUsageSave => 'Save usage';
+
+  @override
+  String get supUsageSaved => 'Supplies usage saved';
+
+  @override
+  String supIncrease(String name) {
+    return 'Add one $name';
+  }
+
+  @override
+  String supDecrease(String name) {
+    return 'Remove one $name';
+  }
+
+  @override
+  String get sampleTestsTitle => 'Lab tests to collect';
+
+  @override
+  String get sampleGeneric => 'Collect samples as per the lab order.';
+
+  @override
+  String get sampleFastingShort => 'Fasting';
+
+  @override
+  String get sampleFastingRequired =>
+      'Fasting required. Confirm with the patient before collecting.';
+
+  @override
+  String sampleFastingHours(int hours) {
+    return 'Fasting required ($hours h). Confirm with the patient before collecting.';
+  }
+
+  @override
+  String get sampleNoFasting => 'No fasting needed for these tests.';
+
+  @override
+  String get sampleChecklistTitle => 'Before completing: sample checklist';
+
+  @override
+  String get samplePatientId => 'Patient ID verified';
+
+  @override
+  String get sampleFastingConfirmed =>
+      'Fasting status confirmed with the patient';
+
+  @override
+  String get sampleFastingNotNeeded =>
+      'Fasting not needed (checked with the patient)';
+
+  @override
+  String get sampleTubesLabelled => 'All tubes labelled';
+
+  @override
+  String get sampleCount => 'Number of samples';
+
+  @override
+  String get sampleCollectedConfirm => 'Samples collected';
+
+  @override
+  String get sampleCompleteHint => 'Confirm every item to complete the visit.';
+
+  @override
+  String sampleSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count samples collected.',
+      one: '1 sample collected.',
+    );
+    return '$_temp0 Tubes labelled, patient ID verified, fasting status confirmed.';
+  }
+
+  @override
+  String get exCardTitle => 'Exercise plan';
+
+  @override
+  String get exCreateTitle => 'Create exercise plan';
+
+  @override
+  String get exChooseTitle => '1. Choose exercises';
+
+  @override
+  String get exAllAreas => 'All';
+
+  @override
+  String get exLibraryEmpty => 'No exercises for this body area.';
+
+  @override
+  String get exDosageTitle => '2. Sets and repetitions';
+
+  @override
+  String get exNoneSelected => 'Pick at least one exercise above.';
+
+  @override
+  String get exSets => 'Sets';
+
+  @override
+  String get exReps => 'Reps';
+
+  @override
+  String get exHold => 'Hold (s)';
+
+  @override
+  String get exPerDay => 'Per day';
+
+  @override
+  String get exNotes => 'Notes (optional)';
+
+  @override
+  String get exScheduleTitle => '3. Schedule';
+
+  @override
+  String get exStartDate => 'Start date';
+
+  @override
+  String get exWeeks => 'Weeks';
+
+  @override
+  String get exSave => 'Save exercise plan';
+
+  @override
+  String get exCreated => 'Exercise plan created';
+
+  @override
+  String get exErrNoExercises => 'Choose at least one exercise.';
+
+  @override
+  String exErrRange(String field, int min, int max) {
+    return '$field must be between $min and $max.';
+  }
+
+  @override
+  String get exErrStartDate => 'The start date cannot be in the past.';
+
+  @override
+  String get exNoPlans => 'No exercise plans for this patient yet.';
+
+  @override
+  String get exProgressUnavailable => 'Plan progress isn\'t available to you.';
+
+  @override
+  String exPlanLine(int count, String author) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count exercises',
+      one: '1 exercise',
+    );
+    return '$_temp0 · $author';
+  }
+
+  @override
+  String exProgressLine(int done, int planned, int pct) {
+    return '$done/$planned sessions · $pct% adherence';
+  }
+
+  @override
+  String exLatestPain(int score) {
+    return 'latest pain $score/10';
+  }
+
+  @override
+  String get dietCardTitle => 'Diet plan';
+
+  @override
+  String get dietCardBody => 'Create a meal plan for this patient.';
+
+  @override
+  String get dietCreateTitle => 'Create diet plan';
+
+  @override
+  String get dietTemplate => 'Template';
+
+  @override
+  String get dietNoTemplate => 'No template';
+
+  @override
+  String get dietGovernance =>
+      '[REQUIRES CLINICAL GOVERNANCE] This template is not yet clinically approved. Review every item.';
+
+  @override
+  String get dietConditions => 'Conditions and target';
+
+  @override
+  String get dietAddCondition => 'Add condition';
+
+  @override
+  String get dietCalories => 'Calorie target (kcal/day)';
+
+  @override
+  String get dietMeals => 'Meals';
+
+  @override
+  String get dietMealsHint => 'Separate items with commas.';
+
+  @override
+  String get dietAvoid => 'Avoid and notes';
+
+  @override
+  String get dietAvoidHint => 'Foods to avoid (comma separated)';
+
+  @override
+  String get dietNotes => 'Notes (optional)';
+
+  @override
+  String get dietValidUntil => 'Valid until';
+
+  @override
+  String get dietSave => 'Save diet plan';
+
+  @override
+  String get dietCreated => 'Diet plan created';
+
+  @override
+  String get dietErrNoMeals => 'Add food items to at least one meal.';
+
+  @override
+  String get dietErrNoConditions => 'Add at least one condition.';
+
+  @override
+  String dietErrCalories(int min, int max) {
+    return 'Calorie target must be between $min and $max.';
+  }
+
+  @override
+  String get dietErrValidUntil => '\"Valid until\" must be after today.';
+
+  @override
+  String get slotEarlyMorning => 'Early morning';
+
+  @override
+  String get slotBreakfast => 'Breakfast';
+
+  @override
+  String get slotMidMorning => 'Mid-morning';
+
+  @override
+  String get slotLunch => 'Lunch';
+
+  @override
+  String get slotEvening => 'Evening snack';
+
+  @override
+  String get slotDinner => 'Dinner';
+
+  @override
+  String get slotBedtime => 'Bedtime';
 }

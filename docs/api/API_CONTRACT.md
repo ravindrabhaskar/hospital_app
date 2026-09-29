@@ -390,7 +390,7 @@ SafetyEvent = { id, patientId, patientName, careEpisodeId, level: "urgent"|"emer
 ## 17. Provider app (role `provider`)
 | Method | Path | Body | Response |
 |---|---|---|---|
-| GET | `/provider/me` | – | `{ id, name, type: "nurse"|"technician"|"intern"|"physiotherapist", qualification, verificationStatus: "pending"|"verified"|"rejected"|"suspended"|"expired", credentialExpiresAt, onDuty: boolean, zones: [{ id, name }], capabilities: string[] }` |
+| GET | `/provider/me` | – | `{ id, name, type: "nurse"|"technician"|"intern"|"physiotherapist"|"dietitian", qualification, verificationStatus: "pending"|"verified"|"rejected"|"suspended"|"expired", credentialExpiresAt, onDuty: boolean, zones: [{ id, name }], capabilities: string[] }` |
 | POST | `/provider/duty` | `{ onDuty: boolean }` | same as `/provider/me` |
 | GET | `/provider/visits?scope=today|upcoming|completed` | – | list of `HomeVisit` |
 | POST | `/provider/location` | `{ lat, lng }` | 204 |
@@ -494,7 +494,7 @@ PublicConfig = {
   push: { enabled: boolean },
   support: { phone: string, email: string, whatsapp: string|null },
   legal: { privacyUrl: string, termsUrl: string, accountDeletionUrl: string },
-  minAppVersion: { patientAndroid: string, patientIos: string, providerAndroid: string, providerIos: string }
+  minAppVersion: { patientAndroid: string, patientIos: string, providerAndroid: string, providerIos: string, doctorAndroid: string, doctorIos: string }
 }
 ```
 Clients read flags from here instead of hard-coding them. If the app version is below `minAppVersion`, show a blocking "Please update" screen.
@@ -699,7 +699,7 @@ ChatMessage = { id, careEpisodeId, senderUserId: string|null, senderName, sender
 `CareEpisode` gains `coordinatorUserId: string|null, coordinatorName: string|null`.
 ```ts
 CaseloadItem = { patient: PatientSummary, episodes: CareEpisode[], openTasks, overdueTasks, nextFollowUpAt: string|null,
-                 lastContactAt: string|null, flags: ("overdue_tasks"|"missed_doses"|"open_safety_event"|"no_contact_7d")[] }
+                 lastContactAt: string|null, flags: ("overdue_tasks"|"missed_doses"|"open_safety_event"|"no_contact_7d"|"missed_checkin"|"program_breach")[] }
 ContactLog = { id, patientId, careEpisodeId: string|null, channel, outcome, note, followUpAt: string|null, coordinatorName, createdAt }
 ```
 
@@ -805,7 +805,7 @@ Worker behaviour:
 | GET | `/care-programs/enrollments?patientId=` | – | list of `Enrollment` |
 | PATCH | `/care-programs/enrollments/:id` (doctor) | `{ status?: "active"|"paused"|"completed", thresholds? }` | `Enrollment` |
 | GET | `/care-programs/enrollments/:id/summary?from=&to=` | – | `ProgramSummary` |
-| GET/POST | `/admin/care-programs/templates` + `POST /admin/care-programs/templates/:code/approve` (super_admin) | – | templates |
+| GET/POST | `/admin/care-programs/templates` (POST with an existing code creates its next version) + `POST /admin/care-programs/templates/:code/approve` (super_admin) | – | templates |
 ```ts
 ProgramTemplate = { code, name, description, metrics: [{ type: VitalType, frequency: "daily"|"twice_daily"|"weekly", unit }], defaultThresholds: Threshold[], status: "fixture_unapproved"|"approved", version }
 Threshold = { type: VitalType, op: "lt"|"gt", value: number, level: "routine"|"urgent"|"emergency", message: string }
@@ -852,10 +852,10 @@ LabOrder = { id, patientId, patientName, tests: [{ id, name }], total, discount,
              collectionVisitId: string|null, preferredStart, preferredEnd, reportRecordId: string|null, partnerName, partnerOrderId: string|null,
              timeline: [{ status, at }], careEpisodeId: string|null, createdAt }
 ```
-After payment a `sample_collection` home visit is created and auto-matched (§8). Completing that visit moves the order to `sample_collected`, then the partner adapter submits it. The mock partner moves it to `processing` and, after `LAB_MOCK_REPORT_MINUTES` (default 2), to `report_ready`. It generates a PDF watermarked **"SAMPLE REPORT — NOT A REAL RESULT"** with plausible values. The report becomes a `lab_report` MedicalRecord (source `lab_partner`) linked to the episode, and the patient and linked doctor are notified. Seed: 20 tests, 4 packages, with pricing marked placeholder.
+`HomeVisit` gains `labOrder: { id, tests: [{ id, name, sampleType }], fastingRequired: boolean, fastingHours: number|null } | null`. It is set for sample-collection visits, is visible to the assigned provider, and never includes prices. After payment a `sample_collection` home visit is created and auto-matched (§8). Completing that visit moves the order to `sample_collected`, then the partner adapter submits it. The mock partner moves it to `processing` and, after `LAB_MOCK_REPORT_MINUTES` (default 2), to `report_ready`. It generates a PDF watermarked **"SAMPLE REPORT — NOT A REAL RESULT"** with plausible values. The report becomes a `lab_report` MedicalRecord (source `lab_partner`) linked to the episode, and the patient and linked doctor are notified. Seed: 20 tests, 4 packages, with pricing marked placeholder.
 
 ## 45. Doctor mobile app
-Client-only. It uses §16, §29, §31, §33–§36, §46, §47 and push (`/devices`). No new endpoints.
+`GET /care-episodes?patientId=` is also allowed for a doctor linked to that patient (the same rule as the §16 snapshot). Client-only otherwise. It uses §16, §29, §31, §33–§36, §46, §47 and push (`/devices`). No new endpoints.
 
 ## 46. AI consultation notes ("scribe")
 | Method | Path | Body | Response |
@@ -1007,7 +1007,7 @@ The first location outside the zone (while active) creates an `urgent` SafetyEve
 ## 57. Company (corporate) health plans
 | Method | Path | Body | Response |
 |---|---|---|---|
-| GET/POST/PATCH | `/admin/organizations` (super_admin) | `{ name, contactName, contactEmail, planCode, seats, validFrom, validTo, billingNote? }` | `Organization` |
+| GET/POST, PATCH `/:id` | `/admin/organizations` (super_admin) | `{ name, contactName, contactEmail, planCode, seats, validFrom, validTo, billingNote? }` | `Organization` |
 | POST | `/admin/organizations/:id/codes` | `{ count: 1..500 }` | `{ codes: string[] }` (single-use, 10 chars) |
 | GET | `/admin/organizations/:id/usage` | – | `{ seats, redeemed, activeMembers, servicesUsed: { appointments, homeVisits, labOrders } }` (aggregates only, no PHI) |
 | POST | `/subscriptions/redeem` | `{ code }` | `Subscription` (active, sponsored; `sponsorName` set; price 0) |
@@ -1017,7 +1017,7 @@ The first location outside the zone (while active) creates an `urgent` SafetyEve
 ## 58. Hospital white-label branding
 | Method | Path | Body | Response |
 |---|---|---|---|
-| GET/POST/PATCH | `/admin/tenants` (super_admin) | `{ code, displayName, primaryColor: "#RRGGBB", logoMediaId?, facilityIds: string[], supportPhone?, supportEmail? }` | `Tenant` |
+| GET/POST, PATCH `/:id` | `/admin/tenants` (super_admin; responses include `id` and `logoUrl`) | `{ code, displayName, primaryColor: "#RRGGBB", logoMediaId?, facilityIds: string[], supportPhone?, supportEmail? }` | `Tenant` |
 
 `GET /config/public?tenant=<code>` adds `branding: { tenantCode, displayName, logoUrl, primaryColor, supportPhone, supportEmail } | null`. The apps accept `--dart-define=TENANT_CODE=...` and apply the name, primary colour and logo, and show "Powered by CareCompanion". Patients and episodes gain `tenantCode: string|null` (set when created via a tenant's discharge flow or app build).
 
@@ -1043,7 +1043,7 @@ The worker completes the program at day 30. Seed: facility "Deccan Sunrise Multi
 ## 60. Offers, wallet & invites
 | Method | Path | Body | Response |
 |---|---|---|---|
-| GET/POST/PATCH | `/admin/coupons` (super_admin) | `{ code, description, type: "percent"|"flat", value, maxDiscount?, minAmount?, appliesTo: Payment.purpose[], validFrom, validTo, usageLimit?, perUserLimit, active }` | `Coupon` |
+| GET/POST, PATCH `/:id` | `/admin/coupons` (super_admin) | `{ code, description, type: "percent"|"flat", value, maxDiscount?, minAmount?, appliesTo: Payment.purpose[], validFrom, validTo, usageLimit?, perUserLimit, active }` | `Coupon` |
 | POST | `/coupons/validate` | `{ code, purpose, amount }` | `{ valid, discount, finalAmount, message }` |
 | GET | `/wallet` | – | `{ balance, transactions: [{ id, type: "credit"|"debit", amount, reason, refType, refId, at }] }` |
 | GET | `/me/invite` | – | `{ code, shareText, invitedCount, rewardsEarned }` |
@@ -1087,3 +1087,9 @@ The menu is in the caller's language (en/hi/te, from the user profile, else aske
 - **9**: connect to the care team (transfer to `SUPPORT_PHONE`).
 
 Unknown callers hear the support number. The adapter is `IVR_PROVIDER=mock|exotel|twilio`.
+
+### v1.3 follow-ups (additive)
+- `GET /patients/:id/sos-devices` → `{ items: [{ id, deviceId, model, pairedAt }] }` (requires `manage_care`).
+- `GET /diet-plans/:id/logs?date=YYYY-MM-DD` → `{ items: [{ id, date, slot, followed, note }] }`.
+- `PublicConfig.flags` gains these flags, all on by default: `lab_tests`, `care_programs`, `second_opinion`, `insurance`, `preventive_care`, `exercise_plans`, `diet_plans`, `ambulance`, `safe_zone`, `wallet_invites`, `support_desk`, `whatsapp`, `daily_checkin`, `abdm`.
+- `MedicalRecord` gains `importedVia: "abdm"|"hospital_discharge"|null`.

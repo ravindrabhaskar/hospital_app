@@ -31,6 +31,7 @@ export function toPatientSummary(p: PatientRow, v: AccessView) {
     isSelf: v.isSelf,
     permissions: v.permissions,
     avatarUrl: p.avatarUrl,
+    tenantCode: p.tenantCode ?? null,
   };
 }
 

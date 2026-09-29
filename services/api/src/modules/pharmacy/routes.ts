@@ -11,6 +11,7 @@ import { envelope, list, pageFromQuery } from '../../lib/pagination.js';
 import { iso } from '../../lib/time.js';
 import { parse, zAddress, zUuid } from '../../lib/validate.js';
 import { toPayment, type PaymentEffects, type PaymentRow } from '../payments/service.js';
+import { zCouponCode } from '../wallet/routes.js';
 
 export const PHARMACY_CATEGORIES = [
   { code: 'fever_pain', name: 'Fever & Pain', icon: 'thermometer' },
@@ -92,6 +93,8 @@ export async function pharmacyRoutes(app: FastifyInstance): Promise<void> {
         /** Contract section 31: an e-prescription id satisfies the Rx requirement in place of prescriptionRecordId. */
         prescriptionId: zUuid.optional(),
         address: zAddress,
+        couponCode: zCouponCode.optional(),
+        useWallet: z.boolean().optional(),
       }),
       req.body,
     );
@@ -136,11 +139,22 @@ export async function pharmacyRoutes(app: FastifyInstance): Promise<void> {
           createdByUserId: req.ctx.user.id,
         })
         .returning();
-      const payment = await svc.payments.create(tx, { purpose: 'pharmacy_order', refId: order.id, patientId: body.patientId, amount: total, userId: req.ctx.user.id });
+      const payment = await svc.payments.create(tx, {
+        purpose: 'pharmacy_order',
+        refId: order.id,
+        patientId: body.patientId,
+        amount: total,
+        userId: req.ctx.user.id,
+        couponCode: body.couponCode,
+        useWallet: body.useWallet,
+        actor: req.ctx.actor,
+      });
       await audit(tx, req.ctx.actor, { action: 'pharmacy_order.create', entityType: 'pharmacy_order', entityId: order.id, metadata: { itemCount: items.length } });
       return { order, payment };
     });
-    return reply.code(201).send({ order: toOrder(result.order), payment: toPayment(result.payment) });
+    const payment = await svc.payments.settleIfCovered(result.payment, req.ctx.actor);
+    const order = payment === result.payment ? result.order : (await db.select().from(pharmacyOrders).where(eq(pharmacyOrders.id, result.order.id)))[0];
+    return reply.code(201).send({ order: toOrder(order), payment: toPayment(payment) });
   });
 
   app.get('/pharmacy/orders', async (req) => {

@@ -10,6 +10,16 @@ import { formatDate, formatDateTime, humanize } from "@/lib/format";
 import { AiLabel, AiSummaryPanel, sectionDomId, sourceDomId } from "@/components/ai-summary";
 import { EpisodeTimelineCard } from "@/components/episode-timeline";
 import { PrescriptionList } from "@/components/prescription-writer";
+import { ProgramsCard } from "@/components/patient-programs";
+import {
+  CheckinStrip,
+  DietPlansCard,
+  ExercisePlansCard,
+  InsuranceCard,
+  LabOrdersCard,
+  PreventiveCard,
+  SecondOpinionsCard,
+} from "@/components/patient-care-extras";
 import { OpenOriginalButton } from "@/components/record-file";
 import { ReferralList } from "@/components/referral-dialog";
 import { EpisodeStatusBadge, GenericStatusBadge, PriorityBadge, ProvenanceBadge, VisitStatusBadge } from "@/components/status";
@@ -114,6 +124,9 @@ function Snapshot({ snap }: { snap: ClinicalSnapshot }) {
 
           <AiSummaryPanel summary={snap.aiSummary} />
 
+          <ProgramsCard patientId={p.id} episodes={snap.activeEpisodes} />
+          <CheckinStrip patientId={p.id} />
+
           {/* Active episodes */}
           <Card title="Active care episodes" subtitle="Select an episode to show its timeline">
             {snap.activeEpisodes.length === 0 ? (
@@ -182,6 +195,19 @@ function Snapshot({ snap }: { snap: ClinicalSnapshot }) {
           <Card title="Referrals">
             <ReferralList patientId={p.id} />
           </Card>
+
+          <LabOrdersCard patientId={p.id} />
+          <SecondOpinionsCard patientId={p.id} />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <ExercisePlansCard patientId={p.id} episodes={snap.activeEpisodes} />
+            <DietPlansCard patientId={p.id} />
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <PreventiveCard patientId={p.id} />
+            <InsuranceCard patientId={p.id} />
+          </div>
 
           <Card title="Vitals" id={sectionDomId("vital")}>
             <VitalsPanel vitals={snap.recentVitals} />

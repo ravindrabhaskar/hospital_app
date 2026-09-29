@@ -55,10 +55,11 @@ export function buildSecurityHeaders(opts: SecurityHeaderOptions): Header[] {
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     {
       key: "Permissions-Policy",
-      // Camera/mic/screen share are delegated only to the Jitsi frame for the optional embedded call.
+      // Camera/screen share are delegated only to the Jitsi frame for the optional embedded call. The microphone is
+      // also allowed for the portal itself: the §46 AI scribe records the consultation (after patient consent).
       value: [
         `camera=(${jitsi})`,
-        `microphone=(${jitsi})`,
+        `microphone=(self ${jitsi})`,
         `display-capture=(${jitsi})`,
         `fullscreen=(self ${jitsi})`,
         "geolocation=()",

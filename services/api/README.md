@@ -1,7 +1,7 @@
 # CareCompanion API (`services/api`)
 
 Backend for CareCompanion, the AI-assisted care-orchestration platform (Hyderabad pilot).
-It implements `docs/api/API_CONTRACT.md` (v1, v1.1 and the v1.2 additions in sections 29-40) as a **modular monolith**: TypeScript (strict), Fastify 5, zod,
+It implements `docs/api/API_CONTRACT.md` (v1, v1.1, the v1.2 additions in sections 29-40 and the v1.3 additions in sections 41-62) as a **modular monolith**: TypeScript (strict), Fastify 5, zod,
 Drizzle ORM (PostgreSQL dialect), with PostgreSQL **or** embedded PGlite.
 
 > **Clinical safety notice:** the bundled safety rule pack `fixture-0.1` is a **NON-CLINICAL TEST FIXTURE**.
@@ -168,6 +168,80 @@ care-team thread, Meera assigned to Ramesh's episode + one contact log, a referr
 application from **Kavya Iyer (+919800000601)** with 2 generated documents, the plans `family_basic`/`family_plus`
 (no subscription) and 3 schemes (PM-JAY, Aarogyasri Telangana, CGHS).
 
+## v1.3 features (contract sections 41-62)
+
+Every partner integration sits behind an adapter (`modules/partners/index.ts`) with a **mock partner** (the default
+outside production, driven by the worker), a real adapter enabled by env credentials, and `disabled`. In production an
+unset partner defaults to `disabled` and an explicitly configured `mock` is refused at startup (`productionReadinessIssues`).
+Every partner webhook verifies an HMAC signature over the raw body and is idempotent on the partner event id
+(`webhook_events`). Clinical content is versioned fixture data (`fixture_unapproved`, **[REQUIRES CLINICAL GOVERNANCE]**)
+that production refuses to serve until approved (same model as the safety rule packs).
+
+| Section | Module | What it does |
+|---|---|---|
+| 41 Daily check-in | `checkins` | Settings + history (missed days synthesised since check-ins were enabled). Worker: at `windowEnd` (IST) the day becomes `missed` and family with `receive_alerts` are told (`checkin_missed`); after `escalateAfterMins` an `urgent` SafetyEvent (source `checkin`) is assigned to the coordinator; a later check-in the same day is `late` and auto-resolves it. |
+| 42 Programs | `programs` | Versioned templates (`program_templates`; POST with an existing code or PATCH creates the next version `vN`), enrollments (doctor; coordinator only with an approved template's thresholds), summary/adherence. Every new vital (app, home visit, wearables, WhatsApp) is evaluated: a breach creates a SafetyEvent (source `program`) at `max(threshold level, safety-engine level)` and alerts the coordinator + family. Monday 09:00 IST weekly PDF report per enrollment. |
+| 43 WhatsApp | `whatsapp` | Meta Cloud API adapter / console mock, `X-Hub-Signature-256` webhook + verify handshake, opt-in with the `whatsapp_messaging` consent, commands STOP/START/HELP/TODAY/CHECKIN/OK/BP x/y/SUGAR n/BOOK, free text -> AI assistant (safety engine first; without AI consent only the safety engine; emergency -> 108 template). `POST /dev/whatsapp/simulate` (non-production). Outbound notifications use the `WHATSAPP_TEMPLATE_CARE_UPDATE` template with the PHI-free lock-screen text. |
+| 44 Lab | `lab` | 20 tests / 4 packages (placeholder pricing), orders with coupons/wallet, payment -> auto-matched `sample_collection` visit (no extra charge; `HomeVisit.labOrder` gives the provider tests, sample types and fasting only), completion -> `sample_collected` -> partner submission. The mock partner goes `processing` -> `report_ready` after `LAB_MOCK_REPORT_MINUTES` with a PDF watermarked "SAMPLE REPORT — NOT A REAL RESULT" stored as a `lab_report` record (source `lab_partner`). `X-Lab-Signature` webhook. |
+| 46 Scribe | `scribe` | Appointment doctor only, `consentConfirmed` audited, JSON transcript or multipart audio (webm/m4a/wav <= 25 MB) through the STT adapter; audio is never stored. The draft must be grounded (every number must appear in the transcript) or the deterministic speaker-sorted draft is used. Advisory, never saved automatically. |
+| 47 Rx checks | `rxcheck` | `DrugKnowledgeProvider` (versioned pack `interactions-fixture-0.1` with ~45 well-known pairs and a drug-class map, or a licensed database over HTTP). Allergy (class + cross-reactivity), duplicate therapy (active meds + within the Rx), interactions. `POST /clinician/prescriptions` rejects `major` warnings (400, `details.warnings`) unless `acknowledgedWarnings: true` + `overrideReason` (audited `prescription.override`); `Prescription.warnings` is returned. Production with an unapproved pack returns a fail-safe "checks unavailable" warning. |
+| 48 Field ops | `fieldops` | Route (time window, then nearest neighbour; `MapsProvider` = haversine at `ROUTE_SPEED_KMH` or Google Distance Matrix), attendance, supplies (catalogue of 12 items), restock, low stock. |
+| 49 Second opinion | `secondopinion` | Pricing table, paid requests (`second_opinion` payments), specialty queue, claim (records shared read-only for 30 days, audited), response PDF record, overdue alert to ops. |
+| 50 ABDM | `abdm` | `ABDM_MODE` mock/sandbox/production/disabled. Mock: OTP `123456`, ABHA creation/linking, consent granted after `ABDM_MOCK_CONSENT_SEC` (10) and a data push importing 2 records ("Imported via ABDM (sample)", `importedVia: "abdm"`). `X-ABDM-Signature` callbacks. §39 verify still returns 503 while `ABDM_ENABLED=false`; enabled + mock verifies ABHA numbers and `@sbx` addresses. |
+| 51 Insurance | `insurance` | Insurer catalogue, cashless facility filter, policies (AES-256-GCM encrypted numbers, masked `XXXX1234`), claim checklists **[REQUIRES CONTENT REVIEW]**, renewal reminders 30 and 7 days before `validTo`. |
+| 52 Preventive | `preventive` | Fixture schedule `preventive-fixture-0.1` (IAP-style child schedule + adult screenings), status computed from age/sex/records, monthly reminders. |
+| 53-54 Physio & diet | `physio`, `diet` | 15-exercise library, plans by the doctor or a physiotherapist/dietitian with a visit relationship, sessions (pain >= 8 notifies the author), progress; 3 diet templates, plans, per-slot logs (upsert) and adherence. New home-visit service `physiotherapy` (₹699). |
+| 55 Ambulance | `ambulance` | Requests open an `emergency` SafetyEvent; the mock assigns within `AMBULANCE_MOCK_ASSIGN_SEC` (<= 20 s) and moves every 10 s (time-based, advanced by the worker and on every poll). Never replaces 108. |
+| 56 Safe zone | `geofence` | Safe zone with optional IST active window, latest location only, first exit -> `urgent` SafetyEvent (source `geofence`) + family alert with a map link, return resolves; SOS devices; `X-SOS-Signature` vendor webhook -> SOS flow (source `sos_button`). |
+| 57-58 Corporate & tenants | `enterprise` | Organizations (codes capped at seats, aggregate-only usage), `POST /subscriptions/redeem` (sponsored, price 0), tenants (`logoUrl` from a public media id), `GET /config/public?tenant=` branding, `X-Tenant-Code` at sign-in tags a new self profile. |
+| 59 Discharges | `discharges` | `hospital_staff` bound to one facility (`users.facility_id`, set via `/admin/staff` or `/admin/users/:id/roles` with `facilityId`). Multipart create: patient + family users and grants, SMS invites, episode (-> FOLLOW_UP), hospital-issued care plan (`doctorId: null`), tasks at day offsets, medications, 30-day check-in, optional enrollment, `discharge_summary` record (`importedVia: "hospital_discharge"`), coordinator, tenant code. Worker completes at day 30. |
+| 60 Offers & wallet | `wallet`, `payments` | Coupons (percent/flat, caps, min amount, purpose, usage and per-user limits), FIFO wallet ledger with 365-day expiry **[REQUIRES LEGAL REVIEW: RBI PPI rules]**, invites (reward credited by the worker after the invitee's first completed paid service). All booking endpoints accept `couponCode`/`useWallet`; `Payment` has `discount`, `walletUsed`, `amount` (charged). Fully covered payments succeed immediately; failed/voided payments give the wallet part back and release the coupon (re-applied on retry); cancellations accept `refundTo: "wallet"`. |
+| 61 Support | `support` | Tickets `T-000123`, internal notes (never returned to customers), assignment, SLA (30 min urgent/high, else 4 h; breach alerts ops), metrics, ratings. `clinical_concern` opens a SafetyEvent review. Roles: `support_agent`, coordinator, ops. |
+| 62 IVR | `ivr` | Menu 1 reminders, 2 check-in, 3 call-back ticket (high), 4 spoken concern (safety engine; emergency -> "call 108" + ops alert), 9 transfer to `SUPPORT_PHONE`. `POST /dev/ivr/simulate` (non-production); provider webhooks: exotel/mock (`X-IVR-Signature`, JSON) and twilio (`X-Twilio-Signature`, TwiML). |
+
+Also: new roles `hospital_staff`, `support_agent` (MFA staff roles); provider type `dietitian`; SafetyEvent sources
+`checkin`, `program`, `geofence`, `sos_button`; payment purposes `lab_order`, `second_opinion`, `ambulance`; notification
+categories `program`, `checkin`, `lab`, `support`, `insurance`, `preventive`; v1.3 feature flags (all on);
+`MedicalRecord.importedVia`; `CaseloadItem.flags` gains `missed_checkin` and `program_breach`; `minAppVersion.doctor*`.
+
+Seed additions: Ramesh check-in (08:00-10:00, 10-day history with one missed day), hypertension enrollment with 14 days of
+readings, 20 lab tests + 4 packages, Sunita's supplies, 15 exercises, 3 diet templates, insurers + cashless flags,
+coupons `WELCOME100`/`CARE10`, tenant `deccan-sunrise`, **+919800000701** Hospital Discharge Desk with one active discharge
+(Sarojini Rao, +919800000702, family +919800000703), **+919800000801** Support Desk with 2 tickets, second-opinion pricing,
+an insurance policy and preventive records for Ramesh.
+
+### v1.3 environment variables
+
+| Variable | Default (dev) | Notes |
+|---|---|---|
+| `DATA_ENCRYPTION_KEY` | derived | 32 bytes; defaults to a sub-key of `MFA_ENCRYPTION_KEY` |
+| `WHATSAPP_PROVIDER`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_APP_SECRET`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_API_BASE_URL`, `WHATSAPP_TEMPLATE_{CARE_UPDATE,REMINDER,ALERT,LANG}`, `APP_DEEP_LINK_BASE` | `mock` | |
+| `LAB_PARTNER`, `LAB_PARTNER_NAME`, `LAB_PARTNER_BASE_URL`, `LAB_PARTNER_API_KEY`, `LAB_WEBHOOK_SECRET`, `LAB_MOCK_REPORT_MINUTES` | `mock`, 2 min | |
+| `AMBULANCE_PARTNER`, `AMBULANCE_PARTNER_NAME`, `AMBULANCE_PARTNER_BASE_URL`, `AMBULANCE_PARTNER_API_KEY`, `AMBULANCE_MOCK_ASSIGN_SEC` | `mock`, 15 s | |
+| `ABDM_MODE`, `ABDM_BASE_URL`, `ABDM_CLIENT_ID`, `ABDM_CLIENT_SECRET`, `ABDM_HIU_ID`, `ABDM_HIP_ID`, `ABDM_CALLBACK_URL`, `ABDM_WEBHOOK_SECRET`, `ABDM_MOCK_CONSENT_SEC` | `mock`, 10 s | production mode lists every missing item |
+| `DRUG_KNOWLEDGE_PROVIDER`, `DRUG_KNOWLEDGE_BASE_URL`, `DRUG_KNOWLEDGE_API_KEY` | `fixture` | |
+| `STT_PROVIDER`, `STT_BASE_URL`, `STT_API_KEY`, `STT_MODEL` | `mock` | `openai_whisper_compatible` \| `google` \| `disabled` |
+| `IVR_PROVIDER`, `IVR_WEBHOOK_SECRET`, `IVR_PUBLIC_URL` | `mock` | twilio uses `TWILIO_AUTH_TOKEN` |
+| `SOS_BUTTON_PROVIDER`, `SOS_WEBHOOK_SECRET` | `mock` | |
+| `GOOGLE_MAPS_API_KEY`, `ROUTE_SPEED_KMH` | -, 20 | optional |
+| `INVITE_REWARD_INVITER`, `INVITE_REWARD_INVITEE`, `WALLET_CREDIT_EXPIRY_DAYS`, `INVITE_REDEEM_WINDOW_DAYS` | 100, 100, 365, 7 | |
+| `MIN_APP_VERSION_DOCTOR_{ANDROID,IOS}` | 1.0.0 | |
+
+### v1.3 partner credentials the founder must obtain
+
+| Partner | What to create | Env vars |
+|---|---|---|
+| **Meta WhatsApp Cloud API** | Meta Business verification, a WhatsApp Business Account + phone number, a permanent system-user access token, the app secret, webhook URL `https://<api>/api/v1/webhooks/whatsapp` with a verify token, and approved message templates (care update, reminder, family alert) | `WHATSAPP_*` |
+| **Lab partner** (e.g. a NABL-accredited home-collection network) | API base URL + key, a webhook secret for `X-Lab-Signature`, the test catalogue and prices (replace the placeholder seed) | `LAB_PARTNER_*`, `LAB_WEBHOOK_SECRET` |
+| **Ambulance aggregator** | API base URL + key, commercial terms (the mock is free) | `AMBULANCE_PARTNER_*` |
+| **ABDM** | Sandbox registration, HIU/HIP ids, client id/secret, public callback URL; production requires ABDM certification (M1-M3) | `ABDM_*` |
+| **Licensed drug database** (e.g. a CDSCO/Indian-brand-aware interaction database) | API access; until then the fixture pack is used in dev and checks fail safe in production | `DRUG_KNOWLEDGE_*` |
+| **Speech-to-text** | OpenAI-compatible Whisper endpoint or Google Cloud Speech-to-Text key (Indian English/Hindi/Telugu) | `STT_*` |
+| **Telephony** (Exotel or Twilio) | An Indian virtual number with an IVR flow pointing at `https://<api>/api/v1/webhooks/ivr/<provider>`; Exotel: shared HMAC secret; Twilio: auth token + public URL | `IVR_*`, `TWILIO_AUTH_TOKEN` |
+| **SOS button vendor** | Device integration and a webhook secret for `X-SOS-Signature` | `SOS_*` |
+| **Google Maps** (optional) | Distance Matrix API key | `GOOGLE_MAPS_API_KEY` |
+| *Clinical governance* | Approve (or replace) the program templates, interaction pack, preventive schedule, exercise library and diet templates; reviewed insurance checklists | admin endpoints / DB |
+
 ## Switching to real PostgreSQL
 
 1. Create a database (PostgreSQL 14+; uses `gen_random_uuid()` and `jsonb`).
@@ -289,6 +363,9 @@ lock through `pg`. For a real server just set `DATABASE_URL` and run `npm run db
 - Wound workflow performs image-quality checks only; `wound_ai_analysis` stays off.
 - Pagination is offset-based behind an opaque cursor.
 - Prescription/referral/invoice PDFs: e-signature rules, SAC codes and GST treatment need legal/tax review. Family Care Plan
-  auto-renewal via Razorpay Subscriptions is not implemented (prepaid periods + reminder). ABDM is an unconnected adapter.
+  auto-renewal via Razorpay Subscriptions is not implemented (prepaid periods + reminder).
+- v1.3: all clinical content (program thresholds, interaction pack, preventive schedule, exercises, diet templates) is
+  fixture data [REQUIRES CLINICAL GOVERNANCE]; the ABDM sandbox/production and lab/ambulance HTTP adapters follow the
+  documented shapes but must be validated with each partner; wallet rules need RBI PPI legal review.
 - `npm audit` reports 4 moderate advisories in dev-only tooling (drizzle-kit → @esbuild-kit → esbuild); the only fix is a
   breaking drizzle-kit downgrade. Production dependencies: 0 vulnerabilities.

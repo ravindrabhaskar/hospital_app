@@ -17,7 +17,7 @@ import { assertFileClean } from '../records/scanner.js';
 import { sniffMime } from '../records/storage.js';
 
 /** Contract section 30: provider & doctor onboarding applications. */
-export const APPLICATION_TYPES = ['nurse', 'technician', 'intern', 'physiotherapist', 'doctor'] as const;
+export const APPLICATION_TYPES = ['nurse', 'technician', 'intern', 'physiotherapist', 'dietitian', 'doctor'] as const;
 export const DOC_TYPES = ['registration_certificate', 'degree', 'id_proof', 'experience_letter', 'other'] as const;
 const DOC_MIME = ['application/pdf', 'image/jpeg', 'image/png'];
 const DOC_MAX_MB = 10;

@@ -7,6 +7,7 @@ import { randomUUID } from 'node:crypto';
 import net from 'node:net';
 import { PGlite } from '@electric-sql/pglite';
 import { PGLiteSocketServer } from '@electric-sql/pglite-socket';
+import { eq } from 'drizzle-orm';
 import pg from 'pg';
 import { buildApp } from '../src/app.js';
 import { schema } from '../src/db/client.js';
@@ -14,6 +15,7 @@ import { seedDatabase, SEED_PHONES } from '../src/db/seed.js';
 import { addDays, istDate } from '../src/lib/time.js';
 import { ensureInvoice } from '../src/modules/billing/service.js';
 import { MemoryStorage } from '../src/modules/records/storage.js';
+import { creditWallet } from '../src/modules/wallet/service.js';
 import { createLeaderElector } from '../src/worker/leader.js';
 
 let passed = 0;
@@ -138,6 +140,41 @@ async function main(): Promise<void> {
     const nurse = await login(SEED_PHONES.sunita);
     const earn = await call(nurse.accessToken, 'GET', `/provider/earnings?from=${addDays(istDate(), -20)}&to=${istDate()}`);
     check('provider earnings through pg', earn.status === 200 && earn.body.completedServices === 1 && earn.body.payable === 399, earn.body);
+
+    // 4c. v1.3 features through pg (wallet row locks, coupons, serial ticket numbers, upserts, worker jobs)
+    const [vRow] = await svc.db.select().from(schema.users).where(eq(schema.users.phone, SEED_PHONES.vaibhav));
+    await creditWallet(svc.db, svc.config, { userId: vRow.id, amount: 2000, reason: 'verify_pg' });
+    const slot2 = (await call(s.accessToken, 'GET', `/doctors/${doctor.id}/slots?date=${addDays(istDate(), 3)}`)).body.items.find((x: { status: string }) => x.status === 'available');
+    const covered = await call(s.accessToken, 'POST', '/appointments', { patientId: ramesh.id, doctorId: doctor.id, slotId: slot2.id, mode: 'video', reason: 'wallet pg', useWallet: true }, { 'idempotency-key': 'pg-wallet' });
+    check('wallet-covered booking succeeds immediately over pg (FOR UPDATE on credits)', covered.body?.payment?.status === 'succeeded' && covered.body?.appointment?.status === 'confirmed', covered.body);
+    const tests = (await call(s.accessToken, 'GET', '/lab/packages')).body.items;
+    const lab = await call(s.accessToken, 'POST', '/lab/orders', {
+      patientId: ramesh.id,
+      packageIds: [tests[0].id],
+      address: { line1: 'x', city: 'Hyderabad', pincode: '500034' },
+      preferredStart: new Date(Date.now() + 86400_000).toISOString(),
+      preferredEnd: new Date(Date.now() + 90000_000).toISOString(),
+      couponCode: 'CARE10',
+    }, { 'idempotency-key': 'pg-lab' });
+    check('lab order with coupon over pg', lab.status === 201 && lab.body.payment.discount > 0, lab.body);
+    const tk = await call(s.accessToken, 'POST', '/support/tickets', { subject: 'pg ticket', category: 'other', message: 'hello' });
+    check('support ticket serial number over pg', /^T-\d{6}$/.test(tk.body?.number ?? ''), tk.body);
+    const zone = await call(s.accessToken, 'PUT', `/patients/${ramesh.id}/safe-zone`, { enabled: true, centerLat: 17.41, centerLng: 78.44, radiusMeters: 300 });
+    const loc = await call(s.accessToken, 'POST', `/patients/${ramesh.id}/location`, { lat: 17.5, lng: 78.5, accuracyM: 5, source: 'phone' });
+    check('safe zone + geofence upserts over pg', zone.status === 200 && loc.body?.inside === false, loc.body);
+    const sched = await call(s.accessToken, 'GET', `/patients/${ramesh.id}/preventive-schedule`);
+    check('preventive schedule (jsonb pack) over pg', sched.status === 200 && sched.body.items.length > 10, sched.status);
+    const { tick } = await import('../src/worker/jobs.js').then((m) => ({ tick: m.JOBS }));
+    let jobsOk = true;
+    for (const name of ['dailyCheckins', 'labOrdersLifecycle', 'insuranceRenewalReminders', 'supportSlaBreaches', 'inviteRewards', 'walletExpiry']) {
+      try {
+        await tick[name](svc, new Date());
+      } catch (err) {
+        jobsOk = false;
+        console.log(`    job ${name} failed: ${(err as Error).message}`);
+      }
+    }
+    check('v1.3 worker jobs run over pg', jobsOk);
 
     // 5. Worker leader election uses pg_try_advisory_lock on a dedicated pg connection
     const leader = await createLeaderElector(svc.dbHandle, 99);

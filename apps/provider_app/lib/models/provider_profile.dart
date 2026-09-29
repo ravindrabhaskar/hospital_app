@@ -20,7 +20,7 @@ class ProviderProfile {
   final String id;
   final String name;
 
-  /// nurse | technician | intern | physiotherapist
+  /// nurse | technician | intern | physiotherapist | dietitian (v1.3)
   final String type;
   final String qualification;
 

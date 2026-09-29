@@ -28,10 +28,12 @@ class AppTheme {
     return useGoogleFonts ? GoogleFonts.interTextTheme(withSecondary) : withSecondary;
   }
 
-  static ThemeData light() {
+  /// [seed] is a white-label tenant's primary colour (§58); null keeps the
+  /// CareCompanion green.
+  static ThemeData light({Color? seed}) {
     final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      primary: AppColors.primary,
+      seedColor: seed ?? AppColors.primary,
+      primary: seed ?? AppColors.primary,
       onPrimary: Colors.white,
       secondary: AppColors.primaryLight,
       surface: AppColors.surface,
@@ -43,10 +45,11 @@ class AppTheme {
         AppColors.border, AppColors.mint100);
   }
 
-  static ThemeData dark() {
+  static ThemeData dark({Color? seed}) {
     final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.darkPrimary,
-      primary: AppColors.darkPrimary,
+      seedColor: seed ?? AppColors.darkPrimary,
+      // A tenant colour is lightened so it stays readable on dark surfaces.
+      primary: seed == null ? AppColors.darkPrimary : Color.lerp(seed, Colors.white, 0.35)!,
       onPrimary: AppColors.darkBackground,
       surface: AppColors.darkSurface,
       onSurface: AppColors.darkText,

@@ -47,7 +47,7 @@ jobs:
   flutter:
     runs-on: ubuntu-latest
     strategy:
-      matrix: { app: [patient_app, provider_app] }
+      matrix: { app: [patient_app, provider_app, doctor_app] }
     defaults:
       run:
         working-directory: apps/${{ matrix.app }}

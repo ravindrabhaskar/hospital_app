@@ -1,0 +1,24 @@
+/**
+ * FIXTURE EXERCISE LIBRARY `exercise-fixture-0.1` — [REQUIRES CLINICAL GOVERNANCE]. Gentle, commonly prescribed home
+ * exercises with illustrated (text) instructions; videos are not yet produced (videoUrl null).
+ */
+export const EXERCISE_CONTENT_VERSION = 'exercise-fixture-0.1';
+const STOP = 'Stop and tell your physiotherapist if you feel sharp pain, dizziness, chest pain or breathlessness.';
+
+export const EXERCISES = [
+  { code: 'ankle_pumps', title: 'Ankle pumps', bodyArea: 'ankle', level: 'beginner', durationSecs: 60, instructions: ['Lie on your back or sit with legs straight.', 'Point your toes away, then pull them towards you.', 'Move slowly and smoothly.'], precautions: [STOP] },
+  { code: 'heel_slides', title: 'Heel slides', bodyArea: 'knee', level: 'beginner', durationSecs: 90, instructions: ['Lie on your back with legs straight.', 'Slide one heel towards your buttock, bending the knee.', 'Slide back slowly. Repeat with the other leg.'], precautions: ['Bend only as far as comfortable.', STOP] },
+  { code: 'quad_sets', title: 'Static quadriceps (quad sets)', bodyArea: 'knee', level: 'beginner', durationSecs: 60, instructions: ['Sit or lie with the leg straight.', 'Tighten the thigh muscle, pressing the back of the knee down.', 'Hold, then relax.'], precautions: [STOP] },
+  { code: 'straight_leg_raise', title: 'Straight leg raise', bodyArea: 'knee', level: 'beginner', durationSecs: 90, instructions: ['Lie on your back, one knee bent, the other straight.', 'Tighten the thigh and lift the straight leg to the height of the other knee.', 'Lower slowly.'], precautions: ['Keep your lower back relaxed.', STOP] },
+  { code: 'sit_to_stand', title: 'Sit to stand', bodyArea: 'hip', level: 'intermediate', durationSecs: 120, instructions: ['Sit on a firm chair with feet flat.', 'Lean slightly forward and stand up without using your hands if you can.', 'Sit down slowly.'], precautions: ['Use a stable chair against a wall.', 'Have someone nearby if your balance is poor.', STOP] },
+  { code: 'glute_bridge', title: 'Bridging', bodyArea: 'hip', level: 'intermediate', durationSecs: 90, instructions: ['Lie on your back with knees bent.', 'Squeeze your buttocks and lift your hips.', 'Hold briefly and lower slowly.'], precautions: [STOP] },
+  { code: 'hip_abduction_side', title: 'Side-lying hip abduction', bodyArea: 'hip', level: 'intermediate', durationSecs: 90, instructions: ['Lie on your side with the lower knee bent.', 'Lift the top leg up, keeping it straight.', 'Lower slowly.'], precautions: ['Avoid if your surgeon has advised hip precautions.', STOP] },
+  { code: 'pelvic_tilt', title: 'Pelvic tilt', bodyArea: 'back', level: 'beginner', durationSecs: 60, instructions: ['Lie on your back with knees bent.', 'Flatten your lower back against the floor by tightening your tummy.', 'Hold, then relax.'], precautions: [STOP] },
+  { code: 'cat_camel', title: 'Cat-camel stretch', bodyArea: 'back', level: 'beginner', durationSecs: 60, instructions: ['On hands and knees, slowly round your back upwards.', 'Then gently let it dip down.', 'Move within a comfortable range.'], precautions: ['Avoid if kneeling is painful.', STOP] },
+  { code: 'chin_tucks', title: 'Chin tucks', bodyArea: 'neck', level: 'beginner', durationSecs: 60, instructions: ['Sit tall looking straight ahead.', 'Gently draw your chin straight back.', 'Hold, then relax.'], precautions: [STOP] },
+  { code: 'shoulder_pendulum', title: 'Pendulum swings', bodyArea: 'shoulder', level: 'beginner', durationSecs: 60, instructions: ['Lean forward supporting yourself on a table.', 'Let the arm hang and make small circles.', 'Change direction.'], precautions: [STOP] },
+  { code: 'wall_slides', title: 'Wall slides (shoulder flexion)', bodyArea: 'shoulder', level: 'intermediate', durationSecs: 90, instructions: ['Stand facing a wall with fingers on it.', 'Walk or slide your hands up as far as comfortable.', 'Slide back down.'], precautions: [STOP] },
+  { code: 'calf_raises', title: 'Calf raises with support', bodyArea: 'ankle', level: 'intermediate', durationSecs: 60, instructions: ['Hold a counter for support.', 'Rise up onto your toes.', 'Lower slowly.'], precautions: ['Always hold on to a stable support.', STOP] },
+  { code: 'deep_breathing', title: 'Deep breathing', bodyArea: 'chest', level: 'beginner', durationSecs: 120, instructions: ['Sit upright and relax your shoulders.', 'Breathe in slowly through your nose, letting your belly rise.', 'Breathe out slowly through pursed lips.'], precautions: ['Stop if you feel light-headed.', STOP] },
+  { code: 'marching_seated', title: 'Seated marching', bodyArea: 'hip', level: 'beginner', durationSecs: 60, instructions: ['Sit tall on a chair.', 'Lift one knee, lower it, then the other, like marching.', 'Keep a steady pace.'], precautions: [STOP] },
+] as const;

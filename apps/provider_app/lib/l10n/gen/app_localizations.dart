@@ -2061,6 +2061,713 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Voice input isn\'t available on this device, or microphone permission was denied.'**
   String get voiceUnavailable;
+
+  /// No description provided for @typeDietitian.
+  ///
+  /// In en, this message translates to:
+  /// **'Dietitian'**
+  String get typeDietitian;
+
+  /// No description provided for @tabRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'Route'**
+  String get tabRoute;
+
+  /// No description provided for @optionalHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optionalHint;
+
+  /// No description provided for @planFor.
+  ///
+  /// In en, this message translates to:
+  /// **'For {name}'**
+  String planFor(String name);
+
+  /// No description provided for @routeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No stops on your route today.'**
+  String get routeEmpty;
+
+  /// No description provided for @routeSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 stop} other{{count} stops}} · {km} km in total'**
+  String routeSummary(int count, String km);
+
+  /// No description provided for @routeFromLastLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Distances start from your last reported location.'**
+  String get routeFromLastLocation;
+
+  /// No description provided for @routeFromCurrentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Distances start from your service zone centre.'**
+  String get routeFromCurrentLocation;
+
+  /// No description provided for @routeStartNavigation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start navigation'**
+  String get routeStartNavigation;
+
+  /// No description provided for @routeTooManyStops.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Maps shows the first {count} stops. Open navigation again after them.'**
+  String routeTooManyStops(int count);
+
+  /// No description provided for @routeFromStart.
+  ///
+  /// In en, this message translates to:
+  /// **'{km} km from start'**
+  String routeFromStart(String km);
+
+  /// No description provided for @routeFromPrev.
+  ///
+  /// In en, this message translates to:
+  /// **'{km} km from previous stop'**
+  String routeFromPrev(String km);
+
+  /// No description provided for @routeEta.
+  ///
+  /// In en, this message translates to:
+  /// **'ETA {time}'**
+  String routeEta(String time);
+
+  /// No description provided for @routeStopLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop {index}: {service}, {window}. {details}'**
+  String routeStopLabel(
+    int index,
+    String service,
+    String window,
+    String details,
+  );
+
+  /// No description provided for @attTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance'**
+  String get attTitle;
+
+  /// No description provided for @attUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance status unavailable'**
+  String get attUnknown;
+
+  /// No description provided for @attNotCheckedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Not checked in today'**
+  String get attNotCheckedIn;
+
+  /// No description provided for @attNotCheckedInHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in when you start your shift.'**
+  String get attNotCheckedInHint;
+
+  /// No description provided for @attCheckedInAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in at {time}'**
+  String attCheckedInAt(String time);
+
+  /// No description provided for @attCheckedOutAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked out at {time}'**
+  String attCheckedOutAt(String time);
+
+  /// No description provided for @attCheckIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in'**
+  String get attCheckIn;
+
+  /// No description provided for @attCheckOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Check out'**
+  String get attCheckOut;
+
+  /// No description provided for @attCheckedInToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in.'**
+  String get attCheckedInToast;
+
+  /// No description provided for @attCheckedOutToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked out.'**
+  String get attCheckedOutToast;
+
+  /// No description provided for @attNoLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'(Location was not available.)'**
+  String get attNoLocation;
+
+  /// No description provided for @attDaysPresent.
+  ///
+  /// In en, this message translates to:
+  /// **'Days present'**
+  String get attDaysPresent;
+
+  /// No description provided for @attHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get attHours;
+
+  /// No description provided for @attVisits.
+  ///
+  /// In en, this message translates to:
+  /// **'Visits'**
+  String get attVisits;
+
+  /// No description provided for @attDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Day by day'**
+  String get attDaily;
+
+  /// No description provided for @attEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No attendance recorded this month.'**
+  String get attEmpty;
+
+  /// No description provided for @attAbsent.
+  ///
+  /// In en, this message translates to:
+  /// **'No check-in'**
+  String get attAbsent;
+
+  /// No description provided for @attOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'not checked out'**
+  String get attOpen;
+
+  /// No description provided for @attHoursShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} h'**
+  String attHoursShort(String hours);
+
+  /// No description provided for @attVisitsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No visits} =1{1 visit} other{{count} visits}}'**
+  String attVisitsCount(int count);
+
+  /// No description provided for @supTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplies'**
+  String get supTitle;
+
+  /// No description provided for @supEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No supplies are assigned to you.'**
+  String get supEmpty;
+
+  /// No description provided for @supLowBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item is running low. Ask your coordinator to restock.} other{{count} items are running low. Ask your coordinator to restock.}}'**
+  String supLowBanner(int count);
+
+  /// No description provided for @supLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low stock'**
+  String get supLow;
+
+  /// No description provided for @supOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of stock'**
+  String get supOut;
+
+  /// No description provided for @supReorderAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Reorder at {qty}'**
+  String supReorderAt(String qty);
+
+  /// No description provided for @supOnHand.
+  ///
+  /// In en, this message translates to:
+  /// **'On hand: {qty}'**
+  String supOnHand(String qty);
+
+  /// No description provided for @supUsageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplies used'**
+  String get supUsageTitle;
+
+  /// No description provided for @supUsageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter what you used at this visit. It is saved even when you are offline.'**
+  String get supUsageHint;
+
+  /// No description provided for @supUsageCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Record gloves, strips, swabs and other items used at this visit.'**
+  String get supUsageCardBody;
+
+  /// No description provided for @supUsageButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Record supplies used'**
+  String get supUsageButton;
+
+  /// No description provided for @supUsageSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save usage'**
+  String get supUsageSave;
+
+  /// No description provided for @supUsageSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplies usage saved'**
+  String get supUsageSaved;
+
+  /// No description provided for @supIncrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Add one {name}'**
+  String supIncrease(String name);
+
+  /// No description provided for @supDecrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove one {name}'**
+  String supDecrease(String name);
+
+  /// No description provided for @sampleTestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab tests to collect'**
+  String get sampleTestsTitle;
+
+  /// No description provided for @sampleGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Collect samples as per the lab order.'**
+  String get sampleGeneric;
+
+  /// No description provided for @sampleFastingShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting'**
+  String get sampleFastingShort;
+
+  /// No description provided for @sampleFastingRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting required. Confirm with the patient before collecting.'**
+  String get sampleFastingRequired;
+
+  /// No description provided for @sampleFastingHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting required ({hours} h). Confirm with the patient before collecting.'**
+  String sampleFastingHours(int hours);
+
+  /// No description provided for @sampleNoFasting.
+  ///
+  /// In en, this message translates to:
+  /// **'No fasting needed for these tests.'**
+  String get sampleNoFasting;
+
+  /// No description provided for @sampleChecklistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Before completing: sample checklist'**
+  String get sampleChecklistTitle;
+
+  /// No description provided for @samplePatientId.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient ID verified'**
+  String get samplePatientId;
+
+  /// No description provided for @sampleFastingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting status confirmed with the patient'**
+  String get sampleFastingConfirmed;
+
+  /// No description provided for @sampleFastingNotNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting not needed (checked with the patient)'**
+  String get sampleFastingNotNeeded;
+
+  /// No description provided for @sampleTubesLabelled.
+  ///
+  /// In en, this message translates to:
+  /// **'All tubes labelled'**
+  String get sampleTubesLabelled;
+
+  /// No description provided for @sampleCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of samples'**
+  String get sampleCount;
+
+  /// No description provided for @sampleCollectedConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Samples collected'**
+  String get sampleCollectedConfirm;
+
+  /// No description provided for @sampleCompleteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm every item to complete the visit.'**
+  String get sampleCompleteHint;
+
+  /// No description provided for @sampleSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 sample collected.} other{{count} samples collected.}} Tubes labelled, patient ID verified, fasting status confirmed.'**
+  String sampleSummary(int count);
+
+  /// No description provided for @exCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise plan'**
+  String get exCardTitle;
+
+  /// No description provided for @exCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create exercise plan'**
+  String get exCreateTitle;
+
+  /// No description provided for @exChooseTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Choose exercises'**
+  String get exChooseTitle;
+
+  /// No description provided for @exAllAreas.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get exAllAreas;
+
+  /// No description provided for @exLibraryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercises for this body area.'**
+  String get exLibraryEmpty;
+
+  /// No description provided for @exDosageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Sets and repetitions'**
+  String get exDosageTitle;
+
+  /// No description provided for @exNoneSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick at least one exercise above.'**
+  String get exNoneSelected;
+
+  /// No description provided for @exSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get exSets;
+
+  /// No description provided for @exReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps'**
+  String get exReps;
+
+  /// No description provided for @exHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold (s)'**
+  String get exHold;
+
+  /// No description provided for @exPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Per day'**
+  String get exPerDay;
+
+  /// No description provided for @exNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get exNotes;
+
+  /// No description provided for @exScheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Schedule'**
+  String get exScheduleTitle;
+
+  /// No description provided for @exStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start date'**
+  String get exStartDate;
+
+  /// No description provided for @exWeeks.
+  ///
+  /// In en, this message translates to:
+  /// **'Weeks'**
+  String get exWeeks;
+
+  /// No description provided for @exSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save exercise plan'**
+  String get exSave;
+
+  /// No description provided for @exCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise plan created'**
+  String get exCreated;
+
+  /// No description provided for @exErrNoExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose at least one exercise.'**
+  String get exErrNoExercises;
+
+  /// No description provided for @exErrRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} must be between {min} and {max}.'**
+  String exErrRange(String field, int min, int max);
+
+  /// No description provided for @exErrStartDate.
+  ///
+  /// In en, this message translates to:
+  /// **'The start date cannot be in the past.'**
+  String get exErrStartDate;
+
+  /// No description provided for @exNoPlans.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercise plans for this patient yet.'**
+  String get exNoPlans;
+
+  /// No description provided for @exProgressUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan progress isn\'t available to you.'**
+  String get exProgressUnavailable;
+
+  /// No description provided for @exPlanLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exercise} other{{count} exercises}} · {author}'**
+  String exPlanLine(int count, String author);
+
+  /// No description provided for @exProgressLine.
+  ///
+  /// In en, this message translates to:
+  /// **'{done}/{planned} sessions · {pct}% adherence'**
+  String exProgressLine(int done, int planned, int pct);
+
+  /// No description provided for @exLatestPain.
+  ///
+  /// In en, this message translates to:
+  /// **'latest pain {score}/10'**
+  String exLatestPain(int score);
+
+  /// No description provided for @dietCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet plan'**
+  String get dietCardTitle;
+
+  /// No description provided for @dietCardBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a meal plan for this patient.'**
+  String get dietCardBody;
+
+  /// No description provided for @dietCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create diet plan'**
+  String get dietCreateTitle;
+
+  /// No description provided for @dietTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'Template'**
+  String get dietTemplate;
+
+  /// No description provided for @dietNoTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'No template'**
+  String get dietNoTemplate;
+
+  /// No description provided for @dietGovernance.
+  ///
+  /// In en, this message translates to:
+  /// **'[REQUIRES CLINICAL GOVERNANCE] This template is not yet clinically approved. Review every item.'**
+  String get dietGovernance;
+
+  /// No description provided for @dietConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions and target'**
+  String get dietConditions;
+
+  /// No description provided for @dietAddCondition.
+  ///
+  /// In en, this message translates to:
+  /// **'Add condition'**
+  String get dietAddCondition;
+
+  /// No description provided for @dietCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie target (kcal/day)'**
+  String get dietCalories;
+
+  /// No description provided for @dietMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals'**
+  String get dietMeals;
+
+  /// No description provided for @dietMealsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Separate items with commas.'**
+  String get dietMealsHint;
+
+  /// No description provided for @dietAvoid.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid and notes'**
+  String get dietAvoid;
+
+  /// No description provided for @dietAvoidHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Foods to avoid (comma separated)'**
+  String get dietAvoidHint;
+
+  /// No description provided for @dietNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get dietNotes;
+
+  /// No description provided for @dietValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until'**
+  String get dietValidUntil;
+
+  /// No description provided for @dietSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save diet plan'**
+  String get dietSave;
+
+  /// No description provided for @dietCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet plan created'**
+  String get dietCreated;
+
+  /// No description provided for @dietErrNoMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Add food items to at least one meal.'**
+  String get dietErrNoMeals;
+
+  /// No description provided for @dietErrNoConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Add at least one condition.'**
+  String get dietErrNoConditions;
+
+  /// No description provided for @dietErrCalories.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie target must be between {min} and {max}.'**
+  String dietErrCalories(int min, int max);
+
+  /// No description provided for @dietErrValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'\"Valid until\" must be after today.'**
+  String get dietErrValidUntil;
+
+  /// No description provided for @slotEarlyMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Early morning'**
+  String get slotEarlyMorning;
+
+  /// No description provided for @slotBreakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get slotBreakfast;
+
+  /// No description provided for @slotMidMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Mid-morning'**
+  String get slotMidMorning;
+
+  /// No description provided for @slotLunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get slotLunch;
+
+  /// No description provided for @slotEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening snack'**
+  String get slotEvening;
+
+  /// No description provided for @slotDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get slotDinner;
+
+  /// No description provided for @slotBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get slotBedtime;
 }
 
 class _AppLocalizationsDelegate

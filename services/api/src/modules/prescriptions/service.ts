@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import type { DbOrTx } from '../../db/client.js';
-import { medications, prescriptions, type appointments, type patients, type providers, type RxItemJson } from '../../db/schema.js';
+import { medications, prescriptions, type appointments, type patients, type providers, type RxItemJson, type RxWarningJson } from '../../db/schema.js';
 import type { Actor } from '../../lib/context.js';
 import { addDays, ageFromDob, istDate, iso } from '../../lib/time.js';
 import { addEvent } from '../episodes/service.js';
@@ -27,6 +27,7 @@ export const toPrescription = (p: PrescriptionRow) => ({
   advice: p.advice,
   followUpInDays: p.followUpInDays,
   recordId: p.recordId,
+  warnings: p.warnings ?? [],
   createdAt: iso(p.createdAt),
 });
 
@@ -141,6 +142,8 @@ export async function issuePrescription(
     input: PrescriptionInput;
     actor: Actor;
     now?: Date;
+    warnings?: RxWarningJson[];
+    overrideReason?: string | null;
   },
 ): Promise<PrescriptionRow> {
   const now = p.now ?? new Date();
@@ -188,6 +191,8 @@ export async function issuePrescription(
       advice: p.input.advice ?? null,
       followUpInDays: p.input.followUpInDays ?? null,
       recordId: record.id,
+      warnings: p.warnings ?? [],
+      overrideReason: p.overrideReason ?? null,
       createdByUserId: p.doctorUserId,
       createdAt: now,
     })

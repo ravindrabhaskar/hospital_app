@@ -10,7 +10,11 @@ import 'core/theme.dart';
 import 'features/auth/auth_controller.dart';
 import 'features/auth/gate_screens.dart';
 import 'features/auth/login_screen.dart';
+import 'features/care_plans/diet_plan_screen.dart';
+import 'features/care_plans/exercise_plan_screen.dart';
 import 'features/earnings/earnings_screen.dart';
+import 'features/field/attendance_screen.dart';
+import 'features/field/supplies_screen.dart';
 import 'features/offline/visit_action_service.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/profile/profile_screen.dart';
@@ -61,9 +65,28 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/', builder: (_, _) => const HomeScreen()),
       GoRoute(path: '/profile', builder: (_, _) => const ProfileScreen()),
       GoRoute(path: '/earnings', builder: (_, _) => const EarningsScreen()),
+      GoRoute(path: '/attendance', builder: (_, _) => const AttendanceScreen()),
+      GoRoute(path: '/supplies', builder: (_, _) => const SuppliesScreen()),
       GoRoute(
         path: '/visits/:id',
         builder: (_, state) => VisitDetailScreen(visitId: state.pathParameters['id']!),
+        routes: [
+          GoRoute(
+            path: 'exercise-plan',
+            builder: (_, state) => ExercisePlanScreen(
+              patientId: state.uri.queryParameters['patientId'] ?? '',
+              patientName: state.uri.queryParameters['patientName'],
+              careEpisodeId: state.uri.queryParameters['careEpisodeId'],
+            ),
+          ),
+          GoRoute(
+            path: 'diet-plan',
+            builder: (_, state) => DietPlanScreen(
+              patientId: state.uri.queryParameters['patientId'] ?? '',
+              patientName: state.uri.queryParameters['patientName'],
+            ),
+          ),
+        ],
       ),
     ],
   );
@@ -122,6 +145,7 @@ class _ProviderAppState extends ConsumerState<ProviderApp> {
   void _onSyncEvent(SyncEvent event) {
     ref.invalidate(visitListProvider);
     ref.invalidate(visitDetailProvider(event.visitId));
+    if (event.type == VisitActionType.suppliesUsage) ref.invalidate(suppliesProvider);
     if (event.foreground) return; // the screen that triggered it reports itself
     final messenger = ref.read(scaffoldMessengerKeyProvider).currentState;
     final ctx = ref.read(scaffoldMessengerKeyProvider).currentContext;

@@ -15,6 +15,7 @@ import '../../models/patient.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
 import '../payments/booking_success_screen.dart';
+import '../offers/checkout_offers.dart';
 import '../payments/payment_sheet.dart';
 
 class DoctorDetailScreen extends ConsumerWidget {
@@ -246,6 +247,7 @@ class _SlotBookingPanelState extends ConsumerState<SlotBookingPanel> {
   bool _busy = false;
   final _reason = TextEditingController();
   final _action = IdempotentAction();
+  final _offers = CheckoutOffersController();
   Appointment? _pendingAppointment;
   Payment? _pendingPayment;
 
@@ -254,10 +256,16 @@ class _SlotBookingPanelState extends ConsumerState<SlotBookingPanel> {
     super.initState();
     final now = DateTime.now();
     _date = DateTime(now.year, now.month, now.day);
+    _offers.addListener(_offersChanged);
+  }
+
+  void _offersChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    _offers.dispose();
     _reason.dispose();
     super.dispose();
   }
@@ -294,6 +302,8 @@ class _SlotBookingPanelState extends ConsumerState<SlotBookingPanel> {
             reason: _reason.text.trim().isEmpty ? l.defaultConsultReason : _reason.text.trim(),
             careEpisodeId: widget.careEpisodeId,
             idempotencyKey: _action.key,
+            couponCode: _offers.couponCode,
+            useWallet: _offers.useWallet,
           );
       _action.complete();
       _invalidateAppointments();
@@ -437,6 +447,10 @@ class _SlotBookingPanelState extends ConsumerState<SlotBookingPanel> {
                     counterText: '',
                   ),
                 ),
+                if (_slot != null) ...[
+                  const SizedBox(height: Space.md),
+                  CheckoutOffersCard(controller: _offers, purpose: 'appointment', amount: d.fees.forMode(_mode)),
+                ],
               ],
               if (!canBook && patient != null) ...[
                 const SizedBox(height: Space.md),
@@ -453,7 +467,9 @@ class _SlotBookingPanelState extends ConsumerState<SlotBookingPanel> {
               key: const Key('confirm-appointment'),
               label: isReschedule
                   ? l.rescheduleToSlot
-                  : (_slot == null ? l.selectASlot : l.confirmAppointmentFee(money(d.fees.forMode(_mode)))),
+                  : (_slot == null
+                      ? l.selectASlot
+                      : l.confirmAppointmentFee(money(_offers.breakdown(d.fees.forMode(_mode)).payable))),
               loading: _busy,
               onPressed: (_slot != null && patient != null && canBook && _pendingPayment == null)
                   ? () => _confirm(patient)

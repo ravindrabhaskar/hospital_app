@@ -11,6 +11,7 @@ import '../../core/widgets/state_views.dart';
 import '../../models/patient.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
+import '../abdm/abdm.dart' show AbdmActionsCard;
 import 'abha_section.dart';
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -124,6 +125,7 @@ class HealthProfileScreen extends ConsumerWidget {
                   ),
               SectionHeader(title: l.abhaTitle),
               AbhaSection(profile: p),
+              AbdmActionsCard(profile: p),
             ],
           ),
         ),

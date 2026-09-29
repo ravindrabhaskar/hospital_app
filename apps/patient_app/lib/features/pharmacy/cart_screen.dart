@@ -15,6 +15,7 @@ import '../../models/patient.dart';
 import '../../models/records.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
+import '../offers/checkout_offers.dart';
 import '../payments/booking_success_screen.dart';
 import '../payments/payment_sheet.dart';
 import 'cart.dart';
@@ -34,6 +35,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   String? _rxId;
   bool _busy = false;
   final _action = IdempotentAction();
+  final _offers = CheckoutOffersController();
   PharmacyOrder? _order;
   Payment? _payment;
 
@@ -43,10 +45,14 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     for (final c in [_line1, _city, _pincode]) {
       c.addListener(() => setState(() {}));
     }
+    _offers.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
   void dispose() {
+    _offers.dispose();
     _line1.dispose();
     _city.dispose();
     _pincode.dispose();
@@ -66,6 +72,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             prescriptionRecordId: eRx == null && cart.needsPrescription ? _rxId : null,
             address: Address(line1: _line1.text.trim(), city: _city.text.trim(), pincode: _pincode.text.trim()),
             idempotencyKey: _action.key,
+            couponCode: _offers.couponCode,
+            useWallet: _offers.useWallet,
           );
       _action.complete();
       setState(() {
@@ -195,15 +203,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         ],
                       ),
                       const SizedBox(height: Space.lg),
-                      CcCard(
-                        child: Row(
-                          children: [
-                            Expanded(child: Text(l.totalAmount)),
-                            Text(money(cart.total),
-                                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
-                          ],
-                        ),
-                      ),
+                      CheckoutOffersCard(controller: _offers, purpose: 'pharmacy_order', amount: cart.total),
                       if (!canBook && patient != null)
                         Padding(
                           padding: const EdgeInsets.only(top: Space.sm),
@@ -217,7 +217,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(Space.screen, Space.sm, Space.screen, Space.md),
                     child: PrimaryButton(
-                      label: l.placeOrderAndPay(money(cart.total)),
+                      label: l.placeOrderAndPay(money(_offers.breakdown(cart.total).payable)),
                       loading: _busy,
                       onPressed: ready && patient != null ? () => _place(patient, cart) : null,
                     ),

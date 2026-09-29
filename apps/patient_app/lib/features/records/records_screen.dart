@@ -131,6 +131,13 @@ class RecordList extends ConsumerWidget {
   }
 }
 
+/// Records imported through ABDM (§50). The contract marks them with source
+/// `imported`; hospital discharge PDFs (§59) share that source, so the ABDM
+/// title marker ("Imported via ABDM …") is also required.
+bool isAbdmImport(MedicalRecord r) => r.importedVia != null
+    ? r.importedVia == 'abdm'
+    : r.source == 'imported' && r.title.toLowerCase().contains('abdm'); // older servers
+
 class RecordTile extends StatelessWidget {
   const RecordTile({super.key, required this.record});
   final MedicalRecord record;
@@ -149,6 +156,10 @@ class RecordTile extends StatelessWidget {
       accent: Labels.recordAccent(r.type),
       title: r.title,
       subtitle: sub,
+      trailing: isAbdmImport(r)
+          ? StatusPill(
+              key: const Key('abdm-badge'), label: l.importedViaAbdm, color: AppColors.skyFg, icon: Icons.cloud_done_outlined)
+          : null,
       onTap: () => context.push('/records/${r.id}'),
     );
   }

@@ -11,6 +11,17 @@ import { activeCoordinatorPlanSubscribers, coveredPatientIds, subscriptionLifecy
 import { escalateFall } from '../modules/emergency/service.js';
 import { autoAssign } from '../modules/homevisits/service.js';
 import { isActiveOn } from '../modules/medications/service.js';
+import { abdmMockLifecycle } from '../modules/abdm/routes.js';
+import { advanceAmbulances } from '../modules/ambulance/routes.js';
+import { checkinMonitor } from '../modules/checkins/service.js';
+import { completeDischarges } from '../modules/discharges/routes.js';
+import { insuranceRenewals } from '../modules/insurance/routes.js';
+import { labLifecycle } from '../modules/lab/service.js';
+import { preventiveReminders } from '../modules/preventive/routes.js';
+import { weeklyReports } from '../modules/programs/service.js';
+import { secondOpinionOverdue } from '../modules/secondopinion/routes.js';
+import { supportSla } from '../modules/support/routes.js';
+import { expireWalletCredits, processInviteRewards } from '../modules/wallet/service.js';
 import type { Services } from '../services.js';
 
 /**
@@ -187,6 +198,34 @@ export const accountDeletions: Job = async (svc, now) => completeDueDeletions(sv
 /** Remove expired data-export files. */
 export const expireDataExports: Job = async (svc, now) => purgeExpiredExports(svc.db, svc.storage, now);
 
+// ---------------------------------------------------------------- v1.3 (contract sections 41-62)
+/** Section 41: missed check-ins -> family alert -> escalation. */
+export const dailyCheckins: Job = async (svc, now) => checkinMonitor(svc, now);
+/** Section 42: Monday 09:00 IST weekly program reports. */
+export const programWeeklyReports: Job = async (svc, now) => weeklyReports(svc, now);
+/** Section 44: mock lab partner lifecycle + submission retries. */
+export const labOrdersLifecycle: Job = async (svc, now) => labLifecycle(svc, now);
+/** Section 55: ambulance partner progress (mock simulation or polling). */
+export const ambulanceProgress: Job = async (svc, now) => advanceAmbulances(svc, now);
+/** Section 50: mock ABDM consent grant + data push. */
+export const abdmConsents: Job = async (svc, now) => abdmMockLifecycle(svc, now);
+/** Section 51: insurance renewal reminders (30 and 7 days). */
+export const insuranceRenewalReminders: Job = async (svc, now) => insuranceRenewals(svc, now);
+/** Section 52: monthly preventive due/overdue reminders. */
+export const preventiveDueReminders: Job = async (svc, now) => preventiveReminders(svc, now);
+/** Section 61: first-response SLA breaches. */
+export const supportSlaBreaches: Job = async (svc, now) => supportSla(svc, now);
+/** Section 49: overdue second opinions alert ops. */
+export const secondOpinionsOverdue: Job = async (svc, now) => secondOpinionOverdue(svc, now);
+/** Section 59: complete 30-day post-discharge programs. */
+export const dischargePrograms: Job = async (svc, now) => completeDischarges(svc, now);
+/** Section 60: invite rewards after the invitee's first completed paid service; wallet credit expiry. */
+export const inviteRewards: Job = async (svc, now) =>
+  processInviteRewards(svc.db, svc.config, now, async (inviterId, inviteeId) => {
+    await svc.notify.notifyUsers([inviterId, inviteeId], { template: 'invite_reward', category: 'payment', deepLink: '/wallet', dedupeKey: `invite_reward:${inviterId}:${inviteeId}` });
+  });
+export const walletExpiry: Job = async (svc, now) => expireWalletCredits(svc.db, now);
+
 export const JOBS: Record<string, Job> = {
   markMissedDoses,
   markOverdueTasks,
@@ -198,5 +237,17 @@ export const JOBS: Record<string, Job> = {
   subscriptions,
   accountDeletions,
   expireDataExports,
+  dailyCheckins,
+  programWeeklyReports,
+  labOrdersLifecycle,
+  ambulanceProgress,
+  abdmConsents,
+  insuranceRenewalReminders,
+  preventiveDueReminders,
+  supportSlaBreaches,
+  secondOpinionsOverdue,
+  dischargePrograms,
+  inviteRewards,
+  walletExpiry,
   dispatchOutbox,
 };

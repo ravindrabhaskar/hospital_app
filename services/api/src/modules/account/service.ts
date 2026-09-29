@@ -40,7 +40,7 @@ import { buildMe, revokeAllSessions } from '../auth/service.js';
 import type { StorageAdapter } from '../records/storage.js';
 
 /** Staff (including field providers) cannot self-delete; an admin disables them (contract section 23). */
-export const NON_DELETABLE_ROLES = ['doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin'] as const;
+export const NON_DELETABLE_ROLES = ['doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin', 'hospital_staff', 'support_agent'] as const;
 
 type DeletionRow = typeof accountDeletionRequests.$inferSelect;
 type ExportRow = typeof dataExports.$inferSelect;

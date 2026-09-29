@@ -49,6 +49,14 @@ export const CONSENT_CATALOG = [
     scope: 'family',
   },
   {
+    purpose: 'whatsapp_messaging',
+    version: '1.0',
+    title: 'WhatsApp messages',
+    description: 'Send me reminders and care updates on WhatsApp, and let me use the WhatsApp assistant. Reply STOP any time to opt out.',
+    required: false,
+    scope: 'whatsapp',
+  },
+  {
     purpose: 'marketing',
     version: '1.0',
     title: 'Offers and updates',

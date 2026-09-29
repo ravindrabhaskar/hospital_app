@@ -13,7 +13,7 @@ import { users, type Role } from '../db/schema.js';
 import { audit } from '../lib/audit.js';
 import { ensureUser } from '../modules/auth/service.js';
 
-const ROLES: Role[] = ['patient', 'doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin'];
+const ROLES: Role[] = ['patient', 'doctor', 'provider', 'coordinator', 'ops_admin', 'super_admin', 'hospital_staff', 'support_agent'];
 export const CLI_ACTOR = { userId: null, name: 'system:cli', role: 'system', ip: null, correlationId: null };
 
 export interface CreateAdminInput {

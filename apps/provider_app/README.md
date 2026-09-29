@@ -2,9 +2,9 @@
 
 Store name **CareCompanion Pro**, Android application id / iOS bundle id `com.carecompanion.provider`.
 
-Flutter app for home-care field providers (nurses, technicians, interns, physiotherapists). It covers login, verification gating, duty status, assigned home visits and the guided visit lifecycle: accept, travel, arrive, verify patient, checkup, escalate and complete. It works offline and syncs with idempotency. v1.2 adds the apply-to-join onboarding flow, earnings, the profile photo and voice-to-note.
+Flutter app for home-care field providers (nurses, technicians, interns, physiotherapists, dietitians). It covers login, verification gating, duty status, assigned home visits and the guided visit lifecycle: accept, travel, arrive, verify patient, checkup, escalate and complete. It works offline and syncs with idempotency. v1.2 adds the apply-to-join onboarding flow, earnings, the profile photo and voice-to-note. v1.3 adds today's route, attendance, supplies, lab sample-collection visits, exercise plans (physiotherapists) and diet plans (dietitians).
 
-API: `docs/api/API_CONTRACT.md` §2 (auth), §8 (home visits), §9 (records, for visit photos), §12/§24 (devices/push), §17 (provider app), §21–§23 (public config, MFA, account) and the v1.2 additions §29 (`/me/photo`), §30 (onboarding applications) and §32 (earnings). Models are hand-written; no codegen is used.
+API: `docs/api/API_CONTRACT.md` §2 (auth), §8 (home visits), §9 (records, for visit photos), §12/§24 (devices/push), §17 (provider app), §21–§23 (public config, MFA, account) and the v1.2 additions §29 (`/me/photo`), §30 (onboarding applications) and §32 (earnings), and the v1.3 additions §44 (sample-collection visits), §48 (route, attendance, supplies), §53 (exercise plans) and §54 (diet plans). Models are hand-written; no codegen is used.
 
 ## Run
 
@@ -76,6 +76,16 @@ Tests (`test/`):
   - The whole multi-step form (validation, languages, pincode → zone, request body).
   - Documents: upload (multipart, progress), required-docs hint, delete, failed upload with retry, the 10 MB limit.
   - Reviewer note, rejected/approved/doctor screens, Telugu rendering.
+- `field_ops_test.dart` (§48):
+  - The Maps URL builder: waypoints in visiting order, the last stop as destination, the origin from `startLocation`, an address fallback, and the cap at 10 stops.
+  - The route list renders ordered stops, distances, ETAs and total km. The route view fetches today's date, and pull-to-refresh refetches it.
+  - Attendance state per day. Load, then check-in and check-out with and without location. A failed check-in. The Home card. The monthly totals view.
+  - Supplies: low-stock ordering and highlighting, and the offline cache.
+  - Usage is **queued offline and replayed once with the same Idempotency-Key**. A lost response is replayed with the same key. A 403 drops only the usage item.
+- `care_plans_test.dart`:
+  - Sample-collection checklist gating: Complete stays disabled until every item is ticked and the sample count is ≥ 1; the summary is prefilled. Other services have no checklist. The lab-tests card shows the ordered tests with fasting, or the generic instruction.
+  - Exercise-plan and diet-plan validation (unit tests and form tests, including the POST bodies).
+  - Type-based visibility, tested in the full app: a nurse sees no plan actions; a physiotherapist sees plan progress and "Create exercise plan"; a dietitian sees only "Create diet plan".
 - `earnings_voice_test.dart`:
   - Earnings tiles and lines (₹ formatting), empty month, month range, the month selector and pull-to-refresh.
   - Voice-to-note: dictated text is **appended** for review and never submitted automatically; the mic toggles off; locale selection (en-IN / hi-IN / te-IN, then same-language, then device default); an unavailable recognizer shows a message.
@@ -106,6 +116,47 @@ lib/
   - **approved** → `/me` is re-read automatically. If the role is there, the router moves to the verification gate or home; otherwise the screen says "Sign out and sign in again" (doctors: use the web portal).
 - **Documents** can be added only once the application exists (the upload endpoint needs it), so the review step says so and the status screen shows "Still needed: registration certificate, ID proof" until both are uploaded (approval requires them). Camera, gallery (`image_picker`) or a PDF/JPG/PNG file (`file_picker`); ≤ 10 MB checked on the device; multipart `file` + `docType` with a progress bar; failed uploads stay in the list with retry; delete asks for confirmation.
 - **Preferred zones**: there is no public zone list (only `/admin/service-zones`), so the provider types pincodes and each one is resolved with `POST /home-visit/serviceability` into `{zoneId, zoneName}`; `preferredZoneIds` holds those ids. Unserviceable pincodes are explained and not added. When editing, previously saved zones show as "Saved area" (the application stores ids only).
+
+### Today's route (§48)
+Home has a fourth tab, **Route**. It calls `GET /provider/route?date=<today>` and shows a list without a map:
+- ordered stops, each with a numbered marker, the service, the time window, the address, the km from the previous stop (or from the start), and the ETA;
+- a summary: the number of stops and total km;
+- pull to refresh. Tapping a stop opens the visit.
+
+**Start navigation** opens a Google Maps URL, `https://www.google.com/maps/dir/?api=1&origin=&destination=&waypoints=a|b&travelmode=driving`, which needs no API key:
+- The waypoints are in visiting order, and the last stop is the destination.
+- The origin is `startLocation` if the server sends one; otherwise Maps uses the device location.
+- Each stop uses its coordinates if it has them, otherwise its address text.
+- Maps URLs allow 9 waypoints, so the URL covers only the first 10 stops, and the screen says so.
+
+### Attendance (§48)
+A Home card shows today's state: not checked in, checked in at …, or checked out at …. Its **Check in** / **Check out** button calls `POST /provider/attendance`. It adds `lat`/`lng` only when a one-shot, foreground location read succeeds; a missing fix never blocks attendance, and the snackbar says the location was unavailable. The state comes from today's row of `GET /provider/attendance?month=YYYY-MM` and is updated from the POST response. **Attendance** (`/attendance`) has a month selector, totals (days present, hours, visits) and a row per day (in – out, hours, visits).
+
+### Supplies (§48)
+**Supplies** (`/supplies`, linked from the attendance card) lists on-hand stock with low-stock items first. Items at or below `reorderLevel` are amber with "Low stock", items at 0 are red with "Out of stock", and a banner counts them. The last list is cached in the encrypted store (wiped on logout), so usage can be recorded offline. During `in_progress`/`escalated`, the visit shows **Record supplies used**. A quantity sheet then queues `POST /provider/supplies/usage {visitId, items:[{code, qty}]}` (zero quantities are left out) as the `suppliesUsage` visit action. It goes through the same encrypted FIFO queue, with one Idempotency-Key for its whole life. It is not visit-scoped: a 403/404 drops only that item.
+
+### Lab sample-collection visits (§44)
+For `serviceCode == sample_collection`:
+- **Lab tests card.** The visit shows the ordered tests and a fasting banner (with hours) when the visit carries them in `labTests`, `tests` or `labOrder.tests`. §8 `HomeVisit` has no such field, so otherwise the card says "Collect samples as per the lab order".
+- **Checklist.** The in-progress step adds a checklist: patient ID verified, fasting status confirmed, all tubes labelled, number of samples (≥ 1), and a final **Samples collected** confirmation. **Complete visit** stays disabled until every item is confirmed.
+- **Summary.** The completion summary is prefilled ("3 samples collected. Tubes labelled, …") and stays editable.
+
+### Physiotherapists: exercise plans (§53)
+If `/provider/me.type == physiotherapist`, the visit (in progress, escalated or completed) shows an **Exercise plan** card:
+- The patient's plans come from `GET /exercise-plans?patientId=`. For each plan, `GET /exercise-plans/:id/progress` gives sessions done/planned, adherence and the latest pain score. If the API refuses, the card says progress isn't available.
+- **Create exercise plan** first loads `/exercise-library`, with body-area chips that re-query `?bodyArea=`.
+- For each exercise you pick, you set sets (1–10), reps (1–50), an optional hold (0–300 s), times per day (1–6) and notes. The plan also has a start date (today or later) and a number of weeks (1–26).
+- Saving sends `POST /exercise-plans` with an Idempotency-Key per form. It works online only.
+
+### Dietitians: diet plans (§54)
+If `type == dietitian`, the visit shows **Create diet plan**, which opens a form with these parts:
+- a template picker from `/diet-templates` that adds the template's conditions; unapproved fixtures show "[REQUIRES CLINICAL GOVERNANCE]";
+- condition chips (at least 1);
+- an optional calorie target (800–4000);
+- the meal items for each of the 7 slots, comma separated (at least one slot);
+- an avoid list, notes, and a "valid until" date (after today).
+
+Saving sends `POST /diet-plans`, online only. The dietitian role is also a type option in apply-to-join (§30).
 
 ### Earnings (§32)
 Profile → **Earnings** (also the wallet icon on Home) → `/earnings`: a month selector (next is disabled on the current month), tiles (payable, completed services, gross, platform fee, refunds) and the per-service lines; pull to refresh. It calls `GET /provider/earnings?from=YYYY-MM-01&to=<last day of month>`.

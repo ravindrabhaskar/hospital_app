@@ -23,6 +23,7 @@ import { createStorage } from '../modules/records/storage-factory.js';
 import { storeRecord } from '../modules/records/service.js';
 import { createDb, runMigrations, type Db } from './client.js';
 import * as s from './schema.js';
+import { seedV13 } from './seed-v13.js';
 
 export const SEED_PHONES = {
   vaibhav: '+919800000001',
@@ -38,6 +39,9 @@ export const SEED_PHONES = {
   ops: '+919800000401',
   admin: '+919800000501',
   kavya: '+919800000601',
+  // v1.3
+  hospitalDesk: '+919800000701',
+  support: '+919800000801',
 } as const;
 
 const SPECIALTIES = [
@@ -58,6 +62,8 @@ const HOME_SERVICES = [
   { code: 'sample_collection', name: 'Lab sample collection', description: 'A trained phlebotomist collects blood/urine samples at home.', price: 399, durationMins: 20, icon: 'test-tube' },
   { code: 'elderly_care', name: 'Elderly care visit', description: 'A nurse visit for older adults: vitals, mobility and medication review.', price: 799, durationMins: 60, icon: 'user-heart' },
   { code: 'post_report_consult', name: 'Post-report home consult', description: 'A nurse reviews your recent report with you and connects you to a doctor.', price: 599, durationMins: 45, icon: 'file-heart' },
+  // v1.3 (contract section 53); also inserted by migration 0005 for existing databases.
+  { code: 'physiotherapy', name: 'Physiotherapy at home', description: 'A physiotherapist assesses mobility and teaches a home exercise program.', price: 699, durationMins: 45, icon: 'activity' },
 ];
 
 const PRODUCTS = [
@@ -556,6 +562,22 @@ export async function seedDatabase(db: Db, storage: StorageAdapter, now = new Da
     hv,
     facilities: facilityRows,
     zoneId: zone.id,
+    consent: (userId: string) => consent(userId, REQUIRED),
+    mkUser,
+  });
+
+  // ================================================================ v1.3 demo data (contract sections 41-62)
+  await seedV13(db, storage, {
+    now,
+    daysAgo,
+    vaibhav: (await db.select().from(s.users).where(eq(s.users.id, vaibhav.id)))[0],
+    lakshmi: (await db.select().from(s.users).where(eq(s.users.id, lakshmi.id)))[0],
+    ramesh,
+    ananya,
+    sunita,
+    meera,
+    episode,
+    facilities: facilityRows,
     consent: (userId: string) => consent(userId, REQUIRED),
     mkUser,
   });

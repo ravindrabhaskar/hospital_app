@@ -3153,6 +3153,1612 @@ class AppLocalizationsHi extends AppLocalizations {
   String get themeDark => 'डार्क';
 
   @override
+  String get more => 'और';
+
+  @override
+  String get moreServices => 'और सेवाएँ';
+
+  @override
+  String get apply => 'लागू करें';
+
+  @override
+  String get done => 'हो गया';
+
+  @override
+  String get from => 'से';
+
+  @override
+  String get to => 'तक';
+
+  @override
+  String get refresh => 'रीफ़्रेश करें';
+
+  @override
+  String get restart => 'फिर से शुरू करें';
+
+  @override
+  String get redeem => 'रिडीम करें';
+
+  @override
+  String get copied => 'कॉपी हो गया';
+
+  @override
+  String get copyCode => 'कोड कॉपी करें';
+
+  @override
+  String copyCommand(String command) {
+    return '$command कॉपी करें';
+  }
+
+  @override
+  String get notSet => 'सेट नहीं है';
+
+  @override
+  String get expired => 'समाप्त';
+
+  @override
+  String get provider => 'प्रदाता';
+
+  @override
+  String get subject => 'विषय';
+
+  @override
+  String get credit => 'जमा';
+
+  @override
+  String get debit => 'नामे';
+
+  @override
+  String updatedAt(String time) {
+    return '$time को अपडेट हुआ';
+  }
+
+  @override
+  String validUntil(String date) {
+    return '$date तक मान्य';
+  }
+
+  @override
+  String planBy(String name) {
+    return '$name द्वारा योजना';
+  }
+
+  @override
+  String planDates(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get reasonOptional => 'कारण (वैकल्पिक)';
+
+  @override
+  String logoOf(String name) {
+    return '$name का लोगो';
+  }
+
+  @override
+  String get poweredByCareCompanion => 'केयरकम्पैनियन द्वारा संचालित';
+
+  @override
+  String get adherence => 'पालन';
+
+  @override
+  String get qxLabTests => 'लैब टेस्ट';
+
+  @override
+  String get qxCarePrograms => 'केयर प्रोग्राम';
+
+  @override
+  String get qxPreventiveCare => 'निवारक देखभाल';
+
+  @override
+  String get qxSecondOpinion => 'दूसरी राय';
+
+  @override
+  String get qxInsurance => 'बीमा';
+
+  @override
+  String get qxExercise => 'व्यायाम';
+
+  @override
+  String get qxDiet => 'आहार';
+
+  @override
+  String get dailyCheckin => 'दैनिक चेक-इन';
+
+  @override
+  String get dailyCheckinSub => 'हर सुबह \"मैं ठीक हूँ\" पर टैप';
+
+  @override
+  String get imOkToday => 'मैं आज ठीक हूँ';
+
+  @override
+  String get checkinPrompt =>
+      'एक टैप से आपके परिवार को पता चलेगा कि आप आज ठीक हैं।';
+
+  @override
+  String get checkinMissedBody =>
+      'आज की चेक-इन अवधि बीत गई है। अभी चेक-इन करने से भी परिवार को पता चलेगा कि आप ठीक हैं।';
+
+  @override
+  String get checkinMoodOptional => 'आप कैसा महसूस कर रहे हैं? (वैकल्पिक)';
+
+  @override
+  String checkinWindow(String start, String end) {
+    return '$start–$end';
+  }
+
+  @override
+  String get checkinThanks =>
+      'धन्यवाद! आपके परिवार को बता दिया गया है कि आप ठीक हैं।';
+
+  @override
+  String checkinDoneAt(String time) {
+    return '$time पर चेक-इन किया';
+  }
+
+  @override
+  String checkinFamilyDone(String name, String time) {
+    return '$name ने आज $time पर चेक-इन किया';
+  }
+
+  @override
+  String checkinFamilyMissed(String name) {
+    return '$name ने आज चेक-इन नहीं किया';
+  }
+
+  @override
+  String checkinFamilyPending(String name, String window) {
+    return '$name ने अभी चेक-इन नहीं किया (समय $window)';
+  }
+
+  @override
+  String get checkinOk => 'समय पर';
+
+  @override
+  String get checkinLate => 'देर से';
+
+  @override
+  String get checkinMissed => 'छूट गया';
+
+  @override
+  String get checkinPending => 'बाकी';
+
+  @override
+  String checkinHistorySemantic(int ok, int late, int missed) {
+    return 'पिछले 30 दिन: $ok समय पर, $late देर से, $missed छूटे';
+  }
+
+  @override
+  String checkinIntro(String name) {
+    return '$name के लिए रोज़ \"मैं ठीक हूँ\" चेक-इन। छूटने पर परिवार और केयर कोऑर्डिनेटर को सूचना मिलती है।';
+  }
+
+  @override
+  String get checkinNoPermission =>
+      'केवल \"देखभाल प्रबंधन\" अनुमति वाले परिवारजन इसे बदल सकते हैं।';
+
+  @override
+  String get checkinEnable => 'दैनिक चेक-इन';
+
+  @override
+  String get checkinEnableSub => 'हर सुबह \"मैं आज ठीक हूँ\" कार्ड दिखाएँ';
+
+  @override
+  String get checkinWindowStart => 'समय शुरू';
+
+  @override
+  String get checkinWindowEnd => 'समय समाप्त';
+
+  @override
+  String get checkinWindowInvalid => 'समाप्ति का समय शुरुआत के बाद होना चाहिए';
+
+  @override
+  String get checkinEscalateAfter => 'इतनी देर बाद केयर टीम को सूचित करें';
+
+  @override
+  String minutesCount(int minutes) {
+    return '$minutes मिनट';
+  }
+
+  @override
+  String get checkinNotifyFamily => 'छूटने पर परिवार को सूचित करें';
+
+  @override
+  String get checkinNotifyCoordinator => 'केयर कोऑर्डिनेटर को सूचित करें';
+
+  @override
+  String get checkinHowItWorks =>
+      'समय समाप्त होने तक चेक-इन न होने पर परिवार को सूचना मिलती है। तय समय के बाद भी न होने पर केयर कोऑर्डिनेटर संपर्क करते हैं। समय IST में है।';
+
+  @override
+  String get checkinLast30Days => 'पिछले 30 दिन';
+
+  @override
+  String get checkinNoHistory => 'अभी कोई चेक-इन नहीं';
+
+  @override
+  String get carePrograms => 'केयर प्रोग्राम';
+
+  @override
+  String get myPrograms => 'मेरे प्रोग्राम';
+
+  @override
+  String get programsIntro =>
+      'आपके डॉक्टर ने विज़िट के बीच आपकी रीडिंग देखने के लिए इन्हें शुरू किया है।';
+
+  @override
+  String get noProgramsTitle => 'अभी कोई केयर प्रोग्राम नहीं';
+
+  @override
+  String get noProgramsBody =>
+      'आपके डॉक्टर आपको बीपी, डायबिटीज़ या हृदय देखभाल प्रोग्राम में जोड़ सकते हैं।';
+
+  @override
+  String get logReading => 'रीडिंग दर्ज करें';
+
+  @override
+  String lastReadingAt(String time) {
+    return 'पिछली रीडिंग $time';
+  }
+
+  @override
+  String get adherence7d => 'ली गई रीडिंग (7 दिन)';
+
+  @override
+  String get adherence30d => 'ली गई रीडिंग (30 दिन)';
+
+  @override
+  String readingsDueToday(int count) {
+    return 'आज $count रीडिंग बाकी';
+  }
+
+  @override
+  String get readingsDoneToday => 'आज की रीडिंग पूरी';
+
+  @override
+  String readingsReceived(int received, int expected) {
+    return '$expected में से $received रीडिंग';
+  }
+
+  @override
+  String openAlerts(int count) {
+    return '$count खुली चेतावनियाँ';
+  }
+
+  @override
+  String get openAlertsTitle => 'चेतावनियाँ';
+
+  @override
+  String get noAlerts => 'पिछले 30 दिनों में कोई चेतावनी नहीं।';
+
+  @override
+  String get programPaused => 'रोका गया';
+
+  @override
+  String get programCompleted => 'पूरा';
+
+  @override
+  String get trend => 'रुझान';
+
+  @override
+  String get noReadingsYet => 'अभी कोई रीडिंग नहीं';
+
+  @override
+  String trendSemantic(String type, int count, String latest, String date) {
+    return '$type रुझान: $count दिन, नवीनतम औसत $latest ($date)';
+  }
+
+  @override
+  String get weeklyReports => 'साप्ताहिक रिपोर्ट';
+
+  @override
+  String get noWeeklyReports => 'आपकी पहली साप्ताहिक रिपोर्ट सोमवार को आएगी।';
+
+  @override
+  String get programDisclaimer =>
+      'चेतावनियाँ आपकी केयर टीम को जाती हैं। तबीयत ठीक न लगे तो डॉक्टर को, आपात स्थिति में 108 पर कॉल करें।';
+
+  @override
+  String get bloodPressure => 'रक्तचाप';
+
+  @override
+  String get bloodPressureShort => 'बीपी';
+
+  @override
+  String get glucoseShort => 'शुगर';
+
+  @override
+  String get weightShort => 'वज़न';
+
+  @override
+  String get readingOutOfRange =>
+      'यह मान असामान्य लगता है। कृपया जाँचकर फिर दर्ज करें।';
+
+  @override
+  String get readingSystolicBelowDiastolic =>
+      'ऊपरी (सिस्टोलिक) संख्या निचली से अधिक होनी चाहिए।';
+
+  @override
+  String get readingSafetyNote =>
+      'रीडिंग आपकी केयर टीम के साथ साझा होती हैं। तबीयत ख़राब हो तो आपात स्थिति में 108 पर कॉल करें।';
+
+  @override
+  String get readingSaved => 'रीडिंग सहेजी गई';
+
+  @override
+  String get whatsappAssistant => 'व्हाट्सऐप सहायक';
+
+  @override
+  String get whatsappExplain =>
+      'व्हाट्सऐप पर रिमाइंडर पाएँ और जवाब देकर चेक-इन करें, बीपी या शुगर दर्ज करें या सवाल पूछें। कोई निदान नहीं दिया जाता।';
+
+  @override
+  String get whatsappOptIn => 'व्हाट्सऐप सहायक का उपयोग करें';
+
+  @override
+  String get whatsappPrivacyNote =>
+      'संदेश आपके पंजीकृत नंबर पर जाते हैं। कभी भी बंद करने के लिए STOP भेजें।';
+
+  @override
+  String get whatsappTryIt => 'आज़माएँ';
+
+  @override
+  String get whatsappTryIntro => 'ये संदेश हमारे व्हाट्सऐप नंबर पर भेजें:';
+
+  @override
+  String get whatsappOptedIn => 'व्हाट्सऐप सहायक चालू हुआ';
+
+  @override
+  String get whatsappOptedOut => 'व्हाट्सऐप सहायक बंद हुआ';
+
+  @override
+  String get waCmdToday => 'आज की दवा और विज़िट के रिमाइंडर';
+
+  @override
+  String get waCmdCheckin => 'दैनिक \"मैं ठीक हूँ\" चेक-इन';
+
+  @override
+  String get waCmdBp => 'रक्तचाप रीडिंग दर्ज करें';
+
+  @override
+  String get waCmdSugar => 'ब्लड शुगर रीडिंग दर्ज करें';
+
+  @override
+  String get waCmdBook => 'देखभाल बुक करने के लिंक पाएँ';
+
+  @override
+  String get waCmdStop => 'व्हाट्सऐप संदेश बंद करें';
+
+  @override
+  String get waCmdStart => 'फिर से शुरू करें';
+
+  @override
+  String get whatsappNoDiagnosis =>
+      'जवाब सामान्य मार्गदर्शन हैं, निदान नहीं। आपात स्थिति में 108 पर कॉल करें।';
+
+  @override
+  String get labTests => 'घर पर लैब टेस्ट';
+
+  @override
+  String get labIntro =>
+      'प्रशिक्षित तकनीशियन घर पर सैंपल लेते हैं। रिपोर्ट आपके रिकॉर्ड में आती है।';
+
+  @override
+  String get searchLabTests => 'टेस्ट खोजें (जैसे HbA1c, लिपिड)';
+
+  @override
+  String get healthPackages => 'हेल्थ पैकेज';
+
+  @override
+  String get noPackages => 'अभी कोई पैकेज नहीं';
+
+  @override
+  String get allTests => 'सभी टेस्ट';
+
+  @override
+  String resultsFor(String query) {
+    return '\"$query\" के परिणाम';
+  }
+
+  @override
+  String get noLabTests => 'कोई टेस्ट नहीं मिला';
+
+  @override
+  String get labPricingNote =>
+      'कीमतें सांकेतिक हैं और बुकिंग पर पुष्ट होती हैं।';
+
+  @override
+  String testsIncluded(int count) {
+    return '$count टेस्ट';
+  }
+
+  @override
+  String get fastingRequired => 'उपवास';
+
+  @override
+  String fastingHoursShort(int hours) {
+    return '$hours घंटे उपवास';
+  }
+
+  @override
+  String reportInHours(int hours) {
+    return '$hours घंटे में रिपोर्ट';
+  }
+
+  @override
+  String get includedInPackage => 'पैकेज में शामिल';
+
+  @override
+  String removeFromCart(String name) {
+    return '$name हटाएँ';
+  }
+
+  @override
+  String labCartBar(int count, String amount) {
+    return '$count चुने · $amount · कार्ट देखें';
+  }
+
+  @override
+  String get sampleBlood => 'रक्त';
+
+  @override
+  String get sampleUrine => 'मूत्र';
+
+  @override
+  String get sampleSwab => 'स्वैब';
+
+  @override
+  String get sampleOther => 'अन्य सैंपल';
+
+  @override
+  String get fastingNoticeTitle => 'उपवास आवश्यक';
+
+  @override
+  String fastingNoticeBody(int hours) {
+    return 'सैंपल लेने से $hours घंटे पहले कुछ न खाएँ। पानी पी सकते हैं। डॉक्टर ने मना न किया हो तो नियमित दवाएँ लें।';
+  }
+
+  @override
+  String get labCart => 'आपके टेस्ट';
+
+  @override
+  String get labCartEmpty => 'कोई टेस्ट नहीं चुना';
+
+  @override
+  String get browseTests => 'टेस्ट देखें';
+
+  @override
+  String get sampleCollectionAddress => 'सैंपल लेने का पता';
+
+  @override
+  String get sampleCollectionTime => 'सैंपल का समय';
+
+  @override
+  String youSaveVsMrp(String amount) {
+    return 'MRP पर $amount की बचत';
+  }
+
+  @override
+  String get labOrderTitle => 'लैब टेस्ट ऑर्डर';
+
+  @override
+  String get labBooked => 'सैंपल कलेक्शन बुक हुआ';
+
+  @override
+  String get trackOrder => 'ऑर्डर ट्रैक करें';
+
+  @override
+  String get myLabOrders => 'मेरे लैब ऑर्डर';
+
+  @override
+  String get noLabOrders => 'अभी कोई लैब ऑर्डर नहीं';
+
+  @override
+  String get labPendingPayment => 'भुगतान बाकी';
+
+  @override
+  String get labScheduled => 'कलेक्शन तय';
+
+  @override
+  String get labSampleCollected => 'सैंपल लिया गया';
+
+  @override
+  String get labProcessing => 'लैब में जाँच जारी';
+
+  @override
+  String get labReportReady => 'रिपोर्ट तैयार';
+
+  @override
+  String get labCancelled => 'रद्द';
+
+  @override
+  String get labPartner => 'लैब पार्टनर';
+
+  @override
+  String get viewReport => 'रिपोर्ट देखें';
+
+  @override
+  String get labReport => 'लैब रिपोर्ट';
+
+  @override
+  String get trackSampleCollection => 'सैंपल कलेक्शन ट्रैक करें';
+
+  @override
+  String get orderStatus => 'ऑर्डर की स्थिति';
+
+  @override
+  String get cancelOrder => 'ऑर्डर रद्द करें';
+
+  @override
+  String get labOrderCancelled => 'ऑर्डर रद्द हुआ। भुगतान वापस किया जाएगा।';
+
+  @override
+  String get labReportNote =>
+      'आपके डॉक्टर रिपोर्ट देख सकेंगे। परिणामों पर उनसे बात करें।';
+
+  @override
+  String get cancelReasonTitle => 'आप क्यों रद्द कर रहे हैं?';
+
+  @override
+  String get secondOpinion => 'दूसरी राय';
+
+  @override
+  String get secondOpinionIntro =>
+      'अपनी रिपोर्ट वरिष्ठ विशेषज्ञ से साझा करें और लिखित राय पाएँ।';
+
+  @override
+  String get requestSecondOpinion => 'दूसरी राय का अनुरोध करें';
+
+  @override
+  String get myRequests => 'मेरे अनुरोध';
+
+  @override
+  String get noSecondOpinions => 'अभी कोई अनुरोध नहीं';
+
+  @override
+  String get secondOpinionUnavailable => 'दूसरी राय अभी उपलब्ध नहीं है';
+
+  @override
+  String get chooseSpecialty => 'विशेषज्ञता चुनें';
+
+  @override
+  String opinionWithinHours(int hours) {
+    return '$hours घंटे में लिखित राय';
+  }
+
+  @override
+  String get yourQuestion => 'आपका सवाल';
+
+  @override
+  String get yourQuestionHint =>
+      'विशेषज्ञ से क्या देखवाना चाहते हैं? मुख्य चिंता और मौजूदा इलाज लिखें।';
+
+  @override
+  String questionTooShort(int count) {
+    return 'कम से कम $count अक्षर लिखें';
+  }
+
+  @override
+  String get recordsToShare => 'साझा करने के रिकॉर्ड';
+
+  @override
+  String get noRecordsToShare =>
+      'अभी कोई रिकॉर्ड नहीं। आप फिर भी सवाल पूछ सकते हैं।';
+
+  @override
+  String secondOpinionConsent(int count) {
+    return 'मैं अपना सवाल और चुने गए $count रिकॉर्ड, केवल पढ़ने के लिए, इस अनुरोध को लेने वाले विशेषज्ञ से साझा करने की सहमति देता/देती हूँ। पहुँच दर्ज की जाती है।';
+  }
+
+  @override
+  String get secondOpinionDisclaimer =>
+      'दूसरी राय साझा रिकॉर्ड पर आधारित सलाह है। यह जाँच का विकल्प नहीं है। आपात स्थिति में 108 पर कॉल करें।';
+
+  @override
+  String get secondOpinionSubmitted => 'अनुरोध विशेषज्ञों को भेजा गया';
+
+  @override
+  String get soPendingPayment => 'भुगतान बाकी';
+
+  @override
+  String get soOpen => 'विशेषज्ञ की प्रतीक्षा';
+
+  @override
+  String get soClaimed => 'विशेषज्ञ देख रहे हैं';
+
+  @override
+  String get soAnswered => 'राय तैयार';
+
+  @override
+  String get soCancelled => 'रद्द';
+
+  @override
+  String get specialist => 'विशेषज्ञ';
+
+  @override
+  String get expectedBy => 'अपेक्षित समय';
+
+  @override
+  String get recordsShared => 'साझा किए रिकॉर्ड';
+
+  @override
+  String get specialistOpinion => 'विशेषज्ञ की राय';
+
+  @override
+  String opinionBy(String name) {
+    return '$name द्वारा';
+  }
+
+  @override
+  String get recommendations => 'सुझाव';
+
+  @override
+  String get bookTeleconsult => 'वीडियो परामर्श बुक करें';
+
+  @override
+  String get opinionPendingBody =>
+      'विशेषज्ञ के जवाब देने पर हम आपको सूचित करेंगे।';
+
+  @override
+  String get createAbha => 'ABHA बनाएँ';
+
+  @override
+  String get createAbhaSub => 'मोबाइल OTP से अपनी हेल्थ आईडी पाएँ';
+
+  @override
+  String get createAbhaIntro =>
+      'सत्यापन के लिए मोबाइल नंबर दर्ज करें। उस पर OTP भेजा जाएगा।';
+
+  @override
+  String get linkAbha => 'मौजूदा ABHA जोड़ें';
+
+  @override
+  String get linkAbhaSub => 'पहले से 14 अंकों का ABHA नंबर है?';
+
+  @override
+  String get linkAbhaIntro =>
+      'अपना ABHA नंबर दर्ज करें। उससे जुड़े मोबाइल पर OTP भेजा जाएगा।';
+
+  @override
+  String get abhaMobileLabel => 'मोबाइल नंबर';
+
+  @override
+  String get abhaOtpSent => 'भेजा गया 6 अंकों का OTP दर्ज करें।';
+
+  @override
+  String get abhaCreated => 'आपका ABHA तैयार है';
+
+  @override
+  String get abhaLinked => 'ABHA जुड़ गया';
+
+  @override
+  String get abdmPrivacyNote =>
+      'ABHA राष्ट्रीय स्वास्थ्य प्राधिकरण (ABDM) जारी करता है। आपकी सहमति के बिना हम रिकॉर्ड साझा नहीं करते।';
+
+  @override
+  String get fetchRecords => 'दूसरे अस्पतालों से रिकॉर्ड मँगाएँ';
+
+  @override
+  String get fetchRecordsSub => 'ABDM के माध्यम से, आपकी सहमति से';
+
+  @override
+  String get fetchRecordsIntro =>
+      'अपने ABHA से जुड़े अस्पतालों से रिकॉर्ड साझा करने को कहें। अनुरोध आप अपने ABHA ऐप में स्वीकृत करते हैं।';
+
+  @override
+  String get recordTypesToFetch => 'रिकॉर्ड के प्रकार';
+
+  @override
+  String get hiPrescription => 'पर्चे';
+
+  @override
+  String get hiDiagnosticReport => 'जाँच रिपोर्ट';
+
+  @override
+  String get hiDischargeSummary => 'डिस्चार्ज सारांश';
+
+  @override
+  String get hiOpConsultation => 'ओपीडी परामर्श';
+
+  @override
+  String get dateRange => 'तारीख़ सीमा';
+
+  @override
+  String get abdmConsentExplain =>
+      'रिकॉर्ड केवल आपकी देखभाल (उद्देश्य CAREMGT) के लिए उपयोग होते हैं। हर अनुरोध नीचे दिखता है।';
+
+  @override
+  String get sendConsentRequest => 'सहमति अनुरोध भेजें';
+
+  @override
+  String get abdmRequestSent =>
+      'अनुरोध भेजा गया। इसे अपने ABHA ऐप में स्वीकृत करें।';
+
+  @override
+  String get myConsentRequests => 'मेरे अनुरोध';
+
+  @override
+  String get noConsentRequests => 'अभी कोई अनुरोध नहीं';
+
+  @override
+  String get abdmRequested => 'स्वीकृति की प्रतीक्षा';
+
+  @override
+  String get abdmGranted => 'स्वीकृत';
+
+  @override
+  String get abdmDenied => 'अस्वीकृत';
+
+  @override
+  String get abdmExpired => 'समाप्त';
+
+  @override
+  String get abdmDataReceived => 'रिकॉर्ड प्राप्त';
+
+  @override
+  String recordsImported(int count) {
+    return '$count रिकॉर्ड आयात हुए';
+  }
+
+  @override
+  String get importedViaAbdm => 'ABDM से आयातित';
+
+  @override
+  String get insurance => 'बीमा';
+
+  @override
+  String get insuranceSub => 'पॉलिसी, कैशलेस अस्पताल, क्लेम';
+
+  @override
+  String get addPolicy => 'पॉलिसी जोड़ें';
+
+  @override
+  String get editPolicy => 'पॉलिसी बदलें';
+
+  @override
+  String get deletePolicy => 'पॉलिसी हटाएँ';
+
+  @override
+  String get deletePolicyBody => 'इस पॉलिसी को प्रोफ़ाइल से हटाएँ?';
+
+  @override
+  String get noPolicies => 'कोई बीमा पॉलिसी नहीं';
+
+  @override
+  String get noPoliciesBody =>
+      'कैशलेस अस्पताल खोजने और नवीनीकरण रिमाइंडर पाने के लिए अपना स्वास्थ्य बीमा जोड़ें।';
+
+  @override
+  String get expiringSoon => 'जल्द समाप्त';
+
+  @override
+  String sumInsuredValue(String amount) {
+    return 'कवर $amount';
+  }
+
+  @override
+  String get findCashlessHospitals => 'कैशलेस अस्पताल खोजें';
+
+  @override
+  String get cashlessHospitals => 'कैशलेस अस्पताल';
+
+  @override
+  String get noCashlessHospitals =>
+      'इस बीमाकर्ता के लिए कोई कैशलेस अस्पताल सूचीबद्ध नहीं';
+
+  @override
+  String cashlessIntro(String insurer) {
+    return '$insurer के साथ कैशलेस सुविधा वाले अस्पताल।';
+  }
+
+  @override
+  String get cashlessVerifyNote =>
+      'भर्ती से पहले बीमाकर्ता या TPA से कैशलेस पात्रता की पुष्टि ज़रूर करें।';
+
+  @override
+  String get claimHelp => 'क्लेम';
+
+  @override
+  String get claimChecklist => 'क्लेम चेकलिस्ट';
+
+  @override
+  String get claimChecklistSub => 'कैशलेस और रीइम्बर्समेंट के चरण और दस्तावेज़';
+
+  @override
+  String get cashless => 'कैशलेस';
+
+  @override
+  String get reimbursement => 'रीइम्बर्समेंट';
+
+  @override
+  String get claimSteps => 'चरण';
+
+  @override
+  String get insurer => 'बीमाकर्ता';
+
+  @override
+  String get policyNumber => 'पॉलिसी नंबर';
+
+  @override
+  String policyNumberKeep(String masked) {
+    return 'सहेजा: $masked। रखने के लिए खाली छोड़ें।';
+  }
+
+  @override
+  String get planNameOptional => 'प्लान का नाम (वैकल्पिक)';
+
+  @override
+  String get policyType => 'पॉलिसी प्रकार';
+
+  @override
+  String get policyIndividual => 'व्यक्तिगत';
+
+  @override
+  String get policyFamilyFloater => 'फ़ैमिली फ़्लोटर';
+
+  @override
+  String get policyCorporate => 'कॉरपोरेट';
+
+  @override
+  String get policyGovernment => 'सरकारी योजना';
+
+  @override
+  String get sumInsuredOptional => 'बीमा राशि (वैकल्पिक)';
+
+  @override
+  String get validFrom => 'से मान्य';
+
+  @override
+  String get validTo => 'तक मान्य';
+
+  @override
+  String get tpaOptional => 'TPA का नाम (वैकल्पिक)';
+
+  @override
+  String get uploadCardPhoto => 'बीमा कार्ड की फ़ोटो जोड़ें';
+
+  @override
+  String get cardPhotoAdded => 'कार्ड फ़ोटो जुड़ गई';
+
+  @override
+  String get insuranceCardTitle => 'बीमा कार्ड';
+
+  @override
+  String get policyDatesInvalid => 'मान्य तिथियाँ चुनें (अंत, शुरुआत के बाद)';
+
+  @override
+  String get policyPrivacyNote =>
+      'पॉलिसी नंबर एन्क्रिप्ट करके रखे जाते हैं और छिपाकर दिखाए जाते हैं।';
+
+  @override
+  String get preventiveCare => 'निवारक देखभाल';
+
+  @override
+  String get pvOverdue => 'समय बीत गया';
+
+  @override
+  String get pvDue => 'अभी करवाएँ';
+
+  @override
+  String get pvUpcoming => 'आगामी';
+
+  @override
+  String get pvDone => 'हो गया';
+
+  @override
+  String get pvNotApplicable => 'लागू नहीं';
+
+  @override
+  String get noPreventiveItems => 'कुछ निर्धारित नहीं';
+
+  @override
+  String get markAsDone => 'पूरा चिह्नित करें';
+
+  @override
+  String get markedDone => 'पूरा चिह्नित किया';
+
+  @override
+  String whenWasItDone(String name) {
+    return '\"$name\" कब किया गया?';
+  }
+
+  @override
+  String lastDoneOn(String date) {
+    return 'पिछली बार $date';
+  }
+
+  @override
+  String repeatsEveryMonths(int months) {
+    return 'हर $months महीने में';
+  }
+
+  @override
+  String get preventiveNote =>
+      'आयु और लिंग पर आधारित। आपके डॉक्टर अलग समय-सारिणी सुझा सकते हैं।';
+
+  @override
+  String get preventiveNoteFixture =>
+      'आयु और लिंग पर आधारित नमूना समय-सारिणी, चिकित्सकीय समीक्षा बाकी। कृपया डॉक्टर से पुष्टि करें।';
+
+  @override
+  String get exercisePlan => 'व्यायाम योजना';
+
+  @override
+  String get noExercisePlan => 'अभी कोई व्यायाम योजना नहीं';
+
+  @override
+  String get noExercisePlanBody =>
+      'डॉक्टर या फ़िज़ियोथेरेपिस्ट आपके लिए योजना बना सकते हैं।';
+
+  @override
+  String get bookPhysioVisit => 'फ़िज़ियोथेरेपी होम विज़िट बुक करें';
+
+  @override
+  String get bookPhysioVisitSub => 'फ़िज़ियोथेरेपिस्ट आपके घर आएँगे';
+
+  @override
+  String get todaysExercises => 'आज के व्यायाम';
+
+  @override
+  String setsReps(int sets, int reps) {
+    return '$sets सेट × $reps बार';
+  }
+
+  @override
+  String holdSeconds(int seconds) {
+    return '$seconds सेकंड रोकें';
+  }
+
+  @override
+  String get startTimer => 'टाइमर शुरू करें';
+
+  @override
+  String get precautions => 'सावधानियाँ';
+
+  @override
+  String markExerciseDone(String name) {
+    return '$name पूरा चिह्नित करें';
+  }
+
+  @override
+  String finishSession(int done, int total) {
+    return 'सत्र पूरा करें ($done/$total)';
+  }
+
+  @override
+  String sessionsDone(int done, int planned) {
+    return '$planned में से $done सत्र पूरे';
+  }
+
+  @override
+  String get painTrend => 'सत्र के बाद दर्द';
+
+  @override
+  String painTrendSemantic(int score) {
+    return 'दर्द स्कोर रुझान, नवीनतम 10 में से $score';
+  }
+
+  @override
+  String get howIsYourPain => 'अब दर्द कैसा है?';
+
+  @override
+  String painScoreValue(int score) {
+    return 'दर्द $score / 10';
+  }
+
+  @override
+  String get noPain => 'कोई दर्द नहीं';
+
+  @override
+  String get worstPain => 'सबसे तेज़ दर्द';
+
+  @override
+  String get highPainNote =>
+      'तेज़ दर्द: आपके थेरेपिस्ट को बताया जाएगा। व्यायाम रोकें और आराम करें।';
+
+  @override
+  String get sessionSaved => 'सत्र सहेजा गया। शाबाश!';
+
+  @override
+  String get sessionSavedHighPain =>
+      'सत्र सहेजा गया। थेरेपिस्ट को दर्द के बारे में बताया गया।';
+
+  @override
+  String get exerciseSafetyNote =>
+      'तेज़ दर्द, चक्कर या साँस फूलने पर रुकें। आपात स्थिति में 108 पर कॉल करें।';
+
+  @override
+  String get dietPlan => 'आहार योजना';
+
+  @override
+  String get noDietPlan => 'अभी कोई आहार योजना नहीं';
+
+  @override
+  String get noDietPlanBody => 'डॉक्टर या डायटीशियन आपके लिए बना सकते हैं।';
+
+  @override
+  String calorieTarget(int kcal) {
+    return 'रोज़ $kcal kcal लक्ष्य';
+  }
+
+  @override
+  String get adherence14d => 'पालन (14 दिन)';
+
+  @override
+  String dietAdherenceSemantic(int pct) {
+    return '14 दिनों में $pct प्रतिशत आहार का पालन';
+  }
+
+  @override
+  String get todaysMeals => 'आज का भोजन';
+
+  @override
+  String get followed => 'पालन किया';
+
+  @override
+  String get notFollowed => 'पालन नहीं किया';
+
+  @override
+  String get foodsToAvoid => 'इनसे बचें';
+
+  @override
+  String get slotEarlyMorning => 'सुबह जल्दी';
+
+  @override
+  String get slotBreakfast => 'नाश्ता';
+
+  @override
+  String get slotMidMorning => 'दोपहर से पहले';
+
+  @override
+  String get slotLunch => 'दोपहर का भोजन';
+
+  @override
+  String get slotEvening => 'शाम का नाश्ता';
+
+  @override
+  String get slotDinner => 'रात का भोजन';
+
+  @override
+  String get slotBedtime => 'सोने से पहले';
+
+  @override
+  String get dietDisclaimer =>
+      'डॉक्टर या डायटीशियन की सलाह अलग हो तो उसे मानें। नए लक्षण हों तो उन्हें बताएँ।';
+
+  @override
+  String get bookPrivateAmbulance => 'निजी एम्बुलेंस बुक करें';
+
+  @override
+  String get bookPrivateAmbulanceSub =>
+      'गाड़ी लाइव ट्रैक करें। आपात स्थिति में पहले 108 पर कॉल करें।';
+
+  @override
+  String get privateAmbulance => 'निजी एम्बुलेंस';
+
+  @override
+  String get call108First =>
+      'जानलेवा आपात स्थिति? पहले 108 पर कॉल करें। निजी एम्बुलेंस 108 का विकल्प नहीं है।';
+
+  @override
+  String get ambulanceType => 'एम्बुलेंस का प्रकार';
+
+  @override
+  String get ambBls => 'बेसिक (BLS)';
+
+  @override
+  String get ambAls => 'एडवांस्ड (ALS)';
+
+  @override
+  String get ambBlsDesc =>
+      'ऑक्सीजन, स्ट्रेचर और प्रशिक्षित स्टाफ़। स्थिर मरीज़ों के लिए।';
+
+  @override
+  String get ambAlsDesc =>
+      'कार्डियक मॉनिटर, एडवांस्ड लाइफ़ सपोर्ट और पैरामेडिक। गंभीर स्थिति के लिए।';
+
+  @override
+  String get pickupLocation => 'पिकअप स्थान';
+
+  @override
+  String get locating => 'आपका स्थान खोज रहे हैं…';
+
+  @override
+  String gpsLocation(String lat, String lng) {
+    return 'GPS $lat, $lng';
+  }
+
+  @override
+  String get currentLocation => 'वर्तमान स्थान';
+
+  @override
+  String get pickupAddressHint =>
+      'मकान, गली, लैंडमार्क (ड्राइवर की मदद के लिए)';
+
+  @override
+  String get destinationHospital => 'गंतव्य अस्पताल';
+
+  @override
+  String get destinationOptional => 'अस्पताल (वैकल्पिक)';
+
+  @override
+  String get nearestSuitable => 'निकटतम उपयुक्त अस्पताल';
+
+  @override
+  String get requestAmbulance => 'एम्बुलेंस मँगाएँ';
+
+  @override
+  String get ambulanceDefaultReason => 'अस्पताल ले जाना';
+
+  @override
+  String get ambulanceNote =>
+      'शुल्क पार्टनर और दूरी पर निर्भर है। केयर टीम को भी सूचित किया जाता है।';
+
+  @override
+  String get ambulanceTracking => 'एम्बुलेंस';
+
+  @override
+  String get ambSearching => 'एम्बुलेंस खोज रहे हैं';
+
+  @override
+  String get ambAssigned => 'एम्बुलेंस तय हुई';
+
+  @override
+  String get ambEnRoute => 'रास्ते में';
+
+  @override
+  String get ambArrived => 'पहुँच गई';
+
+  @override
+  String get ambTransporting => 'अस्पताल जा रही है';
+
+  @override
+  String get ambCompleted => 'अस्पताल पहुँची';
+
+  @override
+  String get ambCancelled => 'रद्द';
+
+  @override
+  String get ambNoVehicle => 'कोई गाड़ी उपलब्ध नहीं';
+
+  @override
+  String get noVehicleBody =>
+      'पास में कोई निजी एम्बुलेंस उपलब्ध नहीं। अभी 108 पर कॉल करें।';
+
+  @override
+  String get vehicle => 'गाड़ी';
+
+  @override
+  String get driver => 'ड्राइवर';
+
+  @override
+  String get openInMaps => 'मैप में खोलें';
+
+  @override
+  String get openStreetMap => 'OpenStreetMap';
+
+  @override
+  String locationUpdatedAt(String time) {
+    return 'स्थान $time पर अपडेट हुआ';
+  }
+
+  @override
+  String get statusTimeline => 'स्थिति';
+
+  @override
+  String get cancelAmbulance => 'एम्बुलेंस रद्द करें';
+
+  @override
+  String get cancelAmbulanceBody => 'केवल तभी रद्द करें जब मदद की ज़रूरत न हो।';
+
+  @override
+  String get cancelledByUser => 'परिवार द्वारा रद्द';
+
+  @override
+  String get safetyLocation => 'सुरक्षा और स्थान';
+
+  @override
+  String get safetyLocationSub => 'सुरक्षित क्षेत्र, साथी मोड, SOS बटन';
+
+  @override
+  String get safetyIntro =>
+      'उनके लिए जो भटक सकते हैं या भ्रमित हो सकते हैं, जैसे याददाश्त की समस्या में।';
+
+  @override
+  String get safeZone => 'सुरक्षित क्षेत्र';
+
+  @override
+  String safeZoneSub(String name) {
+    return '$name क्षेत्र से बाहर जाएँ तो सूचना पाएँ';
+  }
+
+  @override
+  String get safeZoneSelfSub => 'देखभाल अनुमति वाले परिवारजन सेट करते हैं';
+
+  @override
+  String safeZoneIntro(String name) {
+    return 'साथी मोड चालू रहते $name इस क्षेत्र से बाहर जाएँ तो परिवार को मैप लिंक के साथ सूचना मिलती है।';
+  }
+
+  @override
+  String get safeZoneAlerts => 'सुरक्षित क्षेत्र सूचनाएँ';
+
+  @override
+  String get safeZoneAlertsSub =>
+      'क्षेत्र से बाहर होने पर परिवार को सूचित करें';
+
+  @override
+  String get zoneCentre => 'केंद्र (घर)';
+
+  @override
+  String get useCurrentLocation => 'वर्तमान स्थान उपयोग करें';
+
+  @override
+  String get zoneLabelHint => 'लेबल (जैसे घर)';
+
+  @override
+  String get radius => 'दायरा';
+
+  @override
+  String metersValue(int meters) {
+    return '$meters मी';
+  }
+
+  @override
+  String get activeHoursOnly => 'केवल तय घंटों में';
+
+  @override
+  String get alwaysActive => 'हमेशा सक्रिय';
+
+  @override
+  String get safeZoneNeedsCenter => 'पहले केंद्र सेट करें (वर्तमान स्थान)';
+
+  @override
+  String get safeZoneRadiusInvalid =>
+      'दायरा 100 मी से 5 किमी के बीच होना चाहिए';
+
+  @override
+  String get safeZonePrivacy =>
+      'केवल नवीनतम स्थान रखा जाता है; स्थान का इतिहास नहीं रखा जाता।';
+
+  @override
+  String get lastKnownLocation => 'अंतिम ज्ञात स्थान';
+
+  @override
+  String get noLocationYet =>
+      'अभी कोई स्थान साझा नहीं। उनके फ़ोन पर साथी मोड चालू करें।';
+
+  @override
+  String get insideSafeZone => 'सुरक्षित क्षेत्र के अंदर';
+
+  @override
+  String get outsideSafeZone => 'सुरक्षित क्षेत्र के बाहर';
+
+  @override
+  String get companionMode => 'साथी मोड';
+
+  @override
+  String get companionModeSub => 'इस फ़ोन का स्थान परिवार से साझा करें';
+
+  @override
+  String get companionIntro =>
+      'केयरकम्पैनियन खुला रहने पर यह फ़ोन हर 5 मिनट में स्थान साझा करता है ताकि परिवार जान सके कि आप सुरक्षित हैं।';
+
+  @override
+  String get companionOn => 'चालू: ऐप खुला रहने पर स्थान साझा हो रहा है';
+
+  @override
+  String get companionOff => 'बंद';
+
+  @override
+  String get companionOwnDevice =>
+      'साथी मोड उसी व्यक्ति के फ़ोन से चालू होता है जिसकी देखभाल हो रही है।';
+
+  @override
+  String get companionForegroundOnly =>
+      'केवल ऐप स्क्रीन पर खुला होने पर काम करता है; बैकग्राउंड में ट्रैक नहीं करता।';
+
+  @override
+  String get withdrawConsent => 'सहमति वापस लें';
+
+  @override
+  String get companionConsentTitle => 'अपना स्थान साझा करें?';
+
+  @override
+  String get companionConsent1 =>
+      'ऐप खुला रहने पर हर 5 मिनट में आपका स्थान भेजा जाता है।';
+
+  @override
+  String get companionConsent2 =>
+      'सूचना अनुमति वाले परिवारजन और केयर कोऑर्डिनेटर आपका नवीनतम स्थान देख सकते हैं।';
+
+  @override
+  String get companionConsent3 =>
+      'केवल नवीनतम स्थान रखा जाता है। कोई इतिहास नहीं।';
+
+  @override
+  String get companionConsent4 =>
+      'आप इसे कभी भी बंद कर सकते हैं या सहमति वापस ले सकते हैं।';
+
+  @override
+  String get companionConsentAgree =>
+      'मैं समझता/समझती हूँ और स्थान साझा करने की सहमति देता/देती हूँ';
+
+  @override
+  String get agreeAndTurnOn => 'सहमत हूँ और चालू करें';
+
+  @override
+  String get sosButtonPairing => 'SOS बटन';
+
+  @override
+  String get sosButtonPairingSub => 'पहनने योग्य आपात बटन जोड़ें';
+
+  @override
+  String get sosButtonIntro =>
+      'जुड़ा SOS बटन दबाने पर ऐप के SOS की तरह आपात संपर्कों को सूचना जाती है।';
+
+  @override
+  String get deviceId => 'डिवाइस आईडी';
+
+  @override
+  String get deviceIdHelp => 'बटन के पीछे या डिब्बे पर छपा';
+
+  @override
+  String get deviceModelOptional => 'मॉडल (वैकल्पिक)';
+
+  @override
+  String get pairDevice => 'बटन जोड़ें';
+
+  @override
+  String get pairedDevices => 'इस फ़ोन पर जुड़े';
+
+  @override
+  String get noPairedDevices => 'इस फ़ोन से कोई बटन नहीं जुड़ा';
+
+  @override
+  String get sosButtonPaired => 'SOS बटन जुड़ गया';
+
+  @override
+  String get unpair => 'हटाएँ';
+
+  @override
+  String get sosButtonNote => 'एक सहायक उपकरण, 108 का विकल्प नहीं।';
+
+  @override
+  String get haveCompanyCode => 'कंपनी कोड है?';
+
+  @override
+  String get companyCodeHelp =>
+      'यदि आपका नियोक्ता केयरकम्पैनियन प्रायोजित करता है, तो दिया गया कोड दर्ज करें।';
+
+  @override
+  String get companyCode => 'कंपनी कोड';
+
+  @override
+  String get companyCodeInvalid => 'पूरा कोड दर्ज करें';
+
+  @override
+  String companyPlanActivated(String name) {
+    return 'योजना सक्रिय, $name द्वारा प्रायोजित';
+  }
+
+  @override
+  String sponsoredBy(String name) {
+    return '$name द्वारा प्रायोजित';
+  }
+
+  @override
+  String get offersAndWallet => 'ऑफ़र और वॉलेट';
+
+  @override
+  String get couponCode => 'कूपन कोड';
+
+  @override
+  String couponApplied(String code) {
+    return '$code लागू हुआ';
+  }
+
+  @override
+  String get couponDiscount => 'कूपन छूट';
+
+  @override
+  String get useWalletBalance => 'वॉलेट बैलेंस उपयोग करें';
+
+  @override
+  String walletAvailable(String amount) {
+    return '$amount उपलब्ध';
+  }
+
+  @override
+  String get walletUsedLabel => 'वॉलेट';
+
+  @override
+  String get payableAmount => 'भुगतान करना है';
+
+  @override
+  String get fullyCoveredNote => 'पूरी तरह कवर: भुगतान की ज़रूरत नहीं।';
+
+  @override
+  String checkoutSummarySemantic(
+    String subtotal,
+    String discount,
+    String wallet,
+    String payable,
+  ) {
+    return 'उप-योग $subtotal, छूट $discount, वॉलेट $wallet, देय $payable';
+  }
+
+  @override
+  String get wallet => 'वॉलेट';
+
+  @override
+  String get walletSub => 'बैलेंस और रिवॉर्ड';
+
+  @override
+  String get walletBalance => 'वॉलेट बैलेंस';
+
+  @override
+  String walletBalanceSemantic(String amount) {
+    return 'वॉलेट बैलेंस $amount';
+  }
+
+  @override
+  String get walletNote =>
+      'वॉलेट क्रेडिट बुकिंग पर उपयोग होता है। इसे निकाला नहीं जा सकता और 365 दिन बाद समाप्त हो जाता है।';
+
+  @override
+  String get transactions => 'लेन-देन';
+
+  @override
+  String get noTransactions => 'अभी कोई लेन-देन नहीं';
+
+  @override
+  String get inviteFamilyFriends => 'परिवार और दोस्तों को आमंत्रित करें';
+
+  @override
+  String get inviteRewardSub =>
+      'उनकी पहली सशुल्क सेवा के बाद दोनों को वॉलेट क्रेडिट';
+
+  @override
+  String get inviteIntro =>
+      'अपना कोड साझा करें। उनकी पहली सशुल्क सेवा पूरी होने पर दोनों को वॉलेट क्रेडिट मिलेगा।';
+
+  @override
+  String get yourInviteCode => 'आपका आमंत्रण कोड';
+
+  @override
+  String get shareInvite => 'आमंत्रण साझा करें';
+
+  @override
+  String get friendsInvited => 'आपके कोड से जुड़े';
+
+  @override
+  String get rewardsEarned => 'कमाए रिवॉर्ड';
+
+  @override
+  String get haveInviteCode => 'आमंत्रण कोड है?';
+
+  @override
+  String get inviteCode => 'आमंत्रण कोड';
+
+  @override
+  String get inviteCodeInvalid => 'यह कोड सही नहीं लगता';
+
+  @override
+  String get inviteRedeemed =>
+      'आमंत्रण कोड लागू हुआ। पहली सशुल्क सेवा के बाद रिवॉर्ड मिलेगा।';
+
+  @override
+  String get inviteTerms =>
+      'कोड साइन अप के 7 दिनों के अंदर एक बार उपयोग हो सकता है।';
+
+  @override
+  String get onboardingInviteBody =>
+      'क्या परिवार या दोस्त ने आमंत्रित किया? स्वागत रिवॉर्ड के लिए उनका कोड दर्ज करें। आप इसे छोड़ सकते हैं।';
+
+  @override
+  String get purposeLabOrder => 'लैब टेस्ट';
+
+  @override
+  String get purposeSecondOpinion => 'दूसरी राय';
+
+  @override
+  String get purposeAmbulance => 'एम्बुलेंस';
+
+  @override
+  String get myTickets => 'मेरे टिकट';
+
+  @override
+  String get myTicketsSub => 'बुकिंग, भुगतान या ऐप के बारे में सवाल';
+
+  @override
+  String get newTicket => 'नया टिकट';
+
+  @override
+  String get noTickets => 'कोई टिकट नहीं';
+
+  @override
+  String get noTicketsBody => 'टिकट बनाएँ, हमारी सपोर्ट टीम यहाँ जवाब देगी।';
+
+  @override
+  String get ticketCategory => 'यह किस बारे में है?';
+
+  @override
+  String get tcBooking => 'बुकिंग';
+
+  @override
+  String get tcPayment => 'भुगतान';
+
+  @override
+  String get tcRefund => 'रिफ़ंड';
+
+  @override
+  String get tcAppIssue => 'ऐप समस्या';
+
+  @override
+  String get tcClinicalConcern => 'स्वास्थ्य चिंता';
+
+  @override
+  String get tcOther => 'अन्य';
+
+  @override
+  String get clinicalConcernTitle => 'हमारी केयर टीम इसे देखेगी';
+
+  @override
+  String get clinicalConcernBody =>
+      'स्वास्थ्य चिंताएँ केवल सपोर्ट को नहीं, चिकित्सक को भी जाती हैं। तुरंत ज़रूरत हो या कोई बहुत बीमार हो तो अभी 108 पर कॉल करें।';
+
+  @override
+  String get describeIssue => 'समस्या बताएँ';
+
+  @override
+  String get linkBooking => 'बुकिंग जोड़ें (वैकल्पिक)';
+
+  @override
+  String get noBookingsToLink => 'कोई हाल की बुकिंग नहीं';
+
+  @override
+  String get submitTicket => 'जमा करें';
+
+  @override
+  String ticketCreated(String number) {
+    return 'टिकट $number बना';
+  }
+
+  @override
+  String get supportNotForEmergencies =>
+      'सपोर्ट आपात स्थिति के लिए नहीं है। आपात स्थिति में 108 पर कॉल करें।';
+
+  @override
+  String get supportTicket => 'सपोर्ट टिकट';
+
+  @override
+  String get tsOpen => 'खुला';
+
+  @override
+  String get tsPendingCustomer => 'आपकी प्रतीक्षा';
+
+  @override
+  String get tsResolved => 'हल हो गया';
+
+  @override
+  String get tsClosed => 'बंद';
+
+  @override
+  String handledBy(String name) {
+    return '$name देख रहे हैं';
+  }
+
+  @override
+  String get rateSupport => 'हमारी सपोर्ट को रेट करें';
+
+  @override
+  String youRated(int score) {
+    return 'आपने $score / 5 रेटिंग दी। धन्यवाद!';
+  }
+
+  @override
   String itemsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

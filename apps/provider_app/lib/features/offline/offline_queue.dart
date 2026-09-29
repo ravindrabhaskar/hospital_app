@@ -31,7 +31,11 @@ class QueuedAction {
   int attempts;
 
   String get idempotencyKey => id;
-  String get path => type == VisitActionType.photo ? '/records' : '/home-visits/$visitId/${type.pathSegment}';
+  String get path => switch (type) {
+        VisitActionType.photo => '/records',
+        VisitActionType.suppliesUsage => '/provider/supplies/usage',
+        _ => '/home-visits/$visitId/${type.pathSegment}',
+      };
 
   Map<String, dynamic> toJson() => {
         'id': id,

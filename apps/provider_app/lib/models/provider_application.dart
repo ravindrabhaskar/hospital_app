@@ -3,7 +3,7 @@ import 'json.dart';
 /// Applicant types accepted by `POST /provider-applications` (contract §30).
 /// `doctor` applications are approved into the `doctor` role, which uses the
 /// web portal, not this app.
-const applicationTypes = ['nurse', 'technician', 'intern', 'physiotherapist', 'doctor'];
+const applicationTypes = ['nurse', 'technician', 'intern', 'physiotherapist', 'dietitian', 'doctor'];
 
 /// Document types for `POST /provider-applications/me/documents`.
 const applicationDocTypes = ['registration_certificate', 'degree', 'id_proof', 'experience_letter', 'other'];

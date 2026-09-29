@@ -1,12 +1,12 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch, type Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, FilePlus2, FileText, Plus, Trash2, X } from "lucide-react";
 import { api } from "@/lib/api";
-import { RX_FORMS, type Appointment, type DoctorProfile, type Prescription } from "@/lib/api/types";
+import { RX_FORMS, type Appointment, type DoctorProfile, type Prescription, type RxWarning } from "@/lib/api/types";
 import { slug } from "@/lib/download";
 import { formatDate, formatDateTime, humanize, todayIST } from "@/lib/format";
 import {
@@ -19,12 +19,17 @@ import {
   type PrescriptionFormValues,
   type PrescriptionParsed,
 } from "@/lib/prescription";
+import { hasMajor, overrideBlockReason, overrideFields, rxCheckItems, warningKey, warningsFromError } from "@/lib/rx-warnings";
+import { useDebouncedValue } from "@/lib/use-debounced";
 import { BlobButton } from "./blob-actions";
+import { RxWarningsPanel } from "./rx-warnings-panel";
 import { useToast } from "./toast";
 import { Badge, Button, Card, EmptyState, Field, Input, QueryView, Select, Textarea, cx } from "./ui";
 
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 const MAX_ITEMS = 20;
+/** Debounce for the live §47 check while typing drug names. */
+export const RX_CHECK_DEBOUNCE_MS = 500;
 
 const defaultValues = (): PrescriptionFormValues => ({
   clinicalNote: "",
@@ -95,19 +100,70 @@ function WriterForm({ appt }: { appt: Appointment }) {
   const items = useFieldArray({ control, name: "items" });
   const errors = formState.errors;
 
+  /* §47 live interaction / allergy check (debounced) */
+  const watchedItems = useWatch({ control, name: "items" });
+  const checkKey = JSON.stringify(rxCheckItems(watchedItems));
+  const debouncedKey = useDebouncedValue(checkKey, RX_CHECK_DEBOUNCE_MS);
+  const check = useQuery({
+    queryKey: ["rx-check", appt.patientId, debouncedKey],
+    queryFn: ({ signal }) => api.prescriptions.check({ patientId: appt.patientId, items: JSON.parse(debouncedKey) }, signal),
+    enabled: debouncedKey !== "[]",
+    retry: false,
+    staleTime: 60_000,
+    placeholderData: keepPreviousData,
+  });
+  // Warnings returned by a rejected create (400 details.warnings) apply until the medicines change.
+  const [serverWarnings, setServerWarnings] = useState<{ key: string; warnings: RxWarning[] } | null>(null);
+  const fromServer = serverWarnings?.key === checkKey ? serverWarnings.warnings : null;
+  const liveWarnings = checkKey === "[]" ? [] : (check.data?.warnings ?? []);
+  const warnings = fromServer ?? liveWarnings;
+  const majorKey = warnings.filter((w) => w.severity === "major").map(warningKey).sort().join(";;");
+  // The acknowledgement covers the exact set of major warnings shown; a new major warning needs a new tick.
+  const [ackKey, setAckKey] = useState<string | null>(null);
+  const acknowledged = !!majorKey && ackKey === majorKey;
+  const [overrideReason, setOverrideReason] = useState("");
+  const [gateError, setGateError] = useState<string | null>(null);
+  const ackRef = useRef<HTMLInputElement>(null);
+  const checkStatus: "idle" | "checking" | "ready" | "error" =
+    checkKey === "[]" ? "idle" : checkKey !== debouncedKey || check.isFetching ? "checking" : check.isError ? "error" : check.data ? "ready" : "checking";
+
   const create = useMutation({
-    mutationFn: (v: PrescriptionParsed) => api.prescriptions.create(toPrescriptionInput(appt.id, v)),
+    mutationFn: (v: PrescriptionParsed) =>
+      api.prescriptions.create({ ...toPrescriptionInput(appt.id, v), ...overrideFields(warnings, acknowledged, overrideReason) }),
     onSuccess: (rx) => {
       toast.success("Prescription created", "The PDF is saved to the patient's records and reminders start.");
       setCreated(rx);
       reset(defaultValues());
+      setServerWarnings(null);
+      setAckKey(null);
+      setOverrideReason("");
+      setGateError(null);
       void qc.invalidateQueries({ queryKey: ["prescriptions", appt.patientId] });
       void qc.invalidateQueries({ queryKey: ["episode", appt.careEpisodeId] });
     },
-    onError: (e) => toast.apiError(e, "Could not create the prescription"),
+    onError: (e) => {
+      const ws = warningsFromError(e);
+      if (ws) {
+        setServerWarnings({ key: checkKey, warnings: ws });
+        setGateError(hasMajor(ws) ? "Acknowledge the major warnings and give an override reason, then create the prescription again." : null);
+        toast.error("Prescription needs your review", "Major interaction or allergy warnings must be acknowledged.");
+        window.setTimeout(() => ackRef.current?.focus(), 0);
+        return;
+      }
+      toast.apiError(e, "Could not create the prescription");
+    },
   });
 
-  const onSubmit = handleSubmit((v) => create.mutate(v));
+  const onSubmit = handleSubmit((v) => {
+    const block = overrideBlockReason(warnings, acknowledged, overrideReason);
+    if (block) {
+      setGateError(block);
+      ackRef.current?.focus();
+      return;
+    }
+    setGateError(null);
+    create.mutate(v);
+  });
   const itemsRootError = errors.items?.root?.message ?? errors.items?.message;
 
   return (
@@ -277,6 +333,25 @@ function WriterForm({ appt }: { appt: Appointment }) {
                 />
               )}
             </Field>
+
+            <RxWarningsPanel
+              ref={ackRef}
+              warnings={warnings}
+              knowledgePack={check.data?.knowledgePack}
+              status={checkStatus}
+              fromServer={!!fromServer}
+              acknowledged={acknowledged}
+              onAcknowledge={(v) => {
+                setAckKey(v ? majorKey : null);
+                setGateError(null);
+              }}
+              reason={overrideReason}
+              onReason={(v) => {
+                setOverrideReason(v);
+                setGateError(null);
+              }}
+              gateError={gateError}
+            />
 
             <div className="flex justify-end">
               <Button type="submit" loading={create.isPending} icon={<FilePlus2 className="size-4" aria-hidden />}>

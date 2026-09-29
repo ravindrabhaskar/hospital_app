@@ -175,6 +175,7 @@ export async function toCareEpisodes(db: DbOrTx, rows: EpisodeRow[]) {
     coordinatorUserId: r.coordinatorUserId,
     coordinatorName: r.coordinatorUserId ? (om.get(r.coordinatorUserId) ?? null) : null,
     nextAction: r.nextAction,
+    tenantCode: r.tenantCode ?? null,
     createdAt: iso(r.createdAt),
     updatedAt: iso(r.updatedAt),
   }));

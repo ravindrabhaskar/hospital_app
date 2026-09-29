@@ -6,6 +6,7 @@ import '../../../l10n/gen/app_localizations.dart';
 import '../../../models/home_visit.dart';
 import '../../../ui/l10n_helpers.dart';
 import '../domain/visit_lifecycle.dart';
+import 'sample_collection.dart';
 
 /// Called by the panel to run a lifecycle action.
 typedef VisitActionCallback = Future<void> Function(VisitActionType type, Map<String, dynamic> body);
@@ -124,6 +125,7 @@ class _NextActionPanelState extends State<NextActionPanel> {
   final _verifyForm = GlobalKey<FormState>();
   bool _consent = false;
   bool _consentError = false;
+  final _samples = SampleChecklist();
 
   @override
   void dispose() {
@@ -143,7 +145,8 @@ class _NextActionPanelState extends State<NextActionPanel> {
   }
 
   Future<void> _complete() async {
-    final summary = await showDialog<String>(context: context, builder: (_) => const _CompleteDialog());
+    final initial = widget.visit.isSampleCollection ? _samples.summary(context.l10n) : null;
+    final summary = await showDialog<String>(context: context, builder: (_) => _CompleteDialog(initial: initial));
     if (summary != null && summary.isNotEmpty) {
       await widget.onAction(VisitActionType.complete, {'summary': summary});
     }
@@ -306,10 +309,19 @@ class _NextActionPanelState extends State<NextActionPanel> {
           children: [
             info(next == NextAction.recordCare ? l.nextCareIntro : l.nextEscalatedIntro,
                 icon: next == NextAction.recordCare ? Icons.fact_check_outlined : Icons.warning_amber_rounded),
+            if (widget.visit.isSampleCollection) ...[
+              const SizedBox(height: 12),
+              SampleChecklistView(
+                checklist: _samples,
+                fastingRequired: widget.visit.fastingRequired,
+                onChanged: () => setState(() {}),
+              ),
+            ],
             const SizedBox(height: 12),
             FilledButton.icon(
               key: const Key('action.complete'),
-              onPressed: busy ? null : _complete,
+              // Sample collection: every checklist item must be confirmed first.
+              onPressed: busy || (widget.visit.isSampleCollection && !_samples.isComplete) ? null : _complete,
               icon: const Icon(Icons.task_alt),
               label: Text(l.actionComplete),
             ),
@@ -376,14 +388,15 @@ class _ReasonDialogState extends State<_ReasonDialog> {
 }
 
 class _CompleteDialog extends StatefulWidget {
-  const _CompleteDialog();
+  const _CompleteDialog({this.initial});
+  final String? initial;
 
   @override
   State<_CompleteDialog> createState() => _CompleteDialogState();
 }
 
 class _CompleteDialogState extends State<_CompleteDialog> {
-  final _c = TextEditingController();
+  late final _c = TextEditingController(text: widget.initial ?? '');
   final _form = GlobalKey<FormState>();
 
   @override

@@ -8,6 +8,7 @@ import { errors } from '../../lib/errors.js';
 import { list, envelope, pageFromQuery } from '../../lib/pagination.js';
 import { parse, zUuid } from '../../lib/validate.js';
 import { requireRoles } from '../../plugins/auth.js';
+import { patientDrugContext } from '../rxcheck/engine.js';
 import { issuePrescription, matchProduct, toPrescription } from './service.js';
 
 const zTime = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Expected HH:MM');
@@ -28,6 +29,17 @@ export async function prescriptionRoutes(app: FastifyInstance): Promise<void> {
   const svc = app.svc;
   const db = svc.db;
 
+  app.post('/clinician/prescriptions/check', { preHandler: requireRoles(svc, 'doctor') }, async (req) => {
+    const body = parse(
+      z.object({ patientId: zUuid, items: z.array(z.object({ drugName: z.string().trim().min(1).max(100), strength: z.string().trim().max(40).optional() })).min(1).max(20) }),
+      req.body,
+    );
+    await assertCanActForPatient(db, req.ctx, body.patientId, 'view_records', 'prescription.check');
+    const res = await svc.drugKnowledge.check(db, { items: body.items, ...(await patientDrugContext(db, body.patientId)) });
+    await audit(db, req.ctx.actor, { action: 'prescription.check', entityType: 'patient', entityId: body.patientId, metadata: { warnings: res.warnings.length, knowledgePack: res.knowledgePack.version } });
+    return res;
+  });
+
   app.post('/clinician/prescriptions', { preHandler: requireRoles(svc, 'doctor') }, async (req, reply) => {
     const body = parse(
       z.object({
@@ -36,6 +48,8 @@ export async function prescriptionRoutes(app: FastifyInstance): Promise<void> {
         items: z.array(zRxItem).min(1).max(20),
         advice: z.string().trim().max(2000).optional(),
         followUpInDays: z.number().int().min(1).max(365).optional(),
+        acknowledgedWarnings: z.boolean().optional(),
+        overrideReason: z.string().trim().min(3).max(500).optional(),
       }),
       req.body,
     );
@@ -50,6 +64,16 @@ export async function prescriptionRoutes(app: FastifyInstance): Promise<void> {
     }
     const [doctor] = await db.select().from(providers).where(eq(providers.id, a.doctorId));
     const [patient] = await db.select().from(patients).where(eq(patients.id, a.patientId));
+    // Contract section 47: interaction & allergy check; major warnings need an acknowledged, audited override.
+    const check = await svc.drugKnowledge.check(db, { items: body.items, ...(await patientDrugContext(db, a.patientId)) });
+    const majors = check.warnings.filter((w) => w.severity === 'major');
+    if (majors.length && !(body.acknowledgedWarnings === true && body.overrideReason)) {
+      await audit(db, req.ctx.actor, { action: 'prescription.blocked', entityType: 'appointment', entityId: a.id, metadata: { majorWarnings: majors.length, knowledgePack: check.knowledgePack.version } });
+      throw errors.validation('The prescription has major warnings. Review them, then resend with acknowledgedWarnings=true and an overrideReason.', {
+        warnings: check.warnings,
+        knowledgePack: check.knowledgePack,
+      });
+    }
     const row = await db.transaction(async (tx) => {
       const r = await issuePrescription(tx, svc.storage, {
         appointment: a,
@@ -58,7 +82,17 @@ export async function prescriptionRoutes(app: FastifyInstance): Promise<void> {
         patient,
         input: { clinicalNote: body.clinicalNote, items: body.items, advice: body.advice, followUpInDays: body.followUpInDays },
         actor: req.ctx.actor,
+        warnings: check.warnings,
+        overrideReason: majors.length ? (body.overrideReason ?? null) : null,
       });
+      if (majors.length) {
+        await audit(tx, req.ctx.actor, {
+          action: 'prescription.override',
+          entityType: 'prescription',
+          entityId: r.id,
+          metadata: { majorWarnings: majors.map((w) => ({ type: w.type, drugs: w.drugs })), knowledgePack: check.knowledgePack.version, reasonLength: body.overrideReason?.length ?? 0 },
+        });
+      }
       await audit(tx, req.ctx.actor, { action: 'prescription.create', entityType: 'prescription', entityId: r.id, metadata: { appointmentId: a.id, itemCount: body.items.length } });
       return r;
     });

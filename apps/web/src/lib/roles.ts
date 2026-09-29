@@ -1,6 +1,6 @@
 import type { Role } from "@/lib/api/types";
 
-export type SectionKey = "clinician" | "ops" | "admin";
+export type SectionKey = "clinician" | "ops" | "hospital" | "support" | "admin";
 
 export type NavIcon =
   | "calendar"
@@ -29,7 +29,19 @@ export type NavIcon =
   | "clipboard"
   | "messages"
   | "package"
-  | "landmark";
+  | "landmark"
+  /* v1.3 */
+  | "stethoscope"
+  | "flask"
+  | "ambulance"
+  | "boxes"
+  | "headset"
+  | "hospital"
+  | "filePlus"
+  | "heartPulse"
+  | "building"
+  | "palette"
+  | "ticket";
 
 export interface NavItem {
   href: string;
@@ -47,7 +59,12 @@ export interface NavSection {
 }
 
 export const OPS_ROLES: Role[] = ["coordinator", "ops_admin", "super_admin"];
-export const STAFF_ROLES: Role[] = ["doctor", "coordinator", "ops_admin", "super_admin"];
+/** Everyone who may use the portal (v1.3 adds hospital_staff and support_agent). */
+export const STAFF_ROLES: Role[] = ["doctor", "coordinator", "ops_admin", "super_admin", "hospital_staff", "support_agent"];
+/** §61: the support desk. */
+export const SUPPORT_ROLES: Role[] = ["support_agent", "coordinator", "ops_admin", "super_admin"];
+/** §59: hospital discharge desk. */
+export const HOSPITAL_ROLES: Role[] = ["hospital_staff"];
 /** §34: staff who participate in care-team threads. */
 export const INBOX_ROLES: Role[] = ["doctor", "coordinator", "ops_admin", "super_admin"];
 /** §32: settlements are ops_admin / super_admin only. */
@@ -65,6 +82,7 @@ export const NAV: NavSection[] = [
       { href: "/clinician", label: "Today's queue", icon: "calendar", roles: ["doctor"] },
       { href: "/clinician/patients", label: "Patients", icon: "users", roles: ["doctor"] },
       { href: "/clinician/escalations", label: "Escalations", icon: "siren", roles: ["doctor"] },
+      { href: "/clinician/second-opinions", label: "Second opinions", icon: "stethoscope", roles: ["doctor"] },
       { href: "/inbox", label: "Inbox", icon: "messages", roles: ["doctor"], badge: "inbox" },
       { href: "/clinician/schedule", label: "Schedule & leaves", icon: "schedule", roles: ["doctor"] },
       { href: "/clinician/earnings", label: "Earnings", icon: "rupee", roles: ["doctor"] },
@@ -83,6 +101,10 @@ export const NAV: NavSection[] = [
       { href: "/ops/tasks", label: "Overdue tasks", icon: "clock", roles: OPS_ROLES },
       { href: "/ops/incidents", label: "Incidents", icon: "alert", roles: OPS_ROLES },
       { href: "/ops/payments", label: "Payments", icon: "wallet", roles: OPS_ROLES },
+      { href: "/ops/lab-orders", label: "Lab orders", icon: "flask", roles: OPS_ROLES },
+      { href: "/ops/ambulance", label: "Ambulance", icon: "ambulance", roles: OPS_ROLES },
+      { href: "/ops/supplies", label: "Nurse supplies", icon: "boxes", roles: OPS_ROLES },
+      { href: "/support", label: "Support desk", icon: "headset", roles: OPS_ROLES },
       { href: "/coordinator", label: "Coordinator workspace", icon: "clipboard", roles: OPS_ROLES },
       { href: "/inbox", label: "Inbox", icon: "messages", roles: INBOX_ROLES, badge: "inbox" },
       { href: "/ops/applications", label: "Applications", icon: "fileCheck", roles: OPS_ROLES },
@@ -90,6 +112,20 @@ export const NAV: NavSection[] = [
       { href: "/ops/settlements", label: "Settlements", icon: "receipt", roles: FINANCE_ROLES },
       { href: "/admin/doctors", label: "Doctor schedules", icon: "schedule", roles: FINANCE_ROLES },
     ],
+  },
+  {
+    key: "hospital",
+    label: "Hospital",
+    items: [
+      { href: "/hospital", label: "Discharges", icon: "hospital", roles: HOSPITAL_ROLES },
+      { href: "/hospital/new", label: "New discharge", icon: "filePlus", roles: HOSPITAL_ROLES },
+    ],
+  },
+  {
+    key: "support",
+    label: "Support",
+    // Coordinators and admins reach the desk from Operations; this section is for support agents.
+    items: [{ href: "/support", label: "Support desk", icon: "headset", roles: ["support_agent"] }],
   },
   {
     key: "admin",
@@ -105,6 +141,10 @@ export const NAV: NavSection[] = [
       { href: "/admin/zones", label: "Service zones", icon: "map", roles: ["super_admin"] },
       { href: "/admin/plans", label: "Subscription plans", icon: "package", roles: ["super_admin"] },
       { href: "/admin/schemes", label: "Govt schemes", icon: "landmark", roles: ["super_admin"] },
+      { href: "/admin/programs", label: "Care programs", icon: "heartPulse", roles: ["super_admin"] },
+      { href: "/admin/organizations", label: "Organizations", icon: "building", roles: ["super_admin"] },
+      { href: "/admin/tenants", label: "Hospital branding", icon: "palette", roles: ["super_admin"] },
+      { href: "/admin/coupons", label: "Coupons", icon: "ticket", roles: ["super_admin"] },
     ],
   },
 ];
@@ -141,6 +181,8 @@ const ROUTE_RULES: { prefix: string; roles: Role[] }[] = [
   { prefix: "/admin/audit-logs", roles: ["super_admin", "ops_admin"] },
   { prefix: "/admin/analytics", roles: ["super_admin", "ops_admin"] },
   { prefix: "/admin", roles: ["super_admin"] },
+  { prefix: "/hospital", roles: HOSPITAL_ROLES },
+  { prefix: "/support", roles: SUPPORT_ROLES },
 ];
 
 export function canAccessPath(path: string, userRoles: readonly Role[]): boolean {
@@ -155,6 +197,8 @@ export function canAccessPath(path: string, userRoles: readonly Role[]): boolean
 export function homePathFor(userRoles: readonly Role[]): string | null {
   if (userRoles.includes("doctor")) return "/clinician";
   if (hasAnyRole(userRoles, OPS_ROLES)) return "/ops";
+  if (userRoles.includes("hospital_staff")) return "/hospital";
+  if (userRoles.includes("support_agent")) return "/support";
   return null;
 }
 
@@ -189,4 +233,11 @@ export const ROLE_LABELS: Record<Role, string> = {
   coordinator: "Coordinator",
   ops_admin: "Ops admin",
   super_admin: "Super admin",
+  hospital_staff: "Hospital staff",
+  support_agent: "Support agent",
 };
+
+/** §61: may use the support desk. */
+export function canUseSupportDesk(userRoles: readonly Role[]) {
+  return hasAnyRole(userRoles, SUPPORT_ROLES);
+}

@@ -33,7 +33,7 @@ export async function toCarePlans(db: DbOrTx, rows: CarePlanRow[], graceMin = 60
       .where(
         inArray(
           providers.id,
-          rows.map((r) => r.doctorId),
+          rows.map((r) => r.doctorId).filter((x): x is string => !!x),
         ),
       ),
   ]);
@@ -44,7 +44,7 @@ export async function toCarePlans(db: DbOrTx, rows: CarePlanRow[], graceMin = 60
     careEpisodeId: p.careEpisodeId,
     patientId: p.patientId,
     doctorId: p.doctorId,
-    doctorName: dm.get(p.doctorId) ?? '',
+    doctorName: (p.doctorId ? dm.get(p.doctorId) : p.issuedBy) ?? p.issuedBy ?? '',
     status: p.status,
     summary: p.summary,
     instructions: p.instructions,

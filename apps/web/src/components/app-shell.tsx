@@ -7,6 +7,16 @@ import { QueryClientContext, useQuery } from "@tanstack/react-query";
 import {
   Activity,
   AlertTriangle,
+  Ambulance,
+  Boxes,
+  Building2,
+  FilePlus2,
+  FlaskConical,
+  Headset,
+  Hospital,
+  Palette,
+  Stethoscope,
+  Ticket,
   BadgeCheck,
   BarChart3,
   BookOpen,
@@ -72,6 +82,17 @@ const ICONS: Record<NavIcon, typeof Home> = {
   messages: MessagesSquare,
   package: Package,
   landmark: Landmark,
+  stethoscope: Stethoscope,
+  flask: FlaskConical,
+  ambulance: Ambulance,
+  boxes: Boxes,
+  headset: Headset,
+  hospital: Hospital,
+  filePlus: FilePlus2,
+  heartPulse: HeartPulse,
+  building: Building2,
+  palette: Palette,
+  ticket: Ticket,
 };
 
 /** Client-side guard + shell for every portal page (no middleware). */
@@ -128,6 +149,8 @@ function ShellFrame({ children }: { children: ReactNode }) {
 
   const isActive = (href: string) => {
     if (href === "/clinician" || href === "/ops") return pathname === href;
+    // "/hospital" lists discharges; its sub-pages (new discharge, detail) have their own entries or none.
+    if (href === "/hospital") return pathname === href || pathname.startsWith("/hospital/discharges/");
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 

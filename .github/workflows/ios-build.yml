@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        app: [patient_app, provider_app]
+        app: [patient_app, provider_app, doctor_app]
     env:
       APP_DIR: apps/${{ matrix.app }}
       # Until the production API exists this falls back to a placeholder; set the

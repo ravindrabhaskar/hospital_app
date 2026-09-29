@@ -6,10 +6,12 @@ import { assertCanActForPatient } from '../../lib/access.js';
 import { audit } from '../../lib/audit.js';
 import { envelope, pageFromQuery } from '../../lib/pagination.js';
 import { parse, zIso, zUuid, zVitalType } from '../../lib/validate.js';
+import { evaluateVitals } from '../programs/service.js';
 import { toVital } from './service.js';
 
 export async function vitalRoutes(app: FastifyInstance): Promise<void> {
-  const db = app.svc.db;
+  const svc = app.svc;
+  const db = svc.db;
 
   app.get('/vitals', async (req) => {
     const q = parse(z.object({ patientId: zUuid, type: z.string().max(30).optional() }), req.query);
@@ -47,6 +49,8 @@ export async function vitalRoutes(app: FastifyInstance): Promise<void> {
       })
       .returning();
     await audit(db, req.ctx.actor, { action: 'vital.create', entityType: 'vital', entityId: row.id, metadata: { patientId: body.patientId, type: body.type } });
+    // Contract section 42: every new reading is evaluated against active program enrollments.
+    await evaluateVitals(svc, body.patientId, [row]);
     return reply.code(201).send(toVital(row));
   });
 }

@@ -5740,6 +5740,2831 @@ abstract class AppLocalizations {
   /// **'Dark'**
   String get themeDark;
 
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more;
+
+  /// No description provided for @moreServices.
+  ///
+  /// In en, this message translates to:
+  /// **'More services'**
+  String get moreServices;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get refresh;
+
+  /// No description provided for @restart.
+  ///
+  /// In en, this message translates to:
+  /// **'Restart'**
+  String get restart;
+
+  /// No description provided for @redeem.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeem'**
+  String get redeem;
+
+  /// No description provided for @copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied'**
+  String get copied;
+
+  /// No description provided for @copyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get copyCode;
+
+  /// No description provided for @copyCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy {command}'**
+  String copyCommand(String command);
+
+  /// No description provided for @notSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get notSet;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @provider.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider'**
+  String get provider;
+
+  /// No description provided for @subject.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get subject;
+
+  /// No description provided for @credit.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit'**
+  String get credit;
+
+  /// No description provided for @debit.
+  ///
+  /// In en, this message translates to:
+  /// **'Debit'**
+  String get debit;
+
+  /// No description provided for @updatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {time}'**
+  String updatedAt(String time);
+
+  /// No description provided for @validUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String validUntil(String date);
+
+  /// No description provided for @planBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan by {name}'**
+  String planBy(String name);
+
+  /// No description provided for @planDates.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} – {end}'**
+  String planDates(String start, String end);
+
+  /// No description provided for @reasonOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason (optional)'**
+  String get reasonOptional;
+
+  /// No description provided for @logoOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} logo'**
+  String logoOf(String name);
+
+  /// No description provided for @poweredByCareCompanion.
+  ///
+  /// In en, this message translates to:
+  /// **'Powered by CareCompanion'**
+  String get poweredByCareCompanion;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Adherence'**
+  String get adherence;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Lab Tests'**
+  String get qxLabTests;
+
+  /// No description provided for @qxCarePrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'Care Programs'**
+  String get qxCarePrograms;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Preventive Care'**
+  String get qxPreventiveCare;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Second Opinion'**
+  String get qxSecondOpinion;
+
+  /// No description provided for @qxInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get qxInsurance;
+
+  /// No description provided for @qxExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get qxExercise;
+
+  /// No description provided for @qxDiet.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet'**
+  String get qxDiet;
+
+  /// No description provided for @dailyCheckin.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily check-in'**
+  String get dailyCheckin;
+
+  /// No description provided for @dailyCheckinSub.
+  ///
+  /// In en, this message translates to:
+  /// **'An \"I\'m OK\" tap each morning'**
+  String get dailyCheckinSub;
+
+  /// No description provided for @imOkToday.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m OK today'**
+  String get imOkToday;
+
+  /// No description provided for @checkinPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'One tap lets your family know you are fine today.'**
+  String get checkinPrompt;
+
+  /// No description provided for @checkinMissedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s check-in window has passed. Checking in now still tells your family you\'re OK.'**
+  String get checkinMissedBody;
+
+  /// No description provided for @checkinMoodOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'How are you feeling? (optional)'**
+  String get checkinMoodOptional;
+
+  /// No description provided for @checkinWindow.
+  ///
+  /// In en, this message translates to:
+  /// **'{start}–{end}'**
+  String checkinWindow(String start, String end);
+
+  /// No description provided for @checkinThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you! Your family has been told you are OK.'**
+  String get checkinThanks;
+
+  /// No description provided for @checkinDoneAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Checked in at {time}'**
+  String checkinDoneAt(String time);
+
+  /// No description provided for @checkinFamilyDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} checked in today at {time}'**
+  String checkinFamilyDone(String name, String time);
+
+  /// No description provided for @checkinFamilyMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} hasn\'t checked in today'**
+  String checkinFamilyMissed(String name);
+
+  /// No description provided for @checkinFamilyPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has not checked in yet (window {window})'**
+  String checkinFamilyPending(String name, String window);
+
+  /// No description provided for @checkinOk.
+  ///
+  /// In en, this message translates to:
+  /// **'On time'**
+  String get checkinOk;
+
+  /// No description provided for @checkinLate.
+  ///
+  /// In en, this message translates to:
+  /// **'Late'**
+  String get checkinLate;
+
+  /// No description provided for @checkinMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed'**
+  String get checkinMissed;
+
+  /// No description provided for @checkinPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get checkinPending;
+
+  /// No description provided for @checkinHistorySemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 days: {ok} on time, {late} late, {missed} missed'**
+  String checkinHistorySemantic(int ok, int late, int missed);
+
+  /// No description provided for @checkinIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'A daily \"I\'m OK\" check-in for {name}. If it is missed, family and the care coordinator are alerted.'**
+  String checkinIntro(String name);
+
+  /// No description provided for @checkinNoPermission.
+  ///
+  /// In en, this message translates to:
+  /// **'Only family members with \"Manage care\" permission can change this.'**
+  String get checkinNoPermission;
+
+  /// No description provided for @checkinEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily check-in'**
+  String get checkinEnable;
+
+  /// No description provided for @checkinEnableSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the \"I\'m OK today\" card every morning'**
+  String get checkinEnableSub;
+
+  /// No description provided for @checkinWindowStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Window opens'**
+  String get checkinWindowStart;
+
+  /// No description provided for @checkinWindowEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Window closes'**
+  String get checkinWindowEnd;
+
+  /// No description provided for @checkinWindowInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The window must end after it starts'**
+  String get checkinWindowInvalid;
+
+  /// No description provided for @checkinEscalateAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert the care team after'**
+  String get checkinEscalateAfter;
+
+  /// No description provided for @minutesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} minutes'**
+  String minutesCount(int minutes);
+
+  /// No description provided for @checkinNotifyFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify family if missed'**
+  String get checkinNotifyFamily;
+
+  /// No description provided for @checkinNotifyCoordinator.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify the care coordinator'**
+  String get checkinNotifyCoordinator;
+
+  /// No description provided for @checkinHowItWorks.
+  ///
+  /// In en, this message translates to:
+  /// **'If there is no check-in by the end of the window, family get a notification. If it is still missing after the set time, the care coordinator follows up. Times are in IST.'**
+  String get checkinHowItWorks;
+
+  /// No description provided for @checkinLast30Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 30 days'**
+  String get checkinLast30Days;
+
+  /// No description provided for @checkinNoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No check-ins yet'**
+  String get checkinNoHistory;
+
+  /// No description provided for @carePrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'Care programs'**
+  String get carePrograms;
+
+  /// No description provided for @myPrograms.
+  ///
+  /// In en, this message translates to:
+  /// **'My programs'**
+  String get myPrograms;
+
+  /// No description provided for @programsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Your doctor set these up to watch your readings between visits.'**
+  String get programsIntro;
+
+  /// No description provided for @noProgramsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No care programs yet'**
+  String get noProgramsTitle;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Your doctor can enrol you in a BP, diabetes or heart-care program.'**
+  String get noProgramsBody;
+
+  /// No description provided for @logReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Log reading'**
+  String get logReading;
+
+  /// No description provided for @lastReadingAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Last reading {time}'**
+  String lastReadingAt(String time);
+
+  /// No description provided for @adherence7d.
+  ///
+  /// In en, this message translates to:
+  /// **'Readings taken (7 days)'**
+  String get adherence7d;
+
+  /// No description provided for @adherence30d.
+  ///
+  /// In en, this message translates to:
+  /// **'Readings taken (30 days)'**
+  String get adherence30d;
+
+  /// No description provided for @readingsDueToday.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} readings due today'**
+  String readingsDueToday(int count);
+
+  /// No description provided for @readingsDoneToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s readings done'**
+  String get readingsDoneToday;
+
+  /// No description provided for @readingsReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'{received} of {expected} readings'**
+  String readingsReceived(int received, int expected);
+
+  /// No description provided for @openAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} open alerts'**
+  String openAlerts(int count);
+
+  /// No description provided for @openAlertsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get openAlertsTitle;
+
+  /// No description provided for @noAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts in the last 30 days.'**
+  String get noAlerts;
+
+  /// No description provided for @programPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get programPaused;
+
+  /// No description provided for @programCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get programCompleted;
+
+  /// No description provided for @trend.
+  ///
+  /// In en, this message translates to:
+  /// **'Trend'**
+  String get trend;
+
+  /// No description provided for @noReadingsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No readings yet'**
+  String get noReadingsYet;
+
+  /// No description provided for @trendSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'{type} trend: {count} days, latest average {latest} on {date}'**
+  String trendSemantic(String type, int count, String latest, String date);
+
+  /// No description provided for @weeklyReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly reports'**
+  String get weeklyReports;
+
+  /// No description provided for @noWeeklyReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first weekly report arrives on Monday.'**
+  String get noWeeklyReports;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts go to your care team. If you feel unwell, call your doctor or 108 in an emergency.'**
+  String get programDisclaimer;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Blood pressure'**
+  String get bloodPressure;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'BP'**
+  String get bloodPressureShort;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Sugar'**
+  String get glucoseShort;
+
+  /// No description provided for @weightShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get weightShort;
+
+  /// No description provided for @readingOutOfRange.
+  ///
+  /// In en, this message translates to:
+  /// **'That value looks unusual. Please check and re-enter.'**
+  String get readingOutOfRange;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'The upper (systolic) number must be higher than the lower one.'**
+  String get readingSystolicBelowDiastolic;
+
+  /// No description provided for @readingSafetyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Readings are shared with your care team. Feeling unwell? Call 108 in an emergency.'**
+  String get readingSafetyNote;
+
+  /// No description provided for @readingSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading saved'**
+  String get readingSaved;
+
+  /// No description provided for @whatsappAssistant.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp assistant'**
+  String get whatsappAssistant;
+
+  /// No description provided for @whatsappExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Get reminders on WhatsApp and reply to check in, log BP or sugar, or ask a question. No diagnosis is given.'**
+  String get whatsappExplain;
+
+  /// No description provided for @whatsappOptIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the WhatsApp assistant'**
+  String get whatsappOptIn;
+
+  /// No description provided for @whatsappPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages go to your registered number. Send STOP at any time to opt out.'**
+  String get whatsappPrivacyNote;
+
+  /// No description provided for @whatsappTryIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Try it'**
+  String get whatsappTryIt;
+
+  /// No description provided for @whatsappTryIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Send these messages to our WhatsApp number:'**
+  String get whatsappTryIntro;
+
+  /// No description provided for @whatsappOptedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp assistant turned on'**
+  String get whatsappOptedIn;
+
+  /// No description provided for @whatsappOptedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp assistant turned off'**
+  String get whatsappOptedOut;
+
+  /// No description provided for @waCmdToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s medicine and visit reminders'**
+  String get waCmdToday;
+
+  /// No description provided for @waCmdCheckin.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily \"I\'m OK\" check-in'**
+  String get waCmdCheckin;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Record a blood pressure reading'**
+  String get waCmdBp;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Record a blood sugar reading'**
+  String get waCmdSugar;
+
+  /// No description provided for @waCmdBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Get links to book care'**
+  String get waCmdBook;
+
+  /// No description provided for @waCmdStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop WhatsApp messages'**
+  String get waCmdStop;
+
+  /// No description provided for @waCmdStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start them again'**
+  String get waCmdStart;
+
+  /// No description provided for @whatsappNoDiagnosis.
+  ///
+  /// In en, this message translates to:
+  /// **'Replies are general guidance, not a diagnosis. In an emergency call 108.'**
+  String get whatsappNoDiagnosis;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Lab tests at home'**
+  String get labTests;
+
+  /// No description provided for @labIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'A trained technician collects the sample at home. Reports come to your records.'**
+  String get labIntro;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Search tests (e.g. HbA1c, lipid)'**
+  String get searchLabTests;
+
+  /// No description provided for @healthPackages.
+  ///
+  /// In en, this message translates to:
+  /// **'Health packages'**
+  String get healthPackages;
+
+  /// No description provided for @noPackages.
+  ///
+  /// In en, this message translates to:
+  /// **'No packages right now'**
+  String get noPackages;
+
+  /// No description provided for @allTests.
+  ///
+  /// In en, this message translates to:
+  /// **'All tests'**
+  String get allTests;
+
+  /// No description provided for @resultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Results for \"{query}\"'**
+  String resultsFor(String query);
+
+  /// No description provided for @noLabTests.
+  ///
+  /// In en, this message translates to:
+  /// **'No tests found'**
+  String get noLabTests;
+
+  /// No description provided for @labPricingNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Prices are indicative and confirmed at booking.'**
+  String get labPricingNote;
+
+  /// No description provided for @testsIncluded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} tests'**
+  String testsIncluded(int count);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting'**
+  String get fastingRequired;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting {hours} h'**
+  String fastingHoursShort(int hours);
+
+  /// No description provided for @reportInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Report in {hours} h'**
+  String reportInHours(int hours);
+
+  /// No description provided for @includedInPackage.
+  ///
+  /// In en, this message translates to:
+  /// **'In package'**
+  String get includedInPackage;
+
+  /// No description provided for @removeFromCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {name}'**
+  String removeFromCart(String name);
+
+  /// No description provided for @labCartBar.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} selected · {amount} · View cart'**
+  String labCartBar(int count, String amount);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Blood'**
+  String get sampleBlood;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Urine'**
+  String get sampleUrine;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Swab'**
+  String get sampleSwab;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Other sample'**
+  String get sampleOther;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Fasting needed'**
+  String get fastingNoticeTitle;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Please do not eat for {hours} hours before the sample is collected. Water is fine. Take regular medicines unless your doctor said otherwise.'**
+  String fastingNoticeBody(int hours);
+
+  /// No description provided for @labCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Your tests'**
+  String get labCart;
+
+  /// No description provided for @labCartEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No tests selected'**
+  String get labCartEmpty;
+
+  /// No description provided for @browseTests.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse tests'**
+  String get browseTests;
+
+  /// No description provided for @sampleCollectionAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample collection address'**
+  String get sampleCollectionAddress;
+
+  /// No description provided for @sampleCollectionTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection time'**
+  String get sampleCollectionTime;
+
+  /// No description provided for @youSaveVsMrp.
+  ///
+  /// In en, this message translates to:
+  /// **'You save {amount} on MRP'**
+  String youSaveVsMrp(String amount);
+
+  /// No description provided for @labOrderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab test order'**
+  String get labOrderTitle;
+
+  /// No description provided for @labBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample collection booked'**
+  String get labBooked;
+
+  /// No description provided for @trackOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Track order'**
+  String get trackOrder;
+
+  /// No description provided for @myLabOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'My lab orders'**
+  String get myLabOrders;
+
+  /// No description provided for @noLabOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'No lab orders yet'**
+  String get noLabOrders;
+
+  /// No description provided for @labPendingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment pending'**
+  String get labPendingPayment;
+
+  /// No description provided for @labScheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection scheduled'**
+  String get labScheduled;
+
+  /// No description provided for @labSampleCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample collected'**
+  String get labSampleCollected;
+
+  /// No description provided for @labProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing at lab'**
+  String get labProcessing;
+
+  /// No description provided for @labReportReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Report ready'**
+  String get labReportReady;
+
+  /// No description provided for @labCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get labCancelled;
+
+  /// No description provided for @labPartner.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab partner'**
+  String get labPartner;
+
+  /// No description provided for @viewReport.
+  ///
+  /// In en, this message translates to:
+  /// **'View report'**
+  String get viewReport;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Lab report'**
+  String get labReport;
+
+  /// No description provided for @trackSampleCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Track sample collection'**
+  String get trackSampleCollection;
+
+  /// No description provided for @orderStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Order status'**
+  String get orderStatus;
+
+  /// No description provided for @cancelOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel order'**
+  String get cancelOrder;
+
+  /// No description provided for @labOrderCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Order cancelled. Any payment will be refunded.'**
+  String get labOrderCancelled;
+
+  /// No description provided for @labReportNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your doctor will be able to see the report. Discuss the results with them.'**
+  String get labReportNote;
+
+  /// No description provided for @cancelReasonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you cancelling?'**
+  String get cancelReasonTitle;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Second opinion'**
+  String get secondOpinion;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Share your reports with a senior specialist and get a written opinion.'**
+  String get secondOpinionIntro;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Request a second opinion'**
+  String get requestSecondOpinion;
+
+  /// No description provided for @myRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'My requests'**
+  String get myRequests;
+
+  /// No description provided for @noSecondOpinions.
+  ///
+  /// In en, this message translates to:
+  /// **'No requests yet'**
+  String get noSecondOpinions;
+
+  /// No description provided for @secondOpinionUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Second opinions are not available right now'**
+  String get secondOpinionUnavailable;
+
+  /// No description provided for @chooseSpecialty.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a specialty'**
+  String get chooseSpecialty;
+
+  /// No description provided for @opinionWithinHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Written opinion within {hours} hours'**
+  String opinionWithinHours(int hours);
+
+  /// No description provided for @yourQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Your question'**
+  String get yourQuestion;
+
+  /// No description provided for @yourQuestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like the specialist to review? Include your main concern and current treatment.'**
+  String get yourQuestionHint;
+
+  /// No description provided for @questionTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Please write at least {count} characters'**
+  String questionTooShort(int count);
+
+  /// No description provided for @recordsToShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Records to share'**
+  String get recordsToShare;
+
+  /// No description provided for @noRecordsToShare.
+  ///
+  /// In en, this message translates to:
+  /// **'No records yet. You can still ask your question.'**
+  String get noRecordsToShare;
+
+  /// No description provided for @secondOpinionConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to share my question and the {count} selected records, read-only, with the specialist who takes up this request. Access is logged.'**
+  String secondOpinionConsent(int count);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'A second opinion is advice based on the records shared. It does not replace an examination. In an emergency call 108.'**
+  String get secondOpinionDisclaimer;
+
+  /// No description provided for @secondOpinionSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent to specialists'**
+  String get secondOpinionSubmitted;
+
+  /// No description provided for @soPendingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment pending'**
+  String get soPendingPayment;
+
+  /// No description provided for @soOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for a specialist'**
+  String get soOpen;
+
+  /// No description provided for @soClaimed.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialist reviewing'**
+  String get soClaimed;
+
+  /// No description provided for @soAnswered.
+  ///
+  /// In en, this message translates to:
+  /// **'Opinion ready'**
+  String get soAnswered;
+
+  /// No description provided for @soCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get soCancelled;
+
+  /// No description provided for @specialist.
+  ///
+  /// In en, this message translates to:
+  /// **'Specialist'**
+  String get specialist;
+
+  /// No description provided for @expectedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected by'**
+  String get expectedBy;
+
+  /// No description provided for @recordsShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Records shared'**
+  String get recordsShared;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Specialist\'s opinion'**
+  String get specialistOpinion;
+
+  /// No description provided for @opinionBy.
+  ///
+  /// In en, this message translates to:
+  /// **'By {name}'**
+  String opinionBy(String name);
+
+  /// No description provided for @recommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations'**
+  String get recommendations;
+
+  /// No description provided for @bookTeleconsult.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a video consultation'**
+  String get bookTeleconsult;
+
+  /// No description provided for @opinionPendingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We will notify you when the specialist has answered.'**
+  String get opinionPendingBody;
+
+  /// No description provided for @createAbha.
+  ///
+  /// In en, this message translates to:
+  /// **'Create ABHA'**
+  String get createAbha;
+
+  /// No description provided for @createAbhaSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your Health ID with a mobile OTP'**
+  String get createAbhaSub;
+
+  /// No description provided for @createAbhaIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the mobile number to verify. An OTP will be sent to it.'**
+  String get createAbhaIntro;
+
+  /// No description provided for @linkAbha.
+  ///
+  /// In en, this message translates to:
+  /// **'Link existing ABHA'**
+  String get linkAbha;
+
+  /// No description provided for @linkAbhaSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have a 14-digit ABHA number?'**
+  String get linkAbhaSub;
+
+  /// No description provided for @linkAbhaIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your ABHA number. An OTP will be sent to the mobile linked with it.'**
+  String get linkAbhaIntro;
+
+  /// No description provided for @abhaMobileLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile number'**
+  String get abhaMobileLabel;
+
+  /// No description provided for @abhaOtpSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit OTP we sent.'**
+  String get abhaOtpSent;
+
+  /// No description provided for @abhaCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Your ABHA is ready'**
+  String get abhaCreated;
+
+  /// No description provided for @abhaLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'ABHA linked'**
+  String get abhaLinked;
+
+  /// No description provided for @abdmPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'ABHA is issued by the National Health Authority (ABDM). We never share your records without your consent.'**
+  String get abdmPrivacyNote;
+
+  /// No description provided for @fetchRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetch records from other hospitals'**
+  String get fetchRecords;
+
+  /// No description provided for @fetchRecordsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Via ABDM, with your consent'**
+  String get fetchRecordsSub;
+
+  /// No description provided for @fetchRecordsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask hospitals linked to your ABHA to share your records. You approve the request in your ABHA app.'**
+  String get fetchRecordsIntro;
+
+  /// No description provided for @recordTypesToFetch.
+  ///
+  /// In en, this message translates to:
+  /// **'Record types'**
+  String get recordTypesToFetch;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Prescriptions'**
+  String get hiPrescription;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Diagnostic reports'**
+  String get hiDiagnosticReport;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Discharge summaries'**
+  String get hiDischargeSummary;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'OP consultations'**
+  String get hiOpConsultation;
+
+  /// No description provided for @dateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Date range'**
+  String get dateRange;
+
+  /// No description provided for @abdmConsentExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Records are used only for your care (purpose CAREMGT). You can see every request below.'**
+  String get abdmConsentExplain;
+
+  /// No description provided for @sendConsentRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send consent request'**
+  String get sendConsentRequest;
+
+  /// No description provided for @abdmRequestSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Request sent. Approve it in your ABHA app.'**
+  String get abdmRequestSent;
+
+  /// No description provided for @myConsentRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'My requests'**
+  String get myConsentRequests;
+
+  /// No description provided for @noConsentRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No requests yet'**
+  String get noConsentRequests;
+
+  /// No description provided for @abdmRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for approval'**
+  String get abdmRequested;
+
+  /// No description provided for @abdmGranted.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get abdmGranted;
+
+  /// No description provided for @abdmDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Denied'**
+  String get abdmDenied;
+
+  /// No description provided for @abdmExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get abdmExpired;
+
+  /// No description provided for @abdmDataReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Records received'**
+  String get abdmDataReceived;
+
+  /// No description provided for @recordsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} records imported'**
+  String recordsImported(int count);
+
+  /// No description provided for @importedViaAbdm.
+  ///
+  /// In en, this message translates to:
+  /// **'Imported via ABDM'**
+  String get importedViaAbdm;
+
+  /// No description provided for @insurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get insurance;
+
+  /// No description provided for @insuranceSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Policies, cashless hospitals, claims'**
+  String get insuranceSub;
+
+  /// No description provided for @addPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Add policy'**
+  String get addPolicy;
+
+  /// No description provided for @editPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit policy'**
+  String get editPolicy;
+
+  /// No description provided for @deletePolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove policy'**
+  String get deletePolicy;
+
+  /// No description provided for @deletePolicyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this policy from your profile?'**
+  String get deletePolicyBody;
+
+  /// No description provided for @noPolicies.
+  ///
+  /// In en, this message translates to:
+  /// **'No insurance policies'**
+  String get noPolicies;
+
+  /// No description provided for @noPoliciesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your health insurance to find cashless hospitals and get renewal reminders.'**
+  String get noPoliciesBody;
+
+  /// No description provided for @expiringSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiring soon'**
+  String get expiringSoon;
+
+  /// No description provided for @sumInsuredValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover {amount}'**
+  String sumInsuredValue(String amount);
+
+  /// No description provided for @findCashlessHospitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Find cashless hospitals'**
+  String get findCashlessHospitals;
+
+  /// No description provided for @cashlessHospitals.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashless hospitals'**
+  String get cashlessHospitals;
+
+  /// No description provided for @noCashlessHospitals.
+  ///
+  /// In en, this message translates to:
+  /// **'No cashless hospitals listed for this insurer'**
+  String get noCashlessHospitals;
+
+  /// No description provided for @cashlessIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospitals with a cashless tie-up with {insurer}.'**
+  String cashlessIntro(String insurer);
+
+  /// No description provided for @cashlessVerifyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Always confirm cashless eligibility with your insurer or TPA before admission.'**
+  String get cashlessVerifyNote;
+
+  /// No description provided for @claimHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Claims'**
+  String get claimHelp;
+
+  /// No description provided for @claimChecklist.
+  ///
+  /// In en, this message translates to:
+  /// **'Claim checklist'**
+  String get claimChecklist;
+
+  /// No description provided for @claimChecklistSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps and documents for cashless and reimbursement'**
+  String get claimChecklistSub;
+
+  /// No description provided for @cashless.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashless'**
+  String get cashless;
+
+  /// No description provided for @reimbursement.
+  ///
+  /// In en, this message translates to:
+  /// **'Reimbursement'**
+  String get reimbursement;
+
+  /// No description provided for @claimSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Steps'**
+  String get claimSteps;
+
+  /// No description provided for @insurer.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurer'**
+  String get insurer;
+
+  /// No description provided for @policyNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy number'**
+  String get policyNumber;
+
+  /// No description provided for @policyNumberKeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved: {masked}. Leave empty to keep it.'**
+  String policyNumberKeep(String masked);
+
+  /// No description provided for @planNameOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan name (optional)'**
+  String get planNameOptional;
+
+  /// No description provided for @policyType.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy type'**
+  String get policyType;
+
+  /// No description provided for @policyIndividual.
+  ///
+  /// In en, this message translates to:
+  /// **'Individual'**
+  String get policyIndividual;
+
+  /// No description provided for @policyFamilyFloater.
+  ///
+  /// In en, this message translates to:
+  /// **'Family floater'**
+  String get policyFamilyFloater;
+
+  /// No description provided for @policyCorporate.
+  ///
+  /// In en, this message translates to:
+  /// **'Corporate'**
+  String get policyCorporate;
+
+  /// No description provided for @policyGovernment.
+  ///
+  /// In en, this message translates to:
+  /// **'Government scheme'**
+  String get policyGovernment;
+
+  /// No description provided for @sumInsuredOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Sum insured (optional)'**
+  String get sumInsuredOptional;
+
+  /// No description provided for @validFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid from'**
+  String get validFrom;
+
+  /// No description provided for @validTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid to'**
+  String get validTo;
+
+  /// No description provided for @tpaOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'TPA name (optional)'**
+  String get tpaOptional;
+
+  /// No description provided for @uploadCardPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add insurance card photo'**
+  String get uploadCardPhoto;
+
+  /// No description provided for @cardPhotoAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Card photo added'**
+  String get cardPhotoAdded;
+
+  /// No description provided for @insuranceCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance card'**
+  String get insuranceCardTitle;
+
+  /// No description provided for @policyDatesInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose valid from and valid to dates (end after start)'**
+  String get policyDatesInvalid;
+
+  /// No description provided for @policyPrivacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy numbers are stored encrypted and shown masked.'**
+  String get policyPrivacyNote;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Preventive care'**
+  String get preventiveCare;
+
+  /// No description provided for @pvOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get pvOverdue;
+
+  /// No description provided for @pvDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get pvDue;
+
+  /// No description provided for @pvUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get pvUpcoming;
+
+  /// No description provided for @pvDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get pvDone;
+
+  /// No description provided for @pvNotApplicable.
+  ///
+  /// In en, this message translates to:
+  /// **'Not applicable'**
+  String get pvNotApplicable;
+
+  /// No description provided for @noPreventiveItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing scheduled'**
+  String get noPreventiveItems;
+
+  /// No description provided for @markAsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as done'**
+  String get markAsDone;
+
+  /// No description provided for @markedDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as done'**
+  String get markedDone;
+
+  /// No description provided for @whenWasItDone.
+  ///
+  /// In en, this message translates to:
+  /// **'When was \"{name}\" done?'**
+  String whenWasItDone(String name);
+
+  /// No description provided for @lastDoneOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Last done {date}'**
+  String lastDoneOn(String date);
+
+  /// No description provided for @repeatsEveryMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeats every {months} months'**
+  String repeatsEveryMonths(int months);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Based on age and sex. Your doctor may advise a different schedule.'**
+  String get preventiveNote;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'A sample schedule based on age and sex, pending clinical review. Please confirm with your doctor.'**
+  String get preventiveNoteFixture;
+
+  /// No description provided for @exercisePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise plan'**
+  String get exercisePlan;
+
+  /// No description provided for @noExercisePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'No exercise plan yet'**
+  String get noExercisePlan;
+
+  /// No description provided for @noExercisePlanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A doctor or physiotherapist can create one for you.'**
+  String get noExercisePlanBody;
+
+  /// No description provided for @bookPhysioVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a physiotherapy home visit'**
+  String get bookPhysioVisit;
+
+  /// No description provided for @bookPhysioVisitSub.
+  ///
+  /// In en, this message translates to:
+  /// **'A physiotherapist visits your home'**
+  String get bookPhysioVisitSub;
+
+  /// No description provided for @todaysExercises.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s exercises'**
+  String get todaysExercises;
+
+  /// No description provided for @setsReps.
+  ///
+  /// In en, this message translates to:
+  /// **'{sets} sets × {reps} reps'**
+  String setsReps(int sets, int reps);
+
+  /// No description provided for @holdSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold {seconds} s'**
+  String holdSeconds(int seconds);
+
+  /// No description provided for @startTimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Start timer'**
+  String get startTimer;
+
+  /// No description provided for @precautions.
+  ///
+  /// In en, this message translates to:
+  /// **'Precautions'**
+  String get precautions;
+
+  /// No description provided for @markExerciseDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark {name} as done'**
+  String markExerciseDone(String name);
+
+  /// No description provided for @finishSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish session ({done}/{total})'**
+  String finishSession(int done, int total);
+
+  /// No description provided for @sessionsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {planned} sessions done'**
+  String sessionsDone(int done, int planned);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Pain after sessions'**
+  String get painTrend;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Pain score trend, latest {score} out of 10'**
+  String painTrendSemantic(int score);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'How is your pain now?'**
+  String get howIsYourPain;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Pain {score} / 10'**
+  String painScoreValue(int score);
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'No pain'**
+  String get noPain;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Worst pain'**
+  String get worstPain;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'High pain: your therapist will be told. Stop exercising and rest.'**
+  String get highPainNote;
+
+  /// No description provided for @sessionSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Session saved. Well done!'**
+  String get sessionSaved;
+
+  /// No description provided for @sessionSavedHighPain.
+  ///
+  /// In en, this message translates to:
+  /// **'Session saved. Your therapist has been told about the pain.'**
+  String get sessionSavedHighPain;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Stop if you feel sharp pain, dizziness or breathlessness. Call 108 in an emergency.'**
+  String get exerciseSafetyNote;
+
+  /// No description provided for @dietPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet plan'**
+  String get dietPlan;
+
+  /// No description provided for @noDietPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'No diet plan yet'**
+  String get noDietPlan;
+
+  /// No description provided for @noDietPlanBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A doctor or dietitian can create one for you.'**
+  String get noDietPlanBody;
+
+  /// No description provided for @calorieTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Target {kcal} kcal a day'**
+  String calorieTarget(int kcal);
+
+  /// No description provided for @adherence14d.
+  ///
+  /// In en, this message translates to:
+  /// **'Followed (14 days)'**
+  String get adherence14d;
+
+  /// No description provided for @dietAdherenceSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Diet followed {pct} percent over 14 days'**
+  String dietAdherenceSemantic(int pct);
+
+  /// No description provided for @todaysMeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s meals'**
+  String get todaysMeals;
+
+  /// No description provided for @followed.
+  ///
+  /// In en, this message translates to:
+  /// **'Followed'**
+  String get followed;
+
+  /// No description provided for @notFollowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Not followed'**
+  String get notFollowed;
+
+  /// No description provided for @foodsToAvoid.
+  ///
+  /// In en, this message translates to:
+  /// **'Foods to avoid'**
+  String get foodsToAvoid;
+
+  /// No description provided for @slotEarlyMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Early morning'**
+  String get slotEarlyMorning;
+
+  /// No description provided for @slotBreakfast.
+  ///
+  /// In en, this message translates to:
+  /// **'Breakfast'**
+  String get slotBreakfast;
+
+  /// No description provided for @slotMidMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Mid-morning'**
+  String get slotMidMorning;
+
+  /// No description provided for @slotLunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunch'**
+  String get slotLunch;
+
+  /// No description provided for @slotEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening snack'**
+  String get slotEvening;
+
+  /// No description provided for @slotDinner.
+  ///
+  /// In en, this message translates to:
+  /// **'Dinner'**
+  String get slotDinner;
+
+  /// No description provided for @slotBedtime.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedtime'**
+  String get slotBedtime;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Follow your doctor or dietitian if their advice differs. Tell them about any new symptoms.'**
+  String get dietDisclaimer;
+
+  /// No description provided for @bookPrivateAmbulance.
+  ///
+  /// In en, this message translates to:
+  /// **'Book private ambulance'**
+  String get bookPrivateAmbulance;
+
+  /// No description provided for @bookPrivateAmbulanceSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Track the vehicle live. Call 108 first in an emergency.'**
+  String get bookPrivateAmbulanceSub;
+
+  /// No description provided for @privateAmbulance.
+  ///
+  /// In en, this message translates to:
+  /// **'Private ambulance'**
+  String get privateAmbulance;
+
+  /// No description provided for @call108First.
+  ///
+  /// In en, this message translates to:
+  /// **'Life-threatening emergency? Call 108 first. A private ambulance does not replace 108.'**
+  String get call108First;
+
+  /// No description provided for @ambulanceType.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambulance type'**
+  String get ambulanceType;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Basic (BLS)'**
+  String get ambBls;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced (ALS)'**
+  String get ambAls;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Oxygen, stretcher and trained staff. For stable patients.'**
+  String get ambBlsDesc;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Cardiac monitor, advanced life support and a paramedic. For serious conditions.'**
+  String get ambAlsDesc;
+
+  /// No description provided for @pickupLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup location'**
+  String get pickupLocation;
+
+  /// No description provided for @locating.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding your location…'**
+  String get locating;
+
+  /// No description provided for @gpsLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'GPS {lat}, {lng}'**
+  String gpsLocation(String lat, String lng);
+
+  /// No description provided for @currentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Current location'**
+  String get currentLocation;
+
+  /// No description provided for @pickupAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'House, street, landmark (helps the driver)'**
+  String get pickupAddressHint;
+
+  /// No description provided for @destinationHospital.
+  ///
+  /// In en, this message translates to:
+  /// **'Destination hospital'**
+  String get destinationHospital;
+
+  /// No description provided for @destinationOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Hospital (optional)'**
+  String get destinationOptional;
+
+  /// No description provided for @nearestSuitable.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest suitable hospital'**
+  String get nearestSuitable;
+
+  /// No description provided for @requestAmbulance.
+  ///
+  /// In en, this message translates to:
+  /// **'Request ambulance'**
+  String get requestAmbulance;
+
+  /// No description provided for @ambulanceDefaultReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport to hospital'**
+  String get ambulanceDefaultReason;
+
+  /// No description provided for @ambulanceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Charges depend on the partner and distance. The care team is alerted too.'**
+  String get ambulanceNote;
+
+  /// No description provided for @ambulanceTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambulance'**
+  String get ambulanceTracking;
+
+  /// No description provided for @ambSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding an ambulance'**
+  String get ambSearching;
+
+  /// No description provided for @ambAssigned.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambulance assigned'**
+  String get ambAssigned;
+
+  /// No description provided for @ambEnRoute.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get ambEnRoute;
+
+  /// No description provided for @ambArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrived'**
+  String get ambArrived;
+
+  /// No description provided for @ambTransporting.
+  ///
+  /// In en, this message translates to:
+  /// **'Going to hospital'**
+  String get ambTransporting;
+
+  /// No description provided for @ambCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Reached hospital'**
+  String get ambCompleted;
+
+  /// No description provided for @ambCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get ambCancelled;
+
+  /// No description provided for @ambNoVehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'No vehicle available'**
+  String get ambNoVehicle;
+
+  /// No description provided for @noVehicleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'No private ambulance is available nearby. Call 108 now.'**
+  String get noVehicleBody;
+
+  /// No description provided for @vehicle.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get vehicle;
+
+  /// No description provided for @driver.
+  ///
+  /// In en, this message translates to:
+  /// **'Driver'**
+  String get driver;
+
+  /// No description provided for @openInMaps.
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Maps'**
+  String get openInMaps;
+
+  /// No description provided for @openStreetMap.
+  ///
+  /// In en, this message translates to:
+  /// **'OpenStreetMap'**
+  String get openStreetMap;
+
+  /// No description provided for @locationUpdatedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Location updated {time}'**
+  String locationUpdatedAt(String time);
+
+  /// No description provided for @statusTimeline.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusTimeline;
+
+  /// No description provided for @cancelAmbulance.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel ambulance'**
+  String get cancelAmbulance;
+
+  /// No description provided for @cancelAmbulanceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel only if help is no longer needed.'**
+  String get cancelAmbulanceBody;
+
+  /// No description provided for @cancelledByUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled by the family'**
+  String get cancelledByUser;
+
+  /// No description provided for @safetyLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety & location'**
+  String get safetyLocation;
+
+  /// No description provided for @safetyLocationSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe zone, companion mode, SOS button'**
+  String get safetyLocationSub;
+
+  /// No description provided for @safetyIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'For people who may wander or get confused, such as with memory problems.'**
+  String get safetyIntro;
+
+  /// No description provided for @safeZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe zone'**
+  String get safeZone;
+
+  /// No description provided for @safeZoneSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Get an alert if {name} leaves the area'**
+  String safeZoneSub(String name);
+
+  /// No description provided for @safeZoneSelfSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up by family with care permission'**
+  String get safeZoneSelfSub;
+
+  /// No description provided for @safeZoneIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'If {name} leaves this area while companion mode is on, family get an alert with a map link.'**
+  String safeZoneIntro(String name);
+
+  /// No description provided for @safeZoneAlerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe zone alerts'**
+  String get safeZoneAlerts;
+
+  /// No description provided for @safeZoneAlertsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert family when outside the zone'**
+  String get safeZoneAlertsSub;
+
+  /// No description provided for @zoneCentre.
+  ///
+  /// In en, this message translates to:
+  /// **'Centre (home)'**
+  String get zoneCentre;
+
+  /// No description provided for @useCurrentLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use current location'**
+  String get useCurrentLocation;
+
+  /// No description provided for @zoneLabelHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Label (e.g. Home)'**
+  String get zoneLabelHint;
+
+  /// No description provided for @radius.
+  ///
+  /// In en, this message translates to:
+  /// **'Radius'**
+  String get radius;
+
+  /// No description provided for @metersValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{meters} m'**
+  String metersValue(int meters);
+
+  /// No description provided for @activeHoursOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Only during set hours'**
+  String get activeHoursOnly;
+
+  /// No description provided for @alwaysActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Always active'**
+  String get alwaysActive;
+
+  /// No description provided for @safeZoneNeedsCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Set the centre first (use current location)'**
+  String get safeZoneNeedsCenter;
+
+  /// No description provided for @safeZoneRadiusInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Radius must be between 100 m and 5 km'**
+  String get safeZoneRadiusInvalid;
+
+  /// No description provided for @safeZonePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the latest location is kept; there is no location history.'**
+  String get safeZonePrivacy;
+
+  /// No description provided for @lastKnownLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Last known location'**
+  String get lastKnownLocation;
+
+  /// No description provided for @noLocationYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No location shared yet. Turn on companion mode on their phone.'**
+  String get noLocationYet;
+
+  /// No description provided for @insideSafeZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Inside the safe zone'**
+  String get insideSafeZone;
+
+  /// No description provided for @outsideSafeZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Outside the safe zone'**
+  String get outsideSafeZone;
+
+  /// No description provided for @companionMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Companion mode'**
+  String get companionMode;
+
+  /// No description provided for @companionModeSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Share this phone\'s location with family'**
+  String get companionModeSub;
+
+  /// No description provided for @companionIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'While CareCompanion is open, this phone shares its location every 5 minutes so family can check you are safe.'**
+  String get companionIntro;
+
+  /// No description provided for @companionOn.
+  ///
+  /// In en, this message translates to:
+  /// **'On: sharing location while the app is open'**
+  String get companionOn;
+
+  /// No description provided for @companionOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off'**
+  String get companionOff;
+
+  /// No description provided for @companionOwnDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Companion mode is turned on from the phone of the person being cared for.'**
+  String get companionOwnDevice;
+
+  /// No description provided for @companionForegroundOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Works only while the app is open on screen; it does not track in the background.'**
+  String get companionForegroundOnly;
+
+  /// No description provided for @withdrawConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw consent'**
+  String get withdrawConsent;
+
+  /// No description provided for @companionConsentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your location?'**
+  String get companionConsentTitle;
+
+  /// No description provided for @companionConsent1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location is sent every 5 minutes while the app is open.'**
+  String get companionConsent1;
+
+  /// No description provided for @companionConsent2.
+  ///
+  /// In en, this message translates to:
+  /// **'Family with alert permission and your care coordinator can see your latest location.'**
+  String get companionConsent2;
+
+  /// No description provided for @companionConsent3.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the latest location is stored. No history is kept.'**
+  String get companionConsent3;
+
+  /// No description provided for @companionConsent4.
+  ///
+  /// In en, this message translates to:
+  /// **'You can turn it off or withdraw consent at any time.'**
+  String get companionConsent4;
+
+  /// No description provided for @companionConsentAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand and agree to share my location'**
+  String get companionConsentAgree;
+
+  /// No description provided for @agreeAndTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Agree and turn on'**
+  String get agreeAndTurnOn;
+
+  /// No description provided for @sosButtonPairing.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS button'**
+  String get sosButtonPairing;
+
+  /// No description provided for @sosButtonPairingSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair a wearable emergency button'**
+  String get sosButtonPairingSub;
+
+  /// No description provided for @sosButtonIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressing a paired SOS button alerts emergency contacts, the same as SOS in the app.'**
+  String get sosButtonIntro;
+
+  /// No description provided for @deviceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Device ID'**
+  String get deviceId;
+
+  /// No description provided for @deviceIdHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Printed on the back of the button or its box'**
+  String get deviceIdHelp;
+
+  /// No description provided for @deviceModelOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Model (optional)'**
+  String get deviceModelOptional;
+
+  /// No description provided for @pairDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pair button'**
+  String get pairDevice;
+
+  /// No description provided for @pairedDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Paired on this phone'**
+  String get pairedDevices;
+
+  /// No description provided for @noPairedDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No buttons paired from this phone'**
+  String get noPairedDevices;
+
+  /// No description provided for @sosButtonPaired.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS button paired'**
+  String get sosButtonPaired;
+
+  /// No description provided for @unpair.
+  ///
+  /// In en, this message translates to:
+  /// **'Unpair'**
+  String get unpair;
+
+  /// No description provided for @sosButtonNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A supportive device, not a replacement for 108.'**
+  String get sosButtonNote;
+
+  /// No description provided for @haveCompanyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a company code?'**
+  String get haveCompanyCode;
+
+  /// No description provided for @companyCodeHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'If your employer sponsors CareCompanion, enter the code they gave you.'**
+  String get companyCodeHelp;
+
+  /// No description provided for @companyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Company code'**
+  String get companyCode;
+
+  /// No description provided for @companyCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the full code'**
+  String get companyCodeInvalid;
+
+  /// No description provided for @companyPlanActivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan activated, sponsored by {name}'**
+  String companyPlanActivated(String name);
+
+  /// No description provided for @sponsoredBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sponsored by {name}'**
+  String sponsoredBy(String name);
+
+  /// No description provided for @offersAndWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers & wallet'**
+  String get offersAndWallet;
+
+  /// No description provided for @couponCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon code'**
+  String get couponCode;
+
+  /// No description provided for @couponApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied'**
+  String couponApplied(String code);
+
+  /// No description provided for @couponDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon discount'**
+  String get couponDiscount;
+
+  /// No description provided for @useWalletBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Use wallet balance'**
+  String get useWalletBalance;
+
+  /// No description provided for @walletAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} available'**
+  String walletAvailable(String amount);
+
+  /// No description provided for @walletUsedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get walletUsedLabel;
+
+  /// No description provided for @payableAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'To pay'**
+  String get payableAmount;
+
+  /// No description provided for @fullyCoveredNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully covered: no payment needed.'**
+  String get fullyCoveredNote;
+
+  /// No description provided for @checkoutSummarySemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal {subtotal}, discount {discount}, wallet {wallet}, to pay {payable}'**
+  String checkoutSummarySemantic(
+    String subtotal,
+    String discount,
+    String wallet,
+    String payable,
+  );
+
+  /// No description provided for @wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get wallet;
+
+  /// No description provided for @walletSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance and rewards'**
+  String get walletSub;
+
+  /// No description provided for @walletBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet balance'**
+  String get walletBalance;
+
+  /// No description provided for @walletBalanceSemantic.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet balance {amount}'**
+  String walletBalanceSemantic(String amount);
+
+  /// No description provided for @walletNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet credit can be used on bookings. It cannot be withdrawn and expires after 365 days.'**
+  String get walletNote;
+
+  /// No description provided for @transactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transactions;
+
+  /// No description provided for @noTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions yet'**
+  String get noTransactions;
+
+  /// No description provided for @inviteFamilyFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite family & friends'**
+  String get inviteFamilyFriends;
+
+  /// No description provided for @inviteRewardSub.
+  ///
+  /// In en, this message translates to:
+  /// **'You both get wallet credit after their first paid service'**
+  String get inviteRewardSub;
+
+  /// No description provided for @inviteIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your code. When they complete their first paid service, you both get wallet credit.'**
+  String get inviteIntro;
+
+  /// No description provided for @yourInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Your invite code'**
+  String get yourInviteCode;
+
+  /// No description provided for @shareInvite.
+  ///
+  /// In en, this message translates to:
+  /// **'Share invite'**
+  String get shareInvite;
+
+  /// No description provided for @friendsInvited.
+  ///
+  /// In en, this message translates to:
+  /// **'Joined with your code'**
+  String get friendsInvited;
+
+  /// No description provided for @rewardsEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards earned'**
+  String get rewardsEarned;
+
+  /// No description provided for @haveInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Have an invite code?'**
+  String get haveInviteCode;
+
+  /// No description provided for @inviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code'**
+  String get inviteCode;
+
+  /// No description provided for @inviteCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That code does not look right'**
+  String get inviteCodeInvalid;
+
+  /// No description provided for @inviteRedeemed.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code applied. Your reward arrives after your first paid service.'**
+  String get inviteRedeemed;
+
+  /// No description provided for @inviteTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Codes can be used once, within 7 days of signing up.'**
+  String get inviteTerms;
+
+  /// No description provided for @onboardingInviteBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Were you invited by family or a friend? Enter their code to get a welcome reward. You can skip this.'**
+  String get onboardingInviteBody;
+
+  /// No description provided for @purposeLabOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Lab test'**
+  String get purposeLabOrder;
+
+  /// No description provided for @purposeSecondOpinion.
+  ///
+  /// In en, this message translates to:
+  /// **'Second opinion'**
+  String get purposeSecondOpinion;
+
+  /// No description provided for @purposeAmbulance.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambulance'**
+  String get purposeAmbulance;
+
+  /// No description provided for @myTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'My tickets'**
+  String get myTickets;
+
+  /// No description provided for @myTicketsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions about bookings, payments or the app'**
+  String get myTicketsSub;
+
+  /// No description provided for @newTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'New ticket'**
+  String get newTicket;
+
+  /// No description provided for @noTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'No tickets'**
+  String get noTickets;
+
+  /// No description provided for @noTicketsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Raise a ticket and our support team will reply here.'**
+  String get noTicketsBody;
+
+  /// No description provided for @ticketCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'What is it about?'**
+  String get ticketCategory;
+
+  /// No description provided for @tcBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking'**
+  String get tcBooking;
+
+  /// No description provided for @tcPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get tcPayment;
+
+  /// No description provided for @tcRefund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get tcRefund;
+
+  /// No description provided for @tcAppIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'App issue'**
+  String get tcAppIssue;
+
+  /// No description provided for @tcClinicalConcern.
+  ///
+  /// In en, this message translates to:
+  /// **'Health concern'**
+  String get tcClinicalConcern;
+
+  /// No description provided for @tcOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get tcOther;
+
+  /// No description provided for @clinicalConcernTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our care team will review this'**
+  String get clinicalConcernTitle;
+
+  /// No description provided for @clinicalConcernBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Health concerns go to a clinician, not only to support. If it is urgent or someone is very unwell, call 108 now.'**
+  String get clinicalConcernBody;
+
+  /// No description provided for @describeIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the issue'**
+  String get describeIssue;
+
+  /// No description provided for @linkBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Link a booking (optional)'**
+  String get linkBooking;
+
+  /// No description provided for @noBookingsToLink.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent bookings'**
+  String get noBookingsToLink;
+
+  /// No description provided for @submitTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submitTicket;
+
+  /// No description provided for @ticketCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket {number} created'**
+  String ticketCreated(String number);
+
+  /// No description provided for @supportNotForEmergencies.
+  ///
+  /// In en, this message translates to:
+  /// **'Support is not for emergencies. Call 108 in an emergency.'**
+  String get supportNotForEmergencies;
+
+  /// No description provided for @supportTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Support ticket'**
+  String get supportTicket;
+
+  /// No description provided for @tsOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get tsOpen;
+
+  /// No description provided for @tsPendingCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for you'**
+  String get tsPendingCustomer;
+
+  /// No description provided for @tsResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get tsResolved;
+
+  /// No description provided for @tsClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get tsClosed;
+
+  /// No description provided for @handledBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Handled by {name}'**
+  String handledBy(String name);
+
+  /// No description provided for @rateSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate our support'**
+  String get rateSupport;
+
+  /// No description provided for @youRated.
+  ///
+  /// In en, this message translates to:
+  /// **'You rated {score} / 5. Thank you!'**
+  String youRated(int score);
+
   /// No description provided for @itemsCount.
   ///
   /// In en, this message translates to:

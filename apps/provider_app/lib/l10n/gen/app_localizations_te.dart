@@ -1092,4 +1092,448 @@ class AppLocalizationsTe extends AppLocalizations {
   @override
   String get voiceUnavailable =>
       'ఈ పరికరంలో వాయిస్ ఇన్‌పుట్ అందుబాటులో లేదు, లేదా మైక్రోఫోన్ అనుమతి నిరాకరించబడింది.';
+
+  @override
+  String get typeDietitian => 'డైటీషియన్';
+
+  @override
+  String get tabRoute => 'రూట్';
+
+  @override
+  String get optionalHint => 'ఐచ్ఛికం';
+
+  @override
+  String planFor(String name) {
+    return '$name కోసం';
+  }
+
+  @override
+  String get routeEmpty => 'ఈరోజు మీ రూట్‌లో స్టాప్‌లు లేవు.';
+
+  @override
+  String routeSummary(int count, String km) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count స్టాప్‌లు',
+      one: '1 స్టాప్',
+    );
+    return '$_temp0 · మొత్తం $km కి.మీ.';
+  }
+
+  @override
+  String get routeFromLastLocation =>
+      'దూరాలు మీరు చివరగా పంపిన లొకేషన్ నుండి లెక్కించబడ్డాయి.';
+
+  @override
+  String get routeFromCurrentLocation =>
+      'దూరాలు మీ సేవా ప్రాంత కేంద్రం నుండి లెక్కించబడ్డాయి.';
+
+  @override
+  String get routeStartNavigation => 'నావిగేషన్ ప్రారంభించండి';
+
+  @override
+  String routeTooManyStops(int count) {
+    return 'Google Maps మొదటి $count స్టాప్‌లను చూపిస్తుంది. వాటి తర్వాత నావిగేషన్‌ను మళ్లీ తెరవండి.';
+  }
+
+  @override
+  String routeFromStart(String km) {
+    return 'ప్రారంభం నుండి $km కి.మీ.';
+  }
+
+  @override
+  String routeFromPrev(String km) {
+    return 'మునుపటి స్టాప్ నుండి $km కి.మీ.';
+  }
+
+  @override
+  String routeEta(String time) {
+    return 'చేరే సమయం $time';
+  }
+
+  @override
+  String routeStopLabel(
+    int index,
+    String service,
+    String window,
+    String details,
+  ) {
+    return 'స్టాప్ $index: $service, $window. $details';
+  }
+
+  @override
+  String get attTitle => 'హాజరు';
+
+  @override
+  String get attUnknown => 'హాజరు స్థితి అందుబాటులో లేదు';
+
+  @override
+  String get attNotCheckedIn => 'ఈరోజు చెక్-ఇన్ చేయలేదు';
+
+  @override
+  String get attNotCheckedInHint =>
+      'మీ షిఫ్ట్ ప్రారంభించినప్పుడు చెక్-ఇన్ చేయండి.';
+
+  @override
+  String attCheckedInAt(String time) {
+    return '$timeకి చెక్-ఇన్ అయ్యారు';
+  }
+
+  @override
+  String attCheckedOutAt(String time) {
+    return '$timeకి చెక్-అవుట్ అయ్యారు';
+  }
+
+  @override
+  String get attCheckIn => 'చెక్-ఇన్';
+
+  @override
+  String get attCheckOut => 'చెక్-అవుట్';
+
+  @override
+  String get attCheckedInToast => 'చెక్-ఇన్ అయింది.';
+
+  @override
+  String get attCheckedOutToast => 'చెక్-అవుట్ అయింది.';
+
+  @override
+  String get attNoLocation => '(లొకేషన్ అందుబాటులో లేదు.)';
+
+  @override
+  String get attDaysPresent => 'హాజరైన రోజులు';
+
+  @override
+  String get attHours => 'గంటలు';
+
+  @override
+  String get attVisits => 'విజిట్‌లు';
+
+  @override
+  String get attDaily => 'రోజువారీగా';
+
+  @override
+  String get attEmpty => 'ఈ నెలలో హాజరు నమోదు కాలేదు.';
+
+  @override
+  String get attAbsent => 'చెక్-ఇన్ లేదు';
+
+  @override
+  String get attOpen => 'చెక్-అవుట్ చేయలేదు';
+
+  @override
+  String attHoursShort(String hours) {
+    return '$hours గం.';
+  }
+
+  @override
+  String attVisitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count విజిట్‌లు',
+      one: '1 విజిట్',
+      zero: 'విజిట్‌లు లేవు',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get supTitle => 'సామాగ్రి';
+
+  @override
+  String get supEmpty => 'మీకు సామాగ్రి కేటాయించబడలేదు.';
+
+  @override
+  String supLowBanner(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count వస్తువులు తక్కువగా ఉన్నాయి. తిరిగి నింపమని కోఆర్డినేటర్‌ను అడగండి.',
+      one: '1 వస్తువు తక్కువగా ఉంది. తిరిగి నింపమని కోఆర్డినేటర్‌ను అడగండి.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get supLow => 'స్టాక్ తక్కువ';
+
+  @override
+  String get supOut => 'స్టాక్ అయిపోయింది';
+
+  @override
+  String supReorderAt(String qty) {
+    return '$qty వద్ద మళ్లీ ఆర్డర్ చేయండి';
+  }
+
+  @override
+  String supOnHand(String qty) {
+    return 'చేతిలో: $qty';
+  }
+
+  @override
+  String get supUsageTitle => 'వాడిన సామాగ్రి';
+
+  @override
+  String get supUsageHint =>
+      'ఈ విజిట్‌లో వాడిన వాటిని నమోదు చేయండి. ఆఫ్‌లైన్‌లో ఉన్నా సేవ్ అవుతుంది.';
+
+  @override
+  String get supUsageCardBody =>
+      'ఈ విజిట్‌లో వాడిన గ్లౌజులు, స్ట్రిప్‌లు, స్వాబ్‌లు మొదలైనవి నమోదు చేయండి.';
+
+  @override
+  String get supUsageButton => 'వాడిన సామాగ్రిని నమోదు చేయండి';
+
+  @override
+  String get supUsageSave => 'సేవ్ చేయండి';
+
+  @override
+  String get supUsageSaved => 'సామాగ్రి వినియోగం సేవ్ అయింది';
+
+  @override
+  String supIncrease(String name) {
+    return 'ఒక $name జోడించండి';
+  }
+
+  @override
+  String supDecrease(String name) {
+    return 'ఒక $name తీసివేయండి';
+  }
+
+  @override
+  String get sampleTestsTitle => 'సేకరించాల్సిన ల్యాబ్ పరీక్షలు';
+
+  @override
+  String get sampleGeneric => 'ల్యాబ్ ఆర్డర్ ప్రకారం శాంపిల్స్ సేకరించండి.';
+
+  @override
+  String get sampleFastingShort => 'ఉపవాసం';
+
+  @override
+  String get sampleFastingRequired =>
+      'ఉపవాసం అవసరం. శాంపిల్ తీసుకునే ముందు రోగితో నిర్ధారించండి.';
+
+  @override
+  String sampleFastingHours(int hours) {
+    return 'ఉపవాసం అవసరం ($hours గం.). శాంపిల్ తీసుకునే ముందు రోగితో నిర్ధారించండి.';
+  }
+
+  @override
+  String get sampleNoFasting => 'ఈ పరీక్షలకు ఉపవాసం అవసరం లేదు.';
+
+  @override
+  String get sampleChecklistTitle => 'పూర్తి చేసే ముందు: శాంపిల్ చెక్‌లిస్ట్';
+
+  @override
+  String get samplePatientId => 'రోగి గుర్తింపు ధృవీకరించబడింది';
+
+  @override
+  String get sampleFastingConfirmed => 'రోగితో ఉపవాస స్థితి నిర్ధారించబడింది';
+
+  @override
+  String get sampleFastingNotNeeded =>
+      'ఉపవాసం అవసరం లేదు (రోగితో తనిఖీ చేశాను)';
+
+  @override
+  String get sampleTubesLabelled => 'అన్ని ట్యూబ్‌లకు లేబుల్ వేశాను';
+
+  @override
+  String get sampleCount => 'శాంపిల్స్ సంఖ్య';
+
+  @override
+  String get sampleCollectedConfirm => 'శాంపిల్స్ సేకరించబడ్డాయి';
+
+  @override
+  String get sampleCompleteHint =>
+      'విజిట్ పూర్తి చేయడానికి ప్రతి అంశాన్ని నిర్ధారించండి.';
+
+  @override
+  String sampleSummary(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count శాంపిల్స్ సేకరించబడ్డాయి.',
+      one: '1 శాంపిల్ సేకరించబడింది.',
+    );
+    return '$_temp0 ట్యూబ్‌లకు లేబుల్ వేశాను, రోగి గుర్తింపు ధృవీకరించాను, ఉపవాస స్థితి నిర్ధారించాను.';
+  }
+
+  @override
+  String get exCardTitle => 'వ్యాయామ ప్రణాళిక';
+
+  @override
+  String get exCreateTitle => 'వ్యాయామ ప్రణాళిక సృష్టించండి';
+
+  @override
+  String get exChooseTitle => '1. వ్యాయామాలు ఎంచుకోండి';
+
+  @override
+  String get exAllAreas => 'అన్నీ';
+
+  @override
+  String get exLibraryEmpty => 'ఈ శరీర భాగానికి వ్యాయామాలు లేవు.';
+
+  @override
+  String get exDosageTitle => '2. సెట్‌లు మరియు పునరావృతాలు';
+
+  @override
+  String get exNoneSelected => 'పైన కనీసం ఒక వ్యాయామం ఎంచుకోండి.';
+
+  @override
+  String get exSets => 'సెట్‌లు';
+
+  @override
+  String get exReps => 'పునరావృతాలు';
+
+  @override
+  String get exHold => 'ఆపండి (సె.)';
+
+  @override
+  String get exPerDay => 'రోజుకు';
+
+  @override
+  String get exNotes => 'గమనికలు (ఐచ్ఛికం)';
+
+  @override
+  String get exScheduleTitle => '3. షెడ్యూల్';
+
+  @override
+  String get exStartDate => 'ప్రారంభ తేదీ';
+
+  @override
+  String get exWeeks => 'వారాలు';
+
+  @override
+  String get exSave => 'వ్యాయామ ప్రణాళికను సేవ్ చేయండి';
+
+  @override
+  String get exCreated => 'వ్యాయామ ప్రణాళిక సృష్టించబడింది';
+
+  @override
+  String get exErrNoExercises => 'కనీసం ఒక వ్యాయామం ఎంచుకోండి.';
+
+  @override
+  String exErrRange(String field, int min, int max) {
+    return '$field $min మరియు $max మధ్య ఉండాలి.';
+  }
+
+  @override
+  String get exErrStartDate => 'ప్రారంభ తేదీ గతంలో ఉండకూడదు.';
+
+  @override
+  String get exNoPlans => 'ఈ రోగికి ఇంకా వ్యాయామ ప్రణాళికలు లేవు.';
+
+  @override
+  String get exProgressUnavailable => 'ప్రణాళిక పురోగతి మీకు అందుబాటులో లేదు.';
+
+  @override
+  String exPlanLine(int count, String author) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count వ్యాయామాలు',
+      one: '1 వ్యాయామం',
+    );
+    return '$_temp0 · $author';
+  }
+
+  @override
+  String exProgressLine(int done, int planned, int pct) {
+    return '$done/$planned సెషన్‌లు · $pct% పాటింపు';
+  }
+
+  @override
+  String exLatestPain(int score) {
+    return 'తాజా నొప్పి $score/10';
+  }
+
+  @override
+  String get dietCardTitle => 'డైట్ ప్లాన్';
+
+  @override
+  String get dietCardBody => 'ఈ రోగికి భోజన ప్రణాళిక సృష్టించండి.';
+
+  @override
+  String get dietCreateTitle => 'డైట్ ప్లాన్ సృష్టించండి';
+
+  @override
+  String get dietTemplate => 'టెంప్లేట్';
+
+  @override
+  String get dietNoTemplate => 'టెంప్లేట్ లేదు';
+
+  @override
+  String get dietGovernance =>
+      '[క్లినికల్ సమీక్ష అవసరం] ఈ టెంప్లేట్ ఇంకా క్లినికల్‌గా ఆమోదించబడలేదు. ప్రతి అంశాన్ని సమీక్షించండి.';
+
+  @override
+  String get dietConditions => 'పరిస్థితులు మరియు లక్ష్యం';
+
+  @override
+  String get dietAddCondition => 'పరిస్థితిని జోడించండి';
+
+  @override
+  String get dietCalories => 'కేలరీ లక్ష్యం (kcal/రోజు)';
+
+  @override
+  String get dietMeals => 'భోజనాలు';
+
+  @override
+  String get dietMealsHint => 'అంశాలను కామాలతో వేరు చేయండి.';
+
+  @override
+  String get dietAvoid => 'నివారించాల్సినవి మరియు గమనికలు';
+
+  @override
+  String get dietAvoidHint => 'నివారించాల్సిన ఆహారాలు (కామాలతో వేరు చేయండి)';
+
+  @override
+  String get dietNotes => 'గమనికలు (ఐచ్ఛికం)';
+
+  @override
+  String get dietValidUntil => 'ఎప్పటి వరకు చెల్లుతుంది';
+
+  @override
+  String get dietSave => 'డైట్ ప్లాన్ సేవ్ చేయండి';
+
+  @override
+  String get dietCreated => 'డైట్ ప్లాన్ సృష్టించబడింది';
+
+  @override
+  String get dietErrNoMeals => 'కనీసం ఒక భోజనానికి ఆహార అంశాలు జోడించండి.';
+
+  @override
+  String get dietErrNoConditions => 'కనీసం ఒక పరిస్థితిని జోడించండి.';
+
+  @override
+  String dietErrCalories(int min, int max) {
+    return 'కేలరీ లక్ష్యం $min మరియు $max మధ్య ఉండాలి.';
+  }
+
+  @override
+  String get dietErrValidUntil =>
+      '\"ఎప్పటి వరకు\" ఈరోజు తర్వాతి తేదీ అయి ఉండాలి.';
+
+  @override
+  String get slotEarlyMorning => 'తెల్లవారుజాము';
+
+  @override
+  String get slotBreakfast => 'అల్పాహారం';
+
+  @override
+  String get slotMidMorning => 'మధ్యాహ్నానికి ముందు';
+
+  @override
+  String get slotLunch => 'మధ్యాహ్న భోజనం';
+
+  @override
+  String get slotEvening => 'సాయంత్రం అల్పాహారం';
+
+  @override
+  String get slotDinner => 'రాత్రి భోజనం';
+
+  @override
+  String get slotBedtime => 'పడుకునే ముందు';
 }

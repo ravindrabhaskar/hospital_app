@@ -3170,6 +3170,1618 @@ class AppLocalizationsTe extends AppLocalizations {
   String get themeDark => 'డార్క్';
 
   @override
+  String get more => 'మరిన్ని';
+
+  @override
+  String get moreServices => 'మరిన్ని సేవలు';
+
+  @override
+  String get apply => 'వర్తింపజేయండి';
+
+  @override
+  String get done => 'పూర్తయింది';
+
+  @override
+  String get from => 'నుండి';
+
+  @override
+  String get to => 'వరకు';
+
+  @override
+  String get refresh => 'రిఫ్రెష్ చేయండి';
+
+  @override
+  String get restart => 'మళ్లీ ప్రారంభించండి';
+
+  @override
+  String get redeem => 'రిడీమ్ చేయండి';
+
+  @override
+  String get copied => 'కాపీ అయింది';
+
+  @override
+  String get copyCode => 'కోడ్ కాపీ చేయండి';
+
+  @override
+  String copyCommand(String command) {
+    return '$command కాపీ చేయండి';
+  }
+
+  @override
+  String get notSet => 'సెట్ చేయలేదు';
+
+  @override
+  String get expired => 'గడువు ముగిసింది';
+
+  @override
+  String get provider => 'ప్రొవైడర్';
+
+  @override
+  String get subject => 'విషయం';
+
+  @override
+  String get credit => 'జమ';
+
+  @override
+  String get debit => 'డెబిట్';
+
+  @override
+  String updatedAt(String time) {
+    return '$timeకి అప్‌డేట్ అయింది';
+  }
+
+  @override
+  String validUntil(String date) {
+    return '$date వరకు చెల్లుతుంది';
+  }
+
+  @override
+  String planBy(String name) {
+    return '$name రూపొందించిన ప్లాన్';
+  }
+
+  @override
+  String planDates(String start, String end) {
+    return '$start – $end';
+  }
+
+  @override
+  String get reasonOptional => 'కారణం (ఐచ్ఛికం)';
+
+  @override
+  String logoOf(String name) {
+    return '$name లోగో';
+  }
+
+  @override
+  String get poweredByCareCompanion => 'కేర్‌కంపానియన్ ఆధారితం';
+
+  @override
+  String get adherence => 'పాటింపు';
+
+  @override
+  String get qxLabTests => 'ల్యాబ్ పరీక్షలు';
+
+  @override
+  String get qxCarePrograms => 'కేర్ ప్రోగ్రామ్‌లు';
+
+  @override
+  String get qxPreventiveCare => 'నివారణ సంరక్షణ';
+
+  @override
+  String get qxSecondOpinion => 'రెండో అభిప్రాయం';
+
+  @override
+  String get qxInsurance => 'బీమా';
+
+  @override
+  String get qxExercise => 'వ్యాయామం';
+
+  @override
+  String get qxDiet => 'ఆహారం';
+
+  @override
+  String get dailyCheckin => 'రోజువారీ చెక్-ఇన్';
+
+  @override
+  String get dailyCheckinSub => 'ప్రతి ఉదయం \"నేను బాగున్నాను\" ట్యాప్';
+
+  @override
+  String get imOkToday => 'నేను ఈరోజు బాగున్నాను';
+
+  @override
+  String get checkinPrompt =>
+      'ఒక్క ట్యాప్‌తో మీరు ఈరోజు బాగున్నారని మీ కుటుంబానికి తెలుస్తుంది.';
+
+  @override
+  String get checkinMissedBody =>
+      'ఈరోజు చెక్-ఇన్ సమయం దాటింది. ఇప్పుడు చెక్-ఇన్ చేసినా మీరు బాగున్నారని కుటుంబానికి తెలుస్తుంది.';
+
+  @override
+  String get checkinMoodOptional => 'మీరు ఎలా ఉన్నారు? (ఐచ్ఛికం)';
+
+  @override
+  String checkinWindow(String start, String end) {
+    return '$start–$end';
+  }
+
+  @override
+  String get checkinThanks =>
+      'ధన్యవాదాలు! మీరు బాగున్నారని కుటుంబానికి తెలియజేశాం.';
+
+  @override
+  String checkinDoneAt(String time) {
+    return '$timeకి చెక్-ఇన్ చేశారు';
+  }
+
+  @override
+  String checkinFamilyDone(String name, String time) {
+    return '$name ఈరోజు $timeకి చెక్-ఇన్ చేశారు';
+  }
+
+  @override
+  String checkinFamilyMissed(String name) {
+    return '$name ఈరోజు చెక్-ఇన్ చేయలేదు';
+  }
+
+  @override
+  String checkinFamilyPending(String name, String window) {
+    return '$name ఇంకా చెక్-ఇన్ చేయలేదు (సమయం $window)';
+  }
+
+  @override
+  String get checkinOk => 'సమయానికి';
+
+  @override
+  String get checkinLate => 'ఆలస్యంగా';
+
+  @override
+  String get checkinMissed => 'మిస్ అయింది';
+
+  @override
+  String get checkinPending => 'పెండింగ్';
+
+  @override
+  String checkinHistorySemantic(int ok, int late, int missed) {
+    return 'గత 30 రోజులు: $ok సమయానికి, $late ఆలస్యం, $missed మిస్';
+  }
+
+  @override
+  String checkinIntro(String name) {
+    return '$name కోసం రోజువారీ \"నేను బాగున్నాను\" చెక్-ఇన్. మిస్ అయితే కుటుంబానికి, కేర్ కోఆర్డినేటర్‌కు హెచ్చరిక వెళ్తుంది.';
+  }
+
+  @override
+  String get checkinNoPermission =>
+      '\"సంరక్షణ నిర్వహణ\" అనుమతి ఉన్న కుటుంబ సభ్యులు మాత్రమే దీన్ని మార్చగలరు.';
+
+  @override
+  String get checkinEnable => 'రోజువారీ చెక్-ఇన్';
+
+  @override
+  String get checkinEnableSub =>
+      'ప్రతి ఉదయం \"నేను ఈరోజు బాగున్నాను\" కార్డ్ చూపించండి';
+
+  @override
+  String get checkinWindowStart => 'సమయం ప్రారంభం';
+
+  @override
+  String get checkinWindowEnd => 'సమయం ముగింపు';
+
+  @override
+  String get checkinWindowInvalid => 'ముగింపు సమయం ప్రారంభం తర్వాత ఉండాలి';
+
+  @override
+  String get checkinEscalateAfter => 'ఇంత సమయం తర్వాత కేర్ టీమ్‌కు హెచ్చరిక';
+
+  @override
+  String minutesCount(int minutes) {
+    return '$minutes నిమిషాలు';
+  }
+
+  @override
+  String get checkinNotifyFamily => 'మిస్ అయితే కుటుంబానికి తెలియజేయండి';
+
+  @override
+  String get checkinNotifyCoordinator => 'కేర్ కోఆర్డినేటర్‌కు తెలియజేయండి';
+
+  @override
+  String get checkinHowItWorks =>
+      'సమయం ముగిసే వరకు చెక్-ఇన్ లేకపోతే కుటుంబానికి నోటిఫికేషన్ వస్తుంది. నిర్ణీత సమయం తర్వాత కూడా లేకపోతే కేర్ కోఆర్డినేటర్ సంప్రదిస్తారు. సమయాలు IST లో ఉంటాయి.';
+
+  @override
+  String get checkinLast30Days => 'గత 30 రోజులు';
+
+  @override
+  String get checkinNoHistory => 'ఇంకా చెక్-ఇన్‌లు లేవు';
+
+  @override
+  String get carePrograms => 'కేర్ ప్రోగ్రామ్‌లు';
+
+  @override
+  String get myPrograms => 'నా ప్రోగ్రామ్‌లు';
+
+  @override
+  String get programsIntro =>
+      'సందర్శనల మధ్య మీ రీడింగ్‌లను గమనించేందుకు మీ డాక్టర్ వీటిని ఏర్పాటు చేశారు.';
+
+  @override
+  String get noProgramsTitle => 'ఇంకా కేర్ ప్రోగ్రామ్‌లు లేవు';
+
+  @override
+  String get noProgramsBody =>
+      'మీ డాక్టర్ మిమ్మల్ని బీపీ, షుగర్ లేదా గుండె సంరక్షణ ప్రోగ్రామ్‌లో చేర్చగలరు.';
+
+  @override
+  String get logReading => 'రీడింగ్ నమోదు చేయండి';
+
+  @override
+  String lastReadingAt(String time) {
+    return 'చివరి రీడింగ్ $time';
+  }
+
+  @override
+  String get adherence7d => 'తీసుకున్న రీడింగ్‌లు (7 రోజులు)';
+
+  @override
+  String get adherence30d => 'తీసుకున్న రీడింగ్‌లు (30 రోజులు)';
+
+  @override
+  String readingsDueToday(int count) {
+    return 'ఈరోజు $count రీడింగ్‌లు మిగిలాయి';
+  }
+
+  @override
+  String get readingsDoneToday => 'ఈరోజు రీడింగ్‌లు పూర్తయ్యాయి';
+
+  @override
+  String readingsReceived(int received, int expected) {
+    return '$expectedలో $received రీడింగ్‌లు';
+  }
+
+  @override
+  String openAlerts(int count) {
+    return '$count తెరిచి ఉన్న హెచ్చరికలు';
+  }
+
+  @override
+  String get openAlertsTitle => 'హెచ్చరికలు';
+
+  @override
+  String get noAlerts => 'గత 30 రోజుల్లో హెచ్చరికలు లేవు.';
+
+  @override
+  String get programPaused => 'నిలిపివేయబడింది';
+
+  @override
+  String get programCompleted => 'పూర్తయింది';
+
+  @override
+  String get trend => 'ధోరణి';
+
+  @override
+  String get noReadingsYet => 'ఇంకా రీడింగ్‌లు లేవు';
+
+  @override
+  String trendSemantic(String type, int count, String latest, String date) {
+    return '$type ధోరణి: $count రోజులు, తాజా సగటు $latest ($date)';
+  }
+
+  @override
+  String get weeklyReports => 'వారపు నివేదికలు';
+
+  @override
+  String get noWeeklyReports => 'మీ మొదటి వారపు నివేదిక సోమవారం వస్తుంది.';
+
+  @override
+  String get programDisclaimer =>
+      'హెచ్చరికలు మీ కేర్ టీమ్‌కు వెళ్తాయి. ఆరోగ్యం బాగోలేకపోతే డాక్టర్‌కు, అత్యవసరంలో 108కి కాల్ చేయండి.';
+
+  @override
+  String get bloodPressure => 'రక్తపోటు';
+
+  @override
+  String get bloodPressureShort => 'బీపీ';
+
+  @override
+  String get glucoseShort => 'షుగర్';
+
+  @override
+  String get weightShort => 'బరువు';
+
+  @override
+  String get readingOutOfRange =>
+      'ఈ విలువ అసాధారణంగా ఉంది. దయచేసి సరిచూసి మళ్లీ నమోదు చేయండి.';
+
+  @override
+  String get readingSystolicBelowDiastolic =>
+      'పై (సిస్టోలిక్) సంఖ్య కింది సంఖ్య కంటే ఎక్కువగా ఉండాలి.';
+
+  @override
+  String get readingSafetyNote =>
+      'రీడింగ్‌లు మీ కేర్ టీమ్‌తో పంచుకోబడతాయి. బాగోలేకపోతే అత్యవసరంలో 108కి కాల్ చేయండి.';
+
+  @override
+  String get readingSaved => 'రీడింగ్ సేవ్ అయింది';
+
+  @override
+  String get whatsappAssistant => 'వాట్సాప్ సహాయకుడు';
+
+  @override
+  String get whatsappExplain =>
+      'వాట్సాప్‌లో రిమైండర్లు పొందండి, జవాబిచ్చి చెక్-ఇన్ చేయండి, బీపీ లేదా షుగర్ నమోదు చేయండి లేదా ప్రశ్న అడగండి. నిర్ధారణ ఇవ్వబడదు.';
+
+  @override
+  String get whatsappOptIn => 'వాట్సాప్ సహాయకుడిని ఉపయోగించండి';
+
+  @override
+  String get whatsappPrivacyNote =>
+      'సందేశాలు మీ నమోదైన నంబర్‌కు వస్తాయి. ఎప్పుడైనా ఆపడానికి STOP పంపండి.';
+
+  @override
+  String get whatsappTryIt => 'ప్రయత్నించండి';
+
+  @override
+  String get whatsappTryIntro => 'ఈ సందేశాలను మా వాట్సాప్ నంబర్‌కు పంపండి:';
+
+  @override
+  String get whatsappOptedIn => 'వాట్సాప్ సహాయకుడు ఆన్ అయింది';
+
+  @override
+  String get whatsappOptedOut => 'వాట్సాప్ సహాయకుడు ఆఫ్ అయింది';
+
+  @override
+  String get waCmdToday => 'ఈరోజు మందులు, సందర్శన రిమైండర్లు';
+
+  @override
+  String get waCmdCheckin => 'రోజువారీ \"నేను బాగున్నాను\" చెక్-ఇన్';
+
+  @override
+  String get waCmdBp => 'రక్తపోటు రీడింగ్ నమోదు';
+
+  @override
+  String get waCmdSugar => 'షుగర్ రీడింగ్ నమోదు';
+
+  @override
+  String get waCmdBook => 'సంరక్షణ బుక్ చేసే లింక్‌లు పొందండి';
+
+  @override
+  String get waCmdStop => 'వాట్సాప్ సందేశాలు ఆపండి';
+
+  @override
+  String get waCmdStart => 'మళ్లీ ప్రారంభించండి';
+
+  @override
+  String get whatsappNoDiagnosis =>
+      'జవాబులు సాధారణ మార్గదర్శకం, నిర్ధారణ కాదు. అత్యవసరంలో 108కి కాల్ చేయండి.';
+
+  @override
+  String get labTests => 'ఇంటి వద్ద ల్యాబ్ పరీక్షలు';
+
+  @override
+  String get labIntro =>
+      'శిక్షణ పొందిన టెక్నీషియన్ ఇంటి వద్దే శాంపిల్ తీసుకుంటారు. నివేదికలు మీ రికార్డులకు వస్తాయి.';
+
+  @override
+  String get searchLabTests => 'పరీక్షలు వెతకండి (ఉదా. HbA1c, లిపిడ్)';
+
+  @override
+  String get healthPackages => 'ఆరోగ్య ప్యాకేజీలు';
+
+  @override
+  String get noPackages => 'ప్రస్తుతం ప్యాకేజీలు లేవు';
+
+  @override
+  String get allTests => 'అన్ని పరీక్షలు';
+
+  @override
+  String resultsFor(String query) {
+    return '\"$query\" ఫలితాలు';
+  }
+
+  @override
+  String get noLabTests => 'పరీక్షలు కనబడలేదు';
+
+  @override
+  String get labPricingNote =>
+      'ధరలు సూచనాత్మకం, బుకింగ్ సమయంలో నిర్ధారించబడతాయి.';
+
+  @override
+  String testsIncluded(int count) {
+    return '$count పరీక్షలు';
+  }
+
+  @override
+  String get fastingRequired => 'ఉపవాసం';
+
+  @override
+  String fastingHoursShort(int hours) {
+    return '$hours గం. ఉపవాసం';
+  }
+
+  @override
+  String reportInHours(int hours) {
+    return '$hours గం.లో నివేదిక';
+  }
+
+  @override
+  String get includedInPackage => 'ప్యాకేజీలో ఉంది';
+
+  @override
+  String removeFromCart(String name) {
+    return '$name తీసివేయండి';
+  }
+
+  @override
+  String labCartBar(int count, String amount) {
+    return '$count ఎంచుకున్నారు · $amount · కార్ట్ చూడండి';
+  }
+
+  @override
+  String get sampleBlood => 'రక్తం';
+
+  @override
+  String get sampleUrine => 'మూత్రం';
+
+  @override
+  String get sampleSwab => 'స్వాబ్';
+
+  @override
+  String get sampleOther => 'ఇతర శాంపిల్';
+
+  @override
+  String get fastingNoticeTitle => 'ఉపవాసం అవసరం';
+
+  @override
+  String fastingNoticeBody(int hours) {
+    return 'శాంపిల్ తీసుకునే ముందు $hours గంటలు ఏమీ తినకండి. నీళ్లు తాగవచ్చు. డాక్టర్ వద్దనకపోతే మామూలు మందులు వేసుకోండి.';
+  }
+
+  @override
+  String get labCart => 'మీ పరీక్షలు';
+
+  @override
+  String get labCartEmpty => 'పరీక్షలు ఎంచుకోలేదు';
+
+  @override
+  String get browseTests => 'పరీక్షలు చూడండి';
+
+  @override
+  String get sampleCollectionAddress => 'శాంపిల్ సేకరణ చిరునామా';
+
+  @override
+  String get sampleCollectionTime => 'సేకరణ సమయం';
+
+  @override
+  String youSaveVsMrp(String amount) {
+    return 'MRP పై $amount ఆదా';
+  }
+
+  @override
+  String get labOrderTitle => 'ల్యాబ్ పరీక్ష ఆర్డర్';
+
+  @override
+  String get labBooked => 'శాంపిల్ సేకరణ బుక్ అయింది';
+
+  @override
+  String get trackOrder => 'ఆర్డర్ ట్రాక్ చేయండి';
+
+  @override
+  String get myLabOrders => 'నా ల్యాబ్ ఆర్డర్లు';
+
+  @override
+  String get noLabOrders => 'ఇంకా ల్యాబ్ ఆర్డర్లు లేవు';
+
+  @override
+  String get labPendingPayment => 'చెల్లింపు పెండింగ్';
+
+  @override
+  String get labScheduled => 'సేకరణ షెడ్యూల్ అయింది';
+
+  @override
+  String get labSampleCollected => 'శాంపిల్ సేకరించారు';
+
+  @override
+  String get labProcessing => 'ల్యాబ్‌లో ప్రాసెసింగ్';
+
+  @override
+  String get labReportReady => 'నివేదిక సిద్ధం';
+
+  @override
+  String get labCancelled => 'రద్దు చేయబడింది';
+
+  @override
+  String get labPartner => 'ల్యాబ్ భాగస్వామి';
+
+  @override
+  String get viewReport => 'నివేదిక చూడండి';
+
+  @override
+  String get labReport => 'ల్యాబ్ నివేదిక';
+
+  @override
+  String get trackSampleCollection => 'శాంపిల్ సేకరణ ట్రాక్ చేయండి';
+
+  @override
+  String get orderStatus => 'ఆర్డర్ స్థితి';
+
+  @override
+  String get cancelOrder => 'ఆర్డర్ రద్దు చేయండి';
+
+  @override
+  String get labOrderCancelled =>
+      'ఆర్డర్ రద్దయింది. చెల్లింపు తిరిగి ఇవ్వబడుతుంది.';
+
+  @override
+  String get labReportNote =>
+      'మీ డాక్టర్ నివేదికను చూడగలరు. ఫలితాల గురించి వారితో మాట్లాడండి.';
+
+  @override
+  String get cancelReasonTitle => 'ఎందుకు రద్దు చేస్తున్నారు?';
+
+  @override
+  String get secondOpinion => 'రెండో అభిప్రాయం';
+
+  @override
+  String get secondOpinionIntro =>
+      'మీ నివేదికలను సీనియర్ నిపుణుడితో పంచుకుని లిఖిత అభిప్రాయం పొందండి.';
+
+  @override
+  String get requestSecondOpinion => 'రెండో అభిప్రాయం కోరండి';
+
+  @override
+  String get myRequests => 'నా అభ్యర్థనలు';
+
+  @override
+  String get noSecondOpinions => 'ఇంకా అభ్యర్థనలు లేవు';
+
+  @override
+  String get secondOpinionUnavailable =>
+      'రెండో అభిప్రాయం ప్రస్తుతం అందుబాటులో లేదు';
+
+  @override
+  String get chooseSpecialty => 'నిపుణత ఎంచుకోండి';
+
+  @override
+  String opinionWithinHours(int hours) {
+    return '$hours గంటల్లో లిఖిత అభిప్రాయం';
+  }
+
+  @override
+  String get yourQuestion => 'మీ ప్రశ్న';
+
+  @override
+  String get yourQuestionHint =>
+      'నిపుణుడు ఏమి పరిశీలించాలి? మీ ప్రధాన సమస్య, ప్రస్తుత చికిత్స రాయండి.';
+
+  @override
+  String questionTooShort(int count) {
+    return 'కనీసం $count అక్షరాలు రాయండి';
+  }
+
+  @override
+  String get recordsToShare => 'పంచుకునే రికార్డులు';
+
+  @override
+  String get noRecordsToShare => 'ఇంకా రికార్డులు లేవు. అయినా ప్రశ్న అడగవచ్చు.';
+
+  @override
+  String secondOpinionConsent(int count) {
+    return 'నా ప్రశ్నను, ఎంచుకున్న $count రికార్డులను ఈ అభ్యర్థనను స్వీకరించే నిపుణుడితో (చదవడానికి మాత్రమే) పంచుకోవడానికి అంగీకరిస్తున్నాను. యాక్సెస్ నమోదవుతుంది.';
+  }
+
+  @override
+  String get secondOpinionDisclaimer =>
+      'రెండో అభిప్రాయం పంచుకున్న రికార్డుల ఆధారంగా ఇచ్చే సలహా. ఇది పరీక్షకు ప్రత్యామ్నాయం కాదు. అత్యవసరంలో 108కి కాల్ చేయండి.';
+
+  @override
+  String get secondOpinionSubmitted => 'అభ్యర్థన నిపుణులకు పంపబడింది';
+
+  @override
+  String get soPendingPayment => 'చెల్లింపు పెండింగ్';
+
+  @override
+  String get soOpen => 'నిపుణుడి కోసం వేచి ఉంది';
+
+  @override
+  String get soClaimed => 'నిపుణుడు పరిశీలిస్తున్నారు';
+
+  @override
+  String get soAnswered => 'అభిప్రాయం సిద్ధం';
+
+  @override
+  String get soCancelled => 'రద్దు చేయబడింది';
+
+  @override
+  String get specialist => 'నిపుణుడు';
+
+  @override
+  String get expectedBy => 'ఆశించిన సమయం';
+
+  @override
+  String get recordsShared => 'పంచుకున్న రికార్డులు';
+
+  @override
+  String get specialistOpinion => 'నిపుణుడి అభిప్రాయం';
+
+  @override
+  String opinionBy(String name) {
+    return '$name ద్వారా';
+  }
+
+  @override
+  String get recommendations => 'సిఫార్సులు';
+
+  @override
+  String get bookTeleconsult => 'వీడియో సంప్రదింపు బుక్ చేయండి';
+
+  @override
+  String get opinionPendingBody =>
+      'నిపుణుడు జవాబిచ్చినప్పుడు మీకు తెలియజేస్తాం.';
+
+  @override
+  String get createAbha => 'ABHA సృష్టించండి';
+
+  @override
+  String get createAbhaSub => 'మొబైల్ OTP తో మీ హెల్త్ ఐడీ పొందండి';
+
+  @override
+  String get createAbhaIntro =>
+      'ధృవీకరణ కోసం మొబైల్ నంబర్ నమోదు చేయండి. దానికి OTP వస్తుంది.';
+
+  @override
+  String get linkAbha => 'ఉన్న ABHA లింక్ చేయండి';
+
+  @override
+  String get linkAbhaSub => 'ఇప్పటికే 14 అంకెల ABHA నంబర్ ఉందా?';
+
+  @override
+  String get linkAbhaIntro =>
+      'మీ ABHA నంబర్ నమోదు చేయండి. దానికి లింక్ అయిన మొబైల్‌కు OTP వస్తుంది.';
+
+  @override
+  String get abhaMobileLabel => 'మొబైల్ నంబర్';
+
+  @override
+  String get abhaOtpSent => 'పంపిన 6 అంకెల OTP నమోదు చేయండి.';
+
+  @override
+  String get abhaCreated => 'మీ ABHA సిద్ధంగా ఉంది';
+
+  @override
+  String get abhaLinked => 'ABHA లింక్ అయింది';
+
+  @override
+  String get abdmPrivacyNote =>
+      'ABHA ను జాతీయ ఆరోగ్య ప్రాధికార సంస్థ (ABDM) జారీ చేస్తుంది. మీ సమ్మతి లేకుండా మేము రికార్డులు పంచుకోము.';
+
+  @override
+  String get fetchRecords => 'ఇతర ఆసుపత్రుల నుండి రికార్డులు తెప్పించండి';
+
+  @override
+  String get fetchRecordsSub => 'ABDM ద్వారా, మీ సమ్మతితో';
+
+  @override
+  String get fetchRecordsIntro =>
+      'మీ ABHA కి లింక్ అయిన ఆసుపత్రులను రికార్డులు పంచుకోమని అడగండి. అభ్యర్థనను మీ ABHA యాప్‌లో ఆమోదిస్తారు.';
+
+  @override
+  String get recordTypesToFetch => 'రికార్డు రకాలు';
+
+  @override
+  String get hiPrescription => 'ప్రిస్క్రిప్షన్లు';
+
+  @override
+  String get hiDiagnosticReport => 'రోగనిర్ధారణ నివేదికలు';
+
+  @override
+  String get hiDischargeSummary => 'డిశ్చార్జ్ సారాంశాలు';
+
+  @override
+  String get hiOpConsultation => 'ఓపీ సంప్రదింపులు';
+
+  @override
+  String get dateRange => 'తేదీ పరిధి';
+
+  @override
+  String get abdmConsentExplain =>
+      'రికార్డులు మీ సంరక్షణకు మాత్రమే (ఉద్దేశం CAREMGT) వాడబడతాయి. ప్రతి అభ్యర్థన కింద కనిపిస్తుంది.';
+
+  @override
+  String get sendConsentRequest => 'సమ్మతి అభ్యర్థన పంపండి';
+
+  @override
+  String get abdmRequestSent =>
+      'అభ్యర్థన పంపబడింది. మీ ABHA యాప్‌లో ఆమోదించండి.';
+
+  @override
+  String get myConsentRequests => 'నా అభ్యర్థనలు';
+
+  @override
+  String get noConsentRequests => 'ఇంకా అభ్యర్థనలు లేవు';
+
+  @override
+  String get abdmRequested => 'ఆమోదం కోసం వేచి ఉంది';
+
+  @override
+  String get abdmGranted => 'ఆమోదించబడింది';
+
+  @override
+  String get abdmDenied => 'తిరస్కరించబడింది';
+
+  @override
+  String get abdmExpired => 'గడువు ముగిసింది';
+
+  @override
+  String get abdmDataReceived => 'రికార్డులు అందాయి';
+
+  @override
+  String recordsImported(int count) {
+    return '$count రికార్డులు దిగుమతి అయ్యాయి';
+  }
+
+  @override
+  String get importedViaAbdm => 'ABDM ద్వారా దిగుమతి';
+
+  @override
+  String get insurance => 'బీమా';
+
+  @override
+  String get insuranceSub => 'పాలసీలు, క్యాష్‌లెస్ ఆసుపత్రులు, క్లెయిమ్‌లు';
+
+  @override
+  String get addPolicy => 'పాలసీ జోడించండి';
+
+  @override
+  String get editPolicy => 'పాలసీ మార్చండి';
+
+  @override
+  String get deletePolicy => 'పాలసీ తీసివేయండి';
+
+  @override
+  String get deletePolicyBody => 'ఈ పాలసీని ప్రొఫైల్ నుండి తీసివేయాలా?';
+
+  @override
+  String get noPolicies => 'బీమా పాలసీలు లేవు';
+
+  @override
+  String get noPoliciesBody =>
+      'క్యాష్‌లెస్ ఆసుపత్రులు కనుగొనడానికి, రెన్యూవల్ రిమైండర్ల కోసం మీ ఆరోగ్య బీమా జోడించండి.';
+
+  @override
+  String get expiringSoon => 'త్వరలో గడువు';
+
+  @override
+  String sumInsuredValue(String amount) {
+    return 'కవర్ $amount';
+  }
+
+  @override
+  String get findCashlessHospitals => 'క్యాష్‌లెస్ ఆసుపత్రులు వెతకండి';
+
+  @override
+  String get cashlessHospitals => 'క్యాష్‌లెస్ ఆసుపత్రులు';
+
+  @override
+  String get noCashlessHospitals =>
+      'ఈ బీమా సంస్థకు క్యాష్‌లెస్ ఆసుపత్రులు లేవు';
+
+  @override
+  String cashlessIntro(String insurer) {
+    return '$insurerతో క్యాష్‌లెస్ ఒప్పందం ఉన్న ఆసుపత్రులు.';
+  }
+
+  @override
+  String get cashlessVerifyNote =>
+      'చేరే ముందు బీమా సంస్థ లేదా TPA తో క్యాష్‌లెస్ అర్హతను నిర్ధారించుకోండి.';
+
+  @override
+  String get claimHelp => 'క్లెయిమ్‌లు';
+
+  @override
+  String get claimChecklist => 'క్లెయిమ్ చెక్‌లిస్ట్';
+
+  @override
+  String get claimChecklistSub => 'క్యాష్‌లెస్, రీయింబర్స్‌మెంట్ దశలు, పత్రాలు';
+
+  @override
+  String get cashless => 'క్యాష్‌లెస్';
+
+  @override
+  String get reimbursement => 'రీయింబర్స్‌మెంట్';
+
+  @override
+  String get claimSteps => 'దశలు';
+
+  @override
+  String get insurer => 'బీమా సంస్థ';
+
+  @override
+  String get policyNumber => 'పాలసీ నంబర్';
+
+  @override
+  String policyNumberKeep(String masked) {
+    return 'సేవ్ అయింది: $masked. అలాగే ఉంచాలంటే ఖాళీగా వదలండి.';
+  }
+
+  @override
+  String get planNameOptional => 'ప్లాన్ పేరు (ఐచ్ఛికం)';
+
+  @override
+  String get policyType => 'పాలసీ రకం';
+
+  @override
+  String get policyIndividual => 'వ్యక్తిగత';
+
+  @override
+  String get policyFamilyFloater => 'ఫ్యామిలీ ఫ్లోటర్';
+
+  @override
+  String get policyCorporate => 'కార్పొరేట్';
+
+  @override
+  String get policyGovernment => 'ప్రభుత్వ పథకం';
+
+  @override
+  String get sumInsuredOptional => 'బీమా మొత్తం (ఐచ్ఛికం)';
+
+  @override
+  String get validFrom => 'నుండి చెల్లుతుంది';
+
+  @override
+  String get validTo => 'వరకు చెల్లుతుంది';
+
+  @override
+  String get tpaOptional => 'TPA పేరు (ఐచ్ఛికం)';
+
+  @override
+  String get uploadCardPhoto => 'బీమా కార్డు ఫోటో జోడించండి';
+
+  @override
+  String get cardPhotoAdded => 'కార్డు ఫోటో జోడించబడింది';
+
+  @override
+  String get insuranceCardTitle => 'బీమా కార్డు';
+
+  @override
+  String get policyDatesInvalid =>
+      'చెల్లుబాటు తేదీలు ఎంచుకోండి (ముగింపు ప్రారంభం తర్వాత)';
+
+  @override
+  String get policyPrivacyNote =>
+      'పాలసీ నంబర్లు ఎన్‌క్రిప్ట్ చేసి నిల్వ చేయబడతాయి, మాస్క్ చేసి చూపబడతాయి.';
+
+  @override
+  String get preventiveCare => 'నివారణ సంరక్షణ';
+
+  @override
+  String get pvOverdue => 'గడువు దాటింది';
+
+  @override
+  String get pvDue => 'ఇప్పుడు చేయించాలి';
+
+  @override
+  String get pvUpcoming => 'రాబోయేవి';
+
+  @override
+  String get pvDone => 'పూర్తయింది';
+
+  @override
+  String get pvNotApplicable => 'వర్తించదు';
+
+  @override
+  String get noPreventiveItems => 'ఏమీ షెడ్యూల్ కాలేదు';
+
+  @override
+  String get markAsDone => 'పూర్తయినట్లు గుర్తించండి';
+
+  @override
+  String get markedDone => 'పూర్తయినట్లు గుర్తించబడింది';
+
+  @override
+  String whenWasItDone(String name) {
+    return '\"$name\" ఎప్పుడు చేశారు?';
+  }
+
+  @override
+  String lastDoneOn(String date) {
+    return 'చివరిసారి $date';
+  }
+
+  @override
+  String repeatsEveryMonths(int months) {
+    return 'ప్రతి $months నెలలకు';
+  }
+
+  @override
+  String get preventiveNote =>
+      'వయస్సు, లింగం ఆధారంగా. మీ డాక్టర్ వేరే షెడ్యూల్ సూచించవచ్చు.';
+
+  @override
+  String get preventiveNoteFixture =>
+      'వయస్సు, లింగం ఆధారంగా నమూనా షెడ్యూల్, వైద్య సమీక్ష పెండింగ్. దయచేసి డాక్టర్‌తో నిర్ధారించుకోండి.';
+
+  @override
+  String get exercisePlan => 'వ్యాయామ ప్లాన్';
+
+  @override
+  String get noExercisePlan => 'ఇంకా వ్యాయామ ప్లాన్ లేదు';
+
+  @override
+  String get noExercisePlanBody =>
+      'డాక్టర్ లేదా ఫిజియోథెరపిస్ట్ మీ కోసం ప్లాన్ తయారు చేయగలరు.';
+
+  @override
+  String get bookPhysioVisit => 'ఫిజియోథెరపీ ఇంటి సందర్శన బుక్ చేయండి';
+
+  @override
+  String get bookPhysioVisitSub => 'ఫిజియోథెరపిస్ట్ మీ ఇంటికి వస్తారు';
+
+  @override
+  String get todaysExercises => 'ఈరోజు వ్యాయామాలు';
+
+  @override
+  String setsReps(int sets, int reps) {
+    return '$sets సెట్లు × $reps సార్లు';
+  }
+
+  @override
+  String holdSeconds(int seconds) {
+    return '$seconds సె. పట్టి ఉంచండి';
+  }
+
+  @override
+  String get startTimer => 'టైమర్ ప్రారంభించండి';
+
+  @override
+  String get precautions => 'జాగ్రత్తలు';
+
+  @override
+  String markExerciseDone(String name) {
+    return '$name పూర్తయినట్లు గుర్తించండి';
+  }
+
+  @override
+  String finishSession(int done, int total) {
+    return 'సెషన్ ముగించండి ($done/$total)';
+  }
+
+  @override
+  String sessionsDone(int done, int planned) {
+    return '$plannedలో $done సెషన్లు పూర్తి';
+  }
+
+  @override
+  String get painTrend => 'సెషన్ల తర్వాత నొప్పి';
+
+  @override
+  String painTrendSemantic(int score) {
+    return 'నొప్పి స్కోర్ ధోరణి, తాజా 10కి $score';
+  }
+
+  @override
+  String get howIsYourPain => 'ఇప్పుడు నొప్పి ఎలా ఉంది?';
+
+  @override
+  String painScoreValue(int score) {
+    return 'నొప్పి $score / 10';
+  }
+
+  @override
+  String get noPain => 'నొప్పి లేదు';
+
+  @override
+  String get worstPain => 'అత్యధిక నొప్పి';
+
+  @override
+  String get highPainNote =>
+      'ఎక్కువ నొప్పి: మీ థెరపిస్ట్‌కు తెలియజేస్తాం. వ్యాయామం ఆపి విశ్రాంతి తీసుకోండి.';
+
+  @override
+  String get sessionSaved => 'సెషన్ సేవ్ అయింది. బాగా చేశారు!';
+
+  @override
+  String get sessionSavedHighPain =>
+      'సెషన్ సేవ్ అయింది. నొప్పి గురించి థెరపిస్ట్‌కు తెలియజేశాం.';
+
+  @override
+  String get exerciseSafetyNote =>
+      'తీవ్రమైన నొప్పి, తలతిరుగుడు లేదా ఆయాసం అనిపిస్తే ఆపండి. అత్యవసరంలో 108కి కాల్ చేయండి.';
+
+  @override
+  String get dietPlan => 'ఆహార ప్రణాళిక';
+
+  @override
+  String get noDietPlan => 'ఇంకా ఆహార ప్రణాళిక లేదు';
+
+  @override
+  String get noDietPlanBody => 'డాక్టర్ లేదా డైటీషియన్ మీ కోసం తయారు చేయగలరు.';
+
+  @override
+  String calorieTarget(int kcal) {
+    return 'రోజుకు $kcal kcal లక్ష్యం';
+  }
+
+  @override
+  String get adherence14d => 'పాటించినవి (14 రోజులు)';
+
+  @override
+  String dietAdherenceSemantic(int pct) {
+    return '14 రోజుల్లో $pct శాతం ఆహారం పాటించారు';
+  }
+
+  @override
+  String get todaysMeals => 'ఈరోజు భోజనం';
+
+  @override
+  String get followed => 'పాటించాను';
+
+  @override
+  String get notFollowed => 'పాటించలేదు';
+
+  @override
+  String get foodsToAvoid => 'తినకూడనివి';
+
+  @override
+  String get slotEarlyMorning => 'తెల్లవారుజాము';
+
+  @override
+  String get slotBreakfast => 'అల్పాహారం';
+
+  @override
+  String get slotMidMorning => 'మధ్యాహ్నానికి ముందు';
+
+  @override
+  String get slotLunch => 'మధ్యాహ్న భోజనం';
+
+  @override
+  String get slotEvening => 'సాయంత్రం అల్పాహారం';
+
+  @override
+  String get slotDinner => 'రాత్రి భోజనం';
+
+  @override
+  String get slotBedtime => 'పడుకునే ముందు';
+
+  @override
+  String get dietDisclaimer =>
+      'డాక్టర్ లేదా డైటీషియన్ సలహా వేరుగా ఉంటే దాన్ని పాటించండి. కొత్త లక్షణాలు ఉంటే వారికి చెప్పండి.';
+
+  @override
+  String get bookPrivateAmbulance => 'ప్రైవేట్ అంబులెన్స్ బుక్ చేయండి';
+
+  @override
+  String get bookPrivateAmbulanceSub =>
+      'వాహనాన్ని లైవ్‌గా ట్రాక్ చేయండి. అత్యవసరంలో ముందు 108కి కాల్ చేయండి.';
+
+  @override
+  String get privateAmbulance => 'ప్రైవేట్ అంబులెన్స్';
+
+  @override
+  String get call108First =>
+      'ప్రాణాపాయ అత్యవసరమా? ముందు 108కి కాల్ చేయండి. ప్రైవేట్ అంబులెన్స్ 108కి ప్రత్యామ్నాయం కాదు.';
+
+  @override
+  String get ambulanceType => 'అంబులెన్స్ రకం';
+
+  @override
+  String get ambBls => 'బేసిక్ (BLS)';
+
+  @override
+  String get ambAls => 'అడ్వాన్స్‌డ్ (ALS)';
+
+  @override
+  String get ambBlsDesc =>
+      'ఆక్సిజన్, స్ట్రెచర్, శిక్షణ పొందిన సిబ్బంది. స్థిరంగా ఉన్న రోగులకు.';
+
+  @override
+  String get ambAlsDesc =>
+      'కార్డియాక్ మానిటర్, అధునాతన ప్రాణ సహాయం, పారామెడిక్. తీవ్ర పరిస్థితులకు.';
+
+  @override
+  String get pickupLocation => 'పికప్ ప్రదేశం';
+
+  @override
+  String get locating => 'మీ ప్రదేశం కనుగొంటున్నాం…';
+
+  @override
+  String gpsLocation(String lat, String lng) {
+    return 'GPS $lat, $lng';
+  }
+
+  @override
+  String get currentLocation => 'ప్రస్తుత ప్రదేశం';
+
+  @override
+  String get pickupAddressHint =>
+      'ఇల్లు, వీధి, ల్యాండ్‌మార్క్ (డ్రైవర్‌కు సహాయం)';
+
+  @override
+  String get destinationHospital => 'గమ్య ఆసుపత్రి';
+
+  @override
+  String get destinationOptional => 'ఆసుపత్రి (ఐచ్ఛికం)';
+
+  @override
+  String get nearestSuitable => 'సమీపంలోని తగిన ఆసుపత్రి';
+
+  @override
+  String get requestAmbulance => 'అంబులెన్స్ కోరండి';
+
+  @override
+  String get ambulanceDefaultReason => 'ఆసుపత్రికి తరలింపు';
+
+  @override
+  String get ambulanceNote =>
+      'ఛార్జీలు భాగస్వామి, దూరంపై ఆధారపడతాయి. కేర్ టీమ్‌కు కూడా తెలియజేస్తాం.';
+
+  @override
+  String get ambulanceTracking => 'అంబులెన్స్';
+
+  @override
+  String get ambSearching => 'అంబులెన్స్ వెతుకుతున్నాం';
+
+  @override
+  String get ambAssigned => 'అంబులెన్స్ కేటాయించబడింది';
+
+  @override
+  String get ambEnRoute => 'దారిలో ఉంది';
+
+  @override
+  String get ambArrived => 'చేరుకుంది';
+
+  @override
+  String get ambTransporting => 'ఆసుపత్రికి వెళ్తోంది';
+
+  @override
+  String get ambCompleted => 'ఆసుపత్రికి చేరింది';
+
+  @override
+  String get ambCancelled => 'రద్దు చేయబడింది';
+
+  @override
+  String get ambNoVehicle => 'వాహనం అందుబాటులో లేదు';
+
+  @override
+  String get noVehicleBody =>
+      'సమీపంలో ప్రైవేట్ అంబులెన్స్ లేదు. ఇప్పుడే 108కి కాల్ చేయండి.';
+
+  @override
+  String get vehicle => 'వాహనం';
+
+  @override
+  String get driver => 'డ్రైవర్';
+
+  @override
+  String get openInMaps => 'మ్యాప్స్‌లో తెరవండి';
+
+  @override
+  String get openStreetMap => 'OpenStreetMap';
+
+  @override
+  String locationUpdatedAt(String time) {
+    return 'ప్రదేశం $timeకి అప్‌డేట్ అయింది';
+  }
+
+  @override
+  String get statusTimeline => 'స్థితి';
+
+  @override
+  String get cancelAmbulance => 'అంబులెన్స్ రద్దు చేయండి';
+
+  @override
+  String get cancelAmbulanceBody =>
+      'సహాయం అవసరం లేనప్పుడు మాత్రమే రద్దు చేయండి.';
+
+  @override
+  String get cancelledByUser => 'కుటుంబం రద్దు చేసింది';
+
+  @override
+  String get safetyLocation => 'భద్రత & ప్రదేశం';
+
+  @override
+  String get safetyLocationSub => 'సురక్షిత ప్రాంతం, సహచర మోడ్, SOS బటన్';
+
+  @override
+  String get safetyIntro =>
+      'దారి తప్పే లేదా గందరగోళపడే వారి కోసం, ఉదా. జ్ఞాపకశక్తి సమస్యలు ఉన్నవారు.';
+
+  @override
+  String get safeZone => 'సురక్షిత ప్రాంతం';
+
+  @override
+  String safeZoneSub(String name) {
+    return '$name ప్రాంతం దాటితే హెచ్చరిక పొందండి';
+  }
+
+  @override
+  String get safeZoneSelfSub => 'సంరక్షణ అనుమతి ఉన్న కుటుంబం ఏర్పాటు చేస్తుంది';
+
+  @override
+  String safeZoneIntro(String name) {
+    return 'సహచర మోడ్ ఆన్‌లో ఉన్నప్పుడు $name ఈ ప్రాంతం దాటితే కుటుంబానికి మ్యాప్ లింక్‌తో హెచ్చరిక వస్తుంది.';
+  }
+
+  @override
+  String get safeZoneAlerts => 'సురక్షిత ప్రాంత హెచ్చరికలు';
+
+  @override
+  String get safeZoneAlertsSub => 'ప్రాంతం దాటితే కుటుంబానికి తెలియజేయండి';
+
+  @override
+  String get zoneCentre => 'కేంద్రం (ఇల్లు)';
+
+  @override
+  String get useCurrentLocation => 'ప్రస్తుత ప్రదేశం వాడండి';
+
+  @override
+  String get zoneLabelHint => 'లేబుల్ (ఉదా. ఇల్లు)';
+
+  @override
+  String get radius => 'వ్యాసార్థం';
+
+  @override
+  String metersValue(int meters) {
+    return '$meters మీ';
+  }
+
+  @override
+  String get activeHoursOnly => 'నిర్ణీత గంటల్లో మాత్రమే';
+
+  @override
+  String get alwaysActive => 'ఎల్లప్పుడూ సక్రియం';
+
+  @override
+  String get safeZoneNeedsCenter =>
+      'ముందు కేంద్రం సెట్ చేయండి (ప్రస్తుత ప్రదేశం)';
+
+  @override
+  String get safeZoneRadiusInvalid =>
+      'వ్యాసార్థం 100 మీ నుండి 5 కి.మీ మధ్య ఉండాలి';
+
+  @override
+  String get safeZonePrivacy =>
+      'తాజా ప్రదేశం మాత్రమే ఉంచబడుతుంది; ప్రదేశ చరిత్ర ఉండదు.';
+
+  @override
+  String get lastKnownLocation => 'చివరిగా తెలిసిన ప్రదేశం';
+
+  @override
+  String get noLocationYet =>
+      'ఇంకా ప్రదేశం పంచుకోలేదు. వారి ఫోన్‌లో సహచర మోడ్ ఆన్ చేయండి.';
+
+  @override
+  String get insideSafeZone => 'సురక్షిత ప్రాంతంలో ఉన్నారు';
+
+  @override
+  String get outsideSafeZone => 'సురక్షిత ప్రాంతం బయట ఉన్నారు';
+
+  @override
+  String get companionMode => 'సహచర మోడ్';
+
+  @override
+  String get companionModeSub => 'ఈ ఫోన్ ప్రదేశాన్ని కుటుంబంతో పంచుకోండి';
+
+  @override
+  String get companionIntro =>
+      'కేర్‌కంపానియన్ తెరిచి ఉన్నప్పుడు ఈ ఫోన్ ప్రతి 5 నిమిషాలకు ప్రదేశాన్ని పంచుకుంటుంది, మీరు సురక్షితంగా ఉన్నారని కుటుంబం చూడవచ్చు.';
+
+  @override
+  String get companionOn => 'ఆన్: యాప్ తెరిచి ఉన్నప్పుడు ప్రదేశం పంచుకుంటోంది';
+
+  @override
+  String get companionOff => 'ఆఫ్';
+
+  @override
+  String get companionOwnDevice =>
+      'సంరక్షణ పొందే వ్యక్తి ఫోన్ నుండే సహచర మోడ్ ఆన్ చేయాలి.';
+
+  @override
+  String get companionForegroundOnly =>
+      'యాప్ స్క్రీన్‌పై తెరిచి ఉన్నప్పుడే పనిచేస్తుంది; బ్యాక్‌గ్రౌండ్‌లో ట్రాక్ చేయదు.';
+
+  @override
+  String get withdrawConsent => 'సమ్మతి ఉపసంహరించండి';
+
+  @override
+  String get companionConsentTitle => 'మీ ప్రదేశాన్ని పంచుకోవాలా?';
+
+  @override
+  String get companionConsent1 =>
+      'యాప్ తెరిచి ఉన్నప్పుడు ప్రతి 5 నిమిషాలకు మీ ప్రదేశం పంపబడుతుంది.';
+
+  @override
+  String get companionConsent2 =>
+      'హెచ్చరిక అనుమతి ఉన్న కుటుంబం, కేర్ కోఆర్డినేటర్ మీ తాజా ప్రదేశాన్ని చూడగలరు.';
+
+  @override
+  String get companionConsent3 =>
+      'తాజా ప్రదేశం మాత్రమే నిల్వ ఉంటుంది. చరిత్ర ఉంచబడదు.';
+
+  @override
+  String get companionConsent4 =>
+      'మీరు ఎప్పుడైనా ఆఫ్ చేయవచ్చు లేదా సమ్మతి ఉపసంహరించవచ్చు.';
+
+  @override
+  String get companionConsentAgree =>
+      'నాకు అర్థమైంది, ప్రదేశం పంచుకోవడానికి అంగీకరిస్తున్నాను';
+
+  @override
+  String get agreeAndTurnOn => 'అంగీకరించి ఆన్ చేయండి';
+
+  @override
+  String get sosButtonPairing => 'SOS బటన్';
+
+  @override
+  String get sosButtonPairingSub => 'ధరించే అత్యవసర బటన్ జత చేయండి';
+
+  @override
+  String get sosButtonIntro =>
+      'జత చేసిన SOS బటన్ నొక్కితే యాప్‌లోని SOS లాగే అత్యవసర సంపర్కాలకు హెచ్చరిక వెళ్తుంది.';
+
+  @override
+  String get deviceId => 'డివైస్ ఐడీ';
+
+  @override
+  String get deviceIdHelp => 'బటన్ వెనుక లేదా డబ్బాపై ముద్రించి ఉంటుంది';
+
+  @override
+  String get deviceModelOptional => 'మోడల్ (ఐచ్ఛికం)';
+
+  @override
+  String get pairDevice => 'బటన్ జత చేయండి';
+
+  @override
+  String get pairedDevices => 'ఈ ఫోన్‌లో జత చేసినవి';
+
+  @override
+  String get noPairedDevices => 'ఈ ఫోన్ నుండి బటన్‌లు జత చేయలేదు';
+
+  @override
+  String get sosButtonPaired => 'SOS బటన్ జత అయింది';
+
+  @override
+  String get unpair => 'జత తొలగించండి';
+
+  @override
+  String get sosButtonNote => 'సహాయక పరికరం, 108కి ప్రత్యామ్నాయం కాదు.';
+
+  @override
+  String get haveCompanyCode => 'కంపెనీ కోడ్ ఉందా?';
+
+  @override
+  String get companyCodeHelp =>
+      'మీ యజమాని కేర్‌కంపానియన్‌ను స్పాన్సర్ చేస్తే, వారు ఇచ్చిన కోడ్ నమోదు చేయండి.';
+
+  @override
+  String get companyCode => 'కంపెనీ కోడ్';
+
+  @override
+  String get companyCodeInvalid => 'పూర్తి కోడ్ నమోదు చేయండి';
+
+  @override
+  String companyPlanActivated(String name) {
+    return 'ప్లాన్ సక్రియం, $name స్పాన్సర్ చేశారు';
+  }
+
+  @override
+  String sponsoredBy(String name) {
+    return '$name స్పాన్సర్ చేశారు';
+  }
+
+  @override
+  String get offersAndWallet => 'ఆఫర్లు & వాలెట్';
+
+  @override
+  String get couponCode => 'కూపన్ కోడ్';
+
+  @override
+  String couponApplied(String code) {
+    return '$code వర్తించింది';
+  }
+
+  @override
+  String get couponDiscount => 'కూపన్ తగ్గింపు';
+
+  @override
+  String get useWalletBalance => 'వాలెట్ బ్యాలెన్స్ వాడండి';
+
+  @override
+  String walletAvailable(String amount) {
+    return '$amount అందుబాటులో';
+  }
+
+  @override
+  String get walletUsedLabel => 'వాలెట్';
+
+  @override
+  String get payableAmount => 'చెల్లించాల్సింది';
+
+  @override
+  String get fullyCoveredNote => 'పూర్తిగా కవర్: చెల్లింపు అవసరం లేదు.';
+
+  @override
+  String checkoutSummarySemantic(
+    String subtotal,
+    String discount,
+    String wallet,
+    String payable,
+  ) {
+    return 'ఉపమొత్తం $subtotal, తగ్గింపు $discount, వాలెట్ $wallet, చెల్లించాల్సింది $payable';
+  }
+
+  @override
+  String get wallet => 'వాలెట్';
+
+  @override
+  String get walletSub => 'బ్యాలెన్స్, రివార్డులు';
+
+  @override
+  String get walletBalance => 'వాలెట్ బ్యాలెన్స్';
+
+  @override
+  String walletBalanceSemantic(String amount) {
+    return 'వాలెట్ బ్యాలెన్స్ $amount';
+  }
+
+  @override
+  String get walletNote =>
+      'వాలెట్ క్రెడిట్‌ను బుకింగ్‌లకు వాడవచ్చు. విత్‌డ్రా చేయలేరు, 365 రోజుల తర్వాత గడువు ముగుస్తుంది.';
+
+  @override
+  String get transactions => 'లావాదేవీలు';
+
+  @override
+  String get noTransactions => 'ఇంకా లావాదేవీలు లేవు';
+
+  @override
+  String get inviteFamilyFriends => 'కుటుంబం & స్నేహితులను ఆహ్వానించండి';
+
+  @override
+  String get inviteRewardSub =>
+      'వారి మొదటి చెల్లింపు సేవ తర్వాత ఇద్దరికీ వాలెట్ క్రెడిట్';
+
+  @override
+  String get inviteIntro =>
+      'మీ కోడ్ పంచుకోండి. వారి మొదటి చెల్లింపు సేవ పూర్తయ్యాక ఇద్దరికీ వాలెట్ క్రెడిట్ వస్తుంది.';
+
+  @override
+  String get yourInviteCode => 'మీ ఆహ్వాన కోడ్';
+
+  @override
+  String get shareInvite => 'ఆహ్వానం పంచుకోండి';
+
+  @override
+  String get friendsInvited => 'మీ కోడ్‌తో చేరినవారు';
+
+  @override
+  String get rewardsEarned => 'పొందిన రివార్డులు';
+
+  @override
+  String get haveInviteCode => 'ఆహ్వాన కోడ్ ఉందా?';
+
+  @override
+  String get inviteCode => 'ఆహ్వాన కోడ్';
+
+  @override
+  String get inviteCodeInvalid => 'ఈ కోడ్ సరిగా లేదు';
+
+  @override
+  String get inviteRedeemed =>
+      'ఆహ్వాన కోడ్ వర్తించింది. మొదటి చెల్లింపు సేవ తర్వాత రివార్డ్ వస్తుంది.';
+
+  @override
+  String get inviteTerms =>
+      'సైన్ అప్ అయిన 7 రోజుల్లో ఒకసారి మాత్రమే కోడ్ వాడవచ్చు.';
+
+  @override
+  String get onboardingInviteBody =>
+      'కుటుంబం లేదా స్నేహితులు ఆహ్వానించారా? స్వాగత రివార్డ్ కోసం వారి కోడ్ నమోదు చేయండి. దీన్ని దాటవేయవచ్చు.';
+
+  @override
+  String get purposeLabOrder => 'ల్యాబ్ పరీక్ష';
+
+  @override
+  String get purposeSecondOpinion => 'రెండో అభిప్రాయం';
+
+  @override
+  String get purposeAmbulance => 'అంబులెన్స్';
+
+  @override
+  String get myTickets => 'నా టికెట్లు';
+
+  @override
+  String get myTicketsSub =>
+      'బుకింగ్‌లు, చెల్లింపులు లేదా యాప్ గురించి ప్రశ్నలు';
+
+  @override
+  String get newTicket => 'కొత్త టికెట్';
+
+  @override
+  String get noTickets => 'టికెట్లు లేవు';
+
+  @override
+  String get noTicketsBody =>
+      'టికెట్ సృష్టించండి, మా సపోర్ట్ టీమ్ ఇక్కడ జవాబిస్తుంది.';
+
+  @override
+  String get ticketCategory => 'ఇది దేని గురించి?';
+
+  @override
+  String get tcBooking => 'బుకింగ్';
+
+  @override
+  String get tcPayment => 'చెల్లింపు';
+
+  @override
+  String get tcRefund => 'రీఫండ్';
+
+  @override
+  String get tcAppIssue => 'యాప్ సమస్య';
+
+  @override
+  String get tcClinicalConcern => 'ఆరోగ్య సమస్య';
+
+  @override
+  String get tcOther => 'ఇతర';
+
+  @override
+  String get clinicalConcernTitle => 'మా కేర్ టీమ్ దీన్ని పరిశీలిస్తుంది';
+
+  @override
+  String get clinicalConcernBody =>
+      'ఆరోగ్య సమస్యలు సపోర్ట్‌కే కాదు, వైద్యుడికి వెళ్తాయి. అత్యవసరం లేదా ఎవరైనా చాలా అస్వస్థంగా ఉంటే ఇప్పుడే 108కి కాల్ చేయండి.';
+
+  @override
+  String get describeIssue => 'సమస్యను వివరించండి';
+
+  @override
+  String get linkBooking => 'బుకింగ్ లింక్ చేయండి (ఐచ్ఛికం)';
+
+  @override
+  String get noBookingsToLink => 'ఇటీవలి బుకింగ్‌లు లేవు';
+
+  @override
+  String get submitTicket => 'సమర్పించండి';
+
+  @override
+  String ticketCreated(String number) {
+    return 'టికెట్ $number సృష్టించబడింది';
+  }
+
+  @override
+  String get supportNotForEmergencies =>
+      'సపోర్ట్ అత్యవసరాల కోసం కాదు. అత్యవసరంలో 108కి కాల్ చేయండి.';
+
+  @override
+  String get supportTicket => 'సపోర్ట్ టికెట్';
+
+  @override
+  String get tsOpen => 'తెరిచి ఉంది';
+
+  @override
+  String get tsPendingCustomer => 'మీ కోసం వేచి ఉంది';
+
+  @override
+  String get tsResolved => 'పరిష్కరించబడింది';
+
+  @override
+  String get tsClosed => 'మూసివేయబడింది';
+
+  @override
+  String handledBy(String name) {
+    return '$name చూస్తున్నారు';
+  }
+
+  @override
+  String get rateSupport => 'మా సపోర్ట్‌కు రేటింగ్ ఇవ్వండి';
+
+  @override
+  String youRated(int score) {
+    return 'మీరు $score / 5 ఇచ్చారు. ధన్యవాదాలు!';
+  }
+
+  @override
   String itemsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

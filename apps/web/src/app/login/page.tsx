@@ -98,7 +98,7 @@ function LoginInner() {
           </span>
           <div>
             <p className="text-xl font-bold text-primary-dark">CareCompanion</p>
-            <p className="text-sm text-ink-muted">Clinician · Operations · Admin portal</p>
+            <p className="text-sm text-ink-muted">Clinician · Operations · Hospital · Support · Admin portal</p>
           </div>
         </div>
 
@@ -184,7 +184,7 @@ function LoginInner() {
             <div className="flex flex-col gap-4" role="alert">
               <h1 className="text-lg font-semibold">Please use the CareCompanion mobile app</h1>
               <p className="text-sm text-ink-muted">
-                This portal is for clinicians, care coordinators and administrators. Patients, family caregivers and home-care
+                This portal is for clinicians, care coordinators, hospital discharge teams, support agents and administrators. Patients, family caregivers and home-care
                 providers can manage care in the CareCompanion app for Android and iOS.
               </p>
               <p className="text-sm text-ink-muted">

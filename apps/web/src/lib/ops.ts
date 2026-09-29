@@ -22,3 +22,10 @@ export function credentialWarning(p: Pick<OpsProvider, "credentialExpiresAt">, n
   if (d <= 30) return "soon";
   return null;
 }
+
+/** §55: a plain OpenStreetMap link (no API key; no embedded map because the CSP allows no third-party frames). */
+export function osmLink(lat: number, lng: number): string {
+  const a = lat.toFixed(5);
+  const o = lng.toFixed(5);
+  return `https://www.openstreetmap.org/?mlat=${a}&mlon=${o}#map=16/${a}/${o}`;
+}

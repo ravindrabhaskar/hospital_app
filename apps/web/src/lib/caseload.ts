@@ -3,6 +3,8 @@ import type { Tone } from "@/components/ui";
 
 export const FLAG_META: Record<CaseloadFlag, { label: string; tone: Tone; weight: number; description: string }> = {
   open_safety_event: { label: "Open safety event", tone: "red", weight: 100, description: "An urgent or emergency safety event is still open" },
+  program_breach: { label: "Program breach", tone: "red", weight: 40, description: "A care-program reading crossed a threshold and is still open" },
+  missed_checkin: { label: "Missed check-in", tone: "amber", weight: 25, description: "The daily \"I'm OK\" check-in was missed" },
   missed_doses: { label: "Missed doses", tone: "amber", weight: 30, description: "Medication doses were missed recently" },
   overdue_tasks: { label: "Overdue tasks", tone: "amber", weight: 20, description: "Care tasks are past their due time" },
   no_contact_7d: { label: "No contact 7d", tone: "lavender", weight: 10, description: "No coordinator contact in the last 7 days" },

@@ -23,9 +23,10 @@ const ts = (name: string) => timestamp(name, { withTimezone: true, mode: 'date' 
 const id = () => uuid('id').primaryKey().defaultRandom();
 const createdAt = () => ts('created_at').notNull().defaultNow();
 
-export type Role = 'patient' | 'doctor' | 'provider' | 'coordinator' | 'ops_admin' | 'super_admin';
+export type Role = 'patient' | 'doctor' | 'provider' | 'coordinator' | 'ops_admin' | 'super_admin' | 'hospital_staff' | 'support_agent';
 export type FamilyPermission = 'view_records' | 'manage_care' | 'book' | 'receive_alerts';
-export type Provenance = 'patient_entered' | 'clinician_verified' | 'home_visit' | 'imported' | 'ai_extracted' | 'device';
+/** `lab_partner` (contract section 44) marks reports received from a lab partner. */
+export type Provenance = 'patient_entered' | 'clinician_verified' | 'home_visit' | 'imported' | 'ai_extracted' | 'device' | 'lab_partner';
 
 // ---------------------------------------------------------------- identity
 export const users = pgTable('users', {
@@ -46,6 +47,10 @@ export const users = pgTable('users', {
   /** Last accepted TOTP time step (replay protection). */
   mfaLastStep: integer('mfa_last_step'),
   deletedAt: ts('deleted_at'),
+  /** hospital_staff only: the one facility the user is bound to (contract section 59). */
+  facilityId: uuid('facility_id'),
+  /** Personal invite code (contract section 60), generated lazily. */
+  inviteCode: text('invite_code').unique(),
 });
 
 export const mfaRecoveryCodes = pgTable(
@@ -176,6 +181,8 @@ export const patients = pgTable('patients', {
   /** Legal retention hold: personal data is NOT deleted by account deletion while set. [REQUIRES LEGAL REVIEW] */
   retentionHold: boolean('retention_hold').notNull().default(false),
   anonymisedAt: ts('anonymised_at'),
+  /** White-label tenant (contract section 58), set by a tenant's discharge flow or app build. */
+  tenantCode: text('tenant_code'),
   createdAt: createdAt(),
   updatedAt: ts('updated_at').notNull().defaultNow(),
 });
@@ -238,6 +245,8 @@ export const careEpisodes = pgTable(
     /** Assigned care coordinator (contract section 35). */
     coordinatorUserId: uuid('coordinator_user_id').references(() => users.id),
     nextAction: text('next_action'),
+    /** White-label tenant (contract section 58). */
+    tenantCode: text('tenant_code'),
     createdByUserId: uuid('created_by_user_id').references(() => users.id),
     createdAt: createdAt(),
     updatedAt: ts('updated_at').notNull().defaultNow(),
@@ -281,6 +290,8 @@ export const facilities = pgTable('facilities', {
   services: jsonb('services').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
   emergency24x7: boolean('emergency_24x7').notNull().default(false),
   verified: boolean('verified').notNull().default(true),
+  /** Insurer codes with a cashless tie-up (contract section 51). */
+  cashlessInsurers: jsonb('cashless_insurers').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
 });
 
 export const serviceZones = pgTable('service_zones', {
@@ -421,6 +432,12 @@ export const payments = pgTable(
     gatewayOrderId: text('gateway_order_id').notNull(),
     gatewayPaymentId: text('gateway_payment_id'),
     refundedAmount: integer('refunded_amount').notNull().default(0),
+    /** Contract section 60: coupon discount and wallet credit applied; `amount` is the remainder charged. */
+    discount: integer('discount').notNull().default(0),
+    walletUsed: integer('wallet_used').notNull().default(0),
+    couponCode: text('coupon_code'),
+    /** Wallet credit already returned to the wallet (refunds / voided payments). */
+    walletRefunded: integer('wallet_refunded').notNull().default(0),
     /** Razorpay Checkout options for clients (null for the mock gateway). */
     checkout: jsonb('checkout').$type<PaymentCheckoutJson | null>(),
     createdByUserId: uuid('created_by_user_id').references(() => users.id),
@@ -557,6 +574,8 @@ export const medicalRecords = pgTable(
     sha256: text('sha256'),
     aiSummary: jsonb('ai_summary').$type<AiSummaryJson | null>(),
     homeVisitId: uuid('home_visit_id'),
+    /** Import channel (contract v1.3): abdm | hospital_discharge | null. */
+    importedVia: text('imported_via'),
     createdAt: createdAt(),
   },
   (t) => [index('records_patient_idx').on(t.patientId, t.createdAt)],
@@ -705,7 +724,10 @@ export const carePlans = pgTable('care_plans', {
   id: id(),
   careEpisodeId: uuid('care_episode_id').notNull().references(() => careEpisodes.id),
   patientId: uuid('patient_id').notNull().references(() => patients.id),
-  doctorId: uuid('doctor_id').notNull().references(() => providers.id),
+  /** Null for hospital-issued plans (contract section 59). */
+  doctorId: uuid('doctor_id').references(() => providers.id),
+  /** Issuer shown when there is no platform doctor (e.g. "Dr. X (Hospital-issued)"). */
+  issuedBy: text('issued_by'),
   status: text('status').notNull().default('active'),
   summary: text('summary').notNull(),
   instructions: text('instructions').notNull(),
@@ -1069,6 +1091,14 @@ export type RxItemJson = {
   instructions?: string;
 };
 
+export type RxWarningJson = {
+  severity: 'info' | 'moderate' | 'major';
+  type: 'allergy' | 'duplicate_therapy' | 'interaction' | 'dose_form';
+  drugs: string[];
+  message: string;
+  source: string;
+};
+
 export const prescriptions = pgTable(
   'prescriptions',
   {
@@ -1089,6 +1119,9 @@ export const prescriptions = pgTable(
     advice: text('advice'),
     followUpInDays: integer('follow_up_in_days'),
     recordId: uuid('record_id').notNull().references(() => medicalRecords.id),
+    /** Contract section 47: warnings at issue time and the audited override reason. */
+    warnings: jsonb('warnings').$type<RxWarningJson[]>().notNull().default(sql`'[]'::jsonb`),
+    overrideReason: text('override_reason'),
     createdByUserId: uuid('created_by_user_id'),
     createdAt: createdAt(),
   },
@@ -1254,6 +1287,9 @@ export const subscriptions = pgTable(
     currentPeriodEnd: ts('current_period_end'),
     cancelAtPeriodEnd: boolean('cancel_at_period_end').notNull().default(false),
     renewalReminderSentAt: ts('renewal_reminder_sent_at'),
+    /** Corporate sponsorship (contract section 57). */
+    sponsorOrgId: uuid('sponsor_org_id'),
+    sponsorName: text('sponsor_name'),
     createdAt: createdAt(),
     updatedAt: ts('updated_at').notNull().defaultNow(),
   },
@@ -1282,6 +1318,739 @@ export const schemes = pgTable('schemes', {
   disclaimer: text('disclaimer').notNull(),
   /** Admin-only editorial note (never returned by the public /schemes endpoints). */
   internalNote: text('internal_note'),
+  createdAt: createdAt(),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+// ================================================================ v1.3 additions (contract sections 41-62)
+
+/** Generic idempotency ledger for partner webhooks (WhatsApp, lab, ABDM, IVR, SOS button). */
+export const webhookEvents = pgTable(
+  'webhook_events',
+  {
+    id: id(),
+    source: text('source').notNull(),
+    eventId: text('event_id').notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('webhook_events_uq').on(t.source, t.eventId)],
+);
+
+/**
+ * Versioned clinical content packs (interaction pack, preventive schedules). status: fixture_unapproved | approved.
+ * Production refuses to serve unapproved packs (same model as the safety rule packs).
+ */
+export const clinicalContentPacks = pgTable(
+  'clinical_content_packs',
+  {
+    id: id(),
+    kind: text('kind').notNull(), // interactions | preventive
+    version: text('version').notNull(),
+    status: text('status').notNull().default('fixture_unapproved'),
+    active: boolean('active').notNull().default(false),
+    content: jsonb('content').$type<Record<string, unknown>>().notNull(),
+    approvedBy: text('approved_by'),
+    approvedAt: ts('approved_at'),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('clinical_packs_kind_version_uq').on(t.kind, t.version)],
+);
+
+// ---------------------------------------------------------------- 41 daily check-in
+export const checkinSettings = pgTable('checkin_settings', {
+  patientId: uuid('patient_id').primaryKey().references(() => patients.id),
+  enabled: boolean('enabled').notNull().default(false),
+  windowStart: text('window_start').notNull().default('08:00'),
+  windowEnd: text('window_end').notNull().default('10:00'),
+  escalateAfterMins: integer('escalate_after_mins').notNull().default(60),
+  notifyFamily: boolean('notify_family').notNull().default(true),
+  notifyCoordinator: boolean('notify_coordinator').notNull().default(true),
+  /** Optional end date (a discharge program enables check-ins for 30 days). */
+  activeUntil: date('active_until', { mode: 'string' }),
+  updatedByUserId: uuid('updated_by_user_id'),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+export const checkins = pgTable(
+  'checkins',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    date: date('date', { mode: 'string' }).notNull(),
+    status: text('status').notNull(), // ok | late | missed | pending
+    checkedInAt: ts('checked_in_at'),
+    mood: integer('mood'),
+    note: text('note'),
+    source: text('source'), // app | whatsapp | ivr
+    missedAlertedAt: ts('missed_alerted_at'),
+    escalatedAt: ts('escalated_at'),
+    safetyEventId: uuid('safety_event_id'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('checkins_patient_date_uq').on(t.patientId, t.date)],
+);
+
+// ---------------------------------------------------------------- 42 chronic care programs
+export type ThresholdJson = { type: string; op: 'lt' | 'gt'; value: number; level: 'routine' | 'urgent' | 'emergency'; message: string };
+export type ProgramMetricJson = { type: string; frequency: 'daily' | 'twice_daily' | 'weekly'; unit: string };
+
+export const programTemplates = pgTable(
+  'program_templates',
+  {
+    id: id(),
+    code: text('code').notNull(),
+    version: text('version').notNull(),
+    name: text('name').notNull(),
+    description: text('description').notNull(),
+    metrics: jsonb('metrics').$type<ProgramMetricJson[]>().notNull(),
+    defaultThresholds: jsonb('default_thresholds').$type<ThresholdJson[]>().notNull(),
+    status: text('status').notNull().default('fixture_unapproved'),
+    active: boolean('active').notNull().default(true),
+    approvedBy: text('approved_by'),
+    approvedAt: ts('approved_at'),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('program_templates_code_version_uq').on(t.code, t.version)],
+);
+
+export const programEnrollments = pgTable(
+  'program_enrollments',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    templateCode: text('template_code').notNull(),
+    templateVersion: text('template_version').notNull(),
+    status: text('status').notNull().default('active'), // active | paused | completed
+    thresholds: jsonb('thresholds').$type<ThresholdJson[]>().notNull(),
+    thresholdsApprovedByUserId: uuid('thresholds_approved_by_user_id'),
+    thresholdsApprovedByName: text('thresholds_approved_by_name'),
+    startDate: date('start_date', { mode: 'string' }).notNull(),
+    endDate: date('end_date', { mode: 'string' }),
+    careEpisodeId: uuid('care_episode_id'),
+    lastWeeklyReportWeek: text('last_weekly_report_week'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('program_enrollments_patient_idx').on(t.patientId, t.status)],
+);
+
+export const programBreaches = pgTable(
+  'program_breaches',
+  {
+    id: id(),
+    enrollmentId: uuid('enrollment_id').notNull().references(() => programEnrollments.id),
+    vitalId: uuid('vital_id').notNull(),
+    at: ts('at').notNull(),
+    type: text('type').notNull(),
+    value: doublePrecision('value').notNull(),
+    threshold: jsonb('threshold').$type<ThresholdJson>().notNull(),
+    safetyEventId: uuid('safety_event_id'),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('program_breaches_vital_uq').on(t.enrollmentId, t.vitalId)],
+);
+
+// ---------------------------------------------------------------- 43 WhatsApp
+export const whatsappOptins = pgTable('whatsapp_optins', {
+  userId: uuid('user_id').primaryKey().references(() => users.id),
+  optedIn: boolean('opted_in').notNull().default(false),
+  optedInAt: ts('opted_in_at'),
+  optedOutAt: ts('opted_out_at'),
+  /** AI assistant conversation used for WhatsApp free text. */
+  conversationId: uuid('conversation_id'),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------- 44 lab tests at home
+export const labTests = pgTable('lab_tests', {
+  id: id(),
+  code: text('code').notNull().unique(),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  category: text('category').notNull(),
+  sampleType: text('sample_type').notNull(),
+  fastingRequired: boolean('fasting_required').notNull().default(false),
+  fastingHours: integer('fasting_hours'),
+  turnaroundHours: integer('turnaround_hours').notNull(),
+  price: integer('price').notNull(),
+  mrp: integer('mrp').notNull(),
+  partnerName: text('partner_name').notNull(),
+  /** Illustrative range used only by the mock partner's watermarked SAMPLE report. */
+  sampleRange: jsonb('sample_range').$type<{ unit: string; low: number; high: number } | null>(),
+  active: boolean('active').notNull().default(true),
+});
+
+export const labPackages = pgTable('lab_packages', {
+  id: id(),
+  code: text('code').notNull().unique(),
+  name: text('name').notNull(),
+  testIds: jsonb('test_ids').$type<string[]>().notNull(),
+  price: integer('price').notNull(),
+  mrp: integer('mrp').notNull(),
+  description: text('description').notNull(),
+  active: boolean('active').notNull().default(true),
+});
+
+export type StatusAtJson = { status: string; at: string };
+
+export const labOrders = pgTable(
+  'lab_orders',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    tests: jsonb('tests').$type<Array<{ id: string; name: string }>>().notNull(),
+    packageIds: jsonb('package_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    total: integer('total').notNull(),
+    discount: integer('discount').notNull().default(0),
+    status: text('status').notNull().default('pending_payment'),
+    collectionVisitId: uuid('collection_visit_id'),
+    address: jsonb('address').$type<AddressJson>().notNull(),
+    preferredStart: ts('preferred_start').notNull(),
+    preferredEnd: ts('preferred_end').notNull(),
+    reportRecordId: uuid('report_record_id'),
+    partnerName: text('partner_name').notNull(),
+    partnerOrderId: text('partner_order_id'),
+    timeline: jsonb('timeline').$type<StatusAtJson[]>().notNull().default(sql`'[]'::jsonb`),
+    careEpisodeId: uuid('care_episode_id').notNull().references(() => careEpisodes.id),
+    prescriptionId: uuid('prescription_id'),
+    processingAt: ts('processing_at'),
+    cancelReason: text('cancel_reason'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('lab_orders_patient_idx').on(t.patientId, t.createdAt), index('lab_orders_status_idx').on(t.status)],
+);
+
+// ---------------------------------------------------------------- 46 scribe
+export const scribeDrafts = pgTable('scribe_drafts', {
+  id: id(),
+  appointmentId: uuid('appointment_id').notNull().references(() => appointments.id),
+  doctorUserId: uuid('doctor_user_id').notNull(),
+  transcript: text('transcript').notNull(),
+  draft: jsonb('draft').$type<{ subjective: string; objective: string; assessment: string; plan: string }>().notNull(),
+  model: text('model').notNull(),
+  generatedAt: ts('generated_at').notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------- 48 field operations
+export const providerAttendance = pgTable(
+  'provider_attendance',
+  {
+    id: id(),
+    providerId: uuid('provider_id').notNull().references(() => providers.id),
+    action: text('action').notNull(), // check_in | check_out
+    at: ts('at').notNull().defaultNow(),
+    lat: doublePrecision('lat'),
+    lng: doublePrecision('lng'),
+  },
+  (t) => [index('provider_attendance_idx').on(t.providerId, t.at)],
+);
+
+export const providerSupplies = pgTable(
+  'provider_supplies',
+  {
+    providerId: uuid('provider_id').notNull().references(() => providers.id),
+    code: text('code').notNull(),
+    onHand: integer('on_hand').notNull().default(0),
+    reorderLevel: integer('reorder_level').notNull().default(0),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [primaryKey({ columns: [t.providerId, t.code] })],
+);
+
+export const supplyUsage = pgTable('supply_usage', {
+  id: id(),
+  providerId: uuid('provider_id').notNull().references(() => providers.id),
+  visitId: uuid('visit_id').notNull(),
+  items: jsonb('items').$type<Array<{ code: string; qty: number }>>().notNull(),
+  createdAt: createdAt(),
+});
+
+// ---------------------------------------------------------------- 49 second opinion
+export const secondOpinionPricing = pgTable('second_opinion_pricing', {
+  specialty: text('specialty').primaryKey(),
+  price: integer('price').notNull(),
+  turnaroundHours: integer('turnaround_hours').notNull(),
+  active: boolean('active').notNull().default(true),
+});
+
+export const secondOpinions = pgTable(
+  'second_opinions',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    specialty: text('specialty').notNull(),
+    question: text('question').notNull(),
+    recordIds: jsonb('record_ids').$type<string[]>().notNull(),
+    status: text('status').notNull().default('pending_payment'),
+    price: integer('price').notNull(),
+    turnaroundHours: integer('turnaround_hours').notNull(),
+    doctorId: uuid('doctor_id').references(() => providers.id),
+    opinion: text('opinion'),
+    recommendations: jsonb('recommendations').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    suggestTeleconsult: boolean('suggest_teleconsult'),
+    opinionRecordId: uuid('opinion_record_id'),
+    dueAt: ts('due_at'),
+    claimedAt: ts('claimed_at'),
+    answeredAt: ts('answered_at'),
+    overdueAlertedAt: ts('overdue_alerted_at'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('second_opinions_patient_idx').on(t.patientId), index('second_opinions_status_idx').on(t.status, t.specialty)],
+);
+
+// ---------------------------------------------------------------- 50 ABDM
+export const abdmTransactions = pgTable('abdm_transactions', {
+  id: id(),
+  patientId: uuid('patient_id').notNull().references(() => patients.id),
+  kind: text('kind').notNull(), // create | link
+  abhaNumber: text('abha_number'),
+  gatewayTxnId: text('gateway_txn_id'),
+  status: text('status').notNull().default('otp_sent'), // otp_sent | verified | failed
+  attempts: integer('attempts').notNull().default(0),
+  expiresAt: ts('expires_at').notNull(),
+  createdByUserId: uuid('created_by_user_id'),
+  createdAt: createdAt(),
+});
+
+export const abdmConsentRequests = pgTable(
+  'abdm_consent_requests',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    hiTypes: jsonb('hi_types').$type<string[]>().notNull(),
+    fromDate: date('from_date', { mode: 'string' }).notNull(),
+    toDate: date('to_date', { mode: 'string' }).notNull(),
+    purpose: text('purpose').notNull(),
+    status: text('status').notNull().default('requested'),
+    recordsImported: integer('records_imported').notNull().default(0),
+    gatewayRequestId: text('gateway_request_id'),
+    grantedAt: ts('granted_at'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('abdm_consent_patient_idx').on(t.patientId)],
+);
+
+// ---------------------------------------------------------------- 51 insurance
+export const insurers = pgTable('insurers', {
+  code: text('code').primaryKey(),
+  name: text('name').notNull(),
+  type: text('type').notNull(), // private | public | government
+});
+
+export const insurancePolicies = pgTable(
+  'insurance_policies',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    insurerCode: text('insurer_code').notNull(),
+    /** AES-256-GCM encrypted policy number (DATA_ENCRYPTION_KEY); only a masked form is ever returned. */
+    policyNumberEnc: text('policy_number_enc').notNull(),
+    policyNumberLast4: text('policy_number_last4').notNull(),
+    planName: text('plan_name'),
+    type: text('type').notNull(),
+    sumInsured: integer('sum_insured'),
+    validFrom: date('valid_from', { mode: 'string' }).notNull(),
+    validTo: date('valid_to', { mode: 'string' }).notNull(),
+    tpaName: text('tpa_name'),
+    cardRecordId: uuid('card_record_id'),
+    membersCovered: jsonb('members_covered').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    deletedAt: ts('deleted_at'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('insurance_policies_patient_idx').on(t.patientId)],
+);
+
+// ---------------------------------------------------------------- 52 preventive care
+export const preventiveRecords = pgTable(
+  'preventive_records',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    code: text('code').notNull(),
+    doneAt: date('done_at', { mode: 'string' }).notNull(),
+    notes: text('notes'),
+    recordId: uuid('record_id'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+  },
+  (t) => [index('preventive_records_patient_idx').on(t.patientId, t.code)],
+);
+
+// ---------------------------------------------------------------- 53 physiotherapy
+export const exercises = pgTable('exercises', {
+  id: id(),
+  code: text('code').notNull().unique(),
+  title: text('title').notNull(),
+  bodyArea: text('body_area').notNull(),
+  level: text('level').notNull(),
+  durationSecs: integer('duration_secs').notNull(),
+  videoUrl: text('video_url'),
+  imageUrl: text('image_url'),
+  instructions: jsonb('instructions').$type<string[]>().notNull(),
+  precautions: jsonb('precautions').$type<string[]>().notNull(),
+  contentVersion: text('content_version').notNull(),
+  status: text('status').notNull().default('fixture_unapproved'),
+});
+
+export type ExercisePlanItemJson = { exerciseId: string; title: string; sets: number; reps: number; holdSecs: number | null; perDay: number; notes: string | null };
+
+export const exercisePlans = pgTable(
+  'exercise_plans',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    careEpisodeId: uuid('care_episode_id'),
+    authorUserId: uuid('author_user_id').notNull(),
+    authorName: text('author_name').notNull(),
+    authorRole: text('author_role').notNull(),
+    items: jsonb('items').$type<ExercisePlanItemJson[]>().notNull(),
+    startDate: date('start_date', { mode: 'string' }).notNull(),
+    endDate: date('end_date', { mode: 'string' }).notNull(),
+    weeks: integer('weeks').notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index('exercise_plans_patient_idx').on(t.patientId)],
+);
+
+export const exerciseSessions = pgTable(
+  'exercise_sessions',
+  {
+    id: id(),
+    planId: uuid('plan_id').notNull().references(() => exercisePlans.id),
+    at: ts('at').notNull().defaultNow(),
+    completedExerciseIds: jsonb('completed_exercise_ids').$type<string[]>().notNull(),
+    painScore: integer('pain_score').notNull(),
+    note: text('note'),
+    createdByUserId: uuid('created_by_user_id'),
+  },
+  (t) => [index('exercise_sessions_plan_idx').on(t.planId, t.at)],
+);
+
+// ---------------------------------------------------------------- 54 diet plans
+export type MealJson = { slot: string; items: string[]; notes?: string | null };
+
+export const dietTemplates = pgTable('diet_templates', {
+  code: text('code').primaryKey(),
+  version: text('version').notNull(),
+  name: text('name').notNull(),
+  conditions: jsonb('conditions').$type<string[]>().notNull(),
+  calorieTarget: integer('calorie_target'),
+  meals: jsonb('meals').$type<MealJson[]>().notNull(),
+  avoid: jsonb('avoid').$type<string[]>().notNull(),
+  notes: text('notes'),
+  status: text('status').notNull().default('fixture_unapproved'),
+  approvedBy: text('approved_by'),
+  approvedAt: ts('approved_at'),
+});
+
+export const dietPlans = pgTable(
+  'diet_plans',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    templateCode: text('template_code'),
+    authorUserId: uuid('author_user_id').notNull(),
+    authorName: text('author_name').notNull(),
+    authorRole: text('author_role').notNull(),
+    conditions: jsonb('conditions').$type<string[]>().notNull(),
+    calorieTarget: integer('calorie_target'),
+    meals: jsonb('meals').$type<MealJson[]>().notNull(),
+    avoid: jsonb('avoid').$type<string[]>().notNull(),
+    notes: text('notes'),
+    validUntil: date('valid_until', { mode: 'string' }).notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index('diet_plans_patient_idx').on(t.patientId)],
+);
+
+export const dietLogs = pgTable(
+  'diet_logs',
+  {
+    id: id(),
+    planId: uuid('plan_id').notNull().references(() => dietPlans.id),
+    date: date('date', { mode: 'string' }).notNull(),
+    slot: text('slot').notNull(),
+    followed: boolean('followed').notNull(),
+    note: text('note'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex('diet_logs_plan_date_slot_uq').on(t.planId, t.date, t.slot)],
+);
+
+// ---------------------------------------------------------------- 55 ambulance
+export const ambulanceRequests = pgTable(
+  'ambulance_requests',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    type: text('type').notNull(), // bls | als
+    status: text('status').notNull().default('searching'),
+    pickup: jsonb('pickup').$type<{ lat: number; lng: number; address: string }>().notNull(),
+    destinationFacilityId: uuid('destination_facility_id'),
+    reason: text('reason').notNull(),
+    sosId: uuid('sos_id'),
+    partnerName: text('partner_name').notNull(),
+    partnerRequestId: text('partner_request_id'),
+    vehicle: jsonb('vehicle').$type<{ number: string; driverName: string; phoneMasked: string } | null>(),
+    etaMinutes: integer('eta_minutes'),
+    location: jsonb('location').$type<{ lat: number; lng: number; updatedAt: string } | null>(),
+    /** Mock partner only: the simulated vehicle's starting point. */
+    vehicleStart: jsonb('vehicle_start').$type<{ lat: number; lng: number } | null>(),
+    timeline: jsonb('timeline').$type<StatusAtJson[]>().notNull().default(sql`'[]'::jsonb`),
+    safetyEventId: uuid('safety_event_id'),
+    careEpisodeId: uuid('care_episode_id'),
+    assignedAt: ts('assigned_at'),
+    cancelReason: text('cancel_reason'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('ambulance_requests_status_idx').on(t.status)],
+);
+
+// ---------------------------------------------------------------- 56 dementia safety
+export const safeZones = pgTable('safe_zones', {
+  patientId: uuid('patient_id').primaryKey().references(() => patients.id),
+  enabled: boolean('enabled').notNull(),
+  centerLat: doublePrecision('center_lat').notNull(),
+  centerLng: doublePrecision('center_lng').notNull(),
+  radiusMeters: integer('radius_meters').notNull(),
+  label: text('label'),
+  activeFrom: text('active_from'),
+  activeTo: text('active_to'),
+  updatedByUserId: uuid('updated_by_user_id'),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+/** Latest location only (no history is stored). */
+export const patientLocations = pgTable('patient_locations', {
+  patientId: uuid('patient_id').primaryKey().references(() => patients.id),
+  lat: doublePrecision('lat').notNull(),
+  lng: doublePrecision('lng').notNull(),
+  accuracyM: doublePrecision('accuracy_m'),
+  source: text('source').notNull(),
+  inside: boolean('inside'),
+  at: ts('at').notNull(),
+  geofenceEventId: uuid('geofence_event_id'),
+});
+
+export const sosDevices = pgTable(
+  'sos_devices',
+  {
+    id: id(),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    deviceId: text('device_id').notNull(),
+    model: text('model').notNull(),
+    pairedAt: ts('paired_at').notNull().defaultNow(),
+    unpairedAt: ts('unpaired_at'),
+    createdByUserId: uuid('created_by_user_id'),
+  },
+  (t) => [uniqueIndex('sos_devices_active_uq').on(t.deviceId).where(sql`unpaired_at is null`)],
+);
+
+// ---------------------------------------------------------------- 57 corporate plans
+export const organizations = pgTable('organizations', {
+  id: id(),
+  name: text('name').notNull(),
+  contactName: text('contact_name').notNull(),
+  contactEmail: text('contact_email').notNull(),
+  planCode: text('plan_code').notNull().references(() => subscriptionPlans.code),
+  seats: integer('seats').notNull(),
+  validFrom: date('valid_from', { mode: 'string' }).notNull(),
+  validTo: date('valid_to', { mode: 'string' }).notNull(),
+  billingNote: text('billing_note'),
+  createdAt: createdAt(),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+export const organizationCodes = pgTable(
+  'organization_codes',
+  {
+    id: id(),
+    organizationId: uuid('organization_id').notNull().references(() => organizations.id),
+    code: text('code').notNull().unique(),
+    redeemedByUserId: uuid('redeemed_by_user_id'),
+    redeemedAt: ts('redeemed_at'),
+    createdAt: createdAt(),
+  },
+  (t) => [index('organization_codes_org_idx').on(t.organizationId)],
+);
+
+// ---------------------------------------------------------------- 58 tenants
+export const tenants = pgTable('tenants', {
+  id: id(),
+  code: text('code').notNull().unique(),
+  displayName: text('display_name').notNull(),
+  primaryColor: text('primary_color').notNull(),
+  logoMediaId: uuid('logo_media_id'),
+  facilityIds: jsonb('facility_ids').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+  supportPhone: text('support_phone'),
+  supportEmail: text('support_email'),
+  createdAt: createdAt(),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------- 59 discharges
+export type DischargeFollowUpJson = {
+  tasks: Array<{ title: string; type?: string; description?: string | null; dayOffset?: number }>;
+  medications: Array<{ name: string; dose: string; frequency: string; times: string[]; durationDays?: number; instructions?: string | null }>;
+  followUpDays: number[];
+};
+
+export const discharges = pgTable(
+  'discharges',
+  {
+    id: id(),
+    facilityId: uuid('facility_id').notNull().references(() => facilities.id),
+    patientId: uuid('patient_id').notNull().references(() => patients.id),
+    dischargeDate: date('discharge_date', { mode: 'string' }).notNull(),
+    diagnosisSummary: text('diagnosis_summary').notNull(),
+    treatingDoctorName: text('treating_doctor_name').notNull(),
+    status: text('status').notNull().default('active'), // active | completed | readmitted | withdrawn
+    careEpisodeId: uuid('care_episode_id').notNull().references(() => careEpisodes.id),
+    carePlanId: uuid('care_plan_id').notNull().references(() => carePlans.id),
+    enrollmentId: uuid('enrollment_id'),
+    recordId: uuid('record_id'),
+    followUp: jsonb('follow_up').$type<DischargeFollowUpJson>().notNull(),
+    invitedPhones: jsonb('invited_phones').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
+    completedAt: ts('completed_at'),
+    createdByUserId: uuid('created_by_user_id'),
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('discharges_facility_idx').on(t.facilityId, t.status)],
+);
+
+// ---------------------------------------------------------------- 60 offers, wallet & invites
+export const coupons = pgTable('coupons', {
+  id: id(),
+  code: text('code').notNull().unique(),
+  description: text('description').notNull(),
+  type: text('type').notNull(), // percent | flat
+  value: integer('value').notNull(),
+  maxDiscount: integer('max_discount'),
+  minAmount: integer('min_amount'),
+  appliesTo: jsonb('applies_to').$type<string[]>().notNull(),
+  validFrom: ts('valid_from').notNull(),
+  validTo: ts('valid_to').notNull(),
+  usageLimit: integer('usage_limit'),
+  perUserLimit: integer('per_user_limit').notNull().default(1),
+  active: boolean('active').notNull().default(true),
+  createdAt: createdAt(),
+  updatedAt: ts('updated_at').notNull().defaultNow(),
+});
+
+export const couponRedemptions = pgTable(
+  'coupon_redemptions',
+  {
+    id: id(),
+    couponId: uuid('coupon_id').notNull().references(() => coupons.id),
+    userId: uuid('user_id').notNull().references(() => users.id),
+    paymentId: uuid('payment_id').notNull(),
+    discount: integer('discount').notNull(),
+    status: text('status').notNull().default('active'), // active | released
+    createdAt: createdAt(),
+  },
+  (t) => [index('coupon_redemptions_coupon_idx').on(t.couponId, t.userId)],
+);
+
+/**
+ * Wallet ledger. Credits carry `remaining` and `expiresAt` (FIFO consumption by earliest expiry); debits are
+ * informational rows. Balance = sum(remaining) over unexpired credits. [REQUIRES LEGAL REVIEW: RBI PPI rules]
+ */
+export const walletTransactions = pgTable(
+  'wallet_transactions',
+  {
+    id: id(),
+    userId: uuid('user_id').notNull().references(() => users.id),
+    type: text('type').notNull(), // credit | debit
+    amount: integer('amount').notNull(),
+    remaining: integer('remaining').notNull().default(0),
+    reason: text('reason').notNull(),
+    refType: text('ref_type'),
+    refId: text('ref_id'),
+    expiresAt: ts('expires_at'),
+    createdAt: createdAt(),
+  },
+  (t) => [index('wallet_tx_user_idx').on(t.userId, t.createdAt)],
+);
+
+export const inviteRedemptions = pgTable('invite_redemptions', {
+  id: id(),
+  inviterUserId: uuid('inviter_user_id').notNull().references(() => users.id),
+  inviteeUserId: uuid('invitee_user_id').notNull().unique().references(() => users.id),
+  code: text('code').notNull(),
+  status: text('status').notNull().default('pending'), // pending | rewarded
+  rewardedAt: ts('rewarded_at'),
+  createdAt: createdAt(),
+});
+
+// ---------------------------------------------------------------- 61 support desk
+export const supportTickets = pgTable(
+  'support_tickets',
+  {
+    id: id(),
+    seq: serial('seq').notNull(),
+    userId: uuid('user_id').notNull().references(() => users.id),
+    subject: text('subject').notNull(),
+    category: text('category').notNull(),
+    status: text('status').notNull().default('open'),
+    priority: text('priority').notNull().default('normal'),
+    assignedToUserId: uuid('assigned_to_user_id'),
+    refType: text('ref_type'),
+    refId: text('ref_id'),
+    attachmentRecordId: uuid('attachment_record_id'),
+    patientId: uuid('patient_id'),
+    ratingScore: integer('rating_score'),
+    ratingComment: text('rating_comment'),
+    slaDueAt: ts('sla_due_at').notNull(),
+    firstResponseAt: ts('first_response_at'),
+    resolvedAt: ts('resolved_at'),
+    slaBreachedAt: ts('sla_breached_at'),
+    safetyEventId: uuid('safety_event_id'),
+    source: text('source').notNull().default('app'), // app | ivr | whatsapp
+    createdAt: createdAt(),
+    updatedAt: ts('updated_at').notNull().defaultNow(),
+  },
+  (t) => [index('support_tickets_user_idx').on(t.userId, t.createdAt), index('support_tickets_status_idx').on(t.status, t.slaDueAt)],
+);
+
+export const ticketMessages = pgTable(
+  'ticket_messages',
+  {
+    id: id(),
+    ticketId: uuid('ticket_id').notNull().references(() => supportTickets.id),
+    authorUserId: uuid('author_user_id'),
+    authorName: text('author_name').notNull(),
+    authorRole: text('author_role').notNull(), // customer | agent | system
+    text: text('text').notNull(),
+    internal: boolean('internal').notNull().default(false),
+    createdAt: createdAt(),
+  },
+  (t) => [index('ticket_messages_ticket_idx').on(t.ticketId, t.createdAt)],
+);
+
+// ---------------------------------------------------------------- 62 IVR
+export const ivrSessions = pgTable('ivr_sessions', {
+  id: id(),
+  provider: text('provider').notNull(),
+  callId: text('call_id'),
+  fromPhone: text('from_phone').notNull(),
+  userId: uuid('user_id'),
+  lang: text('lang'),
+  state: text('state').notNull().default('start'),
+  endedAt: ts('ended_at'),
   createdAt: createdAt(),
   updatedAt: ts('updated_at').notNull().defaultNow(),
 });

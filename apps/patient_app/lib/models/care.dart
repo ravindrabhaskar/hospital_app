@@ -174,7 +174,15 @@ class Payment {
     required this.refundedAmount,
     required this.createdAt,
     this.checkout,
+    this.discount = 0,
+    this.walletUsed = 0,
   });
+
+  /// Coupon discount applied to this payment (§60).
+  final int discount;
+
+  /// Wallet balance used (§60); [amount] is the remainder charged.
+  final int walletUsed;
   final String id;
   final String purpose;
   final String refId;
@@ -204,6 +212,8 @@ class Payment {
         refundedAmount: intOf(j, 'refundedAmount'),
         createdAt: dateOf(j, 'createdAt'),
         checkout: RazorpayCheckout.tryParse(j['checkout']),
+        discount: intOf(j, 'discount'),
+        walletUsed: intOf(j, 'walletUsed'),
       );
 }
 

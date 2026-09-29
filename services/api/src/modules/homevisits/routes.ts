@@ -15,6 +15,9 @@ import { requireRoles } from '../../plugins/auth.js';
 import { ACTIVE_STATUSES, addEvent, advanceEpisode, createEpisode } from '../episodes/service.js';
 import { clinicalContext } from '../patients/service.js';
 import { toPayment } from '../payments/service.js';
+import { zCouponCode, zRefundTo } from '../wallet/routes.js';
+import { onCollectionVisitCompleted } from '../lab/service.js';
+import { evaluateVitals } from '../programs/service.js';
 import { storeRecord } from '../records/service.js';
 import { homeVisitDiscount } from '../subscriptions/service.js';
 import { autoAssign, findZoneForPincode, providerEligible, timelineAdd, toHomeVisit, toHomeVisits, visitViewFor, type HomeVisitRow } from './service.js';
@@ -49,6 +52,8 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
         preferredEnd: zIso,
         reason: z.string().trim().min(1).max(500),
         careEpisodeId: zUuid.optional(),
+        couponCode: zCouponCode.optional(),
+        useWallet: z.boolean().optional(),
       }),
       req.body,
     );
@@ -100,13 +105,17 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
         patientId: body.patientId,
         amount: price,
         userId: req.ctx.user.id,
+        couponCode: body.couponCode,
+        useWallet: body.useWallet,
+        actor: req.ctx.actor,
       });
       await addEvent(tx, episodeId, 'home_visit_requested', `${service.name} home visit requested`, req.ctx.actor, { homeVisitId: visit.id });
       await audit(tx, req.ctx.actor, { action: 'home_visit.create', entityType: 'home_visit', entityId: visit.id, metadata: { patientId: body.patientId } });
       return { visit: assigned, payment };
     });
     await notifyProviderAssigned(result.visit);
-    return reply.code(201).send({ homeVisit: await toHomeVisit(db, result.visit, 'family'), payment: toPayment(result.payment) });
+    const payment = await svc.payments.settleIfCovered(result.payment, req.ctx.actor);
+    return reply.code(201).send({ homeVisit: await toHomeVisit(db, payment === result.payment ? result.visit : await load(result.visit.id), 'family'), payment: toPayment(payment) });
   });
 
   async function notifyProviderAssigned(v: HomeVisitRow) {
@@ -166,7 +175,7 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
 
   app.post('/home-visits/:id/cancel', async (req) => {
     const { id } = parse(z.object({ id: zUuid }), req.params);
-    const body = parse(z.object({ reason: z.string().trim().min(1).max(500) }), req.body);
+    const body = parse(z.object({ reason: z.string().trim().min(1).max(500), refundTo: zRefundTo.optional() }), req.body);
     const v = await load(id);
     await assertCanActForPatient(db, req.ctx, v.patientId, 'book', 'home_visit.cancel');
     if (!['requested', 'unassigned', 'assigned', 'accepted', 'en_route'].includes(v.status)) throw errors.invalidTransition(v.status, 'cancelled');
@@ -182,7 +191,7 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
       await audit(tx, req.ctx.actor, { action: 'home_visit.cancel', entityType: 'home_visit', entityId: id });
       return r;
     });
-    if (pay?.status === 'succeeded') await svc.payments.refund(pay.id, { reason: 'home_visit_cancelled', actor: req.ctx.actor });
+    if (pay?.status === 'succeeded') await svc.payments.refund(pay.id, { reason: 'home_visit_cancelled', actor: req.ctx.actor, toWallet: body.refundTo === 'wallet' });
     return toHomeVisit(db, row, 'family');
   });
 
@@ -300,9 +309,10 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
       req.body,
     );
     const v = await loadAssigned(req, id, ['in_progress', 'escalated'], 'home_visit.vitals');
-    await db.transaction(async (tx) => {
+    const inserted = await db.transaction(async (tx) => {
+      const out = [];
       for (const m of body.measurements) {
-        await tx.insert(vitals).values({
+        const [row] = await tx.insert(vitals).values({
           patientId: v.patientId,
           type: m.type,
           value: m.value,
@@ -312,10 +322,13 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
           recordedByUserId: req.ctx.user.id,
           recordedByName: req.ctx.user.name,
           homeVisitId: id,
-        });
+        }).returning();
+        out.push(row);
       }
       await audit(tx, req.ctx.actor, { action: 'home_visit.vitals', entityType: 'home_visit', entityId: id, metadata: { count: body.measurements.length } });
+      return out;
     });
+    await evaluateVitals(svc, v.patientId, inserted);
     // Deterministic safety engine on the recorded vitals.
     const ctx = await clinicalContext(db, v.patientId);
     const safety = await svc.safety.evaluate({ vitals: body.measurements.map((m) => ({ type: m.type, value: m.value })), ageYears: ctx.age });
@@ -413,6 +426,8 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
       deepLink: `/home-visits/${id}`,
       dedupeKey: `hv_completed:${id}`,
     });
+    // Contract section 44: a completed sample-collection visit moves its lab order on.
+    if (v.serviceCode === 'sample_collection') await onCollectionVisitCompleted(svc, id, req.ctx.actor);
     return toHomeVisit(db, row, 'provider');
   });
 

@@ -29,6 +29,21 @@ describe('GET /config/public (contract section 21)', () => {
         mental_wellness: true,
         govt_schemes: true,
         voice_input: true,
+        // v1.3 flags (all seeded on)
+        lab_tests: true,
+        care_programs: true,
+        second_opinion: true,
+        insurance: true,
+        preventive_care: true,
+        exercise_plans: true,
+        diet_plans: true,
+        ambulance: true,
+        safe_zone: true,
+        wallet_invites: true,
+        support_desk: true,
+        whatsapp: true,
+        daily_checkin: true,
+        abdm: true,
       },
       payment: { gateway: 'mock', razorpayKeyId: null },
       video: { provider: 'jitsi' },
@@ -39,7 +54,8 @@ describe('GET /config/public (contract section 21)', () => {
         termsUrl: 'https://carecompanion.example/terms',
         accountDeletionUrl: 'https://carecompanion.example/account/delete',
       },
-      minAppVersion: { patientAndroid: '1.0.0', patientIos: '1.0.0', providerAndroid: '1.0.0', providerIos: '1.0.0' },
+      branding: null,
+      minAppVersion: { patientAndroid: '1.0.0', patientIos: '1.0.0', providerAndroid: '1.0.0', providerIos: '1.0.0', doctorAndroid: '1.0.0', doctorIos: '1.0.0' },
     });
     const admin = (await t.login(SEED_PHONES.admin)).accessToken;
     await t.req(admin, 'PUT', '/admin/feature-flags/govt_schemes', { enabled: false });

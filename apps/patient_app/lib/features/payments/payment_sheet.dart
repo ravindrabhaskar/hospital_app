@@ -44,6 +44,8 @@ Future<Payment?> showPaymentSheet(
   required Payment payment,
   required String title,
 }) {
+  // A payment fully covered by a coupon / wallet succeeds immediately (§60).
+  if (payment.succeeded) return Future.value(payment);
   return showModalBottomSheet<Payment>(
     context: context,
     isScrollControlled: true,
@@ -280,6 +282,16 @@ class _PaymentSheetState extends ConsumerState<PaymentSheet> {
                 children: [
                   Text(widget.title, style: Theme.of(context).textTheme.titleSmall),
                   const SizedBox(height: Space.sm),
+                  if (_payment.discount > 0)
+                    _AmountLine(
+                        key: const Key('payment-discount'),
+                        label: l.couponDiscount,
+                        value: '−${money(_payment.discount)}'),
+                  if (_payment.walletUsed > 0)
+                    _AmountLine(
+                        key: const Key('payment-wallet'),
+                        label: l.walletUsedLabel,
+                        value: '−${money(_payment.walletUsed)}'),
                   Row(
                     children: [
                       Expanded(child: Text(l.totalAmount)),
@@ -322,6 +334,23 @@ class _PaymentSheetState extends ConsumerState<PaymentSheet> {
       ),
     );
   }
+}
+
+class _AmountLine extends StatelessWidget {
+  const _AmountLine({super.key, required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Row(
+          children: [
+            Expanded(child: Text(label, style: TextStyle(color: context.textMuted))),
+            Text(value, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primaryLight)),
+          ],
+        ),
+      );
 }
 
 class _Note extends StatelessWidget {

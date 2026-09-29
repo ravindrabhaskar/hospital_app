@@ -50,7 +50,11 @@ enum VisitActionType {
 
   /// Consented visit photo, uploaded as a medical record (`POST /records`,
   /// multipart). Not a lifecycle transition.
-  photo('photo');
+  photo('photo'),
+
+  /// Supplies used during the visit (`POST /provider/supplies/usage`,
+  /// contract §48). Not a lifecycle transition.
+  suppliesUsage('supplies-usage');
 
   const VisitActionType(this.pathSegment);
   final String pathSegment;
@@ -58,7 +62,9 @@ enum VisitActionType {
   /// A 403/404 on a visit-scoped action means the visit was reassigned, so
   /// everything queued for it is dropped. A photo upload hits `/records`,
   /// where 403 only means this provider may not upload records.
-  bool get isVisitScoped => this != photo;
+  /// Supplies usage hits `/provider/supplies/usage`, so a 403/404 there drops
+  /// only that item as well.
+  bool get isVisitScoped => this != photo && this != suppliesUsage;
 
   static VisitActionType? fromName(String name) {
     for (final t in values) {
@@ -170,6 +176,7 @@ class VisitLifecycle {
       case VisitActionType.vitals:
       case VisitActionType.observations:
       case VisitActionType.photo:
+      case VisitActionType.suppliesUsage:
         return null;
     }
   }

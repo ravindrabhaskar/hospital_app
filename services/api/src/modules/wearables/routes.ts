@@ -7,6 +7,7 @@ import { audit } from '../../lib/audit.js';
 import { errors } from '../../lib/errors.js';
 import { list } from '../../lib/pagination.js';
 import { iso } from '../../lib/time.js';
+import { evaluateVitals } from '../programs/service.js';
 import { VITAL_TYPES, parse, zIso, zUuid } from '../../lib/validate.js';
 
 const PROVIDERS = [
@@ -88,7 +89,7 @@ export async function wearableRoutes(app: FastifyInstance): Promise<void> {
       const latest = new Map<string, (typeof body.measurements)[number]>();
       for (const m of body.measurements) latest.set(`${m.type}|${new Date(m.measuredAt).getTime()}`, m);
       const rows = [...latest.values()];
-      await db.transaction(async (tx) => {
+      const inserted = await db.transaction(async (tx) => {
         for (const m of rows) {
           await tx
             .delete(vitals)
@@ -102,7 +103,7 @@ export async function wearableRoutes(app: FastifyInstance): Promise<void> {
               ),
             );
         }
-        await tx.insert(vitals).values(
+        return tx.insert(vitals).values(
           rows.map((m) => ({
             patientId: body.patientId,
             type: m.type,
@@ -112,8 +113,9 @@ export async function wearableRoutes(app: FastifyInstance): Promise<void> {
             source: 'device' as const,
             recordedByName: sourceName,
           })),
-        );
+        ).returning();
       });
+      await evaluateVitals(svc, body.patientId, inserted.filter((r) => (VITAL_TYPES as readonly string[]).includes(r.type)));
     }
     await db.update(wearableConnections).set({ lastSyncAt: new Date() }).where(eq(wearableConnections.id, conn.id));
     await audit(db, req.ctx.actor, { action: 'wearable.sync', entityType: 'wearable_connection', entityId: conn.id, metadata: { count: body.measurements.length } });
