@@ -22,7 +22,7 @@ npm run setup
 # 2. Start the API → http://localhost:4000/api/v1
 npm run dev:api
 
-# 3. Start the web portal (new terminal) → http://localhost:3000
+# 3. Start the web portal (new terminal) → http://localhost:3100
 npm run dev:web
 
 # 4. Start the patient app (new terminal)

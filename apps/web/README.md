@@ -11,16 +11,16 @@ Stack: Next.js 15 (App Router, fully client-rendered pages), TypeScript strict, 
 cd apps/web
 cp .env.example .env.local        # set NEXT_PUBLIC_API_BASE_URL if the API is not on :4000
 npm install
-npm run dev                       # http://localhost:3000
+npm run dev                       # http://localhost:3100
 ```
 
 The API (`services/api`) must be running (default `http://localhost:4000/api/v1`) and seeded (`npm run seed` there).
 
 | Script | What it does |
 |---|---|
-| `npm run dev` | Dev server on port 3000 |
+| `npm run dev` | Dev server on port 3100 |
 | `npm run build` / `npm start` | Production build / serve with `next start` |
-| `npm run start:standalone` | Serve the standalone build (`.next/standalone/server.js`) after copying `.next/static` (and `public/` if present) next to it. `PORT` (default 3000) and `BIND_HOST` (default `0.0.0.0`) are honoured |
+| `npm run start:standalone` | Serve the standalone build (`.next/standalone/server.js`) after copying `.next/static` (and `public/` if present) next to it. `PORT` (default 3100) and `BIND_HOST` (default `0.0.0.0`) are honoured |
 | `npm run lint` | ESLint (next/core-web-vitals + typescript) |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm test` | Vitest unit tests (API client 401/refresh + error parsing, role-based nav and guard incl. the v1.2 routes, domain helpers, MFA state machine + flow, MFA_REQUIRED redirect, idle timeout, account deletion states, video join window, security headers and env validation; v1.2: schedule overlap validation + editor, prescription form validation + payload shape, application decision rules, caseload flags/sorting, inbox thread polling hook) |

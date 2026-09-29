@@ -11,13 +11,13 @@
 #   clamav        clamd malware scanner for uploads (CLAMAV_HOST, contract §27)
 #   redis         rate-limit store / future BullMQ queue (REDIS_URL)
 #   api           services/api image  -> http://localhost:4000/api/v1
-#   web           apps/web image      -> http://localhost:3000
+#   web           apps/web image      -> http://localhost:3100
 #   seed          one-shot synthetic demo seed (profile "seed", opt-in)
 #
 # QUICK START
 #   docker compose up -d --build                  # build + start everything
 #   docker compose --profile seed run --rm seed   # load the demo personas (OTP 123456)
-#   open http://localhost:3000                    # portal; login +919800000101 (doctor)
+#   open http://localhost:3100                    # portal; login +919800000101 (doctor)
 #   docker compose logs -f api                    # follow API logs
 #   docker compose down                           # stop (keeps data volumes)
 #   docker compose down -v                        # stop AND wipe postgres/minio/redis data
@@ -68,7 +68,7 @@ x-api-env: &api-env
   # --- auth (local-only; >= 32 chars required) ---
   JWT_SECRET: ${CC_JWT_SECRET:-local-only-compose-jwt-secret-000000000000}
   PAYMENT_WEBHOOK_SECRET: ${CC_PAYMENT_WEBHOOK_SECRET:-local-only-compose-webhook-secret}
-  CORS_ORIGINS: http://localhost:3000
+  CORS_ORIGINS: http://localhost:3100
   METRICS_TOKEN: ${CC_METRICS_TOKEN:-local-only-metrics-token}
   # --- object storage -> MinIO ---
   STORAGE_DRIVER: s3
@@ -202,7 +202,7 @@ services:
     image: carecompanion/web:local
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3100:3000"
     depends_on:
       api:
         condition: service_started

@@ -26,7 +26,7 @@ const ConfigShape = z.object({
     OTP_MAX_REQUESTS: z.coerce.number().int().positive().default(5),
     OTP_WINDOW_MIN: z.coerce.number().int().positive().default(15),
 
-    CORS_ORIGINS: z.string().default('http://localhost:3000'),
+    CORS_ORIGINS: z.string().default('http://localhost:3100'),
     RATE_LIMIT_MAX: z.coerce.number().int().positive().default(600),
     RATE_LIMIT_OTP_MAX: z.coerce.number().int().positive().default(20),
 

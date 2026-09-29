@@ -22,7 +22,7 @@ if (existsSync(join(root, "public"))) cpSync(join(root, "public"), join(standalo
 const env = {
   ...process.env,
   NODE_ENV: "production",
-  PORT: process.env.PORT ?? "3000",
+  PORT: process.env.PORT ?? "3100",
   HOSTNAME: process.env.BIND_HOST ?? "0.0.0.0",
 };
 const child = spawn(process.execPath, [server], { stdio: "inherit", env, cwd: standalone });
