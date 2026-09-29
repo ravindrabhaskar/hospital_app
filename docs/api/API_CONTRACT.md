@@ -755,3 +755,335 @@ This is informational only. The app never tells a user they are eligible. The se
 - **Wearables**: the patient app reads steps, heart rate, sleep, SpO2, blood pressure, glucose and weight from Google Health Connect (Android) / Apple HealthKit (iOS), with explicit per-type permission. Readings go to `POST /wearables/sync`, and the connection is recorded via `POST /wearables/connections` with provider `health_connect`/`apple_health`.
 - **Fall detection**: an on-device accelerometer heuristic (free-fall < 0.5 g → impact > 2.5 g within 1 s → ~2 s stillness). It runs only when the `fall_detection` flag is on and the user opts in, and it triggers the existing `POST /fall-events` confirmation flow. It is a supportive signal, not a medical device.
 - **Voice replies**: text-to-speech of assistant messages in the selected language when the user used voice input or enabled "Read replies aloud".
+
+
+---
+
+# v1.3 additions: growth & care-program features (all backwards compatible)
+
+Conventions as before: `{ items, nextCursor }` lists, 🔑 = `Idempotency-Key` required, and every sensitive action is audited.
+
+**Partner integrations** (WhatsApp, lab, ambulance, ABDM, drug database, telephony, SOS button, speech-to-text) each sit behind an adapter interface with:
+- a **mock partner** that is the default outside production and simulates realistic flows through the worker;
+- a real adapter enabled by env credentials;
+- a refusal to start in production while the mock is configured, except where noted.
+
+**Clinical content** (program thresholds, interaction packs, preventive schedules, exercise and diet templates) is versioned data with `status: "fixture_unapproved"|"approved"`. Fixtures are clearly labelled **[REQUIRES CLINICAL GOVERNANCE]**, and production refuses to use unapproved packs (the same model as the safety rule packs, §19).
+
+New roles:
+- `hospital_staff`: linked to one facility; can use the §59 discharge endpoints and read their facility's discharged patients;
+- `support_agent`: can use the §61 support desk.
+
+Coordinators and ops admins can also act on support tickets.
+
+New provider types: `dietitian` (plus the existing `physiotherapist`).
+
+New `SafetyEvent.source` values: `"checkin"`, `"program"`, `"geofence"`, `"sos_button"`. New `Payment.purpose` values: `"lab_order"`, `"second_opinion"`, `"ambulance"`. New `Notification.category` values: `"program"`, `"checkin"`, `"lab"`, `"support"`, `"insurance"`, `"preventive"`.
+
+## 41. Daily "I'm OK" check-in
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/patients/:id/checkin-settings` | – | `CheckinSettings` |
+| PUT | `/patients/:id/checkin-settings` (`manage_care`) | `CheckinSettings` minus `patientId` | `CheckinSettings` |
+| POST | `/patients/:id/checkins` (patient or `manage_care`) | `{ mood?: 1..5, note? }` | `CheckIn` (the day's status becomes `ok`, or `late` if after the window) |
+| GET | `/patients/:id/checkins?days=30` | – | list of `CheckIn` (one per day, including missed days) |
+```ts
+CheckinSettings = { patientId, enabled, windowStart: "HH:MM", windowEnd: "HH:MM", escalateAfterMins: number, notifyFamily: boolean, notifyCoordinator: boolean }
+CheckIn = { id, patientId, date, status: "ok"|"late"|"missed"|"pending", checkedInAt: string|null, mood: number|null, note: string|null }
+```
+Worker behaviour:
+- At `windowEnd` (IST) with no check-in, the day becomes `missed` and family with `receive_alerts` get a push/WhatsApp ("{name} hasn't checked in today").
+- After `escalateAfterMins` more, an `urgent` SafetyEvent (source `checkin`) is created and assigned to the coordinator.
+- A later check-in the same day resolves it automatically.
+- Seed: enabled for Ramesh, 08:00–10:00.
+
+## 42. Chronic care programs (remote monitoring)
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/care-programs/templates` | – | list of `ProgramTemplate` (codes `hypertension`, `diabetes`, `heart_failure`) |
+| POST | `/care-programs/enrollments` (doctor; coordinator only with thresholds from an approved template) | `{ patientId, templateCode, thresholds?: Threshold[], startDate, endDate?, careEpisodeId? }` | `Enrollment` |
+| GET | `/care-programs/enrollments?patientId=` | – | list of `Enrollment` |
+| PATCH | `/care-programs/enrollments/:id` (doctor) | `{ status?: "active"|"paused"|"completed", thresholds? }` | `Enrollment` |
+| GET | `/care-programs/enrollments/:id/summary?from=&to=` | – | `ProgramSummary` |
+| GET/POST | `/admin/care-programs/templates` + `POST /admin/care-programs/templates/:code/approve` (super_admin) | – | templates |
+```ts
+ProgramTemplate = { code, name, description, metrics: [{ type: VitalType, frequency: "daily"|"twice_daily"|"weekly", unit }], defaultThresholds: Threshold[], status: "fixture_unapproved"|"approved", version }
+Threshold = { type: VitalType, op: "lt"|"gt", value: number, level: "routine"|"urgent"|"emergency", message: string }
+Enrollment = { id, patientId, patientName, templateCode, templateName, status, thresholds: Threshold[], thresholdsApprovedByName: string|null, startDate, endDate: string|null, careEpisodeId: string|null, adherencePct7d: number|null, lastReadingAt: string|null, openBreaches: number, createdAt }
+ProgramSummary = { enrollmentId, from, to, expectedReadings, receivedReadings, adherencePct, breaches: [{ at, type, value, threshold: Threshold, safetyEventId }], trend: [{ date, type, avg, min, max }] }
+```
+Readings are ordinary vitals (patient-entered, device or home visit). Each new vital is evaluated against active enrollments. A breach creates a SafetyEvent (source `program`, the threshold's level) and notifies the coordinator and family (`receive_alerts`). The deterministic safety engine still runs as well; the program can never lower a safety level.
+**Weekly report**: every Monday 09:00 IST the worker generates a "Weekly health report" PDF record per active enrollment and notifies the family.
+Seed: Ramesh enrolled in `hypertension` (fixture thresholds: systolic > 160 urgent, > 180 emergency, < 90 urgent), with 14 days of readings.
+
+## 43. WhatsApp assistant
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/me/whatsapp` | – | `{ optedIn: boolean, phone, optedInAt: string|null }` |
+| PUT | `/me/whatsapp` | `{ optedIn }` | same (records a `whatsapp_messaging` consent) |
+| GET | `/webhooks/whatsapp` | Meta verify handshake (`hub.mode`, `hub.verify_token`, `hub.challenge`) | challenge |
+| POST | `/webhooks/whatsapp` | Meta Cloud API payload; `X-Hub-Signature-256` HMAC with `WHATSAPP_APP_SECRET` | 200 |
+| POST | `/dev/whatsapp/simulate` (**non-production only**, any authenticated user) | `{ text }` (as if sent from the caller's phone) | `{ replies: string[] }` |
+
+Inbound message handling:
+- It resolves the user by phone, and only opted-in users are served.
+- `STOP` opts the user out; `START` opts them in.
+- `TODAY` / `REMINDERS` returns today's reminders for the user's patients.
+- `CHECKIN` / `OK` records the §41 check-in.
+- `BP 138/88` / `SUGAR 142` records a patient-entered vital, evaluated by §42 and the safety engine.
+- `BOOK` sends deep links to the apps.
+- Any other text goes to the AI Care Assistant pipeline (intake + **safety engine**; emergency → the fixed 108 template).
+- Replies are plain text with no diagnosis. Outbound reminders use approved template names (`WHATSAPP_TEMPLATE_*`). The adapter is a console mock in dev, or Meta Cloud API (`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_ACCESS_TOKEN`).
+
+## 44. Lab tests at home
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/lab/tests?q=&category=` | – | list of `LabTest` |
+| GET | `/lab/packages` | – | list of `LabPackage` |
+| POST | `/lab/orders` 🔑 | `{ patientId, testIds: string[], packageIds?: string[], address: Address, preferredStart, preferredEnd, prescriptionId?, careEpisodeId?, couponCode? }` | `{ order: LabOrder, payment: Payment }` |
+| GET | `/lab/orders?patientId=` / `GET /lab/orders/:id` | – | `LabOrder` |
+| POST | `/lab/orders/:id/cancel` | `{ reason }` | `LabOrder` (refund if paid) |
+| POST | `/webhooks/lab/:partner` | partner payload, HMAC `X-Lab-Signature` | 200 |
+| GET | `/ops/lab-orders?status=` | – | list of `LabOrder` |
+```ts
+LabTest = { id, code, name, description, category, sampleType: "blood"|"urine"|"swab"|"other", fastingRequired: boolean, fastingHours: number|null, turnaroundHours, price, mrp, partnerName }
+LabPackage = { id, code, name, testIds: string[], price, mrp, description }
+LabOrder = { id, patientId, patientName, tests: [{ id, name }], total, discount, status: "pending_payment"|"scheduled"|"sample_collected"|"processing"|"report_ready"|"cancelled",
+             collectionVisitId: string|null, preferredStart, preferredEnd, reportRecordId: string|null, partnerName, partnerOrderId: string|null,
+             timeline: [{ status, at }], careEpisodeId: string|null, createdAt }
+```
+After payment a `sample_collection` home visit is created and auto-matched (§8). Completing that visit moves the order to `sample_collected`, then the partner adapter submits it. The mock partner moves it to `processing` and, after `LAB_MOCK_REPORT_MINUTES` (default 2), to `report_ready`. It generates a PDF watermarked **"SAMPLE REPORT — NOT A REAL RESULT"** with plausible values. The report becomes a `lab_report` MedicalRecord (source `lab_partner`) linked to the episode, and the patient and linked doctor are notified. Seed: 20 tests, 4 packages, with pricing marked placeholder.
+
+## 45. Doctor mobile app
+Client-only. It uses §16, §29, §31, §33–§36, §46, §47 and push (`/devices`). No new endpoints.
+
+## 46. AI consultation notes ("scribe")
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/clinician/appointments/:id/scribe` (doctor of the appointment) | JSON `{ transcript, consentConfirmed: true }` **or** multipart `audio` (webm/m4a/wav ≤ 25 MB) + `consentConfirmed=true` | `ScribeDraft` |
+```ts
+ScribeDraft = { id, appointmentId, transcript, draft: { subjective, objective, assessment, plan }, model, advisory: true, generatedAt, audioRetained: false }
+```
+Rules:
+- `consentConfirmed` must be true, meaning the patient agreed to recording (the event is audited).
+- Audio goes through the speech-to-text adapter (`STT_PROVIDER=mock|openai_whisper_compatible|google`; the mock returns a canned transcript in dev). Audio is **discarded** after transcription.
+- The draft comes from the AI gateway and passes the policy check (no invented findings: the prompt forbids facts that aren't in the transcript).
+- The doctor edits and then saves via the existing complete-consultation notes. AI text never auto-saves into the record.
+
+## 47. Drug interaction & allergy checks
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/clinician/prescriptions/check` | `{ patientId, items: [{ drugName, strength? }] }` | `{ warnings: RxWarning[], knowledgePack: { version, status } }` |
+```ts
+RxWarning = { severity: "info"|"moderate"|"major", type: "allergy"|"duplicate_therapy"|"interaction"|"dose_form", drugs: string[], message, source: string }
+```
+The engine checks:
+- **allergy**: patient allergies against drug names and drug classes, using a class map;
+- **duplicate therapy**: against the patient's active medications of the same drug or class;
+- **interactions**: from a versioned interaction pack (fixture pack `interactions-fixture-0.1`, ~40 well-known pairs, marked **[REQUIRES CLINICAL GOVERNANCE — replace with a licensed drug database adapter]**; the adapter interface `DrugKnowledgeProvider` exists).
+
+`POST /clinician/prescriptions` (§31) now also runs the check and returns `warnings`. When any `major` warning exists, the prescription is rejected (400, `details.warnings`) unless the body includes `acknowledgedWarnings: true` and `overrideReason`. Overrides are audited.
+
+## 48. Nurse route planning, attendance & supplies (role `provider`)
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/provider/route?date=` | – | `{ date, stops: [{ order, visitId, serviceName, window: { start, end }, address, lat, lng, distanceFromPrevKm, etaAt }], totalKm, startLocation: { lat, lng }|null }` |
+| POST | `/provider/attendance` | `{ action: "check_in"|"check_out", lat?, lng? }` | `{ id, action, at, lat, lng }` |
+| GET | `/provider/attendance?month=YYYY-MM` | – | `{ items: [{ date, checkInAt, checkOutAt, hours, visits }] }` |
+| GET | `/provider/supplies` | – | `{ items: [{ code, name, unit, onHand, reorderLevel }] }` |
+| POST | `/provider/supplies/usage` | `{ visitId, items: [{ code, qty }] }` | updated supplies |
+| POST | `/ops/providers/:id/supplies/restock` (ops) | `{ items: [{ code, qty }] }` | supplies |
+| GET | `/ops/supplies/low-stock` | – | list `{ providerId, providerName, code, name, onHand, reorderLevel }` |
+
+Routes are ordered by time window first, then nearest-neighbour by haversine distance (default speed 20 km/h). A `MapsProvider` adapter (Google Distance Matrix, when `GOOGLE_MAPS_API_KEY` is set) refines distances and ETAs. The start point is the provider's last location, or the zone centre. Seed: supplies for Sunita, and lat/lng on seeded addresses.
+
+## 49. Specialist second opinion
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/second-opinions/pricing` | – | `{ items: [{ specialty, price, turnaroundHours }] }` |
+| POST | `/second-opinions` 🔑 | `{ patientId, specialty, question, recordIds: string[] }` | `{ request: SecondOpinion, payment: Payment }` |
+| GET | `/second-opinions?patientId=` / `/second-opinions/:id` | – | `SecondOpinion` |
+| GET | `/clinician/second-opinions?scope=open|mine` (doctor) | – | list (open ones in the doctor's specialty) |
+| POST | `/clinician/second-opinions/:id/claim` | – | `SecondOpinion` |
+| POST | `/clinician/second-opinions/:id/respond` | `{ opinion, recommendations: string[], suggestTeleconsult: boolean }` | `SecondOpinion` (opinion PDF record created; patient notified) |
+```ts
+SecondOpinion = { id, patientId, patientName, specialty, question, records: [{ id, title }], status: "pending_payment"|"open"|"claimed"|"answered"|"cancelled",
+                  price, doctorName: string|null, opinion: string|null, recommendations: string[], opinionRecordId: string|null, dueAt: string|null, createdAt, answeredAt: string|null }
+```
+The records are shared read-only with the claiming doctor (audited). An unanswered request past `dueAt` alerts ops.
+
+## 50. ABDM (ABHA creation, record linking, consent): sandbox-ready adapter
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/abdm/abha/create/start` | `{ patientId, method: "mobile", mobile }` | `{ txnId }` |
+| POST | `/abdm/abha/create/verify` | `{ txnId, otp }` | `PatientProfile.abha` (status `verified`) |
+| POST | `/abdm/abha/link-existing/start` / `verify` | `{ patientId, abhaNumber }` / `{ txnId, otp }` | same |
+| POST | `/abdm/consent-requests` | `{ patientId, hiTypes: ("Prescription"|"DiagnosticReport"|"DischargeSummary"|"OPConsultation")[], from, to, purpose: "CAREMGT" }` | `AbdmConsentRequest` |
+| GET | `/abdm/consent-requests?patientId=` | – | list |
+| POST | `/webhooks/abdm` | gateway callbacks (signature verified) | 200 |
+```ts
+AbdmConsentRequest = { id, patientId, hiTypes, from, to, status: "requested"|"granted"|"denied"|"expired"|"data_received", recordsImported: number, createdAt }
+```
+`ABDM_MODE=mock|sandbox|production` (default `mock`). The mock gateway simulates the OTP (dev OTP `123456`), ABHA creation, consent grant after 10 s, and a data push that imports 2 sample records (source `imported`, titled "Imported via ABDM (sample)"). The §39 verify endpoint also works in mock mode. Production mode requires certification (the startup refusal names the missing items).
+
+## 51. Insurance helper
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/insurance/insurers` | – | list `{ code, name, type: "private"|"public"|"government" }` |
+| GET/POST | `/patients/:id/insurance-policies` | `{ insurerCode, policyNumber, planName?, type: "individual"|"family_floater"|"corporate"|"government", sumInsured?, validFrom, validTo, tpaName?, cardRecordId?, membersCovered?: string[] }` | `InsurancePolicy` |
+| PATCH/DELETE | `/patients/:id/insurance-policies/:policyId` | – | – |
+| GET | `/insurance/claim-checklist?type=cashless|reimbursement` | – | `{ steps: string[], documents: string[], disclaimer }` |
+
+`GET /facilities` gains `?cashlessInsurer=<code>`, and `Facility` gains `cashlessInsurers: string[]`.
+```ts
+InsurancePolicy = { id, patientId, insurerCode, insurerName, policyNumberMasked, planName, type, sumInsured: number|null, validFrom, validTo, tpaName, cardRecordId, status: "active"|"expiring_soon"|"expired", createdAt }
+```
+The worker sends renewal reminders 30 and 7 days before `validTo`. Policy numbers are stored encrypted and returned masked. Checklist content is marked **[REQUIRES CONTENT REVIEW]**.
+
+## 52. Vaccination & preventive screening
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/patients/:id/preventive-schedule` | – | `{ items: PreventiveItem[], scheduleVersion, scheduleStatus }` |
+| POST | `/patients/:id/preventive-records` | `{ code, doneAt, notes?, recordId? }` | `PreventiveItem` |
+```ts
+PreventiveItem = { code, name, category: "vaccine"|"screening", description, dueDate: string|null, status: "upcoming"|"due"|"overdue"|"done"|"not_applicable", lastDoneAt: string|null, repeatEveryMonths: number|null }
+```
+Items are computed from age and sex using versioned fixture schedules: a child immunisation schedule and adult screenings (BP, glucose, lipids, cervical/breast/colorectal screening, influenza/pneumococcal for 65+). They are marked **[REQUIRES CLINICAL GOVERNANCE]**. The worker sends monthly due/overdue reminders to the patient and family.
+
+## 53. Physiotherapy & exercise programs
+New home-visit service `physiotherapy` (₹699, capability required).
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/exercise-library?bodyArea=` | – | list `{ id, title, bodyArea, level, durationSecs, videoUrl: string|null, imageUrl: string|null, instructions: string[], precautions: string[] }` |
+| POST | `/exercise-plans` (doctor, or provider of type physiotherapist) | `{ patientId, careEpisodeId?, items: [{ exerciseId, sets, reps, holdSecs?, perDay, notes? }], startDate, weeks }` | `ExercisePlan` |
+| GET | `/exercise-plans?patientId=` | – | list `ExercisePlan` |
+| POST | `/exercise-plans/:id/sessions` | `{ completedExerciseIds: string[], painScore: 0..10, note? }` | `ExerciseSession` |
+| GET | `/exercise-plans/:id/progress` | – | `{ sessionsPlanned, sessionsDone, adherencePct, painTrend: [{ date, painScore }] }` |
+```ts
+ExercisePlan = { id, patientId, authorName, authorRole, items: [...], startDate, endDate, status: "active"|"completed", createdAt }
+ExerciseSession = { id, planId, at, completedExerciseIds, painScore, note }
+```
+A pain score ≥ 8 in a session notifies the plan author. Seed library: 15 exercises (videos null → illustrated instructions).
+
+## 54. Diet plans
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET | `/diet-templates` | – | list `{ code, name, conditions: string[], status }` (fixtures: diabetic, low-salt cardiac, renal) |
+| POST | `/diet-plans` (doctor, or provider of type dietitian) | `{ patientId, templateCode?, conditions: string[], calorieTarget?: number, meals: [{ slot: "early_morning"|"breakfast"|"mid_morning"|"lunch"|"evening"|"dinner"|"bedtime", items: string[], notes? }], avoid: string[], notes?, validUntil }` | `DietPlan` |
+| GET | `/diet-plans?patientId=` | – | list `DietPlan` |
+| POST | `/diet-plans/:id/logs` | `{ date, slot, followed: boolean, note? }` | `{ id }` |
+| GET | `/diet-plans/:id/adherence?days=14` | – | `{ days: [{ date, slotsLogged, slotsFollowed }], adherencePct }` |
+```ts
+DietPlan = { id, patientId, authorName, authorRole, conditions, calorieTarget, meals, avoid, notes, validUntil, status: "active"|"expired", createdAt }
+```
+Meal suggestions in templates are Indian vegetarian/non-vegetarian options.
+
+## 55. Ambulance booking
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/ambulance/requests` 🔑 | `{ patientId, pickup: { lat, lng, address }, destinationFacilityId?, type: "bls"|"als", reason, sosId? }` | `AmbulanceRequest` (plus `payment` when the partner is paid; the mock is free) |
+| GET | `/ambulance/requests/:id` | – | `AmbulanceRequest` (clients poll every 5 s) |
+| POST | `/ambulance/requests/:id/cancel` | `{ reason }` | `AmbulanceRequest` |
+| GET | `/ops/ambulance-requests?status=` | – | list |
+```ts
+AmbulanceRequest = { id, patientId, patientName, type, status: "searching"|"assigned"|"en_route"|"arrived"|"transporting"|"completed"|"cancelled"|"no_vehicle",
+  vehicle: { number, driverName, phoneMasked } | null, etaMinutes: number|null, location: { lat, lng, updatedAt } | null,
+  pickup, destination: Facility | null, partnerName, timeline: [{ status, at }], createdAt }
+```
+This never replaces 108: every screen keeps "Call 108" as the primary action. A request also creates an `emergency` SafetyEvent for ops. The mock partner assigns a vehicle within 20 s, then moves it towards the pickup every 10 s.
+
+## 56. Dementia safety: safe zone & SOS button
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET/PUT | `/patients/:id/safe-zone` (`manage_care`) | `{ enabled, centerLat, centerLng, radiusMeters (100..5000), label?, activeFrom?: "HH:MM", activeTo?: "HH:MM" }` | `SafeZone` |
+| POST | `/patients/:id/location` (the patient's own device in "companion mode", or a paired tracker) | `{ lat, lng, accuracyM, source: "phone"|"tracker" }` | `{ inside: boolean }` |
+| GET | `/patients/:id/location/latest` (family with `receive_alerts`, coordinator) | – | `{ lat, lng, at, inside, source } | 404` |
+| POST | `/patients/:id/sos-devices` | `{ deviceId, model }` | `{ id, deviceId, model, pairedAt }` |
+| DELETE | `/patients/:id/sos-devices/:deviceRowId` | – | 204 |
+| POST | `/webhooks/sos-button` | vendor payload, HMAC `X-SOS-Signature` | 200 → same flow as `/emergency/sos` |
+
+The first location outside the zone (while active) creates an `urgent` SafetyEvent (source `geofence`), and family get a push/WhatsApp with a map link. Returning inside resolves it. Only the latest location is kept; history is not stored.
+
+## 57. Company (corporate) health plans
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET/POST/PATCH | `/admin/organizations` (super_admin) | `{ name, contactName, contactEmail, planCode, seats, validFrom, validTo, billingNote? }` | `Organization` |
+| POST | `/admin/organizations/:id/codes` | `{ count: 1..500 }` | `{ codes: string[] }` (single-use, 10 chars) |
+| GET | `/admin/organizations/:id/usage` | – | `{ seats, redeemed, activeMembers, servicesUsed: { appointments, homeVisits, labOrders } }` (aggregates only, no PHI) |
+| POST | `/subscriptions/redeem` | `{ code }` | `Subscription` (active, sponsored; `sponsorName` set; price 0) |
+
+`Subscription` gains `sponsorName: string|null`.
+
+## 58. Hospital white-label branding
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET/POST/PATCH | `/admin/tenants` (super_admin) | `{ code, displayName, primaryColor: "#RRGGBB", logoMediaId?, facilityIds: string[], supportPhone?, supportEmail? }` | `Tenant` |
+
+`GET /config/public?tenant=<code>` adds `branding: { tenantCode, displayName, logoUrl, primaryColor, supportPhone, supportEmail } | null`. The apps accept `--dart-define=TENANT_CODE=...` and apply the name, primary colour and logo, and show "Powered by CareCompanion". Patients and episodes gain `tenantCode: string|null` (set when created via a tenant's discharge flow or app build).
+
+## 59. Hospital post-discharge programs (role `hospital_staff`)
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/discharges` (multipart) | `patient` JSON `{ name, phone, dob, gender }`, `familyPhone?`, `dischargeDate`, `diagnosisSummary`, `treatingDoctorName`, `followUp` JSON `{ tasks: [...], medications: [...], followUpDays: number[] }`, `programTemplateCode?`, `file` (discharge summary PDF) | `Discharge` |
+| GET | `/discharges?status=` | – | list `Discharge` (own facility only) |
+| GET | `/discharges/:id` | – | `Discharge` with progress |
+```ts
+Discharge = { id, facility: Facility, patientId, patientName, dischargeDate, diagnosisSummary, treatingDoctorName, status: "active"|"completed"|"readmitted"|"withdrawn",
+              careEpisodeId, carePlanId, enrollmentId: string|null, day: number /* days since discharge */, tasksDone, tasksTotal, missedCheckins, openAlerts, invitedPhones: string[], createdAt }
+```
+Creating a discharge:
+- finds or creates the patient user by phone; SMS/WhatsApp invites go to the patient and family;
+- creates a care episode (`UNDER_CARE` → `FOLLOW_UP`) plus a care plan built from the hospital's follow-up (marked "Hospital-issued"), and follow-up tasks at the given day offsets;
+- enables the §41 daily check-in for 30 days and the §42 enrollment if a template is given;
+- stores the PDF as a `discharge_summary` record (source `imported`);
+- assigns a coordinator and sets `tenantCode` from the facility's tenant.
+
+The worker completes the program at day 30. Seed: facility "Deccan Sunrise Multispeciality" with hospital_staff user **+919800000701** (Hospital Discharge Desk), and 1 active discharge.
+
+## 60. Offers, wallet & invites
+| Method | Path | Body | Response |
+|---|---|---|---|
+| GET/POST/PATCH | `/admin/coupons` (super_admin) | `{ code, description, type: "percent"|"flat", value, maxDiscount?, minAmount?, appliesTo: Payment.purpose[], validFrom, validTo, usageLimit?, perUserLimit, active }` | `Coupon` |
+| POST | `/coupons/validate` | `{ code, purpose, amount }` | `{ valid, discount, finalAmount, message }` |
+| GET | `/wallet` | – | `{ balance, transactions: [{ id, type: "credit"|"debit", amount, reason, refType, refId, at }] }` |
+| GET | `/me/invite` | – | `{ code, shareText, invitedCount, rewardsEarned }` |
+| POST | `/me/invite/redeem` | `{ code }` (once, within 7 days of signup) | `{ ok: true }` |
+
+The booking endpoints (`/appointments`, `/home-visits`, `/lab/orders`, `/pharmacy/orders`, `/subscriptions`, `/second-opinions`) accept `couponCode?` and `useWallet?: boolean`. The resulting `Payment` gains `discount`, `walletUsed` and `amount` (the remainder charged). A fully covered payment succeeds immediately.
+
+Invite rewards (`INVITE_REWARD_INVITER`, default ₹100; `INVITE_REWARD_INVITEE`, default ₹100) are credited when the invitee's first paid service completes. Wallet credit is non-withdrawable and expires after 365 days **[REQUIRES LEGAL REVIEW: RBI PPI rules]**. Refunds can go back to the original method (default) or the wallet (user choice). EMI is offered by Razorpay checkout itself; there is no app logic for it. Seed coupons: `WELCOME100` (flat ₹100 on the first home visit), `CARE10` (10% off lab orders, max ₹200).
+
+## 61. Support desk
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/support/tickets` | `{ subject, category: "booking"|"payment"|"refund"|"app_issue"|"clinical_concern"|"other", message, refType?, refId?, attachmentRecordId? }` | `Ticket` |
+| GET | `/support/tickets` (mine) / `GET /support/tickets/:id` | – | `Ticket` (with messages) |
+| POST | `/support/tickets/:id/messages` | `{ text }` | `TicketMessage` |
+| POST | `/support/tickets/:id/rating` (after resolved) | `{ score: 1..5, comment? }` | `Ticket` |
+| GET | `/ops/support/tickets?status=&assignedTo=me` (support_agent, coordinator, ops_admin, super_admin) | – | list `Ticket` |
+| POST | `/ops/support/tickets/:id/assign` | `{ userId }` | `Ticket` |
+| POST | `/ops/support/tickets/:id/reply` | `{ text, internal?: boolean }` | `TicketMessage` |
+| PATCH | `/ops/support/tickets/:id` | `{ status?, priority? }` | `Ticket` |
+| GET | `/ops/support/metrics` | – | `{ open, avgFirstResponseMins, avgResolutionHours, csatAvg, byCategory: {} }` |
+```ts
+Ticket = { id, number /* "T-000123" */, userId, userName, subject, category, status: "open"|"pending_customer"|"resolved"|"closed", priority: "low"|"normal"|"high"|"urgent",
+           assignedToName: string|null, refType, refId, messages: TicketMessage[], rating: { score, comment } | null, slaDueAt, createdAt, updatedAt }
+TicketMessage = { id, ticketId, authorName, authorRole: "customer"|"agent"|"system", text, internal: boolean, at }
+```
+`clinical_concern` tickets automatically create a SafetyEvent review. They are never handled by support alone.
+The first-response SLA is 30 min for `urgent`/`high`, else 4 h, and a breach alerts ops. Internal notes are never shown to customers. Seed: support_agent **+919800000801** (Support Desk), plus 2 tickets.
+
+## 62. Telephony line for elders without smartphones (IVR)
+| Method | Path | Body | Response |
+|---|---|---|---|
+| POST | `/webhooks/ivr/:provider` | provider callback (Exotel/Twilio-style, signature verified) | provider XML/JSON response |
+| POST | `/dev/ivr/simulate` (**non-production only**) | `{ fromPhone, digits?: string, speechText?: string, sessionId? }` | `{ sessionId, say: string, gather: "digits"|"speech"|"none", ended: boolean }` |
+
+The menu is in the caller's language (en/hi/te, from the user profile, else asked first):
+- **1**: hear today's medicine reminders;
+- **2**: "I'm OK" check-in (§41);
+- **3**: request a call back from the care coordinator (creates a support ticket, category `other`, priority `high`);
+- **4**: speak a health concern (speech → text → AI intake + safety engine; emergency → "Please call 108 now" and an ops alert);
+- **9**: connect to the care team (transfer to `SUPPORT_PHONE`).
+
+Unknown callers hear the support number. The adapter is `IVR_PROVIDER=mock|exotel|twilio`.
