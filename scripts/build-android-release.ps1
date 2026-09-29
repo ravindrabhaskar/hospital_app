@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Builds signed Android release files for both CareCompanion apps.
+  Builds signed Android release files for the CareCompanion apps (patient, provider, doctor).
 
 .DESCRIPTION
   Produces, per app:
@@ -18,7 +18,7 @@
   against a backend running on this PC use http://10.0.2.2:4000/api/v1.
 
 .PARAMETER Apps
-  patient_app, provider_app or both (default).
+  all (default: patient, provider and doctor apps), both (patient + provider), or one app name.
 
 .PARAMETER DartDefines
   Extra --dart-define values, e.g. "FIREBASE_PROJECT_ID=my-proj","FIREBASE_APP_ID=1:2:android:3".
@@ -30,12 +30,16 @@
 #>
 param(
   [Parameter(Mandatory = $true)][string]$ApiUrl,
-  [ValidateSet('both', 'patient_app', 'provider_app')][string]$Apps = 'both',
+  [ValidateSet('all', 'both', 'patient_app', 'provider_app', 'doctor_app')][string]$Apps = 'all',
   [string[]]$DartDefines = @()
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
-$targets = if ($Apps -eq 'both') { @('patient_app', 'provider_app') } else { @($Apps) }
+$targets = switch ($Apps) {
+  'all' { @('patient_app', 'provider_app', 'doctor_app') }
+  'both' { @('patient_app', 'provider_app') }
+  default { @($Apps) }
+}
 
 if ($ApiUrl -notmatch '^https://' -and $ApiUrl -notmatch '^http://(10\.0\.2\.2|localhost|127\.0\.0\.1)(:\d+)?/') {
   throw "ApiUrl must be https:// (production) or a local test address (http://10.0.2.2:4000/api/v1)."

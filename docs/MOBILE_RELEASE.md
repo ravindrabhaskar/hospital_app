@@ -1,11 +1,12 @@
 # Mobile release: Android and iOS
 
-Both apps are Flutter, so one codebase produces the Android and iOS apps:
+All three apps are Flutter, so each codebase produces both the Android and the iOS app:
 
 | App | Android package / iOS bundle ID | Store name |
 |---|---|---|
 | Patient & family | `com.carecompanion.patient` | CareCompanion |
 | Home-care provider | `com.carecompanion.provider` | CareCompanion Pro |
+| Doctor | `com.carecompanion.doctor` | CareCompanion Doctor |
 
 Status (2026-09-29): signed Android release builds and unsigned iOS release builds for both apps compile and pass. The Android release APKs were tested on an Android 15 emulator against a local backend. Store submission still needs the accounts and URLs in `docs/GO_LIVE_CREDENTIALS.md`.
 
@@ -17,11 +18,12 @@ Each app has its own **upload key**, created 2026-09-29 and stored **outside the
 ```
 C:\Users\USER\Desktop\ravindra\hos\signing\
   patient-upload.jks    patient-key.properties
-  provider-upload.jks   provider-key.properties   (passwords are in the .properties files)
+  provider-upload.jks   provider-key.properties
+  doctor-upload.jks     doctor-key.properties     (passwords are in the .properties files)
 ```
 `apps/<app>/android/key.properties` points to these files and is git-ignored.
 
-> **Back these four files up now** to at least two places you control, for example an encrypted USB drive and a password manager. If the upload key is lost you must ask Google to reset it, and until then you cannot publish updates. Never commit them or share them in chat or email.
+> **Back these six files up now** to at least two places you control, for example an encrypted USB drive and a password manager. If the upload key is lost you must ask Google to reset it, and until then you cannot publish updates. Never commit them or share them in chat or email.
 
 When you enrol in **Play App Signing** (recommended; the default for new apps), Google keeps the final app-signing key, and this file is only the upload key.
 
@@ -42,7 +44,7 @@ Before each new store upload, raise `version:` in each app's `pubspec.yaml` (e.g
 
 ### CI alternative
 `.github/workflows/mobile-release.yml` builds signed AABs on GitHub and can upload them to the Play **internal testing** track. It needs these repository secrets and variables:
-- `PATIENT_ANDROID_KEYSTORE_BASE64` / `PROVIDER_…`: produce with `[Convert]::ToBase64String([IO.File]::ReadAllBytes("patient-upload.jks"))`
+- `PATIENT_ANDROID_KEYSTORE_BASE64` / `PROVIDER_…` / `DOCTOR_…`: produce with `[Convert]::ToBase64String([IO.File]::ReadAllBytes("patient-upload.jks"))`
 - `…_KEYSTORE_PASSWORD`, `…_KEY_ALIAS` (`upload`), `…_KEY_PASSWORD`
 - the variable `MOBILE_API_BASE_URL`
 - optionally `PLAY_SERVICE_ACCOUNT_JSON`
@@ -60,7 +62,7 @@ Download them from the workflow run page (**Artifacts**), or with `gh run downlo
 
 ### Signed builds for TestFlight and the App Store: need an Apple Developer account
 1. Enrol in the Apple Developer Program as an **organisation** (needs a D-U-N-S number; US$99/yr).
-2. In the developer portal create the App IDs `com.carecompanion.patient` and `com.carecompanion.provider`. Enable the **Push Notifications** and **HealthKit** capabilities (HealthKit for the patient app only).
+2. In the developer portal create the App IDs `com.carecompanion.patient`, `com.carecompanion.provider` and `com.carecompanion.doctor`. Enable the **Push Notifications** and **HealthKit** capabilities (HealthKit for the patient app only).
 3. Create an **Apple Distribution** certificate (.p12) and an **App Store provisioning profile** per app.
 4. Create an **App Store Connect API key** (.p8) for uploads.
 5. Add `apps/<app>/ios/ExportOptions.plist` (method `app-store-connect`, your team ID, the profile names).

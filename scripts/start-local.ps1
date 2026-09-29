@@ -9,7 +9,7 @@
 
   - Backend API       http://localhost:4000/api/v1
   - Staff web portal  http://localhost:3100/login
-  - Android emulator  CareCompanion (patient) + CareCompanion Pro (provider)
+  - Android emulator  CareCompanion (patient), CareCompanion Pro (provider), CareCompanion Doctor
 
 .PARAMETER Reseed
   Reset the demo database to fresh sample data before starting.
@@ -72,12 +72,25 @@ if (-not $NoEmulator) {
     if ($booted) {
       $packages = (& $adb shell pm list packages) -join "`n"
       $apkDir = Get-ChildItem (Join-Path $root 'dist\android') -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
-      foreach ($app in @(@{ id = 'com.carecompanion.patient'; name = 'patient_app' }, @{ id = 'com.carecompanion.provider'; name = 'provider_app' })) {
-        if ($packages -notmatch [regex]::Escape($app.id)) {
-          $apk = if ($apkDir) { Get-ChildItem $apkDir.FullName -Filter "$($app.name)-*.apk" | Select-Object -First 1 }
-          if (-not $apk) { $apk = Get-Item (Join-Path $root "apps\$($app.name)\build\app\outputs\flutter-apk\app-debug.apk") -ErrorAction SilentlyContinue }
-          if ($apk) { Write-Host "Installing $($app.name)"; & $adb install $apk.FullName | Out-Null }
-          else { Write-Warning "No APK for $($app.name). Build one with: ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1" }
+      foreach ($app in @(@{ id = 'com.carecompanion.patient'; name = 'patient_app' }, @{ id = 'com.carecompanion.provider'; name = 'provider_app' }, @{ id = 'com.carecompanion.doctor'; name = 'doctor_app' })) {
+        $apk = if ($apkDir) { Get-ChildItem $apkDir.FullName -Filter "$($app.name)-*.apk" | Select-Object -First 1 }
+        if (-not $apk) { $apk = Get-Item (Join-Path $root "apps\$($app.name)uildpp\outputslutter-apkpp-debug.apk") -ErrorAction SilentlyContinue }
+        if (-not $apk) { Write-Warning "No APK for $($app.name). Build one with: ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1"; continue }
+        # (Re)install when missing or when a newer build exists; app data is kept (same signing key).
+        $marker = Join-Path $root "distndroid\.installed-$($app.name)"
+        $stamp = "$($apk.FullName)|$($apk.LastWriteTimeUtc.Ticks)"
+        $installed = $packages -match [regex]::Escape($app.id)
+        $current = (Test-Path $marker) -and ((Get-Content $marker -Raw).Trim() -eq $stamp)
+        if (-not $installed -or -not $current) {
+          Write-Host "Installing $($app.name) ($($apk.Name))"
+          $out = (& $adb install -r $apk.FullName 2>&1) -join ' '
+          if ($out -match 'INSTALL_FAILED_UPDATE_INCOMPATIBLE') {
+            # Previously installed with a different signing key (e.g. a debug build): replace it.
+            & $adb uninstall $app.id | Out-Null
+            $out = (& $adb install $apk.FullName 2>&1) -join ' '
+          }
+          if ($out -match 'Success') { New-Item -ItemType Directory -Force -Path (Split-Path $marker) | Out-Null; Set-Content $marker $stamp }
+          else { Write-Warning "Install of $($app.name) failed: $out" }
         }
       }
       & $adb shell monkey -p com.carecompanion.patient -c android.intent.category.LAUNCHER 1 2>$null | Out-Null
@@ -90,7 +103,7 @@ Write-Host @"
 CareCompanion is running.  Close the API / portal windows (or the emulator) to stop them.
 
   Staff web portal   http://localhost:3100/login
-  Emulator apps      CareCompanion (patient)  |  CareCompanion Pro (provider)
+  Emulator apps      CareCompanion (patient)  |  CareCompanion Pro (provider)  |  CareCompanion Doctor
 
   Logins (type the 10-digit number, OTP 123456):
     Patient  9800000001 Vaibhav (switch to father Ramesh via the avatar)   9800000002 Lakshmi (family)
