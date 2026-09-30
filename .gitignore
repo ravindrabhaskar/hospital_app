@@ -31,3 +31,6 @@ apps/*/ios/Pods/
 *.jks
 *.keystore
 .env.production
+
+# Combined app bundle (large, built locally)
+CareCompanion-Apps-*.zip
