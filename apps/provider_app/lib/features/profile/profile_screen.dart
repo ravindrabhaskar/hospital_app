@@ -294,6 +294,20 @@ class ProfileScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+                if (ref.watch(switchAppProvider) case final switchApp?) ...[
+                  const SizedBox(height: 12),
+                  // All-in-one demo build only: back to the role chooser.
+                  Card(
+                    child: ListTile(
+                      key: const Key('switchApp'),
+                      leading: const Icon(Icons.swap_horiz),
+                      title: const Text('Switch app'),
+                      subtitle: const Text('Back to the app chooser'),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: switchApp,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 20),
                 OutlinedButton.icon(
                   key: const Key('logoutButton'),

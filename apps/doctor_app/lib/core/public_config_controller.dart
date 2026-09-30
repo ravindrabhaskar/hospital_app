@@ -25,13 +25,19 @@ Future<String?> readPackageVersion() async {
 ///
 /// Everything is fail-soft: without config the app simply isn't gated.
 class PublicConfigController extends ChangeNotifier {
-  PublicConfigController({required this.api, AppVersionReader? appVersion, TargetPlatform? platformOverride})
-    : _readVersion = appVersion ?? readPackageVersion,
+  PublicConfigController({
+    required this.api,
+    AppVersionReader? appVersion,
+    TargetPlatform? platformOverride,
+    String storagePrefix = '',
+  }) : _readVersion = appVersion ?? readPackageVersion,
+      _cacheKey = '${storagePrefix}config.public',
       _platformOverride = platformOverride; // ignore: prefer_initializing_formals
 
   final TargetPlatform? _platformOverride;
 
-  static const _cacheKey = 'config.public';
+  /// Shared-preferences key of the cached config ([storagePrefix] + `config.public`).
+  final String _cacheKey;
 
   final ApiClient api;
   final AppVersionReader _readVersion;

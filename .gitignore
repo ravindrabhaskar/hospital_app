@@ -34,3 +34,4 @@ apps/*/ios/Pods/
 
 # Combined app bundle (large, built locally)
 CareCompanion-Apps-*.zip
+CareCompanion-All-in-One*.apk

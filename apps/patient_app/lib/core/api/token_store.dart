@@ -15,12 +15,18 @@ abstract class TokenStore {
 }
 
 class SecureTokenStore implements TokenStore {
-  SecureTokenStore([FlutterSecureStorage? storage])
-      : _storage = storage ?? const FlutterSecureStorage();
+  /// [keyPrefix] namespaces the keys (all-in-one demo build); empty keeps
+  /// the standalone keys.
+  SecureTokenStore([FlutterSecureStorage? storage, String keyPrefix = ''])
+      : _storage = storage ?? const FlutterSecureStorage(),
+        _kAccess = '$keyPrefix$accessKey',
+        _kRefresh = '$keyPrefix$refreshKey';
 
   final FlutterSecureStorage _storage;
-  static const _kAccess = 'cc_access_token';
-  static const _kRefresh = 'cc_refresh_token';
+  static const accessKey = 'cc_access_token';
+  static const refreshKey = 'cc_refresh_token';
+  final String _kAccess;
+  final String _kRefresh;
 
   StoredTokens? _cache;
 

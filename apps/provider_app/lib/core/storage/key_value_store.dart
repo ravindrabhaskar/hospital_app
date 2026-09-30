@@ -38,6 +38,24 @@ class SecureKeyValueStore implements KeyValueStore {
   }
 }
 
+/// Namespaces every key with [prefix] (all-in-one demo build, where several
+/// CareCompanion apps share one secure storage). Standalone builds don't use it.
+class PrefixedKeyValueStore implements KeyValueStore {
+  PrefixedKeyValueStore(this.inner, this.prefix);
+
+  final KeyValueStore inner;
+  final String prefix;
+
+  @override
+  Future<String?> read(String key) => inner.read('$prefix$key');
+
+  @override
+  Future<void> write(String key, String value) => inner.write('$prefix$key', value);
+
+  @override
+  Future<void> delete(String key) => inner.delete('$prefix$key');
+}
+
 /// In-memory store used by tests.
 class MemoryKeyValueStore implements KeyValueStore {
   final Map<String, String> data = {};

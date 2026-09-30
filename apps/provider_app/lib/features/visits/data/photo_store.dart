@@ -24,15 +24,17 @@ abstract class PhotoFileStore {
 }
 
 class LocalPhotoFileStore implements PhotoFileStore {
-  LocalPhotoFileStore({Future<Directory> Function()? baseDir, Uuid? uuid})
+  /// [dirName] is namespaced in the all-in-one demo build (`provider.visit_photos`).
+  LocalPhotoFileStore({Future<Directory> Function()? baseDir, Uuid? uuid, this.dirName = 'visit_photos'})
       : _baseDir = baseDir ?? getApplicationSupportDirectory,
         _uuid = uuid ?? const Uuid();
 
   final Future<Directory> Function() _baseDir;
   final Uuid _uuid;
+  final String dirName;
 
   Future<Directory> _dir() async {
-    final dir = Directory('${(await _baseDir()).path}${Platform.pathSeparator}visit_photos');
+    final dir = Directory('${(await _baseDir()).path}${Platform.pathSeparator}$dirName');
     if (!await dir.exists()) await dir.create(recursive: true);
     return dir;
   }

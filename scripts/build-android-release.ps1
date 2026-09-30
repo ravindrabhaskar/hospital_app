@@ -1,6 +1,7 @@
 <#
 .SYNOPSIS
-  Builds signed Android release files for the CareCompanion apps (patient, provider, doctor).
+  Builds signed Android release files for the CareCompanion apps (patient, provider, doctor)
+  and, on request, the All-in-One demo build.
 
 .DESCRIPTION
   Produces, per app:
@@ -10,7 +11,8 @@
 
   Signing uses apps/<app>/android/key.properties (never committed). If that file is
   missing the build is stopped, because Gradle would otherwise fall back to the
-  debug key, which Google Play rejects.
+  debug key, which Google Play rejects. Exception: all_in_one (demo build, APK only) may
+  fall back to the debug key, with a warning.
 
 .PARAMETER ApiUrl
   The backend the apps talk to. For the store this must be your production HTTPS
@@ -18,7 +20,10 @@
   against a backend running on this PC use http://10.0.2.2:4000/api/v1.
 
 .PARAMETER Apps
-  all (default: patient, provider and doctor apps), both (patient + provider), or one app name.
+  all (default: the three store apps: patient, provider and doctor), everything (the three
+  store apps + the all_in_one demo build), both (patient + provider), or one app name.
+  all_in_one is a DEMO convenience build that bundles the three apps; the stores use the
+  separate apps.
 
 .PARAMETER DartDefines
   Extra --dart-define values, e.g. "FIREBASE_PROJECT_ID=my-proj","FIREBASE_APP_ID=1:2:android:3".
@@ -27,16 +32,19 @@
   ./scripts/build-android-release.ps1 -ApiUrl https://api.yourdomain.in/api/v1
 .EXAMPLE
   ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1 -Apps patient_app
+.EXAMPLE
+  ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1 -Apps all_in_one
 #>
 param(
   [Parameter(Mandatory = $true)][string]$ApiUrl,
-  [ValidateSet('all', 'both', 'patient_app', 'provider_app', 'doctor_app')][string]$Apps = 'all',
+  [ValidateSet('all', 'everything', 'both', 'patient_app', 'provider_app', 'doctor_app', 'all_in_one')][string]$Apps = 'all',
   [string[]]$DartDefines = @()
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $targets = switch ($Apps) {
   'all' { @('patient_app', 'provider_app', 'doctor_app') }
+  'everything' { @('patient_app', 'provider_app', 'doctor_app', 'all_in_one') }
   'both' { @('patient_app', 'provider_app') }
   default { @($Apps) }
 }
@@ -54,9 +62,14 @@ $isPhoneDemo = $localHost -and $localHost -notin @('10.0.2.2', 'localhost', '127
 
 foreach ($app in $targets) {
   $dir = Join-Path $root "apps/$app"
-  if (-not (Test-Path (Join-Path $dir 'android/key.properties'))) {
+  # The All-in-One demo build is never uploaded to a store: APK only, and the debug key is
+  # acceptable (with a warning) when it has no key.properties of its own.
+  $isDemoBuild = $app -eq 'all_in_one'
+  $hasKey = Test-Path (Join-Path $dir 'android/key.properties')
+  if (-not $hasKey -and -not $isDemoBuild) {
     throw "$app/android/key.properties is missing, so the build would be debug-signed. See docs/STORE_SUBMISSION.md."
   }
+  if (-not $hasKey) { Write-Warning "$app/android/key.properties is missing: the demo APK is signed with the DEBUG key." }
   $version = (Select-String -Path (Join-Path $dir 'pubspec.yaml') -Pattern '^version:\s*(.+)$').Matches[0].Groups[1].Value.Trim()
   $defines = @("--dart-define=API_BASE_URL=$ApiUrl") + ($DartDefines | ForEach-Object { "--dart-define=$_" })
   $symbols = Join-Path $dir 'build/symbols'
@@ -72,8 +85,10 @@ foreach ($app in $targets) {
   Push-Location $dir
   try {
     flutter pub get | Out-Null
-    flutter build appbundle --release --obfuscate --split-debug-info=$symbols @defines
-    if ($LASTEXITCODE -ne 0) { throw "AAB build failed for $app" }
+    if (-not $isDemoBuild) {
+      flutter build appbundle --release --obfuscate --split-debug-info=$symbols @defines
+      if ($LASTEXITCODE -ne 0) { throw "AAB build failed for $app" }
+    }
     flutter build apk --release --obfuscate --split-debug-info=$symbols @defines
     if ($LASTEXITCODE -ne 0) { throw "APK build failed for $app" }
   } finally {
@@ -83,8 +98,13 @@ foreach ($app in $targets) {
 
   $out = if ($isPhoneDemo) { Join-Path $root "dist/phone/$version" } else { Join-Path $root "dist/android/$version" }
   New-Item -ItemType Directory -Force -Path $out | Out-Null
-  Copy-Item (Join-Path $dir 'build/app/outputs/bundle/release/app-release.aab') (Join-Path $out "$app-$version.aab") -Force
   Copy-Item (Join-Path $dir 'build/app/outputs/flutter-apk/app-release.apk') (Join-Path $out "$app-$version.apk") -Force
+  if ($isDemoBuild) {
+    $size = [math]::Round((Get-Item (Join-Path $out "$app-$version.apk")).Length / 1MB, 1)
+    Write-Host "Demo APK: $(Join-Path $out "$app-$version.apk") ($size MB)$(if (-not $hasKey) { ', DEBUG-signed' })"
+    continue
+  }
+  Copy-Item (Join-Path $dir 'build/app/outputs/bundle/release/app-release.aab') (Join-Path $out "$app-$version.aab") -Force
 
   # Refuse to hand over anything signed with the Android debug key.
   # The AAB carries a JAR signature (keytool); the APK uses APK Signature Scheme v2+ (apksigner).

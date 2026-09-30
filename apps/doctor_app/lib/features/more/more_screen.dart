@@ -85,6 +85,21 @@ class MoreScreen extends ConsumerWidget {
               child: SupportContactButtons(support: cfg.support),
             ),
           ],
+          if (ref.watch(switchAppProvider) case final switchApp?) ...[
+            gap12,
+            // All-in-one demo build only: back to the role chooser.
+            Card(
+              child: ListTile(
+                key: const Key('more.switchApp'),
+                minVerticalPadding: 12,
+                leading: const Icon(Icons.swap_horiz, color: AppColors.primary),
+                title: const Text('Switch app'),
+                subtitle: const Text('Back to the app chooser'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: switchApp,
+              ),
+            ),
+          ],
           gap16,
           OutlinedButton.icon(
             key: const Key('logout'),

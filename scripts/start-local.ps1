@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
   Starts the whole CareCompanion demo on this PC: backend API, staff web portal,
-  and the Android emulator with both apps installed.
+  and the Android emulator with the apps installed.
 
 .DESCRIPTION
   Each server opens in its own window. Close a window to stop that server.
@@ -10,6 +10,7 @@
   - Backend API       http://localhost:4000/api/v1
   - Staff web portal  http://localhost:3100/login
   - Android emulator  CareCompanion (patient), CareCompanion Pro (provider), CareCompanion Doctor
+                      and, when its APK has been built, CareCompanion All-in-One (demo build)
 
 .PARAMETER Reseed
   Reset the demo database to fresh sample data before starting.
@@ -72,12 +73,20 @@ if (-not $NoEmulator) {
     if ($booted) {
       $packages = (& $adb shell pm list packages) -join "`n"
       $apkDir = Get-ChildItem (Join-Path $root 'dist\android') -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
-      foreach ($app in @(@{ id = 'com.carecompanion.patient'; name = 'patient_app' }, @{ id = 'com.carecompanion.provider'; name = 'provider_app' }, @{ id = 'com.carecompanion.doctor'; name = 'doctor_app' })) {
+      $apps = @(
+        @{ id = 'com.carecompanion.patient'; name = 'patient_app' },
+        @{ id = 'com.carecompanion.provider'; name = 'provider_app' },
+        @{ id = 'com.carecompanion.doctor'; name = 'doctor_app' },
+        # Demo build bundling the three apps (optional: installed only when its APK exists).
+        @{ id = 'com.carecompanion.allinone'; name = 'all_in_one'; optional = $true }
+      )
+      foreach ($app in $apps) {
         $apk = if ($apkDir) { Get-ChildItem $apkDir.FullName -Filter "$($app.name)-*.apk" | Select-Object -First 1 }
-        if (-not $apk) { $apk = Get-Item (Join-Path $root "apps\$($app.name)uildpp\outputslutter-apkpp-debug.apk") -ErrorAction SilentlyContinue }
+        if (-not $apk) { $apk = Get-Item (Join-Path $root "apps\$($app.name)\build\app\outputs\flutter-apk\app-debug.apk") -ErrorAction SilentlyContinue }
+        if (-not $apk -and $app.optional) { Write-Host "No APK for $($app.name) (optional). Build it with: ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1 -Apps all_in_one"; continue }
         if (-not $apk) { Write-Warning "No APK for $($app.name). Build one with: ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1"; continue }
         # (Re)install when missing or when a newer build exists; app data is kept (same signing key).
-        $marker = Join-Path $root "distndroid\.installed-$($app.name)"
+        $marker = Join-Path $root "dist\android\.installed-$($app.name)"
         $stamp = "$($apk.FullName)|$($apk.LastWriteTimeUtc.Ticks)"
         $installed = $packages -match [regex]::Escape($app.id)
         $current = (Test-Path $marker) -and ((Get-Content $marker -Raw).Trim() -eq $stamp)
@@ -104,6 +113,7 @@ CareCompanion is running.  Close the API / portal windows (or the emulator) to s
 
   Staff web portal   http://localhost:3100/login
   Emulator apps      CareCompanion (patient)  |  CareCompanion Pro (provider)  |  CareCompanion Doctor
+                     CareCompanion All-in-One (demo: all three apps behind a role chooser, if built)
 
   Logins (type the 10-digit number, OTP 123456):
     Patient  9800000001 Vaibhav (switch to father Ramesh via the avatar)   9800000002 Lakshmi (family)

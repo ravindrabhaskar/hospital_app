@@ -5,7 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// (not sensitive, so it doesn't need encrypted storage).
 class LocaleController extends ChangeNotifier {
   static const supported = ['en', 'hi', 'te'];
-  static const _key = 'app.locale';
+  /// [keyPrefix] namespaces the preference (all-in-one demo build).
+  LocaleController({String keyPrefix = ''}) : _key = '${keyPrefix}app.locale';
+
+  final String _key;
 
   Locale? _locale;
   Locale? get locale => _locale;

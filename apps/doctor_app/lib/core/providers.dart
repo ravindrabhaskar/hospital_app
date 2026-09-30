@@ -17,7 +17,17 @@ import 'push/push_service.dart';
 import 'storage/key_value_store.dart';
 
 // Overridable infrastructure (tests swap these).
-final keyValueStoreProvider = Provider<KeyValueStore>((ref) => SecureKeyValueStore());
+/// Storage namespace (all-in-one demo build: `provider.` / `doctor.`); empty
+/// when standalone, which keeps the existing keys and data.
+final storagePrefixProvider = Provider<String>((ref) => '');
+
+/// "Switch app" callback of the all-in-one demo build; null when standalone.
+final switchAppProvider = Provider<VoidCallback?>((ref) => null);
+
+final keyValueStoreProvider = Provider<KeyValueStore>((ref) {
+  final prefix = ref.watch(storagePrefixProvider);
+  return prefix.isEmpty ? SecureKeyValueStore() : PrefixedKeyValueStore(SecureKeyValueStore(), prefix);
+});
 final connectivityProvider = Provider<ConnectivityService>((ref) => PlusConnectivityService());
 final httpClientProvider = Provider<http.Client>((ref) => http.Client());
 final clockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
@@ -48,7 +58,11 @@ final clinicianRepositoryProvider = Provider<ClinicianRepository>(
 
 /// Public config (§21): support contacts, legal links, minimum app version.
 final publicConfigProvider = Provider<PublicConfigController>((ref) {
-  final c = PublicConfigController(api: ref.watch(apiClientProvider), appVersion: ref.watch(appVersionReaderProvider));
+  final c = PublicConfigController(
+    api: ref.watch(apiClientProvider),
+    appVersion: ref.watch(appVersionReaderProvider),
+    storagePrefix: ref.watch(storagePrefixProvider),
+  );
   ref.onDispose(c.dispose);
   return c;
 });
@@ -61,7 +75,7 @@ final pushServiceProvider = Provider<PushService>((ref) {
 });
 
 final localeControllerProvider = Provider<LocaleController>((ref) {
-  final c = LocaleController();
+  final c = LocaleController(keyPrefix: ref.watch(storagePrefixProvider));
   ref.onDispose(c.dispose);
   return c;
 });

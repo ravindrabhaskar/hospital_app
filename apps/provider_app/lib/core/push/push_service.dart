@@ -83,6 +83,7 @@ class PushService {
   bool _signedIn = false;
   String? _registeredToken;
   StreamSubscription<String>? _tokenSub;
+  final _messageSubs = <StreamSubscription<RemoteMessage>>[];
 
   /// True once Firebase initialised successfully.
   bool get isActive => _active;
@@ -108,7 +109,8 @@ class PushService {
     if (_active) return true;
     if (!settings.isConfigured || !_supportedPlatform) return false;
     try {
-      await Firebase.initializeApp(options: settings.toOptions());
+      // Already initialised once per process (e.g. by the all-in-one demo build).
+      if (Firebase.apps.isEmpty) await Firebase.initializeApp(options: settings.toOptions());
       FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
 
       await _local.initialize(
@@ -128,8 +130,8 @@ class PushService {
 
       final messaging = FirebaseMessaging.instance;
       await messaging.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
-      FirebaseMessaging.onMessage.listen(_showForeground);
-      FirebaseMessaging.onMessageOpenedApp.listen((m) => _openDeepLink(_deepLinkOf(m)));
+      _messageSubs.add(FirebaseMessaging.onMessage.listen(_showForeground));
+      _messageSubs.add(FirebaseMessaging.onMessageOpenedApp.listen((m) => _openDeepLink(_deepLinkOf(m))));
       _tokenSub = messaging.onTokenRefresh.listen((token) {
         if (_signedIn) unawaited(_register(token));
       });
@@ -236,6 +238,10 @@ class PushService {
 
   void dispose() {
     _tokenSub?.cancel();
+    for (final s in _messageSubs) {
+      s.cancel();
+    }
+    _messageSubs.clear();
     _openVisit.close();
   }
 }

@@ -145,6 +145,7 @@ class PushService {
   bool _signedIn = false;
   String? _token;
   StreamSubscription<String>? _refreshSub;
+  final _messageSubs = <StreamSubscription<RemoteMessage>>[];
   final _local = FlutterLocalNotificationsPlugin();
 
   /// Web push would need a VAPID key and service worker; not enabled.
@@ -182,10 +183,11 @@ class PushService {
       // iOS shows foreground notifications natively; Android uses a local one.
       await messaging.setForegroundNotificationPresentationOptions(
           alert: true, badge: true, sound: true);
-      FirebaseMessaging.onMessage.listen((m) {
+      _messageSubs.add(FirebaseMessaging.onMessage.listen((m) {
         if (defaultTargetPlatform == TargetPlatform.android) _showLocal(_local, m);
-      });
-      FirebaseMessaging.onMessageOpenedApp.listen((m) => _open(m.data['deepLink']?.toString()));
+      }));
+      _messageSubs.add(
+          FirebaseMessaging.onMessageOpenedApp.listen((m) => _open(m.data['deepLink']?.toString())));
       final initial = await messaging.getInitialMessage();
       if (initial != null) _open(initial.data['deepLink']?.toString());
       _initialized = true;
@@ -245,6 +247,17 @@ class PushService {
     } catch (e) {
       debugPrint('Push registration failed: $e');
     }
+  }
+
+  /// Stops listening to FCM streams (the app was unmounted, e.g. by "Switch
+  /// app" in the all-in-one demo build). Standalone, it lives as long as the app.
+  void dispose() {
+    _refreshSub?.cancel();
+    _refreshSub = null;
+    for (final s in _messageSubs) {
+      s.cancel();
+    }
+    _messageSubs.clear();
   }
 
   /// Removes this device's token on logout (no-op when unconfigured).

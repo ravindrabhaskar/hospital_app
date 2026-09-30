@@ -139,6 +139,22 @@ class ProfileScreen extends ConsumerWidget {
               ],
             ),
           ),
+          if (ref.watch(switchAppProvider) case final switchApp?) ...[
+            const SizedBox(height: Space.lg),
+            // All-in-one demo build only: back to the role chooser.
+            CcCard(
+              padding: EdgeInsets.zero,
+              child: ListTile(
+                key: const Key('switchApp'),
+                minTileHeight: 56,
+                leading: Icon(Icons.swap_horiz, color: context.textStrong),
+                title: const Text('Switch app', style: TextStyle(fontWeight: FontWeight.w500)),
+                subtitle: const Text('Back to the app chooser', style: TextStyle(fontSize: 12.5)),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: switchApp,
+              ),
+            ),
+          ],
           const SizedBox(height: Space.lg),
           OutlinedButton.icon(
             style: OutlinedButton.styleFrom(

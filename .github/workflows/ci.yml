@@ -47,7 +47,8 @@ jobs:
   flutter:
     runs-on: ubuntu-latest
     strategy:
-      matrix: { app: [patient_app, provider_app, doctor_app] }
+      # all_in_one: the demo build bundling the three apps (path dependencies).
+      matrix: { app: [patient_app, provider_app, doctor_app, all_in_one] }
     defaults:
       run:
         working-directory: apps/${{ matrix.app }}

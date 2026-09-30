@@ -30,7 +30,16 @@ final httpClientProvider = Provider<http.Client>((ref) {
   return c;
 });
 
-final tokenStoreProvider = Provider<TokenStore>((ref) => SecureTokenStore());
+/// Storage namespace (all-in-one demo build: `patient.`); empty when standalone.
+/// Applied to the secure token keys here and to shared preferences in
+/// `buildPatientApp`.
+final storagePrefixProvider = Provider<String>((ref) => '');
+
+/// "Switch app" callback of the all-in-one demo build; null when standalone.
+final switchAppProvider = Provider<VoidCallback?>((ref) => null);
+
+final tokenStoreProvider =
+    Provider<TokenStore>((ref) => SecureTokenStore(null, ref.watch(storagePrefixProvider)));
 
 final apiClientProvider = Provider<ApiClient>((ref) {
   final client = ApiClient(
@@ -179,6 +188,7 @@ final pushServiceProvider = Provider<PushService>((ref) {
         ref.read(notificationRepositoryProvider).registerDevice(token, platform),
     unregisterToken: (token) => ref.read(notificationRepositoryProvider).unregisterDevice(token),
   );
+  ref.onDispose(service.dispose);
   return service;
 });
 

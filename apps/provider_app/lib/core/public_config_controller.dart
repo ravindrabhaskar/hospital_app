@@ -28,9 +28,12 @@ class PublicConfigController extends ChangeNotifier {
   PublicConfigController({
     required this.api,
     AppVersionReader? appVersion,
-  }) : _readVersion = appVersion ?? readPackageVersion;
+    String storagePrefix = '',
+  })  : _readVersion = appVersion ?? readPackageVersion,
+        _cacheKey = '${storagePrefix}config.public';
 
-  static const _cacheKey = 'config.public';
+  /// Shared-preferences key of the cached config ([storagePrefix] + `config.public`).
+  final String _cacheKey;
 
   final ApiClient api;
   final AppVersionReader _readVersion;
