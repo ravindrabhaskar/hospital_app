@@ -41,12 +41,16 @@ $targets = switch ($Apps) {
   default { @($Apps) }
 }
 
-if ($ApiUrl -notmatch '^https://' -and $ApiUrl -notmatch '^http://(10\.0\.2\.2|localhost|127\.0\.0\.1)(:\d+)?/') {
-  throw "ApiUrl must be https:// (production) or a local test address (http://10.0.2.2:4000/api/v1)."
-}
+$localHost = $null   # set for http:// test builds
 if ($ApiUrl -notmatch '^https://') {
+  if ($ApiUrl -notmatch '^http://(?<h>10\.0\.2\.2|localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?/') {
+    throw "ApiUrl must be https:// (production), the emulator address (http://10.0.2.2:4000/api/v1) or a PC on your local network (http://192.168.x.x:4000/api/v1)."
+  }
+  $localHost = $Matches['h']
   Write-Warning "Building against a LOCAL test backend ($ApiUrl). Do not upload these files to the store."
 }
+# Builds for a real phone on the local network go to dist/phone so they don't replace the emulator builds.
+$isPhoneDemo = $localHost -and $localHost -notin @('10.0.2.2', 'localhost', '127.0.0.1')
 
 foreach ($app in $targets) {
   $dir = Join-Path $root "apps/$app"
@@ -58,6 +62,13 @@ foreach ($app in $targets) {
   $symbols = Join-Path $dir 'build/symbols'
 
   Write-Host "`n=== $app $version ===" -ForegroundColor Green
+  # Release builds only allow plain HTTP to emulator/localhost hosts. For a phone demo build, allow
+  # the PC's LAN address for this build only; the file is restored afterwards.
+  $nsc = Join-Path $dir 'android/app/src/main/res/xml/network_security_config.xml'
+  $nscOriginal = if ($isPhoneDemo -and (Test-Path $nsc)) { [IO.File]::ReadAllText($nsc) } else { $null }
+  if ($nscOriginal -and $nscOriginal -notmatch [regex]::Escape(">$localHost<")) {
+    [IO.File]::WriteAllText($nsc, $nscOriginal.Replace('<domain includeSubdomains="false">localhost</domain>', "<domain includeSubdomains=`"false`">localhost</domain>`n        <domain includeSubdomains=`"false`">$localHost</domain>"))
+  }
   Push-Location $dir
   try {
     flutter pub get | Out-Null
@@ -65,9 +76,12 @@ foreach ($app in $targets) {
     if ($LASTEXITCODE -ne 0) { throw "AAB build failed for $app" }
     flutter build apk --release --obfuscate --split-debug-info=$symbols @defines
     if ($LASTEXITCODE -ne 0) { throw "APK build failed for $app" }
-  } finally { Pop-Location }
+  } finally {
+    Pop-Location
+    if ($nscOriginal) { [IO.File]::WriteAllText($nsc, $nscOriginal) }
+  }
 
-  $out = Join-Path $root "dist/android/$version"
+  $out = if ($isPhoneDemo) { Join-Path $root "dist/phone/$version" } else { Join-Path $root "dist/android/$version" }
   New-Item -ItemType Directory -Force -Path $out | Out-Null
   Copy-Item (Join-Path $dir 'build/app/outputs/bundle/release/app-release.aab') (Join-Path $out "$app-$version.aab") -Force
   Copy-Item (Join-Path $dir 'build/app/outputs/flutter-apk/app-release.apk') (Join-Path $out "$app-$version.apk") -Force
@@ -86,4 +100,4 @@ foreach ($app in $targets) {
   $owner = ($aabCert -split "`n" | Where-Object { $_ -match 'Owner:' } | Select-Object -First 1)
   Write-Host "Signed by: $("$owner".Trim())"
 }
-Write-Host "`nRelease files: $(Join-Path $root 'dist/android')" -ForegroundColor Green
+Write-Host "`nRelease files: $(if ($isPhoneDemo) { Join-Path $root 'dist/phone' } else { Join-Path $root 'dist/android' })" -ForegroundColor Green
