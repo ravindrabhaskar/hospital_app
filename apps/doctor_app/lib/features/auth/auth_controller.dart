@@ -149,14 +149,18 @@ class AuthController extends ChangeNotifier {
   }
 
   /// Logs out and wipes local data.
-  Future<void> logout() async {
+  /// [timeout] bounds each server call (used when switching servers, where the
+  /// old server may be unreachable); the local wipe always happens.
+  Future<void> logout({Duration? timeout}) async {
+    Future<void> bounded(Future<void> f) => timeout == null ? f : f.timeout(timeout);
     try {
-      await beforeLogout?.call();
+      final before = beforeLogout?.call();
+      if (before != null) await bounded(before);
     } catch (_) {}
     final refresh = tokens.refreshToken;
     if (refresh != null) {
       try {
-        await authRepository.logout(refresh);
+        await bounded(authRepository.logout(refresh));
       } catch (_) {
         // Server-side revoke is best effort; local wipe always happens.
       }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/locale_controller.dart';
 import '../../core/providers.dart';
+import '../../core/server/server_actions.dart';
 import '../../core/theme.dart';
 import '../../models/public_config.dart';
 import '../../ui/l10n_helpers.dart';
@@ -294,6 +295,23 @@ class ProfileScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+                if (ref.watch(serverSettingsProvider) case final server when server.overrideAllowed) ...[
+                  const SizedBox(height: 12),
+                  // Demo / QA builds only: point the app at another backend.
+                  Card(
+                    child: ListenableBuilder(
+                      listenable: server,
+                      builder: (context, _) => ListTile(
+                        key: const Key('serverAddress'),
+                        leading: const Icon(Icons.dns_outlined),
+                        title: Text(l.serverAddressTitle),
+                        subtitle: Text(server.host),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => openServerAddressDialog(context),
+                      ),
+                    ),
+                  ),
+                ],
                 if (ref.watch(switchAppProvider) case final switchApp?) ...[
                   const SizedBox(height: 12),
                   // All-in-one demo build only: back to the role chooser.

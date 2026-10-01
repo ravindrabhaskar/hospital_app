@@ -443,5 +443,21 @@
   "slotLunch": "दोपहर का भोजन",
   "slotEvening": "शाम का नाश्ता",
   "slotDinner": "रात का भोजन",
-  "slotBedtime": "सोने से पहले"
+  "slotBedtime": "सोने से पहले",
+  "serverChip": "सर्वर: {host}",
+  "serverAddressTitle": "सर्वर पता",
+  "serverAddressHelp": "केयरकम्पैनियन सर्वर का पता डालें, जैसे 10.10.17.134, http://10.10.17.134:4000 या टनल लिंक https://xyz.trycloudflare.com।",
+  "serverAddressLabel": "सर्वर URL या IP पता",
+  "serverAddressInvalid": "ऐसा पता डालें: 10.10.17.134 या https://example.com",
+  "serverTestConnection": "कनेक्शन जाँचें",
+  "serverTesting": "कनेक्शन जाँचा जा रहा है…",
+  "serverConnectedVersion": "कनेक्ट हो गया। सर्वर संस्करण {version}",
+  "serverCantReach": "सर्वर तक नहीं पहुँच पा रहे: जाँचें कि PC पर START-CARECOMPANION.bat चल रहा है और फ़ोन उसी नेटवर्क पर है, या टनल लिंक इस्तेमाल करें।",
+  "serverNotCareCompanion": "सर्वर ने जवाब दिया (HTTP {status}), लेकिन यह केयरकम्पैनियन API नहीं है। पता जाँचें।",
+  "serverSave": "सहेजें",
+  "serverReset": "डिफ़ॉल्ट पर लौटाएँ",
+  "serverDefaultIs": "डिफ़ॉल्ट: {url}",
+  "serverSignOutWarning": "सर्वर बदलने पर आप लॉग आउट हो जाएँगे।",
+  "serverCantReachAt": "{host} पर सर्वर तक नहीं पहुँच पा रहे",
+  "serverChange": "सर्वर बदलें"
 }

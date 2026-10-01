@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DEMO builds only (Gradle property -PdemoCleartext=true, set by
+     scripts/build-android-release.ps1 -Demo). Allows plain HTTP to any host so a
+     tester can point the app at a PC on the local network with the in-app
+     "Server address" setting. Store builds use network_security_config.xml. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

@@ -36,18 +36,22 @@ flutter build apk --release --dart-define=API_BASE_URL=http://10.0.2.2:4000/api/
 
 `API_BASE_URL` (and the optional `FIREBASE_*` values) are passed through unchanged to all three apps, which read them as usual. Without `API_BASE_URL` the defaults are `http://10.0.2.2:4000/api/v1` on Android and `http://localhost:4000/api/v1` elsewhere.
 
-Or use the release script from the repo root. It builds the APK only (no AAB) into `dist/android/<version>/all_in_one-<version>.apk`, or `dist/phone/...` for a LAN IP, for which it adds that IP to the network security config for the duration of the build:
+Or use the release script from the repo root. It builds the APK only (no AAB) into `dist/android/<version>/all_in_one-<version>.apk`. With `-Demo` (implied by a LAN IP) it builds a demo APK into `dist/demo/<version>/` that has the runtime server address setting and allows cleartext HTTP to any host:
 
 ```powershell
 ./scripts/build-android-release.ps1 -ApiUrl http://10.0.2.2:4000/api/v1 -Apps all_in_one
-./scripts/build-android-release.ps1 -ApiUrl http://192.168.1.20:4000/api/v1 -Apps everything   # 3 store apps + this one
+./scripts/build-android-release.ps1 -ApiUrl http://10.10.17.134:4000/api/v1 -Apps everything -Demo   # 3 apps + this one, for real phones
 ```
 
 `START-CARECOMPANION.bat` / `scripts/start-local.ps1` install this APK on the emulator as well, when it has been built.
 
-**Signing:** `android/key.properties` (same format as the other apps, never committed). Without it, the release build is signed with the debug key and Gradle prints a warning. That is fine for a demo APK, and the release script allows it for this app only. Release builds use R8 with the union of the three apps' keep rules (`android/app/proguard-rules.pro`). Cleartext HTTP is allowed only for `10.0.2.2`, `localhost` and `127.0.0.1` (`android/app/src/main/res/xml/network_security_config.xml`).
+**Signing:** `android/key.properties` (same format as the other apps, never committed). Without it, the release build is signed with the debug key and Gradle prints a warning. That is fine for a demo APK, and the release script allows it for this app only. Release builds use R8 with the union of the three apps' keep rules (`android/app/proguard-rules.pro`). Cleartext HTTP is allowed only for `10.0.2.2`, `localhost` and `127.0.0.1` (`android/app/src/main/res/xml/network_security_config.xml`), except in demo builds made with the Gradle property `demoCleartext=true` (`flutter build apk -P demoCleartext=true`), which use `network_security_config_demo.xml`.
 
 **Icon and splash:** generated from the three app icons by `docs/design/brand/all_in_one/generate_icon.py` (needs Pillow). The script also exports the chooser's role icons to `assets/roles/`. To regenerate the icon and splash, run `python generate_icon.py` in that folder, then `dart run flutter_launcher_icons && dart run flutter_native_splash:create` here.
+
+## Testing on a real phone: server address
+
+Each bundled app has the runtime **Server address** setting: a "Server: <host>" chip on its login or phone-number screen, and an entry in Profile (patient, provider) or More (doctor). It is stored under the global, unprefixed key `server.baseUrl.override`, so **the three roles share one server setting**: change it in one role and the others use it too (`test/server_setting_test.dart`). It is only available when `API_BASE_URL` is not https or the build passes `--dart-define=ALLOW_SERVER_OVERRIDE=true`. See the apps' READMEs and `docs/MOBILE_RELEASE.md`.
 
 ## Demo logins (dev seed, OTP `123456`)
 

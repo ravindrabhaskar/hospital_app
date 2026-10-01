@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/api/api_exception.dart';
 import '../../core/providers.dart';
+import '../../core/server/server_actions.dart';
+import '../../core/server/server_address_dialog.dart';
 import '../../core/theme.dart';
 import '../../ui/l10n_helpers.dart';
 
@@ -23,6 +26,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String? _devOtp;
   String? _error;
 
+  /// The OTP request never reached the server (offline, wrong address...).
+  bool _unreachable = false;
+
   String get _e164 => '+91${_phone.text.trim()}';
 
   @override
@@ -37,6 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() {
       _busy = true;
       _error = null;
+      _unreachable = false;
     });
     try {
       final res = await ref.read(authRepositoryProvider).requestOtp(_e164);
@@ -45,7 +52,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         _devOtp = res.devOtp;
       });
     } catch (e) {
-      setState(() => _error = errorMessage(context.l10n, e));
+      if (!mounted) return;
+      final unreachable = e is ApiException && e.isNetwork;
+      setState(() {
+        _unreachable = unreachable;
+        _error = unreachable ? null : errorMessage(context.l10n, e);
+      });
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -67,10 +79,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _changeServer() async {
+    final changed = await openServerAddressDialog(context);
+    if (changed && mounted) setState(() => _unreachable = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
     final text = Theme.of(context).textTheme;
+    final server = ref.watch(serverSettingsProvider);
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -198,6 +216,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: Text(_error!, style: const TextStyle(color: AppColors.danger)),
                     ),
                   ],
+                  if (_unreachable) ...[
+                    const SizedBox(height: 12),
+                    ServerUnreachableNotice(
+                      settings: server,
+                      onChangeServer: _changeServer,
+                      color: AppColors.danger,
+                    ),
+                  ],
+                  const SizedBox(height: 24),
+                  // Demo / QA builds only (hidden in https production builds).
+                  ServerAddressChip(settings: server, onTap: _changeServer),
                 ],
               ),
             ),

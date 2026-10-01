@@ -61,7 +61,8 @@ class ApiClient {
     this.onMfaRequired,
   }) : _http = httpClient ?? http.Client();
 
-  final String baseUrl;
+  /// Mutable: the runtime "Server address" setting re-points the client.
+  String baseUrl;
   final TokenStore tokens;
   final http.Client _http;
   String languageCode;

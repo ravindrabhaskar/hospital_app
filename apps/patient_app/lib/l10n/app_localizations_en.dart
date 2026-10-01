@@ -3151,6 +3151,67 @@ class AppLocalizationsEn extends AppLocalizations {
   String get themeDark => 'Dark';
 
   @override
+  String serverChip(String host) {
+    return 'Server: $host';
+  }
+
+  @override
+  String get serverAddressTitle => 'Server address';
+
+  @override
+  String get serverAddressHelp =>
+      'Enter the CareCompanion server address, for example 10.10.17.134, http://10.10.17.134:4000 or a tunnel link like https://xyz.trycloudflare.com.';
+
+  @override
+  String get serverAddressLabel => 'Server URL or IP address';
+
+  @override
+  String get serverAddressInvalid =>
+      'Enter an address like 10.10.17.134 or https://example.com';
+
+  @override
+  String get serverTestConnection => 'Test connection';
+
+  @override
+  String get serverTesting => 'Testing connection…';
+
+  @override
+  String serverConnectedVersion(String version) {
+    return 'Connected. Server version $version';
+  }
+
+  @override
+  String get serverCantReach =>
+      'Can\'t reach the server: check the PC is running START-CARECOMPANION.bat and the phone is on the same network, or use the tunnel link.';
+
+  @override
+  String serverNotCareCompanion(String status) {
+    return 'The server answered (HTTP $status) but it is not the CareCompanion API. Check the address.';
+  }
+
+  @override
+  String get serverSave => 'Save';
+
+  @override
+  String get serverReset => 'Reset to default';
+
+  @override
+  String serverDefaultIs(String url) {
+    return 'Default: $url';
+  }
+
+  @override
+  String get serverSignOutWarning => 'Changing the server signs you out.';
+
+  @override
+  String serverCantReachAt(String host) {
+    return 'Can\'t reach the server at $host';
+  }
+
+  @override
+  String get serverChange => 'Change server';
+
+  @override
   String get more => 'More';
 
   @override

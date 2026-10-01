@@ -1081,6 +1081,29 @@ k('themeDark', 'Dark', 'डार्क', 'డార్క్')
 
 
 # v1.3 (§41–§61) strings live in tool/arb_v13.py.
+# ---------------------------------------------------------------- Server address (demo builds)
+k('serverChip', 'Server: {host}', 'सर्वर: {host}', 'సర్వర్: {host}')
+P['serverChip'] = {'host': 'String'}
+k('serverAddressTitle', 'Server address', 'सर्वर पता', 'సర్వర్ చిరునామా')
+k('serverAddressHelp', 'Enter the CareCompanion server address, for example 10.10.17.134, http://10.10.17.134:4000 or a tunnel link like https://xyz.trycloudflare.com.', 'केयरकम्पैनियन सर्वर का पता डालें, जैसे 10.10.17.134, http://10.10.17.134:4000 या टनल लिंक https://xyz.trycloudflare.com।', 'కేర్\u200cకంపానియన్ సర్వర్ చిరునామా నమోదు చేయండి, ఉదా. 10.10.17.134, http://10.10.17.134:4000 లేదా టన్నెల్ లింక్ https://xyz.trycloudflare.com.')
+k('serverAddressLabel', 'Server URL or IP address', 'सर्वर URL या IP पता', 'సర్వర్ URL లేదా IP చిరునామా')
+k('serverAddressInvalid', 'Enter an address like 10.10.17.134 or https://example.com', 'ऐसा पता डालें: 10.10.17.134 या https://example.com', '10.10.17.134 లేదా https://example.com లాంటి చిరునామా నమోదు చేయండి')
+k('serverTestConnection', 'Test connection', 'कनेक्शन जाँचें', 'కనెక్షన్ పరీక్షించండి')
+k('serverTesting', 'Testing connection…', 'कनेक्शन जाँचा जा रहा है…', 'కనెక్షన్ పరీక్షిస్తోంది…')
+k('serverConnectedVersion', 'Connected. Server version {version}', 'कनेक्ट हो गया। सर्वर संस्करण {version}', 'కనెక్ట్ అయింది. సర్వర్ వెర్షన్ {version}')
+P['serverConnectedVersion'] = {'version': 'String'}
+k('serverCantReach', "Can't reach the server: check the PC is running START-CARECOMPANION.bat and the phone is on the same network, or use the tunnel link.", 'सर्वर तक नहीं पहुँच पा रहे: जाँचें कि PC पर START-CARECOMPANION.bat चल रहा है और फ़ोन उसी नेटवर्क पर है, या टनल लिंक इस्तेमाल करें।', 'సర్వర్\u200cను చేరుకోలేకపోతున్నాం: PCలో START-CARECOMPANION.bat నడుస్తోందని, ఫోన్ అదే నెట్\u200cవర్క్\u200cలో ఉందని తనిఖీ చేయండి, లేదా టన్నెల్ లింక్ ఉపయోగించండి.')
+k('serverNotCareCompanion', 'The server answered (HTTP {status}) but it is not the CareCompanion API. Check the address.', 'सर्वर ने जवाब दिया (HTTP {status}), लेकिन यह केयरकम्पैनियन API नहीं है। पता जाँचें।', 'సర్వర్ స్పందించింది (HTTP {status}), కానీ ఇది కేర్\u200cకంపానియన్ API కాదు. చిరునామా తనిఖీ చేయండి.')
+P['serverNotCareCompanion'] = {'status': 'String'}
+k('serverSave', 'Save', 'सहेजें', 'సేవ్ చేయండి')
+k('serverReset', 'Reset to default', 'डिफ़ॉल्ट पर लौटाएँ', 'డిఫాల్ట్\u200cకు రీసెట్ చేయండి')
+k('serverDefaultIs', 'Default: {url}', 'डिफ़ॉल्ट: {url}', 'డిఫాల్ట్: {url}')
+P['serverDefaultIs'] = {'url': 'String'}
+k('serverSignOutWarning', 'Changing the server signs you out.', 'सर्वर बदलने पर आप लॉग आउट हो जाएँगे।', 'సర్వర్ మార్చితే మీరు లాగ్ అవుట్ అవుతారు.')
+k('serverCantReachAt', "Can't reach the server at {host}", '{host} पर सर्वर तक नहीं पहुँच पा रहे', '{host} వద్ద సర్వర్\u200cను చేరుకోలేకపోతున్నాం')
+P['serverCantReachAt'] = {'host': 'String'}
+k('serverChange', 'Change server', 'सर्वर बदलें', 'సర్వర్ మార్చండి')
+
 import sys  # noqa: E402
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from arb_v13 import register  # noqa: E402

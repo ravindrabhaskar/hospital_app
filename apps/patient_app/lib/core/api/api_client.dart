@@ -69,7 +69,8 @@ class ApiClient {
   })  : _http = httpClient,
         _tokens = tokenStore;
 
-  final String baseUrl;
+  /// Mutable: the runtime "Server address" setting re-points the client.
+  String baseUrl;
   final http.Client _http;
   final TokenStore _tokens;
   String Function()? languageCode;

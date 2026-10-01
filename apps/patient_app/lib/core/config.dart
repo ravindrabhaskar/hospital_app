@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'server/server_settings.dart';
+
 /// Runtime configuration. The API base URL comes from
 /// `--dart-define=API_BASE_URL=...`; otherwise a sensible local default is
 /// used (Android emulator reaches the host machine through 10.0.2.2).
@@ -15,6 +17,12 @@ class AppConfig {
     }
     return 'http://localhost:4000/api/v1';
   }
+
+  /// Whether the runtime "Server address" override is available: non-https
+  /// (development / demo) builds, or `--dart-define=ALLOW_SERVER_OVERRIDE=true`.
+  /// Always false for https production builds.
+  static bool get serverOverrideAllowed =>
+      ServerSettings.isOverrideAllowed(compiledBaseUrl: apiBaseUrl, allowFlag: ServerSettings.allowFlag);
 
   static String _stripSlash(String v) =>
       v.endsWith('/') ? v.substring(0, v.length - 1) : v;

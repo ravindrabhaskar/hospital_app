@@ -26,7 +26,7 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <application
         android:label="CareCompanion All-in-One"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:networkSecurityConfig="${networkSecurityConfig}"
         android:allowBackup="false"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

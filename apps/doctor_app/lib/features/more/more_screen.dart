@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/locale_controller.dart';
 import '../../core/providers.dart';
+import '../../core/server/server_actions.dart';
 import '../../core/theme.dart';
 import '../../ui/l10n_helpers.dart';
 import '../../ui/widgets.dart';
@@ -83,6 +84,24 @@ class MoreScreen extends ConsumerWidget {
             SectionCard(
               title: l.supportTitle,
               child: SupportContactButtons(support: cfg.support),
+            ),
+          ],
+          if (ref.watch(serverSettingsProvider) case final server when server.overrideAllowed) ...[
+            gap12,
+            // Demo / QA builds only: point the app at another backend.
+            Card(
+              child: ListenableBuilder(
+                listenable: server,
+                builder: (context, _) => ListTile(
+                  key: const Key('more.serverAddress'),
+                  minVerticalPadding: 12,
+                  leading: const Icon(Icons.dns_outlined, color: AppColors.primary),
+                  title: Text(l.serverAddressTitle),
+                  subtitle: Text(server.host),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => openServerAddressDialog(context),
+                ),
+              ),
             ),
           ],
           if (ref.watch(switchAppProvider) case final switchApp?) ...[

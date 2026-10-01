@@ -12,6 +12,7 @@ import '../core/api/api_exception.dart';
 import '../core/api/token_store.dart';
 import '../core/config.dart';
 import '../core/push/push_service.dart';
+import '../core/server/server_settings.dart';
 import '../data/repositories.dart';
 import '../models/auth.dart';
 import '../models/config.dart';
@@ -41,12 +42,26 @@ final switchAppProvider = Provider<VoidCallback?>((ref) => null);
 final tokenStoreProvider =
     Provider<TokenStore>((ref) => SecureTokenStore(null, ref.watch(storagePrefixProvider)));
 
+/// Runtime "Server address" (demo builds). `buildPatientApp` overrides it with
+/// the persisted setting (global, unprefixed key); the default here has no
+/// override and simply uses the compiled `API_BASE_URL`.
+final serverSettingsProvider = Provider<ServerSettings>((ref) {
+  final s = ServerSettings(defaultUrl: AppConfig.apiBaseUrl, overrideAllowed: AppConfig.serverOverrideAllowed);
+  ref.onDispose(s.dispose);
+  return s;
+});
+
 final apiClientProvider = Provider<ApiClient>((ref) {
+  final server = ref.watch(serverSettingsProvider);
   final client = ApiClient(
-    baseUrl: AppConfig.apiBaseUrl,
+    baseUrl: server.effectiveUrl,
     httpClient: ref.watch(httpClientProvider),
     tokenStore: ref.watch(tokenStoreProvider),
   );
+  // A changed server address applies immediately, without a restart.
+  void followServer() => client.baseUrl = server.effectiveUrl;
+  server.addListener(followServer);
+  ref.onDispose(() => server.removeListener(followServer));
   client.languageCode = () => ref.read(localeProvider).languageCode;
   client.onSessionExpired = () => ref.read(sessionProvider.notifier).expire();
   client.onSessionRefreshed = (json) {
@@ -333,15 +348,18 @@ class SessionNotifier extends Notifier<SessionState> {
     }
   }
 
-  Future<void> logout() async {
+  /// [timeout] bounds each server call (used when switching servers, where the
+  /// old server may be unreachable); local sign-out always happens.
+  Future<void> logout({Duration? timeout}) async {
+    Future<void> bounded(Future<void> f) => timeout == null ? f : f.timeout(timeout);
     final t = await _tokens.read();
     if (t != null) {
       // Stop pushes to this device while the access token is still valid.
       try {
-        await ref.read(pushServiceProvider).unregister();
+        await bounded(ref.read(pushServiceProvider).unregister());
       } catch (_) {}
       try {
-        await ref.read(authRepositoryProvider).logout(t.refreshToken);
+        await bounded(ref.read(authRepositoryProvider).logout(t.refreshToken));
       } catch (_) {
         // Logging out locally must always succeed.
       }

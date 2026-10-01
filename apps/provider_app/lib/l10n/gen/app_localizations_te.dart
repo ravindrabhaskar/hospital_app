@@ -1536,4 +1536,65 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get slotBedtime => 'పడుకునే ముందు';
+
+  @override
+  String serverChip(String host) {
+    return 'సర్వర్: $host';
+  }
+
+  @override
+  String get serverAddressTitle => 'సర్వర్ చిరునామా';
+
+  @override
+  String get serverAddressHelp =>
+      'కేర్‌కంపానియన్ సర్వర్ చిరునామా నమోదు చేయండి, ఉదా. 10.10.17.134, http://10.10.17.134:4000 లేదా టన్నెల్ లింక్ https://xyz.trycloudflare.com.';
+
+  @override
+  String get serverAddressLabel => 'సర్వర్ URL లేదా IP చిరునామా';
+
+  @override
+  String get serverAddressInvalid =>
+      '10.10.17.134 లేదా https://example.com లాంటి చిరునామా నమోదు చేయండి';
+
+  @override
+  String get serverTestConnection => 'కనెక్షన్ పరీక్షించండి';
+
+  @override
+  String get serverTesting => 'కనెక్షన్ పరీక్షిస్తోంది…';
+
+  @override
+  String serverConnectedVersion(String version) {
+    return 'కనెక్ట్ అయింది. సర్వర్ వెర్షన్ $version';
+  }
+
+  @override
+  String get serverCantReach =>
+      'సర్వర్‌ను చేరుకోలేకపోతున్నాం: PCలో START-CARECOMPANION.bat నడుస్తోందని, ఫోన్ అదే నెట్‌వర్క్‌లో ఉందని తనిఖీ చేయండి, లేదా టన్నెల్ లింక్ ఉపయోగించండి.';
+
+  @override
+  String serverNotCareCompanion(String status) {
+    return 'సర్వర్ స్పందించింది (HTTP $status), కానీ ఇది కేర్‌కంపానియన్ API కాదు. చిరునామా తనిఖీ చేయండి.';
+  }
+
+  @override
+  String get serverSave => 'సేవ్ చేయండి';
+
+  @override
+  String get serverReset => 'డిఫాల్ట్‌కు రీసెట్ చేయండి';
+
+  @override
+  String serverDefaultIs(String url) {
+    return 'డిఫాల్ట్: $url';
+  }
+
+  @override
+  String get serverSignOutWarning => 'సర్వర్ మార్చితే మీరు లాగ్ అవుట్ అవుతారు.';
+
+  @override
+  String serverCantReachAt(String host) {
+    return '$host వద్ద సర్వర్‌ను చేరుకోలేకపోతున్నాం';
+  }
+
+  @override
+  String get serverChange => 'సర్వర్ మార్చండి';
 }

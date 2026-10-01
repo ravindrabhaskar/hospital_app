@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import 'server/server_settings.dart';
+
 /// Build-time configuration.
 ///
 /// Override the API with `--dart-define=API_BASE_URL=https://host/api/v1`.
@@ -15,6 +17,12 @@ class AppConfig {
     }
     return 'http://localhost:4000/api/v1';
   }
+
+  /// Whether the runtime "Server address" override is available: non-https
+  /// (development / demo) builds, or `--dart-define=ALLOW_SERVER_OVERRIDE=true`.
+  /// Always false for https production builds.
+  static bool get serverOverrideAllowed =>
+      ServerSettings.isOverrideAllowed(compiledBaseUrl: apiBaseUrl, allowFlag: ServerSettings.allowFlag);
 
   static const Duration requestTimeout = Duration(seconds: 20);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/server/server_actions.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
 import '../../core/utils/labels.dart';
@@ -152,6 +153,25 @@ class ProfileScreen extends ConsumerWidget {
                 subtitle: const Text('Back to the app chooser', style: TextStyle(fontSize: 12.5)),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: switchApp,
+              ),
+            ),
+          ],
+          if (ref.watch(serverSettingsProvider) case final server when server.overrideAllowed) ...[
+            const SizedBox(height: Space.lg),
+            // Demo / QA builds only: point the app at another backend.
+            CcCard(
+              padding: EdgeInsets.zero,
+              child: ListenableBuilder(
+                listenable: server,
+                builder: (context, _) => ListTile(
+                  key: const Key('serverAddress'),
+                  minTileHeight: 56,
+                  leading: Icon(Icons.dns_outlined, color: context.textStrong),
+                  title: Text(l.serverAddressTitle, style: const TextStyle(fontWeight: FontWeight.w500)),
+                  subtitle: Text(server.host, style: const TextStyle(fontSize: 12.5)),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => openServerAddressDialog(context),
+                ),
               ),
             ),
           ],

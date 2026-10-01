@@ -18,8 +18,13 @@
   Start only the backend and the web portal.
 .PARAMETER Avd
   Android Virtual Device to use (default: the first one found).
+.PARAMETER Tunnel
+  Also open a temporary public https link to the backend (Cloudflare quick tunnel, no account
+  needed) so a real phone can connect from ANY network, even mobile data. The link is shown
+  at the end and saved to PHONE-SERVER-URL.txt. Enter it in the app: login screen > "Server".
+  Anyone with the link can reach this demo backend while it runs; it only holds demo data.
 #>
-param([switch]$Reseed, [switch]$NoEmulator, [string]$Avd = '')
+param([switch]$Reseed, [switch]$NoEmulator, [string]$Avd = '', [switch]$Tunnel)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $api = Join-Path $root 'services\api'
@@ -56,6 +61,30 @@ else { Start-Process powershell -WorkingDirectory $web -ArgumentList '-NoExit', 
 
 Wait-Until 'backend' 120 { Test-Url 'http://localhost:4000/api/v1/health' } | Out-Null
 Wait-Until 'web portal' 90 { Test-Url 'http://localhost:3100/login' } | Out-Null
+
+# ---------------------------------------------------------------- phone access
+$lanUrls = @(Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue |
+  Where-Object { $_.IPAddress -notmatch '^(127\.|169\.254\.)' -and $_.InterfaceAlias -notmatch 'vEthernet|Loopback' } |
+  ForEach-Object { "http://$($_.IPAddress):4000/api/v1" })
+$tunnelUrl = $null
+if ($Tunnel) {
+  $tools = Join-Path $env:LOCALAPPDATA 'CareCompanion\tools'
+  $cf = Join-Path $tools 'cloudflared.exe'
+  if (-not (Test-Path $cf)) {
+    Write-Host 'Downloading cloudflared (Cloudflare tunnel client, first run only)...'
+    New-Item -ItemType Directory -Force -Path $tools | Out-Null
+    Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe' -OutFile $cf
+    if ((Get-AuthenticodeSignature $cf).Status -ne 'Valid') { Remove-Item $cf -Force; throw 'cloudflared download failed its signature check.' }
+  }
+  $log = Join-Path $tools 'tunnel.log'
+  Remove-Item $log -ErrorAction SilentlyContinue
+  Start-Process powershell -ArgumentList '-NoExit', '-Command', "`$host.UI.RawUI.WindowTitle='CareCompanion phone tunnel (close to stop)'; & '$cf' tunnel --no-autoupdate --url http://localhost:4000 --logfile '$log'"
+  Wait-Until 'public tunnel link' 60 {
+    if (Test-Path $log) { $m = Select-String -Path $log -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -First 1; if ($m) { $script:tunnelUrl = $m.Matches[0].Value + '/api/v1'; $true } else { $false } } else { $false }
+  } | Out-Null
+  if ($tunnelUrl) { Set-Content (Join-Path $root 'PHONE-SERVER-URL.txt') $tunnelUrl }
+  else { Write-Warning 'Could not get a tunnel link. Check the tunnel window; your network may block it.' }
+}
 
 # ---------------------------------------------------------------- emulator + apps
 if (-not $NoEmulator) {
@@ -107,6 +136,9 @@ if (-not $NoEmulator) {
   }
 }
 
+$phoneLines = if ($tunnelUrl) { "  PHONE SERVER (any network):  $tunnelUrl`n  Saved to PHONE-SERVER-URL.txt. In the app: login screen > 'Server' > paste it > Test > Save." }
+  else { "  Phone on the same Wi-Fi: in the app tap 'Server' on the login screen and enter one of:`n    " + ($lanUrls -join "`n    ") + "`n  (Wi-Fi blocked or 'Public' network? Run START-PHONE-DEMO.bat instead: it creates a tunnel link.)" }
+
 Write-Host @"
 
 CareCompanion is running.  Close the API / portal windows (or the emulator) to stop them.
@@ -120,4 +152,6 @@ CareCompanion is running.  Close the API / portal windows (or the emulator) to s
     Doctor   9800000101   Coordinator 9800000301   Ops admin 9800000401   Super admin 9800000501
     Nurse    9800000201   Applicant 9800000601     Expired credential 9800000203
     Hospital desk 9800000701   Support agent 9800000801   (doctor app: 9800000101)
+
+$phoneLines
 "@ -ForegroundColor Cyan

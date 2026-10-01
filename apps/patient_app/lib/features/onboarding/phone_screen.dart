@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/api/api_exception.dart';
+import '../../core/server/server_actions.dart';
+import '../../core/server/server_address_dialog.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
 import '../../core/widgets/common.dart';
@@ -23,6 +25,9 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
   bool _loading = false;
   String? _error;
 
+  /// The OTP request never reached the server (offline, wrong address...).
+  bool _unreachable = false;
+
   @override
   void dispose() {
     _ctrl.dispose();
@@ -39,6 +44,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
     setState(() {
       _loading = true;
       _error = null;
+      _unreachable = false;
     });
     final phone = '+91${_ctrl.text.trim()}';
     try {
@@ -49,15 +55,26 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
         'devOtp': ?res.devOtp,
       }).toString());
     } on ApiException catch (e) {
-      if (mounted) setState(() => _error = errorMessage(context, e));
+      if (mounted) {
+        setState(() {
+          _unreachable = e.isOffline;
+          _error = e.isOffline ? null : errorMessage(context, e);
+        });
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
+  Future<void> _changeServer() async {
+    final changed = await openServerAddressDialog(context);
+    if (changed && mounted) setState(() => _unreachable = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    final server = ref.watch(serverSettingsProvider);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -90,15 +107,28 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                 counterText: '',
                 errorText: _error,
               ),
-              onChanged: (_) => setState(() => _error = null),
+              onChanged: (_) => setState(() {
+                _error = null;
+                _unreachable = false;
+              }),
               onSubmitted: (_) => _submit(),
             ),
+            if (_unreachable) ...[
+              const SizedBox(height: Space.sm),
+              ServerUnreachableNotice(
+                settings: server,
+                onChangeServer: _changeServer,
+              ),
+            ],
             const SizedBox(height: Space.xxl),
             PrimaryButton(label: l.sendOtp, loading: _loading, onPressed: _submit),
             const SizedBox(height: Space.lg),
             Text(l.phoneDisclaimer,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: context.textMuted, fontSize: 12)),
+            const SizedBox(height: Space.lg),
+            // Demo / QA builds only (hidden in https production builds).
+            ServerAddressChip(settings: server, onTap: _changeServer),
           ],
         ),
       ),

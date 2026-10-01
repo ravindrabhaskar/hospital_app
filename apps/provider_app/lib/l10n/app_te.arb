@@ -443,5 +443,21 @@
   "slotLunch": "మధ్యాహ్న భోజనం",
   "slotEvening": "సాయంత్రం అల్పాహారం",
   "slotDinner": "రాత్రి భోజనం",
-  "slotBedtime": "పడుకునే ముందు"
+  "slotBedtime": "పడుకునే ముందు",
+  "serverChip": "సర్వర్: {host}",
+  "serverAddressTitle": "సర్వర్ చిరునామా",
+  "serverAddressHelp": "కేర్‌కంపానియన్ సర్వర్ చిరునామా నమోదు చేయండి, ఉదా. 10.10.17.134, http://10.10.17.134:4000 లేదా టన్నెల్ లింక్ https://xyz.trycloudflare.com.",
+  "serverAddressLabel": "సర్వర్ URL లేదా IP చిరునామా",
+  "serverAddressInvalid": "10.10.17.134 లేదా https://example.com లాంటి చిరునామా నమోదు చేయండి",
+  "serverTestConnection": "కనెక్షన్ పరీక్షించండి",
+  "serverTesting": "కనెక్షన్ పరీక్షిస్తోంది…",
+  "serverConnectedVersion": "కనెక్ట్ అయింది. సర్వర్ వెర్షన్ {version}",
+  "serverCantReach": "సర్వర్‌ను చేరుకోలేకపోతున్నాం: PCలో START-CARECOMPANION.bat నడుస్తోందని, ఫోన్ అదే నెట్‌వర్క్‌లో ఉందని తనిఖీ చేయండి, లేదా టన్నెల్ లింక్ ఉపయోగించండి.",
+  "serverNotCareCompanion": "సర్వర్ స్పందించింది (HTTP {status}), కానీ ఇది కేర్‌కంపానియన్ API కాదు. చిరునామా తనిఖీ చేయండి.",
+  "serverSave": "సేవ్ చేయండి",
+  "serverReset": "డిఫాల్ట్‌కు రీసెట్ చేయండి",
+  "serverDefaultIs": "డిఫాల్ట్: {url}",
+  "serverSignOutWarning": "సర్వర్ మార్చితే మీరు లాగ్ అవుట్ అవుతారు.",
+  "serverCantReachAt": "{host} వద్ద సర్వర్‌ను చేరుకోలేకపోతున్నాం",
+  "serverChange": "సర్వర్ మార్చండి"
 }

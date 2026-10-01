@@ -23,6 +23,7 @@ import 'locale_controller.dart';
 import 'location_reporter.dart';
 import 'public_config_controller.dart';
 import 'push/push_service.dart';
+import 'server/server_settings.dart';
 import 'storage/key_value_store.dart';
 
 // Overridable infrastructure (tests swap these).
@@ -54,11 +55,28 @@ final scaffoldMessengerKeyProvider =
 
 final tokenStoreProvider = Provider<TokenStore>((ref) => TokenStore(ref.watch(keyValueStoreProvider)));
 
-final apiClientProvider = Provider<ApiClient>((ref) => ApiClient(
-      baseUrl: AppConfig.apiBaseUrl,
-      tokens: ref.watch(tokenStoreProvider),
-      httpClient: ref.watch(httpClientProvider),
-    ));
+/// Runtime "Server address" (demo builds). The bootstraps override it with the
+/// persisted setting (global, unprefixed key); the default here has no
+/// override and simply uses the compiled `API_BASE_URL`.
+final serverSettingsProvider = Provider<ServerSettings>((ref) {
+  final s = ServerSettings(defaultUrl: AppConfig.apiBaseUrl, overrideAllowed: AppConfig.serverOverrideAllowed);
+  ref.onDispose(s.dispose);
+  return s;
+});
+
+final apiClientProvider = Provider<ApiClient>((ref) {
+  final server = ref.watch(serverSettingsProvider);
+  final client = ApiClient(
+    baseUrl: server.effectiveUrl,
+    tokens: ref.watch(tokenStoreProvider),
+    httpClient: ref.watch(httpClientProvider),
+  );
+  // A changed server address applies immediately, without a restart.
+  void followServer() => client.baseUrl = server.effectiveUrl;
+  server.addListener(followServer);
+  ref.onDispose(() => server.removeListener(followServer));
+  return client;
+});
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) => AuthRepository(ref.watch(apiClientProvider)));
 

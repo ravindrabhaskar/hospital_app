@@ -2,7 +2,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app.dart';
+import 'core/config.dart';
 import 'core/providers.dart';
+import 'core/server/server_settings.dart';
 
 /// Builds the complete provider app (what `main()` runs).
 ///
@@ -14,6 +16,12 @@ import 'core/providers.dart';
 /// * [onSwitchApp], when given, adds a "Switch app" entry to Profile.
 Future<Widget> buildProviderApp({String storagePrefix = '', VoidCallback? onSwitchApp}) async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Runtime "Server address" (demo builds). Global, unprefixed key: in the
+  // all-in-one build every role shares one server setting.
+  final server = await ServerSettings.load(
+    defaultUrl: AppConfig.apiBaseUrl,
+    overrideAllowed: AppConfig.serverOverrideAllowed,
+  );
   return ProviderScope(
     // Riverpod 3 retries failing providers by default; our screens show an
     // explicit error + retry instead.
@@ -21,6 +29,7 @@ Future<Widget> buildProviderApp({String storagePrefix = '', VoidCallback? onSwit
     overrides: [
       storagePrefixProvider.overrideWithValue(storagePrefix),
       switchAppProvider.overrideWithValue(onSwitchApp),
+      serverSettingsProvider.overrideWithValue(server),
     ],
     child: const ProviderApp(),
   );

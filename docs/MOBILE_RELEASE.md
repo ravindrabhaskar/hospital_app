@@ -49,6 +49,29 @@ Before each new store upload, raise `version:` in each app's `pubspec.yaml` (e.g
 - the variable `MOBILE_API_BASE_URL`
 - optionally `PLAY_SERVICE_ACCOUNT_JSON`
 
+### Testing on a real phone
+A phone can't reach `10.0.2.2`, and the PC's LAN address changes from network to network, so phone testing uses **demo builds** with a runtime server address.
+
+**Build the demo APKs** (APK only, never for a store):
+```powershell
+./scripts/build-android-release.ps1 -ApiUrl http://10.10.17.134:4000/api/v1 -Apps everything -Demo
+```
+- Output: `dist/demo/<version>/<app>-<version>.apk`, signed with each app's upload key (the script checks this with `apksigner`).
+- `-Demo` adds `--dart-define=ALLOW_SERVER_OVERRIDE=true` and sets the Gradle property `demoCleartext=true`, both as `ORG_GRADLE_PROJECT_demoCleartext` and as `flutter build -P` (the environment variable alone does not always reach Gradle through `flutter build`). After the build the script checks the APK manifest with `aapt2`. The Gradle property `demoCleartext` makes the manifest use `network_security_config_demo.xml`, which allows plain HTTP to any host. Store builds keep the strict `network_security_config.xml` (cleartext only to `10.0.2.2`, `localhost` and `127.0.0.1`).
+- An `-ApiUrl` with a LAN IP implies `-Demo`. `-ApiUrl` is only the default server; testers can change it in the app.
+- If Gradle runs out of memory, build one app at a time (`-Apps patient_app`, and so on) and run `./gradlew --stop` in that app's `android` folder before retrying.
+
+**Server address setting.** Demo and other non-https builds show a small "Server: <host>" chip at the bottom of the login (phone-number) screen, and a **Server address** entry in Profile (patient, provider) or More (doctor). In the dialog:
+- type `10.10.17.134` (becomes `http://10.10.17.134:4000/api/v1`), `http://host:port` (`/api/v1` is appended) or a tunnel link such as `https://xyz.trycloudflare.com`;
+- **Test connection** calls `GET <url>/health` and shows the server version, or "Can't reach the server: check the PC is running START-CARECOMPANION.bat and the phone is on the same network, or use the tunnel link";
+- **Save** applies the address at once, with no restart. A signed-in user is signed out first. **Reset to default** returns to the built-in URL.
+
+If sending the OTP fails because the server can't be reached, the login screen says "Can't reach the server at <host>" and offers **Change server**. The setting is stored once per device (key `server.baseUrl.override`), so the all-in-one app's three roles share it.
+
+**Tunnel links** work from any network, including mobile data, and need no cleartext because they are https. Start one on the PC, for example `cloudflared tunnel --url http://localhost:4000`, then enter the printed `https://….trycloudflare.com` address in the app. Quick-tunnel addresses change on every start.
+
+**Safety:** an https build without `ALLOW_SERVER_OVERRIDE=true` (every store build) has no server setting, and it ignores and deletes any stored override, so it can never be redirected.
+
 ## iOS (builds on GitHub's Macs)
 
 iOS apps can only be compiled on macOS with Xcode. This PC runs Windows, so iOS builds run on GitHub Actions Mac runners (macOS 26 / Xcode 26; the current plugins use iOS 26 SDK APIs).

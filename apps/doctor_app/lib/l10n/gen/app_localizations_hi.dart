@@ -1367,4 +1367,65 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get logoutConfirmBody =>
       'दोबारा साइन इन करने के लिए फ़ोन OTP और ऑथेंटिकेटर कोड चाहिए होगा।';
+
+  @override
+  String serverChip(String host) {
+    return 'सर्वर: $host';
+  }
+
+  @override
+  String get serverAddressTitle => 'सर्वर पता';
+
+  @override
+  String get serverAddressHelp =>
+      'केयरकम्पैनियन सर्वर का पता डालें, जैसे 10.10.17.134, http://10.10.17.134:4000 या टनल लिंक https://xyz.trycloudflare.com।';
+
+  @override
+  String get serverAddressLabel => 'सर्वर URL या IP पता';
+
+  @override
+  String get serverAddressInvalid =>
+      'ऐसा पता डालें: 10.10.17.134 या https://example.com';
+
+  @override
+  String get serverTestConnection => 'कनेक्शन जाँचें';
+
+  @override
+  String get serverTesting => 'कनेक्शन जाँचा जा रहा है…';
+
+  @override
+  String serverConnectedVersion(String version) {
+    return 'कनेक्ट हो गया। सर्वर संस्करण $version';
+  }
+
+  @override
+  String get serverCantReach =>
+      'सर्वर तक नहीं पहुँच पा रहे: जाँचें कि PC पर START-CARECOMPANION.bat चल रहा है और फ़ोन उसी नेटवर्क पर है, या टनल लिंक इस्तेमाल करें।';
+
+  @override
+  String serverNotCareCompanion(String status) {
+    return 'सर्वर ने जवाब दिया (HTTP $status), लेकिन यह केयरकम्पैनियन API नहीं है। पता जाँचें।';
+  }
+
+  @override
+  String get serverSave => 'सहेजें';
+
+  @override
+  String get serverReset => 'डिफ़ॉल्ट पर लौटाएँ';
+
+  @override
+  String serverDefaultIs(String url) {
+    return 'डिफ़ॉल्ट: $url';
+  }
+
+  @override
+  String get serverSignOutWarning => 'सर्वर बदलने पर आप लॉग आउट हो जाएँगे।';
+
+  @override
+  String serverCantReachAt(String host) {
+    return '$host पर सर्वर तक नहीं पहुँच पा रहे';
+  }
+
+  @override
+  String get serverChange => 'सर्वर बदलें';
 }

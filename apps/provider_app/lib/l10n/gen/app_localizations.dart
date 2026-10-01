@@ -2768,6 +2768,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bedtime'**
   String get slotBedtime;
+
+  /// No description provided for @serverChip.
+  ///
+  /// In en, this message translates to:
+  /// **'Server: {host}'**
+  String serverChip(String host);
+
+  /// No description provided for @serverAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server address'**
+  String get serverAddressTitle;
+
+  /// No description provided for @serverAddressHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the CareCompanion server address, for example 10.10.17.134, http://10.10.17.134:4000 or a tunnel link like https://xyz.trycloudflare.com.'**
+  String get serverAddressHelp;
+
+  /// No description provided for @serverAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Server URL or IP address'**
+  String get serverAddressLabel;
+
+  /// No description provided for @serverAddressInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an address like 10.10.17.134 or https://example.com'**
+  String get serverAddressInvalid;
+
+  /// No description provided for @serverTestConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Test connection'**
+  String get serverTestConnection;
+
+  /// No description provided for @serverTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing connection…'**
+  String get serverTesting;
+
+  /// No description provided for @serverConnectedVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected. Server version {version}'**
+  String serverConnectedVersion(String version);
+
+  /// No description provided for @serverCantReach.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach the server: check the PC is running START-CARECOMPANION.bat and the phone is on the same network, or use the tunnel link.'**
+  String get serverCantReach;
+
+  /// No description provided for @serverNotCareCompanion.
+  ///
+  /// In en, this message translates to:
+  /// **'The server answered (HTTP {status}) but it is not the CareCompanion API. Check the address.'**
+  String serverNotCareCompanion(String status);
+
+  /// No description provided for @serverSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get serverSave;
+
+  /// No description provided for @serverReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to default'**
+  String get serverReset;
+
+  /// No description provided for @serverDefaultIs.
+  ///
+  /// In en, this message translates to:
+  /// **'Default: {url}'**
+  String serverDefaultIs(String url);
+
+  /// No description provided for @serverSignOutWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Changing the server signs you out.'**
+  String get serverSignOutWarning;
+
+  /// No description provided for @serverCantReachAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t reach the server at {host}'**
+  String serverCantReachAt(String host);
+
+  /// No description provided for @serverChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Change server'**
+  String get serverChange;
 }
 
 class _AppLocalizationsDelegate

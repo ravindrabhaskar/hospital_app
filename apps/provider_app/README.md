@@ -34,6 +34,19 @@ Start the backend first (`services/api`: `npm run seed && npm run dev`, port 400
 
 In dev the API returns `devOtp`, and the login screen shows it as a hint.
 
+## Testing on a real phone: server address
+
+The backend URL is compiled in (`API_BASE_URL`), but non-production builds also have a runtime **Server address** setting, so a tester can point the app at any backend without rebuilding:
+
+- **Login screen:** a small "Server: <host>" chip at the bottom. If sending the OTP fails because the server can't be reached, the screen says "Can't reach the server at <host>" with a **Change server** button.
+- **Profile → Server address** for signed-in users. Changing it signs you out first, because tokens belong to a server.
+
+The dialog accepts `http(s)://host[:port]` (`/api/v1` is appended when missing), a bare IP such as `10.10.17.134` (becomes `http://10.10.17.134:4000/api/v1`) or an https tunnel link such as `https://xyz.trycloudflare.com`. **Test connection** calls `GET <url>/health` and shows the server version, or explains what to check. **Save** applies the address immediately, with no restart. **Reset to default** returns to the compiled URL. The value is stored in shared preferences under the global key `server.baseUrl.override`, so in the all-in-one build the three roles share one setting.
+
+The setting exists only when the compiled `API_BASE_URL` is not https, or when the build passes `--dart-define=ALLOW_SERVER_OVERRIDE=true`. An https production build can't set or use an override (unit-tested in `test/server_settings_test.dart`). The code is in `lib/core/server/`.
+
+Release builds allow cleartext HTTP only to `10.0.2.2`, `localhost` and `127.0.0.1`. For a LAN IP entered at runtime, build with the Gradle property `demoCleartext=true` (`flutter build apk -P demoCleartext=true`, or `ORG_GRADLE_PROJECT_demoCleartext=true` for plain Gradle). It selects `network_security_config_demo.xml` through a manifest placeholder. `scripts/build-android-release.ps1 -Demo` does all of this; see `docs/MOBILE_RELEASE.md`. https tunnel links work in every build that allows the override.
+
 ## Quality gates
 
 ```bash
@@ -226,6 +239,7 @@ dart run flutter_native_splash:create
 | Define | Required | Purpose |
 |---|---|---|
 | `API_BASE_URL` | yes (prod) | e.g. `https://api.carecompanion.in/api/v1` |
+| `ALLOW_SERVER_OVERRIDE` | demo only | `true` enables the runtime "Server address" setting even when `API_BASE_URL` is https. Never set it for store builds. |
 | `FIREBASE_API_KEY` | for push | Firebase app API key |
 | `FIREBASE_APP_ID` | for push | Firebase app id (the Android id for Android builds, the iOS id for iOS builds) |
 | `FIREBASE_MESSAGING_SENDER_ID` | for push | Firebase project number |

@@ -23,7 +23,7 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <application
         android:label="CareCompanion"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:networkSecurityConfig="${networkSecurityConfig}"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'core/config.dart';
+import 'core/server/server_settings.dart';
 import 'core/storage/namespaced_prefs.dart';
 import 'state/core_providers.dart';
 
@@ -22,6 +23,12 @@ Future<Widget> buildPatientApp({String storagePrefix = '', VoidCallback? onSwitc
   try {
     version = (await PackageInfo.fromPlatform()).version;
   } catch (_) {}
+  // Global (unprefixed) key: all-in-one roles share one server setting.
+  final server = await ServerSettings.load(
+    defaultUrl: AppConfig.apiBaseUrl,
+    overrideAllowed: AppConfig.serverOverrideAllowed,
+    prefs: prefs,
+  );
   return ProviderScope(
     // Retries are user-driven (Retry buttons), never automatic, so that
     // 4xx business errors are surfaced instead of silently re-sent.
@@ -31,6 +38,7 @@ Future<Widget> buildPatientApp({String storagePrefix = '', VoidCallback? onSwitc
       appVersionProvider.overrideWithValue(version),
       storagePrefixProvider.overrideWithValue(storagePrefix),
       switchAppProvider.overrideWithValue(onSwitchApp),
+      serverSettingsProvider.overrideWithValue(server),
     ],
     child: const CareCompanionApp(),
   );

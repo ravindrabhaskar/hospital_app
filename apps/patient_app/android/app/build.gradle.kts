@@ -43,6 +43,13 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+        // Network security config: the strict file (cleartext only to the emulator
+        // host / localhost) unless this is a DEMO build made with
+        // -PdemoCleartext=true (or ORG_GRADLE_PROJECT_demoCleartext=true), which
+        // allows plain HTTP to a PC on the LAN (runtime "Server address" setting).
+        val demoCleartext = project.findProperty("demoCleartext")?.toString()?.toBoolean() == true
+        manifestPlaceholders["networkSecurityConfig"] =
+            if (demoCleartext) "@xml/network_security_config_demo" else "@xml/network_security_config"
     }
 
     signingConfigs {
