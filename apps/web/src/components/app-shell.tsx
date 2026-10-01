@@ -170,7 +170,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
                     aria-current={active ? "page" : undefined}
                     className={cx(
                       "flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors",
-                      active ? "bg-primary text-white" : "text-ink hover:bg-mint-50",
+                      active ? "bg-mint-100 font-semibold text-primary-dark" : "text-ink hover:bg-mint-50",
                     )}
                   >
                     <Icon className="size-[18px]" aria-hidden />
@@ -287,7 +287,7 @@ function InboxUnreadBadge({ active }: { active: boolean }) {
     <span
       className={cx(
         "min-w-5 rounded-full px-1.5 text-center text-[11px] font-bold leading-5",
-        active ? "bg-white text-primary" : "bg-danger text-white",
+        active ? "bg-primary text-mint-100" : "bg-danger text-white",
       )}
     >
       {unread > 99 ? "99+" : unread}
@@ -388,7 +388,7 @@ export function IdleWatcher({ onTimeout }: { onTimeout: () => void }) {
 function Brand() {
   return (
     <div className="flex items-center gap-2.5 px-5 py-5">
-      <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-white" aria-hidden>
+      <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-mint-100" aria-hidden>
         <HeartPulse className="size-5" />
       </span>
       <div className="leading-tight">

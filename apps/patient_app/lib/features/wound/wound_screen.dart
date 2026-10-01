@@ -128,7 +128,7 @@ class _WoundScreenState extends ConsumerState<WoundScreen> {
                                   width: 64,
                                   height: 64,
                                   decoration: BoxDecoration(color: context.mintSurface, shape: BoxShape.circle),
-                                  child: const Icon(Icons.photo_camera_outlined, color: AppColors.primary, size: 30),
+                                  child: Icon(Icons.photo_camera_outlined, color: context.brand, size: 30),
                                 ),
                                 const SizedBox(height: Space.md),
                                 Text(l.uploadWoundPhoto, style: Theme.of(context).textTheme.titleSmall),
@@ -228,7 +228,7 @@ class WoundResultCard extends StatelessWidget {
             Row(
               children: [
                 Icon(retake ? Icons.replay : Icons.hourglass_top,
-                    color: retake ? AppColors.peachFg : AppColors.primary),
+                    color: retake ? AppColors.peachFg : context.brand),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(retake ? l.woundRetakeTitle : l.woundPendingTitle,

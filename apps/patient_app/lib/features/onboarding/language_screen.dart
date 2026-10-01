@@ -83,7 +83,7 @@ class LanguageOptionTile extends StatelessWidget {
       child: CcCard(
         onTap: onTap,
         color: selected ? context.mintSurface : null,
-        borderColor: selected ? AppColors.primary : null,
+        borderColor: selected ? context.brand : null,
         child: Row(
           children: [
             Expanded(
@@ -96,7 +96,7 @@ class LanguageOptionTile extends StatelessWidget {
               ),
             ),
             Icon(selected ? Icons.radio_button_checked : Icons.radio_button_off,
-                color: selected ? AppColors.primary : context.textMuted),
+                color: selected ? context.brand : context.textMuted),
           ],
         ),
       ),

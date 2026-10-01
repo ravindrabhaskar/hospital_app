@@ -8,7 +8,7 @@ enum DemoRole {
     headline: "I'm a patient / family member",
     appName: 'CareCompanion',
     description: 'Appointments, records, medicines, home visits and SOS for you and your family.',
-    color: Color(0xFF0B5D45),
+    color: Color(0xFF631D3F),
     asset: 'assets/roles/patient.png',
   ),
   provider(
@@ -17,7 +17,7 @@ enum DemoRole {
     headline: "I'm a home-care nurse / technician",
     appName: 'CareCompanion Pro',
     description: "Today's visits and route, the guided visit checklist, attendance and earnings.",
-    color: Color(0xFF1F8A67),
+    color: Color(0xFF8A3A62),
     asset: 'assets/roles/provider.png',
   ),
   doctor(
@@ -26,7 +26,7 @@ enum DemoRole {
     headline: "I'm a doctor",
     appName: 'CareCompanion Doctor',
     description: 'Your queue, consultations, e-prescriptions, care plans and messages.',
-    color: Color(0xFF08473A),
+    color: Color(0xFF4A142E),
     asset: 'assets/roles/doctor.png',
   );
 

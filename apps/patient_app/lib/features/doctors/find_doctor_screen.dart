@@ -191,7 +191,7 @@ class _ModeChip extends StatelessWidget {
         color: selected ? (context.isDark ? context.mintSurface : AppColors.mint100) : context.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: selected ? AppColors.primary : AppColors.border),
+          side: BorderSide(color: selected ? context.brand : AppColors.border),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
@@ -203,14 +203,14 @@ class _ModeChip extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(icon, size: 18, color: selected ? AppColors.primary : context.textMuted),
+                  Icon(icon, size: 18, color: selected ? context.brand : context.textMuted),
                   const SizedBox(width: 4),
                   Flexible(
                     child: Text(label,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             fontSize: 12.5,
-                            color: selected ? AppColors.primary : context.textStrong)),
+                            color: selected ? context.brand : context.textStrong)),
                   ),
                 ],
               ),
@@ -252,7 +252,7 @@ class SpecialtyChip extends StatelessWidget {
           decoration: BoxDecoration(
             color: selected ? AppColors.mint100 : Colors.transparent,
             borderRadius: BorderRadius.circular(Radii.tile),
-            border: Border.all(color: selected ? AppColors.primary : Colors.transparent),
+            border: Border.all(color: selected ? context.brand : Colors.transparent),
           ),
           child: Column(
             children: [

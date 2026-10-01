@@ -112,7 +112,7 @@ class _PharmacyScreenState extends ConsumerState<PharmacyScreen> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(Radii.tile),
                                       border: Border.all(
-                                          color: sel ? AppColors.primary : Colors.transparent, width: 2),
+                                          color: sel ? context.brand : Colors.transparent, width: 2),
                                     ),
                                     child: IconTile(
                                         icon: _categoryIcon(c.code), accent: accents[i % accents.length], size: 52),
@@ -270,7 +270,7 @@ class CartBar extends ConsumerWidget {
           children: [
             Badge(
               label: Text('${cart.itemCount}'),
-              child: const Icon(Icons.shopping_cart_outlined, color: AppColors.primary, size: 28),
+              child: Icon(Icons.shopping_cart_outlined, color: context.brand, size: 28),
             ),
             const SizedBox(width: Space.lg),
             Expanded(

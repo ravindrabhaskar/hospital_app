@@ -55,7 +55,7 @@ class RecordsScreen extends ConsumerWidget {
                   dividerColor: Colors.transparent,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(22)),
-                  labelColor: Colors.white,
+                  labelColor: AppColors.mint100,
                   splashBorderRadius: BorderRadius.circular(22),
                   unselectedLabelColor: context.textMuted,
                   labelPadding: EdgeInsets.zero,

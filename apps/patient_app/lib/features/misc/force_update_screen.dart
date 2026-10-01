@@ -42,7 +42,7 @@ class ForceUpdateScreen extends ConsumerWidget {
                   width: 96,
                   height: 96,
                   decoration: const BoxDecoration(color: AppColors.mint100, shape: BoxShape.circle),
-                  child: const Icon(Icons.system_update_rounded, size: 52, color: AppColors.primary),
+                  child: Icon(Icons.system_update_rounded, size: 52, color: context.brand),
                 ),
                 const SizedBox(height: Space.xl),
                 Semantics(

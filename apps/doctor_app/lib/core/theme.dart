@@ -4,16 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 /// Tokens from docs/product/11_DESIGN_SYSTEM.md.
 class AppColors {
   AppColors._();
-  static const primary = Color(0xFF0B5D45);
-  static const primaryDark = Color(0xFF08473A);
-  static const primaryLight = Color(0xFF1F8A67);
-  static const mint50 = Color(0xFFEEF7F2);
-  static const mint100 = Color(0xFFDDEFE5);
+  static const primary = Color(0xFF631D3F); // plum
+  static const primaryDark = Color(0xFF4A142E);
+  static const primaryLight = Color(0xFF8A3A62);
+  // `mint*` names are kept for compatibility; they now hold butter tints.
+  static const mint50 = Color(0xFFFFF6CC);
+  static const mint100 = Color(0xFFFFEC8E); // butter
   static const surface = Color(0xFFFFFFFF);
-  static const background = Color(0xFFF6FAF8);
-  static const textPrimary = Color(0xFF12211B);
-  static const textSecondary = Color(0xFF5B6B64);
-  static const border = Color(0xFFE3ECE7);
+  static const background = Color(0xFFFFFAEB);
+  static const textPrimary = Color(0xFF2B0E1C);
+  static const textSecondary = Color(0xFF6D5361);
+  static const border = Color(0xFFF0E3C2);
   static const danger = Color(0xFFD93A3A);
   static const dangerDeep = Color(0xFFB3261E);
   static const dangerBg = Color(0xFFFDE8E8);
@@ -42,7 +43,11 @@ ThemeData buildAppTheme() {
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.primary,
       primary: AppColors.primary,
-      onPrimary: Colors.white,
+      onPrimary: AppColors.mint100,
+      primaryContainer: AppColors.mint100,
+      onPrimaryContainer: AppColors.primaryDark,
+      secondaryContainer: AppColors.mint100,
+      onSecondaryContainer: AppColors.primaryDark,
       surface: AppColors.surface,
       error: AppColors.danger,
     ),
@@ -62,16 +67,23 @@ ThemeData buildAppTheme() {
     displayColor: AppColors.textPrimary,
   );
 
+  // Fraunces (a soft serif) for headings — the brand look.
+  TextStyle? serif(TextStyle? t) => t == null || !useGoogleFonts ? t : GoogleFonts.fraunces(textStyle: t);
+  final brandText = themedText.copyWith(
+    headlineMedium: serif(themedText.headlineMedium),
+    titleLarge: serif(themedText.titleLarge),
+  );
+
   final pill = RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.pillRadius));
   return base.copyWith(
-    textTheme: themedText,
+    textTheme: brandText,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.background,
       foregroundColor: AppColors.textPrimary,
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: false,
-      titleTextStyle: themedText.titleLarge,
+      titleTextStyle: brandText.titleLarge,
     ),
     cardTheme: CardThemeData(
       color: AppColors.surface,
@@ -85,7 +97,7 @@ ThemeData buildAppTheme() {
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.mint100,
         minimumSize: const Size.fromHeight(52),
         shape: pill,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -121,17 +133,29 @@ ThemeData buildAppTheme() {
       ),
     ),
     chipTheme: base.chipTheme.copyWith(
-      backgroundColor: AppColors.mint100,
+      backgroundColor: AppColors.mint50,
+      selectedColor: AppColors.mint100,
       side: BorderSide.none,
       shape: const StadiumBorder(),
     ),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      backgroundColor: AppColors.primary,
+      foregroundColor: AppColors.mint100,
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      backgroundColor: AppColors.surface,
+      indicatorColor: AppColors.mint100,
+      iconTheme: WidgetStateProperty.resolveWith((s) => IconThemeData(
+          color: s.contains(WidgetState.selected) ? AppColors.primaryDark : AppColors.textSecondary)),
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.primary),
     tabBarTheme: const TabBarThemeData(
       labelColor: AppColors.primary,
       unselectedLabelColor: AppColors.textSecondary,
       indicatorColor: AppColors.primary,
     ),
     switchTheme: SwitchThemeData(
-      thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? Colors.white : null),
+      thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? AppColors.mint100 : null),
       trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? AppColors.primary : null),
     ),
   );

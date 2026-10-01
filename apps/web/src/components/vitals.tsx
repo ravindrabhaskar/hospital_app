@@ -34,13 +34,13 @@ export function Sparkline({ points, label }: { points: { value: number; at: stri
   const last = points[points.length - 1]!;
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label} trend, ${points.length} readings, min ${min}, max ${max}`}>
-      <path d={d} fill="none" stroke="#1F8A67" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} fill="none" stroke="#8A3A62" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
       {points.map((p, i) => (
         <circle key={i} cx={x(i)} cy={y(p.value)} r={7} fill="transparent">
           <title>{`${p.value} · ${formatDateTime(p.at)}`}</title>
         </circle>
       ))}
-      <circle cx={x(points.length - 1)} cy={y(last.value)} r={4} fill="#1F8A67" stroke="#fff" strokeWidth={2} />
+      <circle cx={x(points.length - 1)} cy={y(last.value)} r={4} fill="#8A3A62" stroke="#fff" strokeWidth={2} />
     </svg>
   );
 }

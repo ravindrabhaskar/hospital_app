@@ -243,7 +243,7 @@ class _PaymentSheetState extends ConsumerState<PaymentSheet> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.phone_android, color: AppColors.primary),
+              Icon(Icons.phone_android, color: context.brand),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(

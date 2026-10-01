@@ -51,7 +51,7 @@ class EpisodeDetailScreen extends ConsumerWidget {
                     color: context.mintSurface,
                     child: Row(
                       children: [
-                        const Icon(Icons.flag_outlined, color: AppColors.primary),
+                        Icon(Icons.flag_outlined, color: context.brand),
                         const SizedBox(width: 8),
                         Expanded(child: Text(l.nextStep(e.nextAction!))),
                       ],
@@ -132,8 +132,8 @@ class EpisodeStepper extends StatelessWidget {
                         height: 22,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: i <= current ? AppColors.primary : context.surface,
-                          border: Border.all(color: i <= current ? AppColors.primary : AppColors.border, width: 2),
+                          color: i <= current ? context.brand : context.surface,
+                          border: Border.all(color: i <= current ? context.brand : AppColors.border, width: 2),
                         ),
                         child: i < current
                             ? const Icon(Icons.check, size: 14, color: Colors.white)
@@ -142,7 +142,7 @@ class EpisodeStepper extends StatelessWidget {
                                 : null,
                       ),
                       if (i < steps.length - 1)
-                        Container(width: 2, height: 18, color: i < current ? AppColors.primary : AppColors.border),
+                        Container(width: 2, height: 18, color: i < current ? context.brand : AppColors.border),
                     ],
                   ),
                   const SizedBox(width: 12),

@@ -54,7 +54,7 @@ class FamilyScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: Space.sm),
                       child: CcCard(
-                        borderColor: p.id == active?.id ? AppColors.primary : null,
+                        borderColor: p.id == active?.id ? context.brand : null,
                         onTap: () => ref.read(activePatientIdProvider.notifier).select(p.id),
                         child: Row(
                           children: [

@@ -238,7 +238,7 @@ export function CarePlanBuilder({ careEpisodeId, onCreated }: { careEpisodeId: s
         <fieldset className="rounded-xl border border-line p-3">
           <legend className="px-1 text-sm font-semibold">Follow-up</legend>
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" className="size-4 accent-[#0B5D45]" {...register("followUpEnabled")} />
+            <input type="checkbox" className="size-4 accent-[#631D3F]" {...register("followUpEnabled")} />
             Schedule a follow-up
           </label>
           {followUpEnabled && (

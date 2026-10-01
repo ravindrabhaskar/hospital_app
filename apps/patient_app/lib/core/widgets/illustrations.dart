@@ -299,8 +299,8 @@ class _HillsPainter extends CustomPainter {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: dark
-                ? const [AppColors.darkBackground, Color(0xFF132A22)]
-                : const [Color(0xFFF7FBF9), AppColors.mint50],
+                ? const [AppColors.darkBackground, Color(0xFF2A1420)]
+                : const [Color(0xFFFFFDF5), AppColors.mint50],
           ).createShader(Offset.zero & s));
     final p1 = Path()
       ..moveTo(0, h * 0.8)
@@ -309,7 +309,7 @@ class _HillsPainter extends CustomPainter {
       ..lineTo(w, h)
       ..lineTo(0, h)
       ..close();
-    canvas.drawPath(p1, Paint()..color = (dark ? const Color(0xFF1E3A30) : AppColors.mint100).withValues(alpha: 0.6));
+    canvas.drawPath(p1, Paint()..color = (dark ? const Color(0xFF3A1F2C) : AppColors.mint100).withValues(alpha: 0.6));
     final p2 = Path()
       ..moveTo(0, h * 0.9)
       ..quadraticBezierTo(w * 0.35, h * 0.75, w * 0.6, h * 0.88)
@@ -318,7 +318,7 @@ class _HillsPainter extends CustomPainter {
       ..lineTo(0, h)
       ..close();
     canvas.drawPath(p2,
-        Paint()..color = (dark ? const Color(0xFF24463A) : const Color(0xFFCFE7DA)).withValues(alpha: 0.6));
+        Paint()..color = (dark ? const Color(0xFF4A2638) : const Color(0xFFF2D7E3)).withValues(alpha: 0.6));
   }
 
   @override

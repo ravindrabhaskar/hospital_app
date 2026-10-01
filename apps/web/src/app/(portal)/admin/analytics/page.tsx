@@ -10,7 +10,7 @@ import { formatINR, formatNumber, formatPercent } from "@/lib/format";
 import { Button, Card, PageHeader, QueryView, StatTile, Table, Td, Th, cx } from "@/components/ui";
 
 /* Chart tokens. Single series → one hue (validated: passes lightness/chroma/contrast on white). */
-const SERIES = "#1F8A67";
+const SERIES = "#8A3A62";
 const GRID = "#E3ECE7";
 const INK_MUTED = "#5B6B64";
 const INK = "#12211B";

@@ -194,7 +194,7 @@ function ApproveDialog({ pack, onClose }: { pack: SafetyRulePack; onClose: () =>
           {(id, d) => <Input id={id} aria-describedby={d} aria-invalid={!!errors.reg} value={reg} onChange={(e) => setReg(e.target.value)} />}
         </Field>
         <label className="flex items-start gap-2 text-sm">
-          <input type="checkbox" className="mt-0.5 size-4 accent-[#0B5D45]" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />I confirm the
+          <input type="checkbox" className="mt-0.5 size-4 accent-[#631D3F]" checked={confirm} onChange={(e) => setConfirm(e.target.checked)} />I confirm the
           approver has clinically reviewed all {pack.ruleCount} rules.
         </label>
       </div>

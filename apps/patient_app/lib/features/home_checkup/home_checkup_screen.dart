@@ -87,7 +87,7 @@ class _HeroIllustration extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Radii.card),
           gradient: const LinearGradient(
-            colors: [AppColors.mint100, Color(0xFFF7E9DD)],
+            colors: [AppColors.mint100, Color(0xFFF7E6EE)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -101,7 +101,7 @@ class _HeroIllustration extends StatelessWidget {
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.7), shape: BoxShape.circle),
-                child: const Icon(Icons.medical_services_rounded, size: 52, color: AppColors.primary),
+                child: Icon(Icons.medical_services_rounded, size: 52, color: context.brand),
               ),
             ),
             Positioned(

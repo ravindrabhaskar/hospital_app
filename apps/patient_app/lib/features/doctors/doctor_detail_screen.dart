@@ -539,9 +539,9 @@ class DateChipRow extends StatelessWidget {
               child: Container(
                 width: 58,
                 decoration: BoxDecoration(
-                  color: sel ? AppColors.primary : context.surface,
+                  color: sel ? context.brand : context.surface,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: sel ? AppColors.primary : AppColors.border),
+                  border: Border.all(color: sel ? context.brand : AppColors.border),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -638,10 +638,10 @@ class SlotPill extends StatelessWidget {
       label: disabled ? '$label, ${context.l10n.unavailable}' : label,
       excludeSemantics: true,
       child: Material(
-        color: selected ? AppColors.primary : (disabled ? (context.isDark ? AppColors.darkBackground : AppColors.background) : context.surface),
+        color: selected ? context.brand : (disabled ? (context.isDark ? AppColors.darkBackground : AppColors.background) : context.surface),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: selected ? AppColors.primary : AppColors.border),
+          side: BorderSide(color: selected ? context.brand : AppColors.border),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -695,7 +695,7 @@ class _ModeOption extends StatelessWidget {
         color: selected ? context.mintSurface : context.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: selected ? AppColors.primary : AppColors.border, width: selected ? 1.6 : 1),
+          side: BorderSide(color: selected ? context.brand : AppColors.border, width: selected ? 1.6 : 1),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
@@ -704,7 +704,7 @@ class _ModeOption extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
             child: Column(
               children: [
-                Icon(icon, color: selected ? AppColors.primary : context.textStrong),
+                Icon(icon, color: selected ? context.brand : context.textStrong),
                 const SizedBox(height: 4),
                 Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12.5)),
                 Text(fee, style: TextStyle(fontSize: 11.5, color: context.textMuted)),

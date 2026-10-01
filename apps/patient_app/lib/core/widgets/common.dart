@@ -32,7 +32,7 @@ class CcCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: borderColor ?? (dark ? const Color(0xFF24332D) : AppColors.border)),
+        border: Border.all(color: borderColor ?? (dark ? const Color(0xFF3D2330) : AppColors.border)),
         boxShadow: dark ? null : Shadows.card,
       ),
       child: onTap == null

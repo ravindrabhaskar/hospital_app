@@ -48,7 +48,7 @@ class FamilySwitcherSheet extends ConsumerWidget {
                       padding: const EdgeInsets.only(bottom: Space.sm),
                       child: CcCard(
                         color: p.id == activeId ? context.mintSurface : null,
-                        borderColor: p.id == activeId ? AppColors.primary : null,
+                        borderColor: p.id == activeId ? context.brand : null,
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         onTap: () {
                           ref.read(activePatientIdProvider.notifier).select(p.id);
@@ -75,7 +75,7 @@ class FamilySwitcherSheet extends ConsumerWidget {
                             ),
                             Icon(
                               p.id == activeId ? Icons.check_circle : Icons.radio_button_off,
-                              color: p.id == activeId ? AppColors.primary : context.textMuted,
+                              color: p.id == activeId ? context.brand : context.textMuted,
                             ),
                           ],
                         ),

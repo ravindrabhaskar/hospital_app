@@ -39,7 +39,7 @@ class CcBottomNav extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        boxShadow: const [BoxShadow(color: Color(0x140B5D45), blurRadius: 20, offset: Offset(0, -4))],
+        boxShadow: const [BoxShadow(color: Color(0x14631D3F), blurRadius: 20, offset: Offset(0, -4))],
       ),
       padding: EdgeInsets.only(bottom: bottom),
       child: SizedBox(
@@ -95,7 +95,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = selected ? AppColors.primary : context.textMuted;
+    final color = selected ? context.brand : context.textMuted;
     return Expanded(
       child: Semantics(
         button: true,
@@ -168,7 +168,7 @@ class _AskAiButton extends StatelessWidget {
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: selected ? AppColors.primary : context.textStrong)),
+                        color: selected ? context.brand : context.textStrong)),
               ],
             ),
           ),

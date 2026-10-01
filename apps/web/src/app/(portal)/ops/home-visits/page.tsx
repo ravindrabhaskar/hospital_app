@@ -176,7 +176,7 @@ function AssignDialog({ visit, onClose }: { visit: OpsHomeVisit; onClose: () => 
                     )}
                   >
                     <span className="flex items-center gap-3">
-                      <input type="radio" name="provider" value={p.id} checked={selected === p.id} onChange={() => setSelected(p.id)} className="size-4 accent-[#0B5D45]" />
+                      <input type="radio" name="provider" value={p.id} checked={selected === p.id} onChange={() => setSelected(p.id)} className="size-4 accent-[#631D3F]" />
                       <span>
                         <span className="block font-semibold">{p.name}</span>
                         <span className="block text-xs text-ink-muted">

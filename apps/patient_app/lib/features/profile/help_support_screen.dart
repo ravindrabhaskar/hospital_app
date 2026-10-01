@@ -63,7 +63,7 @@ class HelpSupportScreen extends ConsumerWidget {
                   if (s.hasPhone)
                     ListTile(
                       key: const Key('support-call'),
-                      leading: const Icon(Icons.call_outlined, color: AppColors.primary),
+                      leading: Icon(Icons.call_outlined, color: context.brand),
                       title: Text(l.supportCall),
                       subtitle: Text(s.phone),
                       onTap: () => openExternal(context, telUri(s.phone)),
@@ -71,7 +71,7 @@ class HelpSupportScreen extends ConsumerWidget {
                   if (s.hasWhatsapp)
                     ListTile(
                       key: const Key('support-whatsapp'),
-                      leading: const Icon(Icons.chat_outlined, color: AppColors.primary),
+                      leading: Icon(Icons.chat_outlined, color: context.brand),
                       title: Text(l.supportWhatsapp),
                       subtitle: Text(s.whatsapp!),
                       onTap: () => openExternal(context, whatsappUri(s.whatsapp!)),
@@ -79,7 +79,7 @@ class HelpSupportScreen extends ConsumerWidget {
                   if (s.hasEmail)
                     ListTile(
                       key: const Key('support-email'),
-                      leading: const Icon(Icons.mail_outline, color: AppColors.primary),
+                      leading: Icon(Icons.mail_outline, color: context.brand),
                       title: Text(l.supportEmail),
                       subtitle: Text(s.email),
                       onTap: () => openExternal(context, mailUri(s.email, subject: l.supportEmailSubject)),

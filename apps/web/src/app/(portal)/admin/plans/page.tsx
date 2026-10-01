@@ -264,11 +264,11 @@ function PlanDialog({ plan, onClose }: { plan: Plan | null; onClose: () => void 
           {(id, d) => <Textarea id={id} rows={4} aria-describedby={d} {...register("benefitsText")} />}
         </Field>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" className="size-4 accent-[#0B5D45]" {...register("coordinatorIncluded")} />
+          <input type="checkbox" className="size-4 accent-[#631D3F]" {...register("coordinatorIncluded")} />
           Dedicated care coordinator included
         </label>
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" className="size-4 accent-[#0B5D45]" {...register("active")} />
+          <input type="checkbox" className="size-4 accent-[#631D3F]" {...register("active")} />
           Active (offered to patients)
         </label>
       </form>

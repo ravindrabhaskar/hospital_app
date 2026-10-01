@@ -253,7 +253,7 @@ class ActingForChip extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: Space.sm),
       child: ActionChip(
-        avatar: const Icon(Icons.family_restroom, size: 18, color: AppColors.primary),
+        avatar: Icon(Icons.family_restroom, size: 18, color: context.brand),
         label: Text(context.l10n.actingFor(patient.name)),
         onPressed: () => showFamilySwitcher(context),
       ),
@@ -328,8 +328,8 @@ class _AiHeroCardState extends State<AiHeroCard> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: context.isDark
-              ? const [Color(0xFF16262F), AppColors.darkSurface, Color(0xFF1A3028)]
-              : [Color(0xFFE3F0FA), Colors.white, context.mintSurface],
+              ? const [Color(0xFF3A1A2A), AppColors.darkSurface, Color(0xFF3A2A1E)]
+              : [Color(0xFFF7E6EE), Colors.white, context.mintSurface],
         ),
         border: Border.all(color: context.borderColor),
         boxShadow: context.isDark ? null : Shadows.card,
@@ -509,7 +509,7 @@ class CareBanner extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Color(0xFF2F6B58), Color(0xFF5E8F6E), Color(0xFF9DB98A)],
+            colors: [AppColors.primaryDark, AppColors.primary, AppColors.primaryLight],
           ),
         ),
         child: Stack(
@@ -528,7 +528,7 @@ class CareBanner extends StatelessWidget {
                 child: Text(l.bannerScript,
                     textAlign: TextAlign.right,
                     style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.mint100,
                         fontSize: 17,
                         height: 1.15,
                         fontStyle: FontStyle.italic,
@@ -552,7 +552,7 @@ class CareBanner extends StatelessWidget {
                         style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.35)),
                     const SizedBox(height: Space.lg),
                     Material(
-                      color: Colors.white,
+                      color: AppColors.mint100,
                       shape: const StadiumBorder(),
                       child: InkWell(
                         customBorder: const StadiumBorder(),
@@ -565,10 +565,10 @@ class CareBanner extends StatelessWidget {
                               Flexible(
                                 child: Text(l.exploreCarePlans,
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                                        fontWeight: FontWeight.w600, color: AppColors.primaryDark)),
                               ),
                               const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward, size: 18, color: AppColors.textPrimary),
+                              const Icon(Icons.arrow_forward, size: 18, color: AppColors.primaryDark),
                             ],
                           ),
                         ),

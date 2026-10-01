@@ -57,7 +57,7 @@ class StatusTimeline extends StatelessWidget {
   }
 
   Widget _row(BuildContext context, TimelineStep s, {required bool last}) {
-    final color = s.danger ? AppColors.danger : AppColors.primary;
+    final color = s.danger ? AppColors.danger : context.brand;
     return Semantics(
       label: [s.label, if (s.at != null) fmtDateTime(context, s.at!)].join(', '),
       selected: s.current,

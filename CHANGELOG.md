@@ -4,6 +4,9 @@ All notable changes to CareCompanion are documented here. Format based on [Keep 
 
 ## [Unreleased]
 
+### Changed
+- **Brand refresh: plum `#631D3F` and butter `#FFEC8E`** across the patient, nurse, doctor and All-in-One apps and the web portal: colour tokens, light and dark themes, Fraunces serif headings in the apps, butter-on-plum buttons and navigation, recoloured app icons, native splash screens, web manifests and the Razorpay checkout colour. The design-system doc (`docs/product/11_DESIGN_SYSTEM.md`) is updated to match.
+
 ## [0.1.0] - 2026-09-26
 
 Initial MVP scaffold for the Hyderabad controlled-pilot track. **Not clinically approved and not production-ready.** See `docs/KNOWN_LIMITATIONS.md` and `docs/LAUNCH_CHECKLIST.md`.

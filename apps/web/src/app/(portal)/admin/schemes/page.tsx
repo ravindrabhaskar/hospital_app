@@ -352,7 +352,7 @@ function SchemeDialog({ scheme, onClose }: { scheme: Scheme | null; onClose: () 
         {needsReview && (
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label className="flex items-start gap-2 text-sm">
-              <input type="checkbox" className="mt-0.5 size-4 accent-[#0B5D45]" aria-invalid={!!errors.reviewed} {...register("reviewed")} />
+              <input type="checkbox" className="mt-0.5 size-4 accent-[#631D3F]" aria-invalid={!!errors.reviewed} {...register("reviewed")} />
               {wasPublished
                 ? "I confirm these edits passed content review before they go live."
                 : "I confirm this content passed content review and may be published."}

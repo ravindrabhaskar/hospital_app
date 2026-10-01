@@ -3,22 +3,23 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
 
-  --color-primary: #0b5d45;
-  --color-primary-dark: #08473a;
-  --color-primary-light: #1f8a67;
-  --color-mint-50: #eef7f2;
-  --color-mint-100: #ddefe5;
+  --color-primary: #631d3f;
+  --color-primary-dark: #4a142e;
+  --color-primary-light: #8a3a62;
+  /* plum + butter brand; `mint-*` names now hold butter tints */
+  --color-mint-50: #fff6cc;
+  --color-mint-100: #ffec8e;
   --color-surface: #ffffff;
-  --color-background: #f6faf8;
-  --color-ink: #12211b;
-  --color-ink-muted: #5b6b64;
-  --color-line: #e3ece7;
+  --color-background: #fffaeb;
+  --color-ink: #2b0e1c;
+  --color-ink-muted: #6d5361;
+  --color-line: #f0e3c2;
   --color-danger: #d93a3a;
   --color-danger-dark: #b3261e;
   --color-warning: #f2a23a;
 
-  --color-teal-bg: #e3f4ef;
-  --color-teal-fg: #1f8a67;
+  --color-teal-bg: #f7e6ee;
+  --color-teal-fg: #8a3a62;
   --color-rose-bg: #fde8e8;
   --color-rose-fg: #c7343a;
   --color-lavender-bg: #ede9fb;
@@ -32,7 +33,7 @@
   --radius-tile: 16px;
   --radius-pill: 28px;
 
-  --shadow-card: 0 4px 16px rgba(11, 93, 69, 0.06);
+  --shadow-card: 0 4px 16px rgba(99, 29, 63, 0.08);
 }
 
 @layer base {

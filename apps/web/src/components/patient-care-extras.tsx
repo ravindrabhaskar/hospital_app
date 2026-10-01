@@ -24,7 +24,7 @@ import { Badge, Button, Card, Dialog, EmptyState, Field, Input, QueryView, Selec
 
 /* ---------------- §41 check-in history ---------------- */
 const CHECKIN_META: Record<CheckInStatus, { tone: string; label: string; short: string }> = {
-  ok: { tone: "bg-teal-bg text-primary-dark border-[#c4e6d7]", label: "Checked in", short: "OK" },
+  ok: { tone: "bg-teal-bg text-primary-dark border-[#ecc9d8]", label: "Checked in", short: "OK" },
   late: { tone: "bg-peach-bg text-peach-fg border-[#f8d9b5]", label: "Late check-in", short: "Late" },
   missed: { tone: "bg-rose-bg text-danger-dark border-[#f6c9c9]", label: "Missed", short: "✕" },
   pending: { tone: "bg-white text-ink-muted border-line border-dashed", label: "Pending", short: "…" },

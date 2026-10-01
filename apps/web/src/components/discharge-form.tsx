@@ -81,7 +81,7 @@ export function DischargeForm({ onCreated }: { onCreated: (d: Discharge) => void
               aria-current={i === step ? "step" : undefined}
               className={cx(
                 "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[13px] font-medium",
-                i === step ? "border-primary bg-primary text-white" : i < step ? "border-[#c4e6d7] bg-teal-bg text-primary-dark" : "border-line bg-white text-ink-muted",
+                i === step ? "border-primary bg-primary text-white" : i < step ? "border-[#ecc9d8] bg-teal-bg text-primary-dark" : "border-line bg-white text-ink-muted",
               )}
             >
               {i < step ? <Check className="size-3.5" aria-hidden /> : <span aria-hidden>{i + 1}.</span>} {s.label}

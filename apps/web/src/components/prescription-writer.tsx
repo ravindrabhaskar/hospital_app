@@ -169,7 +169,7 @@ function WriterForm({ appt }: { appt: Appointment }) {
   return (
     <div className="flex flex-col gap-5">
       {created && (
-        <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-[#c4e6d7] bg-teal-bg p-4">
+        <div role="status" className="flex flex-wrap items-center justify-between gap-3 rounded-[20px] border border-[#ecc9d8] bg-teal-bg p-4">
           <div className="flex items-start gap-2">
             <CheckCircle2 className="mt-0.5 size-5 text-primary" aria-hidden />
             <div>

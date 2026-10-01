@@ -43,7 +43,7 @@ class BookingSuccessScreen extends StatelessWidget {
                 width: 96,
                 height: 96,
                 decoration: const BoxDecoration(color: AppColors.mint100, shape: BoxShape.circle),
-                child: const Icon(Icons.check_rounded, size: 56, color: AppColors.primary),
+                child: Icon(Icons.check_rounded, size: 56, color: context.brand),
               ),
               const SizedBox(height: Space.xl),
               Semantics(

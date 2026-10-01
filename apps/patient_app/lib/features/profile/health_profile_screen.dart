@@ -80,7 +80,7 @@ class HealthProfileScreen extends ConsumerWidget {
                 title: l.allergies,
                 trailing: IconButton(
                   tooltip: l.addAllergy,
-                  icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
+                  icon: Icon(Icons.add_circle_outline, color: context.brand),
                   onPressed: () async {
                     final r = await showDialog<(String, String?, String?)>(
                         context: context, builder: (_) => const _AllergyDialog());
@@ -104,7 +104,7 @@ class HealthProfileScreen extends ConsumerWidget {
                 title: l.conditions,
                 trailing: IconButton(
                   tooltip: l.addCondition,
-                  icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
+                  icon: Icon(Icons.add_circle_outline, color: context.brand),
                   onPressed: () async {
                     final r = await showDialog<(String, String?)>(
                         context: context, builder: (_) => const _ConditionDialog());

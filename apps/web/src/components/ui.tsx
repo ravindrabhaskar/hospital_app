@@ -110,7 +110,7 @@ export function Card({
 export type Tone = "neutral" | "green" | "red" | "amber" | "lavender" | "sky" | "dark";
 const toneCls: Record<Tone, string> = {
   neutral: "bg-[#eef2f0] text-ink-muted border-line",
-  green: "bg-teal-bg text-primary-dark border-[#c4e6d7]",
+  green: "bg-teal-bg text-primary-dark border-[#ecc9d8]",
   red: "bg-rose-bg text-danger-dark border-[#f6c9c9]",
   amber: "bg-peach-bg text-peach-fg border-[#f8d9b5]",
   lavender: "bg-lavender-bg text-lavender-fg border-[#d9d0f7]",

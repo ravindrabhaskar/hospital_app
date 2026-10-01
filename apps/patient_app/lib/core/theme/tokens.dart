@@ -3,24 +3,25 @@ import 'package:flutter/material.dart';
 /// Design tokens from docs/product/11_DESIGN_SYSTEM.md.
 class AppColors {
   AppColors._();
-  static const primary = Color(0xFF0B5D45);
-  static const primaryDark = Color(0xFF08473A);
-  static const primaryLight = Color(0xFF1F8A67);
-  static const mint50 = Color(0xFFEEF7F2);
-  static const mint100 = Color(0xFFDDEFE5);
+  static const primary = Color(0xFF631D3F); // plum
+  static const primaryDark = Color(0xFF4A142E);
+  static const primaryLight = Color(0xFF8A3A62);
+  // `mint*` names are kept for compatibility; they now hold butter tints.
+  static const mint50 = Color(0xFFFFF6CC);
+  static const mint100 = Color(0xFFFFEC8E); // butter
   static const surface = Color(0xFFFFFFFF);
-  static const background = Color(0xFFF6FAF8);
-  static const textPrimary = Color(0xFF12211B);
-  static const textSecondary = Color(0xFF5B6B64);
-  static const border = Color(0xFFE3ECE7);
+  static const background = Color(0xFFFFFAEB);
+  static const textPrimary = Color(0xFF2B0E1C);
+  static const textSecondary = Color(0xFF6D5361);
+  static const border = Color(0xFFF0E3C2);
   static const danger = Color(0xFFD93A3A);
   static const dangerBgTop = Color(0xFFB3261E);
   static const dangerBgBottom = Color(0xFF7A1410);
   static const warning = Color(0xFFF2A23A);
 
   // Accent tiles (background, foreground)
-  static const tealBg = Color(0xFFE3F4EF);
-  static const tealFg = Color(0xFF1F8A67);
+  static const tealBg = Color(0xFFF7E6EE);
+  static const tealFg = Color(0xFF8A3A62);
   static const roseBg = Color(0xFFFDE8E8);
   static const roseFg = Color(0xFFE0474C);
   static const lavenderBg = Color(0xFFEDE9FB);
@@ -31,10 +32,10 @@ class AppColors {
   static const skyFg = Color(0xFF2F6FDE);
 
   // Dark
-  static const darkBackground = Color(0xFF0E1714);
-  static const darkSurface = Color(0xFF16221E);
-  static const darkPrimary = Color(0xFF3DBB8C);
-  static const darkText = Color(0xFFE6F0EC);
+  static const darkBackground = Color(0xFF1A0D13);
+  static const darkSurface = Color(0xFF28141E);
+  static const darkPrimary = Color(0xFFFFEC8E); // butter on plum
+  static const darkText = Color(0xFFFBF1E4);
 }
 
 class Accent {
@@ -72,10 +73,10 @@ class Radii {
 class Shadows {
   Shadows._();
   static const card = [
-    BoxShadow(color: Color(0x0F0B5D45), blurRadius: 16, offset: Offset(0, 4)),
+    BoxShadow(color: Color(0x14631D3F), blurRadius: 16, offset: Offset(0, 4)),
   ];
   static const raised = [
-    BoxShadow(color: Color(0x330B5D45), blurRadius: 18, offset: Offset(0, 6)),
+    BoxShadow(color: Color(0x33631D3F), blurRadius: 18, offset: Offset(0, 6)),
   ];
 }
 
@@ -86,24 +87,24 @@ extension CcPalette on BuildContext {
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 
   /// Secondary / caption text (AA contrast on both themes).
-  Color get textMuted => isDark ? const Color(0xFFA9B8B1) : AppColors.textSecondary;
+  Color get textMuted => isDark ? const Color(0xFFC9B3BE) : AppColors.textSecondary;
 
   /// Primary body text.
   Color get textStrong => isDark ? AppColors.darkText : AppColors.textPrimary;
 
-  /// Brand colour for text and icons (lighter green in dark mode).
+  /// Brand colour for text and icons (plum; butter in dark mode).
   Color get brand => isDark ? AppColors.darkPrimary : AppColors.primary;
 
   /// Card / input surface.
   Color get surface => isDark ? AppColors.darkSurface : AppColors.surface;
 
-  Color get borderColor => isDark ? const Color(0xFF24332D) : AppColors.border;
+  Color get borderColor => isDark ? const Color(0xFF3D2330) : AppColors.border;
 
   // Tinted panels that carry text.
-  Color get mintSurface => isDark ? const Color(0xFF1E3A30) : AppColors.mint50;
+  Color get mintSurface => isDark ? const Color(0xFF3A2A1E) : AppColors.mint50;
   Color get roseSurface => isDark ? const Color(0xFF3B1F22) : AppColors.roseBg;
   Color get peachSurface => isDark ? const Color(0xFF3B2B18) : AppColors.peachBg;
   Color get lavenderSurface => isDark ? const Color(0xFF2B2542) : AppColors.lavenderBg;
   Color get skySurface => isDark ? const Color(0xFF1B2B42) : AppColors.skyBg;
-  Color get tealSurface => isDark ? const Color(0xFF173A30) : AppColors.tealBg;
+  Color get tealSurface => isDark ? const Color(0xFF3A1F2C) : AppColors.tealBg;
 }

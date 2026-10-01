@@ -250,7 +250,7 @@ function ReferralForm({ appt, onDone }: { appt: Appointment; onDone: () => void 
                         setFacilityId(f.id);
                         setErrors((x) => ({ ...x, facility: undefined }));
                       }}
-                      className="mt-1 size-4 accent-[#0B5D45]"
+                      className="mt-1 size-4 accent-[#631D3F]"
                     />
                     <span className="min-w-0 flex-1">
                       <span className="block font-semibold">{f.name}</span>
@@ -303,7 +303,7 @@ function ReferralForm({ appt, onDone }: { appt: Appointment; onDone: () => void 
                   value={u}
                   checked={urgency === u}
                   onChange={() => setUrgency(u)}
-                  className="size-4 accent-[#0B5D45]"
+                  className="size-4 accent-[#631D3F]"
                 />
                 {humanize(u)}
               </label>

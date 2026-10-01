@@ -509,7 +509,7 @@ void main() {
       expect(seed, const Color(0xFF1E4FA0));
       AppTheme.useGoogleFonts = false;
       expect(AppTheme.light(seed: seed).colorScheme.primary, const Color(0xFF1E4FA0));
-      expect(AppTheme.light().colorScheme.primary, const Color(0xFF0B5D45));
+      expect(AppTheme.light().colorScheme.primary, const Color(0xFF631D3F));
       expect(PublicConfig.fromJson({}).branding, isNull);
       expect(parseHexColor('#12ZZ00'), isNull);
     });

@@ -195,7 +195,7 @@ function RespondForm({ so }: { so: SecondOpinion }) {
         </Button>
       </fieldset>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" className="size-4 accent-[#0B5D45]" checked={teleconsult} onChange={(e) => setTeleconsult(e.target.checked)} />
+        <input type="checkbox" className="size-4 accent-[#631D3F]" checked={teleconsult} onChange={(e) => setTeleconsult(e.target.checked)} />
         Suggest a teleconsultation
       </label>
       <Button type="submit" className="self-start" loading={respond.isPending} icon={<Send className="size-4" aria-hidden />}>

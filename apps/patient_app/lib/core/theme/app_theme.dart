@@ -25,17 +25,29 @@ class AppTheme {
     final withSecondary = t.copyWith(
       bodySmall: t.bodySmall?.copyWith(color: secondary),
     );
-    return useGoogleFonts ? GoogleFonts.interTextTheme(withSecondary) : withSecondary;
+    if (!useGoogleFonts) return withSecondary;
+    // Inter for body copy, Fraunces (a soft serif) for headings — the brand look.
+    final inter = GoogleFonts.interTextTheme(withSecondary);
+    TextStyle? serif(TextStyle? s) => s == null ? null : GoogleFonts.fraunces(textStyle: s);
+    return inter.copyWith(
+      displaySmall: serif(withSecondary.displaySmall),
+      headlineSmall: serif(withSecondary.headlineSmall),
+      titleLarge: serif(withSecondary.titleLarge),
+    );
   }
 
   /// [seed] is a white-label tenant's primary colour (§58); null keeps the
-  /// CareCompanion green.
+  /// CareCompanion plum.
   static ThemeData light({Color? seed}) {
     final scheme = ColorScheme.fromSeed(
       seedColor: seed ?? AppColors.primary,
       primary: seed ?? AppColors.primary,
-      onPrimary: Colors.white,
+      onPrimary: seed == null ? AppColors.mint100 : Colors.white,
+      primaryContainer: AppColors.mint100,
+      onPrimaryContainer: AppColors.primaryDark,
       secondary: AppColors.primaryLight,
+      secondaryContainer: AppColors.mint100,
+      onSecondaryContainer: AppColors.primaryDark,
       surface: AppColors.surface,
       onSurface: AppColors.textPrimary,
       error: AppColors.danger,
@@ -51,13 +63,17 @@ class AppTheme {
       // A tenant colour is lightened so it stays readable on dark surfaces.
       primary: seed == null ? AppColors.darkPrimary : Color.lerp(seed, Colors.white, 0.35)!,
       onPrimary: AppColors.darkBackground,
+      primaryContainer: const Color(0xFF5A2440),
+      onPrimaryContainer: AppColors.mint100,
+      secondaryContainer: const Color(0xFF5A2440),
+      onSecondaryContainer: AppColors.mint100,
       surface: AppColors.darkSurface,
       onSurface: AppColors.darkText,
       error: AppColors.danger,
       brightness: Brightness.dark,
     );
     return _build(scheme, AppColors.darkBackground, AppColors.darkText,
-        AppColors.darkText.withValues(alpha: 0.7), const Color(0xFF24332D), const Color(0xFF1E3A30));
+        AppColors.darkText.withValues(alpha: 0.7), const Color(0xFF3D2330), const Color(0xFF5A2440));
   }
 
   static ThemeData _build(ColorScheme scheme, Color bg, Color text, Color text2, Color border,
@@ -140,6 +156,23 @@ class AppTheme {
         unselectedLabelStyle: textTheme.bodyMedium,
         dividerColor: border,
       ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: scheme.surface,
+        indicatorColor: chip,
+        iconTheme: WidgetStateProperty.resolveWith((s) => IconThemeData(
+            color: s.contains(WidgetState.selected) ? scheme.onSecondaryContainer : text2)),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? scheme.onPrimary : null),
+        trackColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? scheme.primary : null),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: scheme.primary),
       snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: scheme.surface,

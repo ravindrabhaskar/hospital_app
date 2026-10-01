@@ -214,7 +214,7 @@ class LabPackageTile extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: Space.sm),
       child: CcCard(
         key: Key('lab-package-${p.id}'),
-        borderColor: inCart ? AppColors.primary : null,
+        borderColor: inCart ? context.brand : null,
         child: Row(
           children: [
             const IconTile(icon: Icons.inventory_2_outlined, accent: Accent.lavender, size: 44),
@@ -262,7 +262,7 @@ class LabTestTile extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: Space.sm),
       child: CcCard(
         key: Key('lab-test-${t.id}'),
-        borderColor: inCart ? AppColors.primary : null,
+        borderColor: inCart ? context.brand : null,
         child: Row(
           children: [
             Expanded(

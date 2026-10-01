@@ -60,7 +60,7 @@ export function CouponForm({ coupon, formId, onSubmit }: { coupon: Coupon | null
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {PAYMENT_PURPOSES.map((p) => (
             <label key={p} className="flex items-center gap-2 text-sm">
-              <input type="checkbox" value={p} className="size-4 accent-[#0B5D45]" {...register("appliesTo")} />
+              <input type="checkbox" value={p} className="size-4 accent-[#631D3F]" {...register("appliesTo")} />
               {humanize(p)}
             </label>
           ))}
@@ -72,7 +72,7 @@ export function CouponForm({ coupon, formId, onSubmit }: { coupon: Coupon | null
         )}
       </fieldset>
       <label className="flex items-center gap-2 text-sm">
-        <input type="checkbox" className="size-4 accent-[#0B5D45]" {...register("active")} />
+        <input type="checkbox" className="size-4 accent-[#631D3F]" {...register("active")} />
         Active
       </label>
       <p className="text-sm text-ink-muted sm:text-right" aria-live="polite">

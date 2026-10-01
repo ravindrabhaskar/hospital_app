@@ -285,7 +285,7 @@ function LanguagesInput({ value, onChange, error }: { value: string[]; onChange:
         <ul className="flex flex-wrap gap-1.5" aria-label="Selected languages">
           {value.map((l) => (
             <li key={l}>
-              <span className="inline-flex items-center gap-1 rounded-full border border-[#c4e6d7] bg-teal-bg py-0.5 pl-2.5 pr-1 text-xs font-medium text-primary-dark">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[#ecc9d8] bg-teal-bg py-0.5 pl-2.5 pr-1 text-xs font-medium text-primary-dark">
                 {QUICK_LANGUAGES.find((q) => q.code === l)?.label ?? l}
                 <button
                   type="button"

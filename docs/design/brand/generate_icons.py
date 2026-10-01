@@ -15,9 +15,10 @@ import os
 from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-GREEN = (11, 93, 69, 255)          # #0B5D45 (AppColors.primary)
-GREEN_LIGHT = (31, 138, 103, 255)  # #1F8A67
-WHITE = (255, 255, 255, 255)
+GREEN = (99, 29, 63, 255)  # plum
+GREEN_LIGHT = (138, 58, 98, 255)  # plum
+BUTTER = (255, 236, 142, 255)  # #FFEC8E
+WHITE = BUTTER
 SS = 4  # supersampling for smooth edges
 
 

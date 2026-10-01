@@ -206,7 +206,7 @@ function TrendChart({ summary, thresholds }: { summary: { trend: { date: string;
             {lines.map((t, i) => (
               <ReferenceLine key={i} y={t.value} stroke={t.level === "routine" ? "#a4520a" : "#d93a3a"} strokeDasharray="4 4" label={{ value: `${t.op === "gt" ? ">" : "<"} ${t.value} ${t.level}`, fontSize: 10, fill: "#5b6b64", position: "insideTopRight" }} />
             ))}
-            <Line type="monotone" dataKey="avg" stroke="#1F8A67" strokeWidth={2} dot={{ r: 3, fill: "#1F8A67", stroke: "#fff", strokeWidth: 2 }} activeDot={{ r: 5 }} isAnimationActive={false} />
+            <Line type="monotone" dataKey="avg" stroke="#8A3A62" strokeWidth={2} dot={{ r: 3, fill: "#8A3A62", stroke: "#fff", strokeWidth: 2 }} activeDot={{ r: 5 }} isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
       </figure>

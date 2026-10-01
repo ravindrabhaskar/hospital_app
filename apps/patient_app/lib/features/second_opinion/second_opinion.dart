@@ -224,7 +224,7 @@ class _NewSecondOpinionScreenState extends ConsumerState<NewSecondOpinionScreen>
                             padding: const EdgeInsets.only(bottom: Space.sm),
                             child: CcCard(
                               padding: const EdgeInsets.symmetric(horizontal: 4),
-                              borderColor: _specialty == p.specialty ? AppColors.primary : null,
+                              borderColor: _specialty == p.specialty ? context.brand : null,
                               child: RadioListTile<String>(
                                 key: Key('so-specialty-${p.specialty}'),
                                 value: p.specialty,

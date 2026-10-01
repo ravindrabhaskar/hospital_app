@@ -55,20 +55,20 @@ flutter_launcher_icons:
   android: "ic_launcher"
   ios: true
   image_path: "assets/branding/app_icon_1024.png"
-  adaptive_icon_background: "#08473A"
+  adaptive_icon_background: "#4A142E"
   adaptive_icon_foreground: "assets/branding/app_icon_foreground_1024.png"
   remove_alpha_ios: true
   min_sdk_android: 24
   web:
     generate: true
     image_path: "assets/branding/app_icon_1024.png"
-    background_color: "#FFFFFF"
-    theme_color: "#0B5D45"
+    background_color: "#FFFAEB"
+    theme_color: "#631D3F"
 
 flutter_native_splash:
-  color: "#FFFFFF"
+  color: "#FFFAEB"
   image: "assets/branding/splash_logo.png"
   android_12:
-    color: "#FFFFFF"
+    color: "#FFFAEB"
     image: "assets/branding/splash_logo.png"
   web: false

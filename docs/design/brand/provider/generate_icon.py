@@ -6,10 +6,11 @@ apart on a home screen. Run: python generate_icon.py  (needs Pillow)
 """
 from PIL import Image, ImageDraw
 
-GREEN = (11, 93, 69, 255)        # AppColors.primary 0xFF0B5D45
-GREEN_DARK = (8, 71, 58, 255)    # AppColors.primaryDark
-MINT = (238, 247, 242, 255)      # AppColors.mint50
+GREEN = (99, 29, 63, 255)  # plum
+GREEN_DARK = (74, 20, 46, 255)  # plum
+MINT = (255, 246, 204, 255)  # AppColors.mint50 (butter tint)
 WHITE = (255, 255, 255, 255)
+BUTTER = (255, 236, 142, 255)  # #FFEC8E
 SS = 4  # supersampling
 
 
@@ -48,7 +49,7 @@ def render(size, bg, bag_ratio, ring=False):
 
 
 if __name__ == "__main__":
-    render(1024, WHITE, 0.56, ring=True).convert("RGB").save("app_icon_1024.png")
+    render(1024, BUTTER, 0.56, ring=True).convert("RGB").save("app_icon_1024.png")
     # Adaptive icon foreground: glyph inside the 66% safe zone, transparent bg.
     render(1024, (0, 0, 0, 0), 0.40).save("app_icon_foreground_1024.png")
     # Splash logo (transparent), shown centred on white.

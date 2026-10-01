@@ -241,7 +241,7 @@ class _BookHomeVisitScreenState extends ConsumerState<BookHomeVisitScreen> {
                             padding: const EdgeInsets.only(bottom: Space.sm),
                             child: CcCard(
                               padding: const EdgeInsets.symmetric(horizontal: 4),
-                              borderColor: _service == s.code ? AppColors.primary : null,
+                              borderColor: _service == s.code ? context.brand : null,
                               child: RadioListTile<String>(
                                 value: s.code,
                                 title: Text(s.name),

@@ -62,12 +62,12 @@ export function ScribePanel({ appointmentId, onInsert }: { appointmentId: string
         </div>
       </header>
       <div className="flex flex-col gap-4 p-5">
-        <div className={cx("rounded-xl border p-3", consent ? "border-[#c4e6d7] bg-teal-bg/60" : "border-[#f8d9b5] bg-peach-bg/70")}>
+        <div className={cx("rounded-xl border p-3", consent ? "border-[#ecc9d8] bg-teal-bg/60" : "border-[#f8d9b5] bg-peach-bg/70")}>
           <label htmlFor={consentId} className="flex items-start gap-2.5 text-sm">
             <input
               id={consentId}
               type="checkbox"
-              className="mt-0.5 size-4 shrink-0 accent-[#0B5D45]"
+              className="mt-0.5 size-4 shrink-0 accent-[#631D3F]"
               checked={consent}
               onChange={(e) => setConsent(e.target.checked)}
             />

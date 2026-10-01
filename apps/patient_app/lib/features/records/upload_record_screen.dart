@@ -169,7 +169,7 @@ class _UploadRecordScreenState extends ConsumerState<UploadRecordScreen> {
               child: Row(
                 children: [
                   Icon(f.mimeType.startsWith('image/') ? Icons.image_outlined : Icons.picture_as_pdf_outlined,
-                      color: AppColors.primary),
+                      color: context.brand),
                   const SizedBox(width: 8),
                   Expanded(child: Text('${f.name} · ${fmtBytes(f.bytes.length)}')),
                   IconButton(
@@ -232,7 +232,7 @@ class _PickButton extends StatelessWidget {
       child: ExcludeSemantics(
         child: Column(
           children: [
-            Icon(icon, size: 32, color: AppColors.primary),
+            Icon(icon, size: 32, color: context.brand),
             const SizedBox(height: 6),
             Text(label, textAlign: TextAlign.center),
           ],

@@ -2,12 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'roles.dart';
 
-const _mint = Color(0xFFEEF7F2);
-const _green = Color(0xFF0B5D45);
+const _cream = Color(0xFFFFFAEB);
+const _butter = Color(0xFFFFEC8E);
+const _plum = Color(0xFF631D3F);
 
 ThemeData _theme() => ThemeData(
-  colorScheme: ColorScheme.fromSeed(seedColor: _green, primary: _green, surface: Colors.white),
-  scaffoldBackgroundColor: _mint,
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: _plum,
+    primary: _plum,
+    onPrimary: _butter,
+    secondaryContainer: _butter,
+    surface: Colors.white,
+  ),
+  scaffoldBackgroundColor: _cream,
+  cardTheme: const CardThemeData(color: Colors.white, elevation: 0),
+  switchTheme: SwitchThemeData(
+    thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? _butter : null),
+    trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? _plum : null),
+  ),
   useMaterial3: true,
 );
 
@@ -52,15 +64,27 @@ class _RoleChooserScreenState extends State<RoleChooserScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      'Welcome to CareCompanion',
-                      style: text.headlineSmall?.copyWith(fontWeight: FontWeight.w700, color: _green),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
+                    decoration: BoxDecoration(color: _plum, borderRadius: BorderRadius.circular(24)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Semantics(
+                          header: true,
+                          child: Text(
+                            'Welcome to CareCompanion',
+                            style: text.headlineSmall?.copyWith(fontWeight: FontWeight.w700, color: _butter),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Who are you? Pick the app to open.',
+                          style: text.bodyLarge?.copyWith(color: _butter.withValues(alpha: 0.9)),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Text('Who are you? Pick the app to open.', style: text.bodyLarge),
                   const SizedBox(height: 20),
                   for (final role in DemoRole.values) ...[
                     RoleCard(role: role, onTap: () => widget.onChoose(role, _remember)),
@@ -83,7 +107,7 @@ class _RoleChooserScreenState extends State<RoleChooserScreen> {
                   Text(
                     'Demo build: the three CareCompanion apps in one. Each keeps its own sign-in and data.',
                     textAlign: TextAlign.center,
-                    style: text.bodySmall?.copyWith(color: Colors.black54),
+                    style: text.bodySmall?.copyWith(color: const Color(0xFF6D5361)),
                   ),
                 ],
               ),

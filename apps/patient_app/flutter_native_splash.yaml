@@ -1,12 +1,12 @@
 # Native splash generation: `dart run flutter_native_splash:create`
-# Mint background + brand mark (docs/design/brand/splash_logo.png).
+# Butter-cream background + brand mark (docs/design/brand/splash_logo.png).
 flutter_native_splash:
-  color: "#EEF7F2"
+  color: "#FFFAEB"
   image: "../../docs/design/brand/splash_logo.png"
   android_12:
-    color: "#EEF7F2"
+    color: "#FFFAEB"
     image: "../../docs/design/brand/splash_logo.png"
-    icon_background_color: "#EEF7F2"
+    icon_background_color: "#FFFAEB"
   android: true
   ios: true
   web: true

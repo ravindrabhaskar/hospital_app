@@ -259,7 +259,7 @@ export function AccountDeletionFlow({ api: injected }: { api?: DeletionApi }) {
                 {(id, d) => <Textarea id={id} aria-describedby={d} rows={2} maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />}
               </Field>
               <label className="flex items-start gap-2 text-sm">
-                <input type="checkbox" className="mt-0.5 size-4 accent-[#0B5D45]" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} />
+                <input type="checkbox" className="mt-0.5 size-4 accent-[#631D3F]" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} />
                 I understand that my account and personal data will be deleted after the grace period, except records the law requires
                 CareCompanion to keep.
               </label>

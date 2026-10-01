@@ -20,8 +20,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 BRAND = os.path.dirname(HERE)
 APP = os.path.join(BRAND, "..", "..", "..", "apps", "all_in_one", "assets")
 
-GREEN = (11, 93, 69, 255)        # AppColors.primary 0xFF0B5D45
-WHITE = (255, 255, 255, 255)
+GREEN = (99, 29, 63, 255)  # plum
+BUTTER = (255, 236, 142, 255)  # #FFEC8E
+WHITE = BUTTER
 
 SOURCES = {
     "patient": os.path.join(BRAND, "app_icon_1024.png"),

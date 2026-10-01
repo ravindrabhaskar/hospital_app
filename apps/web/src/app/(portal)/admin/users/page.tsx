@@ -140,7 +140,7 @@ function RoleCheckboxes({ value, onChange, disabledRoles = [] }: { value: Role[]
           <label key={r} className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-sm has-[:checked]:border-primary has-[:checked]:bg-mint-50">
             <input
               type="checkbox"
-              className="size-4 accent-[#0B5D45]"
+              className="size-4 accent-[#631D3F]"
               checked={value.includes(r)}
               disabled={disabledRoles.includes(r)}
               onChange={(e) => onChange(e.target.checked ? [...value, r] : value.filter((x) => x !== r))}
@@ -415,7 +415,7 @@ function AddStaffDialog({ onClose }: { onClose: () => void }) {
                 <div className="flex flex-wrap gap-2">
                   {zones.data!.items.map((z) => (
                     <label key={z.id} className="flex items-center gap-2 rounded-full border border-line px-3 py-1 text-sm">
-                      <input type="checkbox" className="accent-[#0B5D45]" checked={zoneIds.includes(z.id)} onChange={(ev) => toggle("zoneIds", z.id, ev.target.checked)} />
+                      <input type="checkbox" className="accent-[#631D3F]" checked={zoneIds.includes(z.id)} onChange={(ev) => toggle("zoneIds", z.id, ev.target.checked)} />
                       {z.name}
                     </label>
                   ))}
@@ -428,7 +428,7 @@ function AddStaffDialog({ onClose }: { onClose: () => void }) {
                 <div className="flex flex-wrap gap-2">
                   {(services.data?.items ?? []).map((s) => (
                     <label key={s.code} className="flex items-center gap-2 rounded-full border border-line px-3 py-1 text-sm">
-                      <input type="checkbox" className="accent-[#0B5D45]" checked={capabilities.includes(s.code)} onChange={(ev) => toggle("capabilities", s.code, ev.target.checked)} />
+                      <input type="checkbox" className="accent-[#631D3F]" checked={capabilities.includes(s.code)} onChange={(ev) => toggle("capabilities", s.code, ev.target.checked)} />
                       {s.name}
                     </label>
                   ))}

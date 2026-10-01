@@ -207,7 +207,7 @@ export function MfaFlow({ user, api, onSession, onDone, onSignOut, onSkip }: Mfa
           <label className="flex items-start gap-2 text-sm">
             <input
               type="checkbox"
-              className="mt-0.5 size-4 accent-[#0B5D45]"
+              className="mt-0.5 size-4 accent-[#631D3F]"
               checked={state.acknowledged}
               onChange={(e) => dispatch({ type: "ACKNOWLEDGE", value: e.target.checked })}
             />

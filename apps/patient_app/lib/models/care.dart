@@ -155,7 +155,7 @@ class RazorpayCheckout {
           'contact': ?prefillContact,
           'name': ?prefillName,
         },
-        'theme': {'color': '#0B5D45'},
+        'theme': {'color': '#631D3F'},
         'retry': {'enabled': false},
       };
 }

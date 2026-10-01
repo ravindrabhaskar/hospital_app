@@ -13,9 +13,9 @@ import math
 
 from PIL import Image, ImageDraw
 
-GREEN = (11, 93, 69, 255)        # AppColors.primary 0xFF0B5D45
-GREEN_DARK = (8, 71, 58, 255)    # AppColors.primaryDark
-MINT = (221, 239, 229, 255)      # AppColors.mint100
+GREEN = (99, 29, 63, 255)  # plum
+GREEN_DARK = (74, 20, 46, 255)  # plum
+MINT = (255, 236, 142, 255)  # butter (AppColors.mint100)
 WHITE = (255, 255, 255, 255)
 SS = 4  # supersampling
 

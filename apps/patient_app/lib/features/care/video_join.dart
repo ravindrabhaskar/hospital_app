@@ -123,7 +123,7 @@ class _VideoJoinCardState extends ConsumerState<VideoJoinCard> {
         children: [
           Row(
             children: [
-              Icon(audio ? Icons.call_outlined : Icons.videocam_outlined, color: AppColors.primary),
+              Icon(audio ? Icons.call_outlined : Icons.videocam_outlined, color: context.brand),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(audio ? l.audioConsultation : l.videoConsultation,
@@ -187,7 +187,7 @@ class _PreJoinChecklistState extends State<PreJoinChecklist> {
               CheckboxListTile(
                 value: _checked.contains(i),
                 onChanged: (v) => setState(() => v == true ? _checked.add(i) : _checked.remove(i)),
-                secondary: Icon(items[i].$1, color: AppColors.primary),
+                secondary: Icon(items[i].$1, color: context.brand),
                 title: Text(items[i].$2),
                 contentPadding: EdgeInsets.zero,
               ),

@@ -182,7 +182,7 @@ export function ScheduleEditor({
                               <label key={m} className="flex items-center gap-1.5 text-sm">
                                 <input
                                   type="checkbox"
-                                  className="size-4 accent-[#0B5D45]"
+                                  className="size-4 accent-[#631D3F]"
                                   disabled={readOnly}
                                   checked={r.b.modes.includes(m)}
                                   onChange={(e) => toggleMode(r, m, e.target.checked)}

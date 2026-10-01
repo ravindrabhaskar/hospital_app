@@ -286,7 +286,7 @@ class VisitTimeline extends StatelessWidget {
       required bool current,
       required bool last,
       bool danger = false}) {
-    final color = danger ? AppColors.danger : AppColors.primary;
+    final color = danger ? AppColors.danger : context.brand;
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,

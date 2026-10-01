@@ -72,7 +72,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen> {
             padding: const EdgeInsets.all(Space.xl),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(Radii.card),
-              gradient: const LinearGradient(colors: [AppColors.mint100, Color(0xFFF1F8EC)]),
+              gradient: const LinearGradient(colors: [AppColors.mint100, Color(0xFFFFF8DD)]),
             ),
             child: Row(
               children: [
@@ -133,7 +133,7 @@ class _WellnessScreenState extends ConsumerState<WellnessScreen> {
                               shape: BoxShape.circle,
                               color: _score == i + 1 ? AppColors.mint100 : Colors.transparent,
                               border: Border.all(
-                                  color: _score == i + 1 ? AppColors.primary : Colors.transparent, width: 2),
+                                  color: _score == i + 1 ? context.brand : Colors.transparent, width: 2),
                             ),
                             child: Text(moodFaces[i], style: const TextStyle(fontSize: 30)),
                           ),

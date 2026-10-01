@@ -60,7 +60,7 @@ export default function TenantsPage() {
 /** Mock of the patient app header with the tenant's branding. */
 function BrandPreview({ name, color, logoUrl, phone }: { name: string; color: string; logoUrl: string | null; phone: string }) {
   const valid = HEX_RE.test(color);
-  const bg = valid ? color : "#0B5D45";
+  const bg = valid ? color : "#631D3F";
   const fg = readableTextOn(bg);
   const initials = name
     .split(/\s+/)
@@ -102,7 +102,7 @@ function TenantDialog({ tenant, onClose }: { tenant: Tenant | null; onClose: () 
     defaultValues: {
       code: tenant?.code ?? "",
       displayName: tenant?.displayName ?? "",
-      primaryColor: tenant?.primaryColor ?? "#0B5D45",
+      primaryColor: tenant?.primaryColor ?? "#631D3F",
       logoMediaId: tenant?.logoMediaId ?? "",
       facilityIdsText: tenant?.facilityIds.join("\n") ?? "",
       supportPhone: tenant?.supportPhone ?? "",
@@ -160,7 +160,7 @@ function TenantDialog({ tenant, onClose }: { tenant: Tenant | null; onClose: () 
                   type="color"
                   aria-label="Pick primary colour"
                   className="h-10 w-12 shrink-0 cursor-pointer rounded-lg border border-line bg-white p-1"
-                  value={validColor ? color : "#0b5d45"}
+                  value={validColor ? color : "#631D3F"}
                   onChange={(ev) => setValue("primaryColor", ev.target.value.toUpperCase(), { shouldValidate: true, shouldDirty: true })}
                 />
                 <Input id={id} className="font-mono" aria-describedby={d} aria-invalid={!!e.primaryColor} {...register("primaryColor")} />

@@ -298,7 +298,7 @@ class MessageBubble extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 6),
                       child: ActionChip(
-                        avatar: Icon(Icons.attach_file, size: 16, color: mine ? AppColors.primary : null),
+                        avatar: Icon(Icons.attach_file, size: 16, color: mine ? context.brand : null),
                         label: Text(l.attachedRecord),
                         onPressed: () => context.push('/records/${m.attachmentRecordId}'),
                       ),
