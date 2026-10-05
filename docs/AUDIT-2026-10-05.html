@@ -1,0 +1,255 @@
+<title>CareCompanion 360° Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,650&family=Public+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; verdict header, area scoreboard, fix-first list, then filterable findings by area. Palette borrows the product's own plum brand. */
+:root{
+  --bg:#fbf8fa; --surface:#ffffff; --ink:#24161d; --muted:#6d5a64; --line:#eadde4;
+  --plum:#631d3f; --plum-soft:#f4e7ee; --butter:#fff3b8;
+  --crit:#b3261e; --crit-bg:#fde7e5; --high:#b4530a; --high-bg:#fdeedd;
+  --med:#7a6200; --med-bg:#fbf3cc; --low:#3f5f7a; --low-bg:#e6eef5; --ok:#2f6b3f; --ok-bg:#e3f1e6;
+  --f-display:"Literata",Georgia,"Times New Roman",serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#17101a; --surface:#20171f; --ink:#f1e8ed; --muted:#b4a1ac; --line:#3a2b35;
+  --plum:#e9a6c6; --plum-soft:#3a1d2c; --butter:#4a4115;
+  --crit:#ff9a92; --crit-bg:#45191a; --high:#ffb474; --high-bg:#42270f; --med:#e8d06a; --med-bg:#3a3313;
+  --low:#9cc3e3; --low-bg:#1c2d3b; --ok:#8fd4a0; --ok-bg:#1a3322; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17101a; --surface:#20171f; --ink:#f1e8ed; --muted:#b4a1ac; --line:#3a2b35;
+  --plum:#e9a6c6; --plum-soft:#3a1d2c; --butter:#4a4115;
+  --crit:#ff9a92; --crit-bg:#45191a; --high:#ffb474; --high-bg:#42270f; --med:#e8d06a; --med-bg:#3a3313;
+  --low:#9cc3e3; --low-bg:#1c2d3b; --ok:#8fd4a0; --ok-bg:#1a3322; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--f-body);padding-inline:16px;padding-block:32px 64px}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,5vw,40px);font-weight:650;color:var(--plum)}
+h2{font-size:24px;font-weight:650}
+h3{font-size:17px;font-weight:650}
+p{margin:0}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+code,.mono{font-family:var(--f-mono);font-size:.86em}
+code{background:var(--plum-soft);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+header{display:flex;flex-direction:column;gap:14px}
+.verdict{display:flex;gap:14px;align-items:flex-start;background:var(--crit-bg);border:1px solid color-mix(in srgb,var(--crit) 30%,transparent);border-radius:10px;padding:16px 18px}
+.verdict strong{color:var(--crit);font-family:var(--f-display);font-size:18px;display:block;margin-bottom:4px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:16px}
+.lede{max-width:68ch}
+/* scoreboard */
+.board-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:500 11px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+td.n{text-align:center;width:64px}
+td.n span{display:inline-block;min-width:28px;padding:2px 6px;border-radius:6px;font-weight:600}
+.n0{color:var(--muted);opacity:.55}
+.nc{background:var(--crit-bg);color:var(--crit)} .nh{background:var(--high-bg);color:var(--high)}
+.nm{background:var(--med-bg);color:var(--med)} .nl{background:var(--low-bg);color:var(--low)}
+.checks{font-size:13px;color:var(--muted)}
+/* fix first */
+ol.fix{margin:0;padding:0;list-style:none;counter-reset:f;display:flex;flex-direction:column;gap:2px;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+ol.fix li{counter-increment:f;display:grid;grid-template-columns:36px 1fr;gap:4px 10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+ol.fix li:last-child{border-bottom:0}
+ol.fix li::before{content:counter(f);font:600 14px/1.5 var(--f-mono);color:var(--plum)}
+ol.fix li>div{min-width:0}
+ol.fix .when{font-size:12.5px;color:var(--muted)}
+/* filters */
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:10px;z-index:2}
+.filters button{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--plum);border-color:var(--plum);color:var(--bg)}
+.filters button:focus-visible,summary:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+.area{display:flex;flex-direction:column;gap:10px}
+.area-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px;border-bottom:2px solid var(--plum);padding-bottom:6px}
+.finding{border:1px solid var(--line);border-radius:8px;background:var(--surface);border-left:4px solid var(--sev);overflow:hidden}
+.finding summary{list-style:none;cursor:pointer;padding:11px 14px;display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:baseline}
+.finding summary::-webkit-details-marker{display:none}
+.finding summary>span:last-child{min-width:0}
+.finding .body{padding:0 14px 14px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.finding .body p{max-width:72ch}
+.finding .where{font-size:12.5px;color:var(--muted)}
+.chip{font:600 10.5px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:var(--sev-bg);color:var(--sev);white-space:nowrap}
+.s-crit{--sev:var(--crit);--sev-bg:var(--crit-bg)} .s-high{--sev:var(--high);--sev-bg:var(--high-bg)}
+.s-med{--sev:var(--med);--sev-bg:var(--med-bg)} .s-low{--sev:var(--low);--sev-bg:var(--low-bg)}
+.lbl{font:600 11px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.strengths{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.strengths div{background:var(--ok-bg);border-radius:8px;padding:12px 14px;font-size:14px;min-width:0}
+.strengths h3{color:var(--ok);font-size:15px;margin-bottom:4px}
+.gaps{background:var(--butter);border-radius:8px;padding:14px 16px;font-size:14px}
+.gaps ul{margin:6px 0 0;padding-left:20px}
+footer{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion:no-preference){.finding[open] .body{animation:in .18s ease-out}@keyframes in{from{opacity:.4}to{opacity:1}}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Code &amp; readiness audit · 5 Oct 2026</span>
+  <h1>CareCompanion 360° Audit</h1>
+  <p class="lede">A read-only review of the whole CareCompanion repository: the Fastify API, the Next.js staff portal, the patient, doctor, provider and all-in-one Flutter apps, AWS Terraform, CI/CD, local launchers, signing keys, and the privacy, clinical and regulatory documents. No files were changed.</p>
+  <div class="verdict" role="note">
+    <div><strong>Not ready for real patients yet</strong>
+    The engineering base is strong: tests pass, auth design is careful, and production config refuses most unsafe settings. What blocks launch is a short list of exploitable gaps (forgeable webhooks, a hospital-desk takeover path, OTP brute force, a money-losing payment bug) plus clinical, regulatory and store-declaration work that has not been done.</div>
+  </div>
+  <div class="meta"><span>Repo: <span class="mono">care-companion</span> (17 commits, 1,308 tracked files)</span><span>Remote: github.com/ravindrabhaskar/hospital_app</span></div>
+</header>
+
+<section>
+  <h2>Scoreboard</h2>
+  <div class="board-wrap"><table>
+    <thead><tr><th>Area</th><th>Crit</th><th>High</th><th>Med</th><th>Low</th><th>Automated checks</th></tr></thead>
+    <tbody id="board"></tbody>
+  </table></div>
+  <p class="checks">Counts are findings in this report after merging duplicates across auditors. Medium and Low items are condensed.</p>
+</section>
+
+<section>
+  <h2>Fix these first</h2>
+  <p class="lede muted">Ordered by how easily they can be exploited or how directly they harm a patient. Items 1–7 are code changes of a day or less each.</p>
+  <ol class="fix">
+    <li><div><b>Shut down the public demo tunnel</b> and stop running the dev API behind trycloudflare. Anyone with the URL can log in as super admin with OTP 123456.<div class="when">Today · ops</div></div></li>
+    <li><div><b>Make partner webhook secrets mandatory in production</b>, and don't register webhook routes for disabled partners. Today a known dev secret lets anyone forge WhatsApp check-ins, vitals, lab results and SOS events.<div class="when">Hours · API</div></div></li>
+    <li><div><b>Set <code>trustProxy</code> to the real load-balancer hop</b> and make OTP/MFA attempt counting atomic. Together these close OTP brute force.<div class="when">Hours · API</div></div></li>
+    <li><div><b>Stop discharges from auto-granting access to existing patients.</b> Any hospital desk user can currently give themselves full access to any patient. Send the patient an invite to accept instead.<div class="when">A day · API</div></div></li>
+    <li><div><b>Fix the Razorpay <code>payment.failed</code> handling</b> so a retried card doesn't leave a paid patient with no booking, and make refunds and cancels race-safe.<div class="when">1–2 days · API</div></div></li>
+    <li><div><b>Make the no-pack prescription warning blocking</b>, and keep a built-in minimum set of emergency rules when no safety pack is approved.<div class="when">Hours · API</div></div></li>
+    <li><div><b>Gate the mobile "Server address" setting on debug builds</b>, stop the provider app wiping its offline queue on a 5xx, and rebuild <code>dist/android</code> with an https API URL.<div class="when">1–2 days · mobile</div></div></li>
+    <li><div><b>Make deploys depend on CI passing</b>, pin GitHub Actions to commit SHAs, and confirm production environment approvals exist in GitHub.<div class="when">A day · CI</div></div></li>
+    <li><div><b>Reconcile the store declarations with the build</b> (Health Connect, HealthKit, privacy manifest), or remove the health permissions.<div class="when">Before any store submission</div></div></li>
+    <li><div><b>Clinical and legal sign-off:</b> an approved safety rule pack with evaluation results, a CDSCO medical-device opinion, counsel review of consent text and cross-border AI processing, and a named Grievance Officer.<div class="when">Before any real patient data</div></div></li>
+  </ol>
+</section>
+
+<section aria-labelledby="fh">
+  <h2 id="fh">All findings</h2>
+  <div class="filters" role="group" aria-label="Filter by severity">
+    <button type="button" data-f="all" aria-pressed="true">All</button>
+    <button type="button" data-f="crit" aria-pressed="false">Critical</button>
+    <button type="button" data-f="high" aria-pressed="false">High</button>
+    <button type="button" data-f="med" aria-pressed="false">Medium</button>
+    <button type="button" data-f="low" aria-pressed="false">Low</button>
+  </div>
+  <div id="areas"></div>
+</section>
+
+<section>
+  <h2>What is already done well</h2>
+  <div class="strengths">
+    <div><h3>Authentication</h3>Pinned HS256 JWT with issuer and audience checks, 15-minute expiry, session and user status re-checked on every request, rotating hashed refresh tokens with reuse detection, TOTP MFA with encrypted secrets and replay protection.</div>
+    <div><h3>Production guardrails</h3>The API refuses to start in production with dev JWT or payment secrets, console SMS, mock gateways or partners, no ClamAV, or no MFA key.</div>
+    <div><h3>Data access</h3>Central <code>assertCanActForPatient</code> with audited denials, zod validation on effectively every route, fully parameterised SQL, append-only audit and episode tables enforced by DB triggers.</div>
+    <div><h3>AI safety design</h3>The deterministic safety engine runs before any model call, emergencies use a fixed template, severity only goes up, and model output is grounded and policy-filtered.</div>
+    <div><h3>Uploads and headers</h3>Content-sniffed allow-listed file types, ClamAV scanning, path-safe storage keys, Helmet with a deny-all CSP, HSTS, and PHI redaction in logs.</div>
+    <div><h3>Infrastructure</h3>AWS Mumbai region, private KMS-encrypted RDS with forced TLS and 14-day point-in-time recovery, CMK-encrypted S3, OIDC deploys, non-root containers. No secrets anywhere in git history.</div>
+  </div>
+</section>
+
+<section>
+  <h2>Not covered by this audit</h2>
+  <div class="gaps">This was a static code review plus the local test suites. It did not include:
+    <ul>
+      <li>Live GitHub settings: whether the repo is public, branch and tag protection, environment approvals.</li>
+      <li>The live AWS account, penetration testing, or DAST against a running stack.</li>
+      <li>Testing under real Postgres concurrency. All tests run on single-connection PGlite, so race conditions are found by reading code only.</li>
+      <li>Code coverage, because <code>@vitest/coverage-v8</code> is not installed.</li>
+      <li>Legal advice. The compliance findings show where the code and the obligations don't match; counsel should confirm them.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>Prepared from seven read-only review passes: API security, a route-by-route access-control sweep of all 333 handlers, API correctness, web portal, mobile apps, infrastructure and CI, and compliance. The most serious findings were re-checked against the source before publishing. File references are relative to <code>care-companion/</code>; API paths are under <code>services/api/src/</code>.</footer>
+</div>
+
+<script>
+const AREAS=[
+{id:"sec",name:"API security",checks:"npm audit (prod): 0 vulns",f:[
+["crit","Partner webhooks accept a publicly known secret in production","WhatsApp, lab, ABDM and SOS webhook secrets default to hard-coded dev-only-* values. Production only rejects them when that partner is enabled, but partners default to disabled while their webhook routes stay registered and still verify against the dev secret.","An attacker signs a request with dev-only-whatsapp-app-secret and posts as any patient's phone number. They can record fake “I'm OK” check-ins (suppressing missed-check-in alerts for an elderly patient), write fake BP or sugar readings, raise false emergencies, or forge lab results and SOS presses.","Require these secrets in production regardless of provider, and don't register a webhook route when its partner is disabled.","config.ts:167-213, 339-375 · whatsapp/routes.ts:53 · lab/routes.ts:210 · abdm/routes.ts:206 · geofence/routes.ts:177"],
+["high","OTP brute force through spoofed IPs and a counter race","trustProxy: true makes req.ip come from the client-supplied X-Forwarded-For header, so every IP rate limit can be bypassed. verifyOtp reads attempts, compares, then writes old+1, so parallel guesses all see attempts=0.","Thousands of concurrent guesses against one live 6-digit OTP within its 5-minute life, each with a fresh X-Forwarded-For, lead to account takeover. The fixed store-review OTP is also exposed.","Set trustProxy to the real hop count or CIDR. Use UPDATE … SET attempts = attempts + 1 WHERE attempts < max RETURNING before comparing. Add a per-phone lockout. Apply the same to the MFA failure counter.","app.ts:153 · auth/service.ts:312-327 · mfa.ts:44-63"],
+["crit","Hospital discharge desk can take over any existing patient","The discharge route attaches the discharge to whoever already owns the patient phone number, grants the entered family phone view_records, manage_care and receive_alerts, and overwrites the patient's tenant.","A hospital_staff user at any facility posts a discharge with a victim's phone number and their own number as the family contact. They get permanent view and manage rights on that patient's records and files, and the same call overwrites the patient's date of birth, gender and tenant and adds a fake hospital care plan with medications.","For an existing patient, create a pending invite the patient must accept. Never auto-issue grants, and don't change tenantCode on existing patients.","modules/discharges/routes.ts:180-202"],
+["high","A one-record share becomes permanent whole-patient access for a doctor","Sharing needs only manage_care, and any active record share counts as a full doctor relationship. With that, the doctor can create a care plan on any active episode, which makes the relationship permanent, supersedes the patient's active plan and deactivates their medications.","Doctor A shares one record with doctor B for a day. B creates a care plan and keeps manage rights on the whole patient after the share expires.","Make share-derived access view-only and limited to the shared records. Require an appointment inside the episode before a doctor can create a care plan, and count only active or recent plans and episodes as a relationship.","records/routes.ts:154 · lib/access.ts:47-64,109-114 · careplans/routes.ts:167-256"],
+["high","Suspended doctors and expired-credential providers keep access","The doctor relationship check and the provider visit check never look at verification status or credential expiry. Suspending a provider only takes them off duty and doesn't unassign their open visits.","A suspended doctor can still read a patient snapshot and create care plans. An intern with an expired credential can still record vitals and complete visits already assigned to them.","Check effective verification status inside resolvePatientAccess, loadAssigned and the clinician hook, and unassign open visits on suspension.","access.ts:109-114 · homevisits/routes.ts:201-208 · clinician/routes.ts:62 · ops/routes.ts:178"],
+["high","Phone demo publishes a dev server with a known login","START-PHONE-DEMO.bat runs the API with no NODE_ENV (so development), behind a public Cloudflare quick tunnel. Every phone accepts 123456, the response echoes devOtp, and the banner prints the super-admin number. A live URL is saved in PHONE-SERVER-URL.txt, and .data/files holds uploaded PDFs.","Anyone with the URL logs in as super admin or any patient. Once a tester types real details, this becomes a PHI exposure.","Close the tunnel. Gate the fixed OTP on an explicit ALLOW_DEV_OTP flag and loopback binding. Use a random JWT secret per tunnel session, leave admin personas out, or put the tunnel behind Cloudflare Access.","START-PHONE-DEMO.bat:6 · scripts/start-local.ps1:57,81,152 · auth/service.ts:289-308"],
+["med","Most PHI has no field-level encryption","Only MFA secrets and insurance policy numbers are field-encrypted. STORAGE_DRIVER=local is allowed in production and S3 SSE-KMS is optional.","","Require S3 with a KMS key in production, refuse local storage, and consider envelope encryption for message text and record blobs.","config.ts:325 · s3.ts:66"],
+["med","Unenrolled staff accounts can be MFA-enrolled with an SMS OTP alone","","Someone who intercepts a new staff member's OTP enrols their own authenticator and keeps access.","Have admins issue one-time enrolment tokens.","plugins/auth.ts:15 · mfa.ts:71"],
+["med","ops_admin can approve their own doctor application","","An ops admin becomes a verified doctor without independent review.","Block deciding on your own application.","applications/routes.ts:257, 402-457"],
+["med","Over-broad reads and writes on weak relationships","Patient profile (allergies, conditions, ABHA, emergency contacts) is returned to booking-only and alerts-only grantees and all ops staff. Any relationship can cancel an ambulance. Doctors see the 4-digit home-visit door code. Old appointments give doctors indefinite access.","","Return a minimal profile without view_records, require manage_care for ambulance cancel, pick the visit view per row, and time-box doctor access.","patients/routes.ts:60 · ambulance/routes.ts:229 · homevisits/routes.ts:140,159 · access.ts:41-46"],
+["low","Smaller security gaps","View-only users can save AI summaries. Alerts-only users can mark a fall “safe”, which stops escalation. The LLM can lower an extracted severity number. The X-Signature payment path stays on alongside Razorpay. CORS_ORIGINS silently defaults to localhost. Postgres error details may reach logs. The dev IVR simulator accepts any fromPhone.","","Tighten each permission and config check.","records/routes.ts:120,141 · fall/routes.ts:50-55 · ai/intake.ts:223 · payments/routes.ts:121 · app.ts:318"]
+]},
+{id:"cor",name:"API correctness",checks:"typecheck ✓ · lint ✓ · 348/348 tests ✓",f:[
+["crit","A failed card attempt cancels a booking that is later paid","Razorpay sends payment.failed for each attempt. The code marks the payment failed, cancels the appointment and frees the slot. A later payment.captured is ignored because the status is no longer pending. The hold-expiry job's synthetic failure has the same effect.","A patient's first card is declined, they retry and succeed: the money is taken, there is no booking and no refund.","Ignore payment.failed while the order is still payable. On capture of a failed or voided payment, re-confirm or auto-refund and alert ops.","payments/gateway.ts:126-129 · payments/service.ts:209,217 · worker/jobs.ts:143-159"],
+["crit","Prescriptions go unchecked when no knowledge pack is approved","With no approved drug pack, the fail-safe warning is moderate, and only major warnings block issuing.","A doctor issues interacting drugs to a patient with a recorded allergy with no acknowledgement or override reason.","Make the fail-safe warning major (override required), or refuse to issue.","rxcheck/engine.ts:142-149 · prescriptions/routes.ts:69-70"],
+["high","Refunds can be sent twice","The payment is read outside the transaction, the gateway refund is called, then refundedAmount is written without a guard. There is no gateway idempotency key.","A double-tap on Cancel, or ops refunding at the same moment, sends two refunds to Razorpay.","Lock the row (FOR UPDATE), write a pending refund row before calling the gateway, and pass an idempotency key.","payments/service.ts:308-352"],
+["high","Cancelling can lose money or overwrite an in-progress visit","Payment status is read before the transaction, and the update has no status guard.","A capture lands between read and cancel: the slot is freed and no refund is issued.","Read and update inside one transaction with WHERE status IN (…).","appointments/service.ts:154-169"],
+["high","Home-visit state changes don't check current state","Updates match on id only, and the timeline is rewritten from an in-memory copy.","The SLA worker re-assigns a visit the patient just cancelled and drops timeline entries.","Add expected-status guards and append to the timeline in SQL.","homevisits/service.ts:96-104 · homevisits/routes.ts:176-217"],
+["high","Booking side effects run after commit with no reconciliation","If onSucceeded fails, the payment is succeeded but the appointment stays pending_payment and the slot stays held for good.","","Use a transactional outbox, or a sweeper for succeeded payments whose bookings are still pending.","payments/service.ts:234-238"],
+["med","Concurrency and governance","Coupon limits can be raced. No unique “active pack” index, and activePack() has no ORDER BY. Safety-pack approval is one super admin typing a name. With no pack, the safety fail-safe returns urgent and never reaches emergency.","","Lock coupons, add partial unique indexes, require two approvers, and keep built-in emergency rules.","wallet/service.ts:73-81 · safety/service.ts:30,54-61 · safety/routes.ts:55-72"],
+["med","Drug matching misses brand names","Only generic names match, so “Augmentin” against a penicillin allergy gives no warning. The pack version isn't stored on the prescription.","","Add brand-to-generic mapping and a pack-version column.","rxcheck/"],
+["med","External calls inside DB transactions, and notification gaps","Payment order creation (up to 10s), PDF rendering and file writes run inside transactions. A notification and its outbox entry aren't written atomically. Emergency SMS waits behind 22 other jobs.","","Move I/O out of transactions, write the outbox atomically, and prioritise SOS dispatch.","payments/service.ts:77,181 · prescriptions/service.ts:159-179 · notifications/service.ts:83-139"],
+["med","Unbounded lists, N+1 queries, no CHECK constraints","28 endpoints load full tables and slice in memory with offset cursors. Missed-dose marking does one insert per dose every 15 seconds. Status and amount columns have no constraints. Business logic lives in route files that the worker imports.","","Use keyset pagination in SQL, batch inserts, add CHECK constraints, and move logic into services.","clinician/routes.ts:96-99,224-231 · worker/jobs.ts:8-58"],
+["low","Time and edge-case bugs","Cancel messages show UTC instead of IST. Doses near midnight are never marked missed. Idempotency keys can get stuck in progress. Daily slot extension can be skipped. All 4xx errors become 400, and uncaught unique/FK violations become 500.","","Use formatIst, look back across midnight, add a TTL to keys, and map DB error codes.","appointments/routes.ts:170 · lib/idempotency.ts:40-46 · app.ts:314-320"]
+]},
+{id:"web",name:"Staff web portal",checks:"typecheck ✓ · lint ✓ · 226/226 tests ✓ · npm audit: 5 high, 2 mod (dev tooling only)",f:[
+["high","Access and refresh tokens readable by page scripts","The session, including the refresh token, is stored in sessionStorage, and the CSP allows 'unsafe-inline' scripts.","Any XSS bug lets an attacker take the refresh token and keep access to patient data.","Put the refresh token in an HttpOnly, Secure, SameSite=Strict cookie, keep the access token in memory, and switch to a nonce-based CSP.","apps/web/src/lib/api/session.ts:3,59 · lib/security-headers.ts:30"],
+["med","Open redirect after login and MFA","next is only checked for a leading / and not //. /login?next=/\\evil.com resolves to evil.com.","A staff member signs in on the real portal and lands on a fake “session expired” page.","Resolve with new URL(next, origin) and require the same origin.","app/login/page.tsx:68 · app/mfa/page.tsx:42 · lib/mfa.ts:29"],
+["med","Blob documents opened on the portal origin without a type check","Safe today only because the API allow-lists upload types.","If HTML or SVG ever got through, its script would run as the portal.","Only open allow-listed blob types and download everything else.","components/record-file.tsx:22-25 · lib/download.ts:27"],
+["med","Role gating is client-side only, and there are no error boundaries","The API enforces roles (about 75 checks), so this is defence in depth. A render error blanks a clinical screen.","","Add error.tsx boundaries and a test that maps every portal route to its server role check.","components/app-shell.tsx:98-120"],
+["low","Polish items","Unvalidated link protocols from the API, unencoded patient IDs in URLs, rose badge contrast at 4.49:1, recharts loaded statically, no focus trap in the mobile nav. Update eslint-config-next and vitest.","","","admin/schemes/page.tsx:158 · lib/video.ts:63"]
+]},
+{id:"mob",name:"Mobile apps",checks:"flutter analyze ✓ in all 4 apps",f:[
+["crit","Provider app deletes unsynced visit data on a server error","Any non-network refresh failure, including 500, 502 or 503, clears tokens and then wipes the offline queue and cache without asking.","A nurse records vitals offline, reconnects, gets a 502 on refresh, and loses every queued visit note and photo.","Clear tokens only on a 401 from refresh. Keep the queue scoped to the user and require re-login before flushing.","provider_app/lib/core/api/api_client.dart:211-217 · auth_controller.dart:217-229"],
+["high","“Server address” setting enabled in release builds","The override is allowed whenever the compiled URL isn't https, and the default is http://10.0.2.2. The artefacts in dist/android were built this way.","An attacker persuades a user to enter their server, relays to the real API, and captures the OTP and tokens.","Also require !kReleaseMode, refuse store builds without https in the build script, and rebuild dist/.","core/server/server_settings.dart:79-80 · config.dart:15-18"],
+["high","Demo builds allow cleartext to any host and share the production identity","Demo builds use the same applicationId and upload key as store builds.","A demo APK passed around sends OTPs and PHI over plain HTTP.","Add applicationIdSuffix \".demo\", use a separate key, and label demo builds visibly.","network_security_config_demo.xml · android/app/build.gradle.kts"],
+["high","Patient app allows Android backup","allowBackup isn't set to false, so preferences and the secure-storage prefs file go to Google cloud backup.","","Set allowBackup=\"false\" or add dataExtractionRules.","patient_app/android/app/src/main/AndroidManifest.xml:24-28"],
+["high","All-in-one iOS app has no permission usage strings","Camera, mic, speech, location and HealthKit code are bundled, so iOS will crash on the first permission request.","","Copy the usage keys and entitlements from the individual apps.","all_in_one/ios/Runner/Info.plist"],
+["med","Offline queue drops conflicts; photos are unencrypted","409 and 403/404 responses silently discard queued items. A corrupt queue is reset and then overwritten. Visit photos sit unencrypted in app storage.","","Add a dead-letter list the user acknowledges, back up the blob before overwriting, and encrypt photos.","provider_app/lib/features/offline/offline_queue.dart:138-209 · photo_store.dart:29-47"],
+["med","No certificate pinning, debug-key fallback, iOS local networking","Release Gradle silently signs with the debug key when key.properties is missing. The patient iOS app allows HTTP to local hosts in release.","","Pin the API host, fail release builds without a keystore, and remove NSAllowsLocalNetworking from release.","build.gradle.kts:61-66 · patient_app/ios/Runner/Info.plist:95-98"],
+["med","Four apps share code by copy-paste","server_settings.dart, api_client and token stores are duplicated with drift, so every security fix has to be made three times.","","Extract a packages/cc_core shared package.",""],
+["low","Minor","An unused CAMERA permission can make image capture throw. Some strings are hardcoded in English. Bundle IDs are inconsistent for all-in-one.","","","chooser_screen.dart:100,202,208"]
+]},
+{id:"inf",name:"Infrastructure & CI/CD",checks:"Git history: no secrets ever committed · 8.6 MB tracked",f:[
+["high","Tests don't gate deploys","Any v* tag deploys to staging and then production with no dependency on CI, and mobile-v* tags push to the Play internal track the same way. Production approval exists only as a comment.","A tag on a failing commit ships to production.","Call ci.yml as a reusable workflow inside deploy, add tag protection, and confirm environment reviewers in GitHub.","deploy.yml:8-63 · mobile-release.yml:33"],
+["high","Actions pinned by tag, not SHA","This includes third-party actions holding the Play service account and the keystore.","A moved tag steals signing keys or AWS sessions.","Pin to commit SHAs and add Dependabot for github-actions.","mobile-release.yml:163"],
+["high","No CloudTrail, GuardDuty, flow logs or WAF/ALB logs; log retention is 30 days","CERT-In requires 180 days of logs kept in India, and the incident runbook assumes a forensic trail.","","Add an encrypted org trail in ap-south-1, GuardDuty, flow and ALB logs, and retention of at least 180 days.","infra/terraform · variables.tf:45-48"],
+["high","Signing keys sit in plaintext with no backup","Four upload keystores and their passwords are in a Desktop folder (signing/). Store and key passwords are identical, and there is no evidence of the offline backup the docs ask for.","Disk loss means a slow Play key reset. Laptop compromise means someone can sign malicious updates.","Keep the passwords in a password manager and CI secrets only, keep an encrypted offline backup of the .jks files, and confirm Play App Signing enrolment.","../signing/*.properties · docs/STORE_SUBMISSION.md:50"],
+["med","State, DR and alerting gaps","The Terraform S3 backend is disabled, so state is local. There is no cross-region or cross-account backup and no vault lock. alarm_emails defaults to empty, so nobody is paged. The on-call sheet is blank and the restore drill has never been run.","","Enable remote state, set up AWS Backup with vault lock copying to ap-south-2, require alarm targets in production, and run the drill.","backend.tf:22-24 · variables.tf:345 · OPERATIONS_RUNBOOK.md:16"],
+["med","Compose and images","API and portal ports in docker-compose bind all interfaces with dev OTP. minio:latest and clamav:stable are mutable, and the RDS CA bundle is fetched without a checksum. npm audit doesn't block CI. There is no secret scanning or image scan gate, and e2e and load tests never run in CI.","","Bind to 127.0.0.1, pin images by digest, add gitleaks and a Trivy gate, and run e2e against compose in CI.","docker-compose.yml:61-205 · services/api/Dockerfile:56 · ci.yml:27-45"],
+["low","Minor","Keystore decoded before umask 077. .gitignore misses *.p12, *.p8, *.pem, .env.* and google-services.json. Redis has no auth token. iOS builds use the newest Xcode, so they aren't reproducible.","","","mobile-release.yml:119 · .gitignore"]
+]},
+{id:"cmp",name:"Compliance & clinical",checks:"GO_LIVE_CREDENTIALS.md: no real secrets",f:[
+["crit","Clinical safety rules are unapproved fixtures","Only fixture-0.1 triage and interaction packs exist, and AI_EVALUATION.md has no results or clinician review. Production only logs a warning, which contradicts the launch checklist. The App Store notes call the rules “clinician-approved”.","","Get a medical director's signed pack, run the 14 evaluation scenarios, block readiness without an approved pack, and correct the review notes.","modules/safety/engine.ts · rxcheck/fixtures.ts · server.ts:17-19 · STORE_SUBMISSION §10.2"],
+["crit","No CDSCO medical-device (SaMD) assessment","Triage escalation, fall auto-escalation (on by default), drug-interaction checks, the AI scribe and remote monitoring may count as medical-device software under MDR 2017.","","Get a written regulatory opinion. Until then, turn off fall auto-escalation and rxcheck and keep claims to navigation.","LAUNCH_CHECKLIST B.06"],
+["crit","Store declarations contradict the build","The docs say Health Connect and HealthKit are not requested, but the manifests request 7 Health Connect permissions, the iOS app has HealthKit entitlements, and there is no PrivacyInfo.xcprivacy file.","Store rejection, or a policy strike for a false Data Safety form.","Remove the permissions or file the declarations, then update Data Safety and privacy labels and add the privacy manifest.","patient_app AndroidManifest · Runner.entitlements · STORE_SUBMISSION §6,8"],
+["crit","Legal prerequisites open","Sending conversation text to Anthropic outside India is unassessed. Consent text is placeholder, the legal-draft flag defaults on, and there is no named Grievance Officer.","","Get counsel sign-off, DPAs and a named Grievance Officer before collecting real data.","consent/catalog.ts · KNOWN_LIMITATIONS L-14"],
+["high","Docs claim AI text is encrypted; it is plain text","messages.text is stored as plain text. The data key is used only for insurance numbers.","","Encrypt message and intake text, or correct SECURITY.md and DATA_PRIVACY.md.","db/schema.ts:613"],
+["high","Consent not enforced on the server","Only ai_assistance is checked. health_data_processing, share_with_clinicians and family_sharing are never enforced, and revoking consent doesn't start account closure.","","Gate patient-data routes on the required consents and link revocation to closure. Update the notice to DPDP Rules 2025.","ai/routes.ts · records/routes.ts:121"],
+["high","Children's data: verifiable parental consent claimed but not built","There is no age gate or guardian verification, and any account can add a child dependent.","","Add an age gate and guardian attestation (DPDP s.9 / Rule 10).","POST /patients · /privacy §8"],
+["high","Retention, erasure and breach response incomplete","No purge jobs for AI text, GPS, OTPs or sessions. Deletion leaves S3 files and vitals behind, and the export omits files and access logs. The incident runbook has no 72-hour Data Protection Board timeline or templates.","","Build retention jobs, define S3 deletion, extend the export, and write breach timelines and templates.","worker/jobs.ts · account/service.ts · INCIDENT_RESPONSE §6"],
+["high","Telemedicine Practice Guidelines gaps","No drug-list checks (List O/A/B, Schedule X, NDPS) by consult type, no recorded teleconsult consent, pharmacy accepts any uploaded record as a prescription, and NMC registration isn't verified.","","Classify drugs and block by consult mode, record consent, and verify registrations.","prescriptions/service.ts · pharmacy/routes.ts:92-112"],
+["high","Unvetted features on by default","Pharmacy, govt schemes, ABDM, ambulance, mental wellness, voice input (hi/te not evaluated) and fall detection are all on.","","Default them off in production and enable each after sign-off.","DEFAULT_FLAGS"],
+["med","Documentation and governance","KNOWN_LIMITATIONS and SECURITY still describe MFA, malware scanning and data requests as missing; all three are built. The audit log lacks patientId, purpose and a hash chain. Significant Data Fiduciary duties are likely, and the DPIA is incomplete. ABDM isn't started though its flag is on. The review-OTP needs a removal step.","","Update the registers, extend the audit log, and start the DPIA.","docs/"]
+]}
+];
+const SEV={crit:"Critical",high:"High",med:"Medium",low:"Low"};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const board=document.getElementById("board"),areas=document.getElementById("areas");
+let tot={crit:0,high:0,med:0,low:0};
+AREAS.forEach(a=>{
+  const c={crit:0,high:0,med:0,low:0};a.f.forEach(x=>{c[x[0]]++;tot[x[0]]++});
+  const cell=(k,cls)=>`<td class="n"><span class="${c[k]?cls:"n0"}">${c[k]}</span></td>`;
+  board.insertAdjacentHTML("beforeend",`<tr><td><a href="#${a.id}" style="color:inherit">${a.name}</a></td>${cell("crit","nc")}${cell("high","nh")}${cell("med","nm")}${cell("low","nl")}<td class="checks">${esc(a.checks)}</td></tr>`);
+  const items=a.f.map(([s,t,what,sc,fix,where])=>`<details class="finding s-${s}" data-s="${s}"><summary><span class="chip">${SEV[s]}</span><span><b>${esc(t)}</b></span></summary><div class="body">${what?`<p>${esc(what)}</p>`:""}${sc?`<p><span class="lbl">Scenario</span>${esc(sc)}</p>`:""}${fix?`<p><span class="lbl">Fix</span>${esc(fix)}</p>`:""}${where?`<p class="where mono">${esc(where)}</p>`:""}</div></details>`).join("");
+  areas.insertAdjacentHTML("beforeend",`<div class="area" id="${a.id}"><div class="area-head"><h3>${a.name}</h3><span class="checks">${esc(a.checks)}</span></div>${items}</div>`);
+});
+const t=k=>`<td class="n"><span class="${{crit:"nc",high:"nh",med:"nm",low:"nl"}[k]}">${tot[k]}</span></td>`;
+board.insertAdjacentHTML("beforeend",`<tr><td><b>Total</b></td>${t("crit")}${t("high")}${t("med")}${t("low")}<td></td></tr>`);
+document.querySelectorAll(".filters button").forEach(b=>b.addEventListener("click",()=>{
+  const f=b.dataset.f;
+  document.querySelectorAll(".filters button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+  document.querySelectorAll(".finding").forEach(d=>{const show=f==="all"||d.dataset.s===f;d.hidden=!show;if(show&&f!=="all")d.open=true});
+  document.querySelectorAll(".area").forEach(a=>a.hidden=!a.querySelector(".finding:not([hidden])"));
+}));
+</script>
