@@ -79,7 +79,10 @@ describe('home visits', () => {
     expect(pv.body.addressMasked).toBe(true);
     expect(pv.body.address.line1).toBeUndefined();
     expect(pv.body.address).toMatchObject({ city: 'Hyderabad', pincode: '500034' });
-    expect(list.body.items.find((v: any) => v.id === hv.id).address.line1).toBeUndefined();
+    // window(5) can fall after midnight IST, so the visit may be in 'upcoming' rather than 'today'.
+    const upcoming = await t.req(sunita, 'GET', '/provider/visits?scope=upcoming');
+    const listed = [...list.body.items, ...upcoming.body.items].find((v: any) => v.id === hv.id);
+    expect(listed.address.line1).toBeUndefined();
         // another provider cannot act on it
     expect((await t.req(ravi, 'POST', `/home-visits/${hv.id}/accept`)).status).toBe(403);
     expect((await t.req(ravi, 'GET', `/home-visits/${hv.id}`)).status).toBe(403);
