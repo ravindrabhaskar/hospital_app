@@ -1,0 +1,152 @@
+# Always-current demo APKs at a permanent link.
+#
+# Every push to main that touches a mobile app rebuilds the four demo APKs and replaces
+# the files on the "apk-latest" GitHub release, so these links always serve the newest build:
+#
+#   https://github.com/<owner>/<repo>/releases/download/apk-latest/CareCompanion-All-in-One.apk
+#   https://github.com/<owner>/<repo>/releases/download/apk-latest/CareCompanion-patient.apk
+#   https://github.com/<owner>/<repo>/releases/download/apk-latest/CareCompanion-Pro-nurse.apk
+#   https://github.com/<owner>/<repo>/releases/download/apk-latest/CareCompanion-Doctor.apk
+#
+# Demo builds (like scripts/build-android-release.ps1 -Demo): the in-app "Server address"
+# setting is enabled and plain-http LAN servers are allowed. Not for the Play Store.
+#
+# Signing: one dedicated demo key for all four APKs, so phones can install each new build
+# over the previous one. Secrets: DEMO_ANDROID_KEYSTORE_BASE64, DEMO_ANDROID_KEYSTORE_PASSWORD,
+# DEMO_ANDROID_KEY_ALIAS (key password = store password). The store upload keys are not used.
+# Optional repo variable DEMO_API_BASE_URL sets the default server baked into the build.
+name: Demo APKs (latest)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/patient_app/**"
+      - "apps/provider_app/**"
+      - "apps/doctor_app/**"
+      - "apps/all_in_one/**"
+      - ".github/workflows/demo-apk.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: demo-apk
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  API_BASE_URL: ${{ vars.DEMO_API_BASE_URL || 'http://10.10.17.134:4000/api/v1' }}
+
+jobs:
+  build:
+    name: build (${{ matrix.app }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { app: all_in_one, file: CareCompanion-All-in-One.apk }
+          - { app: patient_app, file: CareCompanion-patient.apk }
+          - { app: provider_app, file: CareCompanion-Pro-nurse.apk }
+          - { app: doctor_app, file: CareCompanion-Doctor.apk }
+    env:
+      APP_DIR: apps/${{ matrix.app }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: "17" }
+
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+
+      - name: Demo signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.DEMO_ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.DEMO_ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.DEMO_ANDROID_KEY_ALIAS }}
+        run: |
+          set -e
+          [ -n "$KEYSTORE_B64" ] || { echo "::error::Secret DEMO_ANDROID_KEYSTORE_BASE64 is not set"; exit 1; }
+          echo "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/demo-keystore.jks"
+          umask 077
+          printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=%s\n' \
+            "$STORE_PASSWORD" "$STORE_PASSWORD" "$KEY_ALIAS" "$RUNNER_TEMP/demo-keystore.jks" \
+            > "$APP_DIR/android/key.properties"
+
+      - name: Build demo APK
+        working-directory: ${{ env.APP_DIR }}
+        env:
+          ORG_GRADLE_PROJECT_demoCleartext: "true"
+        run: |
+          set -e
+          flutter pub get
+          # Build number keeps rising with every run so each APK installs as an update.
+          flutter build apk --release \
+            --build-number=$((1000 + ${{ github.run_number }})) \
+            --dart-define=API_BASE_URL=$API_BASE_URL \
+            --dart-define=ALLOW_SERVER_OVERRIDE=true \
+            --android-project-arg=demoCleartext=true
+          cp build/app/outputs/flutter-apk/app-release.apk "$RUNNER_TEMP/${{ matrix.file }}"
+
+      - name: Check the APK is not debug-signed
+        run: |
+          set -e
+          APKSIGNER=$(ls "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          CERT=$("$APKSIGNER" verify --print-certs "$RUNNER_TEMP/${{ matrix.file }}")
+          echo "$CERT" | grep -q "CN=CareCompanion Demo" || { echo "::error::APK is not signed with the demo key"; echo "$CERT"; exit 1; }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app }}
+          path: ${{ runner.temp }}/${{ matrix.file }}
+          retention-days: 7
+
+      - name: Remove signing material
+        if: always()
+        run: rm -f "$RUNNER_TEMP/demo-keystore.jks" "$APP_DIR/android/key.properties"
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: apk-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: apks, merge-multiple: true }
+
+      - name: Publish to the apk-latest release
+        run: |
+          set -e
+          cd apks
+          sha256sum *.apk > SHA256SUMS.txt
+          SHORT=${GITHUB_SHA::7}
+          NOW=$(TZ=Asia/Kolkata date '+%d %b %Y, %H:%M IST')
+          BASE="https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}"
+          cat > notes.md <<EOF
+          **Latest CareCompanion demo APKs.** Rebuilt automatically on every change to the apps; these links always give the newest build.
+
+          Last updated: ${NOW}, from commit [${SHORT}](https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}) (build $((1000 + ${{ github.run_number }}))).
+
+          | App | Permanent download link |
+          |---|---|
+          | All-in-One (patient, nurse and doctor) | ${BASE}/CareCompanion-All-in-One.apk |
+          | Patient / family | ${BASE}/CareCompanion-patient.apk |
+          | Nurse (CareCompanion Pro) | ${BASE}/CareCompanion-Pro-nurse.apk |
+          | Doctor | ${BASE}/CareCompanion-Doctor.apk |
+
+          Install over the previous version to update. On the login screen tap **Server: …** to point the app at your backend (e.g. the link from START-PHONE-DEMO.bat). Demo login OTP: 123456.
+
+          Demo builds for testing, not for the app stores.
+          EOF
+          sed -i 's/^          //' notes.md
+          if ! gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$TAG" -R "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "CareCompanion demo APKs (latest)" --notes-file notes.md --latest
+          fi
+          gh release upload "$TAG" -R "$GITHUB_REPOSITORY" *.apk SHA256SUMS.txt --clobber
+          gh release edit "$TAG" -R "$GITHUB_REPOSITORY" --notes-file notes.md --latest \
+            --title "CareCompanion demo APKs (latest, ${SHORT})"
