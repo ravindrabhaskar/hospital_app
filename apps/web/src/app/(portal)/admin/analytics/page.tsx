@@ -6,14 +6,15 @@ import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, Tooltip, 
 import { BarChart3, Table2 } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Analytics } from "@/lib/api/types";
+import { CHART } from "@/lib/chart-theme";
 import { formatINR, formatNumber, formatPercent } from "@/lib/format";
 import { Button, Card, PageHeader, QueryView, StatTile, Table, Td, Th, cx } from "@/components/ui";
 
-/* Chart tokens. Single series → one hue (validated: passes lightness/chroma/contrast on white). */
-const SERIES = "#8A3A62";
-const GRID = "#E3ECE7";
-const INK_MUTED = "#5B6B64";
-const INK = "#12211B";
+/* Chart tokens follow the theme palette (globals.css). Single series → one hue. */
+const SERIES = CHART.series;
+const GRID = CHART.grid;
+const INK_MUTED = CHART.inkMuted;
+const INK = CHART.ink;
 
 const FUNNEL_STEPS: { key: keyof Analytics["funnel"]; label: string }[] = [
   { key: "conversationsStarted", label: "AI conversations started" },

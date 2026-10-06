@@ -28,6 +28,7 @@ class Intake {
     required this.fields,
     required this.missingFields,
     required this.complete,
+    this.progress,
   });
 
   static const fieldKeys = [
@@ -44,6 +45,16 @@ class Intake {
   final List<String> missingFields;
   final bool complete;
 
+  /// Server-computed "question step of total" (monotonic); null from older servers.
+  final (int, int)? progress;
+
+  static (int, int)? _progress(Object? p) {
+    if (p is! Map) return null;
+    final step = p['step'], total = p['total'];
+    if (step is! num || total is! num || total <= 0) return null;
+    return (step.toInt(), total.toInt());
+  }
+
   factory Intake.fromJson(Json j) => Intake(
         fields: {
           for (final k in fieldKeys)
@@ -51,6 +62,7 @@ class Intake {
         },
         missingFields: strList(j, 'missingFields'),
         complete: boolOf(j, 'complete'),
+        progress: _progress(j['progress']),
       );
 
   static Intake empty() => Intake(fields: const {}, missingFields: const [], complete: false);

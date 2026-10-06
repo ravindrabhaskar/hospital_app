@@ -1919,5 +1919,70 @@
   "handledBy": "{name} देख रहे हैं",
   "rateSupport": "हमारी सपोर्ट को रेट करें",
   "youRated": "आपने {score} / 5 रेटिंग दी। धन्यवाद!",
+  "aiGreeting": "नमस्ते! मैं आपका CareCompanion सहायक हूँ। मैं आपकी समस्या समझने और सही देखभाल तक पहुँचने में मदद कर सकता हूँ। मैं निदान नहीं कर सकता। आज आपको क्या परेशानी है?",
+  "@aiGreeting": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrFever": "बुखार",
+  "@qrFever": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrHeadache": "सिरदर्द",
+  "@qrHeadache": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrCoughCold": "खाँसी या जुकाम",
+  "@qrCoughCold": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrStomachPain": "पेट दर्द",
+  "@qrStomachPain": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrSkinProblem": "त्वचा की समस्या",
+  "@qrSkinProblem": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrSinceToday": "आज से",
+  "qrSinceYesterday": "कल से",
+  "qrTwoThreeDays": "2-3 दिन",
+  "qrMoreThanWeek": "एक हफ़्ते से ज़्यादा",
+  "qrMild": "हल्का (3/10)",
+  "@qrMild": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrModerate": "मध्यम (5/10)",
+  "@qrModerate": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrSevere": "गंभीर (8/10)",
+  "@qrSevere": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrNoOtherSymptoms": "कोई और लक्षण नहीं",
+  "@qrNoOtherSymptoms": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrNausea": "जी मिचलाना",
+  "@qrNausea": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrDizziness": "चक्कर आना",
+  "@qrDizziness": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrBodyAche": "बदन दर्द",
+  "@qrBodyAche": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrCall108": "108 पर कॉल करें",
+  "qrPressSos": "SOS दबाएँ",
+  "qrBookDoctor": "डॉक्टर बुक करें",
+  "qrRequestHomeVisit": "होम विज़िट का अनुरोध करें",
+  "cameraPermissionDenied": "कैमरे की अनुमति बंद है। फ़ोटो लेने के लिए सेटिंग्स में कैमरा की अनुमति दें, या इसके बजाय फ़ाइल अपलोड करें।",
+  "photosPermissionDenied": "फ़ोटो और फ़ाइलों की अनुमति बंद है। फ़ाइल चुनने के लिए सेटिंग्स में अनुमति दें।",
+  "openSettings": "सेटिंग्स खोलें",
+  "amountPaidTotal": "चुकाई गई राशि",
+  "attachmentNeedsText": "यह रिकॉर्ड भेजने के लिए एक छोटा संदेश लिखें।",
   "itemsCount": "{count, plural, =1{1 आइटम} other{{count} आइटम}}"
 }

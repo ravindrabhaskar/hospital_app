@@ -210,6 +210,10 @@ export function isPortalUser(userRoles: readonly Role[]): boolean {
 export function canRefund(userRoles: readonly Role[]) {
   return hasAnyRole(userRoles, ["ops_admin", "super_admin"]);
 }
+/** Invoices (GET /payments/:id/invoice) are finance documents: only finance roles see them in the portal. */
+export function canViewInvoices(userRoles: readonly Role[]) {
+  return hasAnyRole(userRoles, FINANCE_ROLES);
+}
 /** POST /ops/providers/:id/verification is "(ops_admin)"; super_admin is treated as a superset. */
 export function canVerifyProviders(userRoles: readonly Role[]) {
   return hasAnyRole(userRoles, ["ops_admin", "super_admin"]);

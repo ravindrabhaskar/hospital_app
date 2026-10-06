@@ -137,6 +137,45 @@ describe('payments & webhooks', () => {
     expect(notifs.body.items.filter((n: any) => n.deepLink === `/appointments/${r.body.appointment.id}` && n.title === 'Appointment confirmed')).toHaveLength(1);
   });
 
+  it('mock mode: retry after a failed payment re-holds the slot and a fresh attempt succeeds (B1); episode states (B30)', async () => {
+    const slot = await firstAvailableSlot(t, vaibhav, doctorId, 18);
+    const r = await book(slot.id);
+    const payId = r.body.payment.id;
+    const firstOrder = r.body.payment.gatewayOrderId;
+    const fail = await t.req(vaibhav, 'POST', `/payments/${payId}/confirm-mock`, { outcome: 'failure' }, idem());
+    expect(fail.body.status).toBe('failed');
+    const cancelled = await t.req(vaibhav, 'GET', `/appointments/${r.body.appointment.id}`);
+    expect(cancelled.body.status).toBe('cancelled');
+    expect(cancelled.body.cancelReason).toBe('payment_failed');
+    // B30: the booking's episode does not stay NEW after a failed payment.
+    const ep1 = await t.req(vaibhav, 'GET', `/care-episodes/${cancelled.body.careEpisodeId}`);
+    expect(ep1.body.status).toBe('AWAITING_CARE');
+    // Confirming the failed payment again is a no-op (what the app used to do).
+    expect((await t.req(vaibhav, 'POST', `/payments/${payId}/confirm-mock`, { outcome: 'success' }, idem())).body.status).toBe('failed');
+    // B1: retry -> fresh pending attempt (new gateway order), appointment back to pending_payment with the slot held.
+    const retry = await t.req(vaibhav, 'POST', `/payments/${payId}/retry`, undefined, idem());
+    expect(retry.status).toBe(200);
+    expect(retry.body).toMatchObject({ id: payId, status: 'pending', gateway: 'mock', amount: 499 });
+    expect(retry.body.gatewayOrderId).not.toBe(firstOrder);
+    expect((await t.req(vaibhav, 'GET', `/appointments/${r.body.appointment.id}`)).body.status).toBe('pending_payment');
+    expect((await book(slot.id)).status).toBe(409); // slot is held again
+    const ok = await t.req(vaibhav, 'POST', `/payments/${payId}/confirm-mock`, { outcome: 'success' }, idem());
+    expect(ok.body.status).toBe('succeeded');
+    expect((await t.req(vaibhav, 'GET', `/appointments/${r.body.appointment.id}`)).body.status).toBe('confirmed');
+    expect((await t.req(vaibhav, 'GET', `/care-episodes/${cancelled.body.careEpisodeId}`)).body.status).toBe('CARE_SCHEDULED');
+    // A succeeded payment cannot be retried.
+    expect((await t.req(vaibhav, 'POST', `/payments/${payId}/retry`, undefined, idem())).status).toBe(409);
+  });
+
+  it('cancelling an unpaid booking closes its own episode as CANCELLED (B30)', async () => {
+    const slot = await firstAvailableSlot(t, vaibhav, doctorId, 20);
+    const r = await book(slot.id);
+    const c = await t.req(vaibhav, 'POST', `/appointments/${r.body.appointment.id}/cancel`, { reason: 'Changed my mind' });
+    expect(c.status).toBe(200);
+    const ep = await t.req(vaibhav, 'GET', `/care-episodes/${r.body.appointment.careEpisodeId}`);
+    expect(ep.body.status).toBe('CANCELLED');
+  });
+
   it('failed payment releases the slot; ops refund requires ops_admin', async () => {
     const slot = await firstAvailableSlot(t, vaibhav, doctorId, 14);
     const r = await book(slot.id);

@@ -65,6 +65,10 @@ class ClinicianRepository {
   Future<List<MedicalRecord>> records(String patientId) async =>
       itemsOf(await _api.get('/records', query: {'patientId': patientId})).map(MedicalRecord.fromJson).toList();
 
+  /// One record (e.g. a message attachment); 403/404 when not visible.
+  Future<MedicalRecord> record(String recordId) async =>
+      MedicalRecord.fromJson(asJson(await _api.get('/records/$recordId')));
+
   Future<List<int>> recordFile(String recordId) => _api.getBytes('/records/$recordId/file');
 
   Future<List<Vital>> vitals(String patientId, {String? type}) async =>

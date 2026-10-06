@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:care_companion_patient/core/api/api_exception.dart';
 import 'package:care_companion_patient/core/push/push_service.dart';
 import 'package:care_companion_patient/data/repositories.dart';
+import 'package:care_companion_patient/features/care/appointment_detail_screen.dart' show hasFailedPaymentFor;
 import 'package:care_companion_patient/features/care/video_join.dart';
 import 'package:care_companion_patient/features/misc/force_update_screen.dart';
 import 'package:care_companion_patient/features/payments/checkout_launcher.dart';
@@ -99,10 +100,17 @@ class FakePaymentRepository extends PaymentRepository {
   final calls = <String>[];
   Payment Function(String id)? onVerify;
 
+  /// Gateway of the fresh attempt returned by [retry].
+  String retryGateway = 'razorpay';
+  final retryKeys = <String?>[];
+
   @override
-  Future<Payment> retry(String id) async {
+  Future<Payment> retry(String id, {String? idempotencyKey}) async {
     calls.add('retry');
-    return payment(gateway: 'razorpay', withCheckout: true, orderId: 'order_retry');
+    retryKeys.add(idempotencyKey);
+    return retryGateway == 'razorpay'
+        ? payment(gateway: 'razorpay', withCheckout: true, orderId: 'order_retry')
+        : payment(gateway: retryGateway, orderId: 'order_retry');
   }
 
   @override
@@ -318,6 +326,40 @@ void main() {
       await tester.pumpAndSettle();
       expect(repo.calls, ['mock:true']);
       expect(results.single!.succeeded, isTrue);
+    });
+
+    testWidgets('mock: retry after a failed payment starts a fresh attempt, then confirms (B1)',
+        (tester) async {
+      final (repo, results) = await pumpSheet(tester, p: payment(), platform: 'android');
+      repo.retryGateway = 'mock';
+      await tester.tap(find.text('Simulate failure'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('payment-failed')), findsOneWidget);
+      expect(results, isEmpty, reason: 'sheet stays open after a failure');
+
+      await tester.tap(find.byKey(const Key('pay-mock')));
+      await tester.pumpAndSettle();
+      expect(repo.calls, ['mock:false', 'retry', 'mock:true'],
+          reason: 'never re-confirms the failed order; retries first');
+      expect(repo.retryKeys.single, isNotEmpty, reason: 'retry is an idempotent route');
+      expect(results.single!.succeeded, isTrue);
+    });
+
+    testWidgets('mock: a payment that already failed is retried before confirming', (tester) async {
+      final (repo, results) =
+          await pumpSheet(tester, p: payment(status: 'failed'), platform: 'android');
+      repo.retryGateway = 'mock';
+      expect(find.byKey(const Key('payment-failed')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('pay-mock')));
+      await tester.pumpAndSettle();
+      expect(repo.calls, ['retry', 'mock:true']);
+      expect(results.single!.succeeded, isTrue);
+    });
+
+    test('a failed appointment payment can be completed again', () {
+      expect(hasFailedPaymentFor('a1', [payment(status: 'failed')]), isTrue);
+      expect(hasFailedPaymentFor('a1', [payment(status: 'refunded')]), isFalse);
+      expect(hasFailedPaymentFor('other', [payment(status: 'failed')]), isFalse);
     });
 
     testWidgets('razorpay on web asks to complete payment in the mobile app', (tester) async {

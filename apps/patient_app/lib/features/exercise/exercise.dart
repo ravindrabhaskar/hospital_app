@@ -74,6 +74,7 @@ class _PlanViewState extends ConsumerState<_PlanView> {
   Future<void> _finish() async {
     final l = context.l10n;
     final result = await showModalBottomSheet<(int, String)>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => const PainScoreSheet(),

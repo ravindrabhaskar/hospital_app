@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 import { and, desc, eq, inArray, isNull, lte, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../../db/client.js';
 import { patients, payments, subscriptionPlans, subscriptions } from '../../db/schema.js';
@@ -18,7 +19,7 @@ export const RENEWAL_REMINDER_DAYS = 7;
 export const toPlan = (p: PlanRow) => ({
   code: p.code,
   name: p.name,
-  description: p.description,
+  description: stripGovernanceMarkers(p.description),
   priceMonthly: p.priceMonthly,
   priceYearly: p.priceYearly,
   benefits: p.benefits,

@@ -24,6 +24,10 @@ class AppColors {
   static const sky = Color(0xFF2F6FDE);
   static const lavenderBg = Color(0xFFEDE9FB);
   static const lavender = Color(0xFF7B61D9);
+  // Disabled buttons: still clearly "off" (no plum fill) but readable,
+  // textSecondary on a dusty-plum tint is about 5:1.
+  static const disabledBg = Color(0xFFEADFE4);
+  static const disabledFg = textSecondary;
 }
 
 class AppSpacing {
@@ -98,6 +102,9 @@ ThemeData buildAppTheme() {
       style: FilledButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.mint100,
+        disabledBackgroundColor: AppColors.disabledBg,
+        disabledForegroundColor: AppColors.disabledFg,
+        disabledIconColor: AppColors.disabledFg,
         minimumSize: const Size.fromHeight(52),
         shape: pill,
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -106,6 +113,8 @@ ThemeData buildAppTheme() {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
+        disabledForegroundColor: AppColors.disabledFg,
+        disabledIconColor: AppColors.disabledFg,
         minimumSize: const Size(48, 52),
         side: const BorderSide(color: AppColors.primary),
         shape: pill,

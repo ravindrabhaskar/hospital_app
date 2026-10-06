@@ -142,6 +142,7 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
 
   Future<void> _pickRecord() async {
     final r = await showModalBottomSheet<MedicalRecord>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => const _RecordPickerSheet(),
@@ -151,6 +152,7 @@ class _NewTicketScreenState extends ConsumerState<NewTicketScreen> {
 
   Future<void> _pickBooking() async {
     final r = await showModalBottomSheet<({String type, String id, String label})>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => const _BookingPickerSheet(),
@@ -392,6 +394,7 @@ class _TicketScreenState extends ConsumerState<TicketScreen> with WidgetsBinding
 
   Future<void> _rate() async {
     final updated = await showModalBottomSheet<Ticket>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => RateTicketSheet(ticketId: widget.id),

@@ -16,6 +16,20 @@ class RoutePlan {
   /// Stops in visiting order (the server orders them; we sort defensively).
   List<RouteStop> get ordered => [...stops]..sort((a, b) => a.order.compareTo(b.order));
 
+  /// Stops the provider still has to visit, safe to show (defensive against
+  /// an older server): finished visits (completed / cancelled / rejected /
+  /// reassigned) are dropped, and visits not yet accepted keep only their
+  /// area and pincode, never the street address, landmark or coordinates.
+  ///
+  /// [knownStatuses] (visit id → status, e.g. from today's visit list) fills
+  /// in when a stop carries no `status`. A stop whose status is unknown is
+  /// treated as not yet accepted.
+  List<RouteStop> remaining([Map<String, String> knownStatuses = const {}]) => [
+        for (final s in ordered)
+          if (!RouteStop.isFinished(s.status ?? knownStatuses[s.visitId]))
+            RouteStop.isAccepted(s.status ?? knownStatuses[s.visitId]) ? s : s.areaOnly(),
+      ];
+
   factory RoutePlan.fromJson(Json json) {
     final start = json['startLocation'] is Map ? asJson(json['startLocation']) : null;
     return RoutePlan(
@@ -40,6 +54,10 @@ class RouteStop {
     this.lng,
     this.distanceFromPrevKm,
     this.etaAt,
+    this.status,
+    this.city = '',
+    this.pincode = '',
+    this.addressHidden = false,
   });
 
   final int order;
@@ -55,26 +73,65 @@ class RouteStop {
   final num? distanceFromPrevKm;
   final DateTime? etaAt;
 
+  /// Visit status, when the server includes it.
+  final String? status;
+
+  /// Area parts of the address (empty when the server sent a plain string).
+  final String city;
+  final String pincode;
+
+  /// True once [areaOnly] stripped the street address (visit not accepted).
+  final bool addressHidden;
+
   bool get hasCoordinates => lat != null && lng != null;
 
-  /// What Google Maps gets for this stop: coordinates when known, else the address.
-  String get mapsLocation => hasCoordinates ? '$lat,$lng' : addressText;
+  /// "City pincode" (what a not-yet-accepted stop may show).
+  String get areaText => [city, pincode].where((s) => s.isNotEmpty).join(' ');
+
+  /// What Google Maps gets for this stop: coordinates when known, else the
+  /// address (only the area for a visit that is not accepted yet).
+  String get mapsLocation => hasCoordinates ? '$lat,$lng' : (addressHidden ? areaText : addressText);
+
+  static const _finished = {'completed', 'cancelled', 'rejected', 'unassigned', 'no_show'};
+  static const _accepted = {'accepted', 'en_route', 'arrived', 'in_progress', 'escalated'};
+
+  static bool isFinished(String? status) => status != null && _finished.contains(status);
+  static bool isAccepted(String? status) => status != null && _accepted.contains(status);
+
+  /// A copy without the street address, landmark or exact coordinates.
+  RouteStop areaOnly() => RouteStop(
+        order: order,
+        visitId: visitId,
+        serviceName: serviceName,
+        windowStart: windowStart,
+        windowEnd: windowEnd,
+        addressText: '',
+        distanceFromPrevKm: distanceFromPrevKm,
+        etaAt: etaAt,
+        status: status,
+        city: city,
+        pincode: pincode,
+        addressHidden: true,
+      );
 
   factory RouteStop.fromJson(Json json) {
     final window = asJson(json['window']);
     final rawAddress = json['address'];
-    final address = rawAddress is Map ? Address.fromJson(asJson(rawAddress)).fullText : strOr(rawAddress);
+    final address = rawAddress is Map ? Address.fromJson(asJson(rawAddress)) : null;
     return RouteStop(
       order: intOrNull(json['order']) ?? 0,
       visitId: strOr(json['visitId']),
       serviceName: strOr(json['serviceName']),
       windowStart: dateOrNull(window['start']),
       windowEnd: dateOrNull(window['end']),
-      addressText: address,
+      addressText: address?.fullText ?? strOr(rawAddress),
       lat: numOrNull(json['lat'])?.toDouble(),
       lng: numOrNull(json['lng'])?.toDouble(),
       distanceFromPrevKm: numOrNull(json['distanceFromPrevKm']),
       etaAt: dateOrNull(json['etaAt']),
+      status: str(json['status']),
+      city: address?.city ?? strOr(json['city']),
+      pincode: address?.pincode ?? strOr(json['pincode']),
     );
   }
 }

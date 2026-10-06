@@ -25,8 +25,11 @@ class ReviewDismissals extends Notifier<Set<String>> {
     }
   }
 
+  /// "Not now" (or closing the sheet): never prompt for [targetId] again and
+  /// snooze the automatic prompt for the others.
   Future<void> dismiss(String targetId) async {
     state = {...state, targetId};
+    await ref.read(reviewSnoozeProvider.notifier).snooze();
     try {
       // Keep the list bounded.
       final list = state.toList();
@@ -37,12 +40,48 @@ class ReviewDismissals extends Notifier<Set<String>> {
 
 final reviewDismissalsProvider = NotifierProvider<ReviewDismissals, Set<String>>(ReviewDismissals.new);
 
+/// After any dismissal the automatic prompt stays quiet for this long, so
+/// other pending visits don't pop up on every reload (B15).
+const reviewPromptSnooze = Duration(days: 3);
+
+/// When the automatic review prompt may show again (persisted).
+class ReviewSnooze extends Notifier<DateTime?> {
+  static const key = 'cc_review_snooze_until';
+
+  @override
+  DateTime? build() {
+    try {
+      final ms = ref.read(sharedPrefsProvider).getInt(key);
+      return ms == null ? null : DateTime.fromMillisecondsSinceEpoch(ms);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> snooze({DateTime? now}) async {
+    final until = (now ?? DateTime.now()).add(reviewPromptSnooze);
+    state = until;
+    try {
+      await ref.read(sharedPrefsProvider).setInt(key, until.millisecondsSinceEpoch);
+    } catch (_) {}
+  }
+
+  bool isSnoozed([DateTime? now]) {
+    final until = state;
+    return until != null && (now ?? DateTime.now()).isBefore(until);
+  }
+}
+
+final reviewSnoozeProvider = NotifierProvider<ReviewSnooze, DateTime?>(ReviewSnooze.new);
+
 /// The next pending review worth prompting for, or null.
 final nextReviewPromptProvider = Provider<PendingReview?>((ref) {
   final patient = ref.watch(activePatientProvider).value;
   if (patient != null && !patient.can(FamilyPermission.manageCare)) return null;
   final pending = ref.watch(pendingReviewsProvider).value ?? const <PendingReview>[];
   final dismissed = ref.watch(reviewDismissalsProvider);
+  ref.watch(reviewSnoozeProvider);
+  if (ref.read(reviewSnoozeProvider.notifier).isSnoozed()) return null;
   for (final p in pending) {
     if (!dismissed.contains(p.targetId)) return p;
   }
@@ -68,7 +107,10 @@ class _ReviewPromptHostState extends ConsumerState<ReviewPromptHost> {
       if (!mounted || _open) return;
       _open = true;
       _shownThisSession.add(next.targetId);
-      await showReviewSheet(context, next);
+      final dismissals = ref.read(reviewDismissalsProvider.notifier);
+      final reviewed = await showReviewSheet(context, next);
+      // Closed without rating (swipe, back, tap outside): same as "Not now".
+      if (reviewed != true) await dismissals.dismiss(next.targetId);
       _open = false;
     });
   }
@@ -81,7 +123,9 @@ class _ReviewPromptHostState extends ConsumerState<ReviewPromptHost> {
   }
 }
 
-Future<void> showReviewSheet(BuildContext context, PendingReview target) => showModalBottomSheet<void>(
+/// Returns true once a review was submitted (or already existed).
+Future<bool?> showReviewSheet(BuildContext context, PendingReview target) => showModalBottomSheet<bool>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => ReviewSheet(target: target),
@@ -123,13 +167,13 @@ class _ReviewSheetState extends ConsumerState<ReviewSheet> {
       ref.invalidate(pendingReviewsProvider);
       if (!mounted) return;
       final messenger = ScaffoldMessenger.maybeOf(context);
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
       messenger?.showSnackBar(SnackBar(content: Text(r.published ? l.reviewThanksPublished : l.reviewThanksPending)));
     } on ApiException catch (e) {
       if (e.isConflict) {
         // Already reviewed (e.g. on another device): nothing left to do.
         ref.invalidate(pendingReviewsProvider);
-        if (mounted) Navigator.of(context).pop();
+        if (mounted) Navigator.of(context).pop(true);
         return;
       }
       if (mounted) setState(() => _error = errorMessage(context, e));

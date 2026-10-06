@@ -46,11 +46,14 @@ const isUniqueViolation = (err: unknown): boolean => {
 export async function toApplications(db: DbOrTx, rows: AppRow[]) {
   if (!rows.length) return [];
   const ids = rows.map((r) => r.id);
-  const [docs, us] = await Promise.all([
+  const zoneIds = [...new Set(rows.flatMap((r) => r.preferredZoneIds))];
+  const [docs, us, zs] = await Promise.all([
     db.select().from(providerApplicationDocuments).where(inArray(providerApplicationDocuments.applicationId, ids)).orderBy(asc(providerApplicationDocuments.uploadedAt)),
     db.select({ id: users.id, phone: users.phone }).from(users).where(inArray(users.id, [...new Set(rows.map((r) => r.userId))])),
+    zoneIds.length ? db.select({ id: serviceZones.id, name: serviceZones.name }).from(serviceZones).where(inArray(serviceZones.id, zoneIds)) : Promise.resolve([]),
   ]);
   const phone = new Map(us.map((u) => [u.id, u.phone]));
+  const zoneName = new Map(zs.map((z) => [z.id, z.name]));
   return rows.map((a) => ({
     id: a.id,
     userId: a.userId,
@@ -64,6 +67,7 @@ export async function toApplications(db: DbOrTx, rows: AppRow[]) {
     experienceYears: a.experienceYears,
     languages: a.languages,
     preferredZoneIds: a.preferredZoneIds,
+    preferredZones: a.preferredZoneIds.map((id) => ({ id, name: zoneName.get(id) ?? null })),
     status: a.status,
     documents: docs
       .filter((d) => d.applicationId === a.id)

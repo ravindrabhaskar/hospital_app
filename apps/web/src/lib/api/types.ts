@@ -1325,6 +1325,13 @@ export interface ProgramTemplate {
 }
 /** Body for POST /admin/care-programs/templates (the server owns `status`). */
 export type ProgramTemplateInput = Omit<ProgramTemplate, "status">;
+export interface ProgramTemplateApproveInput {
+  /** 2–100 chars: the clinical lead who signed off the thresholds. */
+  approverName: string;
+  /** Optional medical registration number, 2–60 chars. */
+  approverRegistration?: string;
+  version?: string;
+}
 export type EnrollmentStatus = "active" | "paused" | "completed";
 export interface Enrollment {
   id: UUID;
@@ -1703,8 +1710,8 @@ export interface CouponInput {
   maxDiscount?: number;
   minAmount?: number;
   appliesTo: PaymentPurpose[];
-  validFrom: ISODate;
-  validTo: ISODate;
+  validFrom: ISODateTime;
+  validTo: ISODateTime;
   usageLimit?: number;
   perUserLimit: number;
   active: boolean;

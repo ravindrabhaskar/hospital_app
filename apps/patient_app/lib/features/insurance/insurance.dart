@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/api/api_exception.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
+import '../../core/utils/permissions.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../core/widgets/status_timeline.dart' show NoticeBox;
@@ -173,7 +174,13 @@ class _PolicyEditScreenState extends ConsumerState<PolicyEditScreen> {
 
   Future<void> _uploadCard() async {
     final l = context.l10n;
-    final file = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 2000, imageQuality: 85);
+    final XFile? file;
+    try {
+      file = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 2000, imageQuality: 85);
+    } catch (e) {
+      if (mounted) showPickerError(context, e);
+      return;
+    }
     if (file == null) return;
     setState(() => _uploading = true);
     try {

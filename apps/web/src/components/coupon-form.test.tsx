@@ -65,8 +65,8 @@ describe("CouponForm", () => {
       type: "flat",
       value: 100,
       appliesTo: ["home_visit"],
-      validFrom: "2026-10-01",
-      validTo: "2026-12-31",
+      validFrom: "2026-09-30T18:30:00.000Z",
+      validTo: "2026-12-31T18:29:59.999Z",
       perUserLimit: 1,
       active: true,
     });

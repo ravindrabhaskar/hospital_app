@@ -106,6 +106,8 @@ class NextActionPanel extends StatefulWidget {
     required this.onNavigate,
     this.busy = false,
     this.online = true,
+    this.consent,
+    this.onConsentChanged,
   });
 
   final HomeVisit visit;
@@ -113,6 +115,13 @@ class NextActionPanel extends StatefulWidget {
   final VoidCallback onNavigate;
   final bool busy;
   final bool online;
+
+  /// Patient-consent tick, owned by the parent so it survives this panel
+  /// being rebuilt (the panel is keyed by status, and a rejected visit code
+  /// briefly applies then rolls back the optimistic status). Null: the panel
+  /// keeps it itself.
+  final bool? consent;
+  final ValueChanged<bool>? onConsentChanged;
 
   @override
   State<NextActionPanel> createState() => _NextActionPanelState();
@@ -123,8 +132,14 @@ class _NextActionPanelState extends State<NextActionPanel> {
   final _code = TextEditingController();
   final _etaForm = GlobalKey<FormState>();
   final _verifyForm = GlobalKey<FormState>();
-  bool _consent = false;
+  bool _ownConsent = false;
   bool _consentError = false;
+
+  bool get _consent => widget.consent ?? _ownConsent;
+  set _consent(bool v) {
+    _ownConsent = v;
+    widget.onConsentChanged?.call(v);
+  }
   final _samples = SampleChecklist();
 
   @override

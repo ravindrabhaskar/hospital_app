@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { payments } from '../../db/schema.js';
 import { assertCanActForPatient } from '../../lib/access.js';
 import { audit } from '../../lib/audit.js';
+import { hasRole } from '../../lib/context.js';
 import { errors } from '../../lib/errors.js';
 import { pageFromQuery, paginateArray } from '../../lib/pagination.js';
 import { parse, zDate, zUuid } from '../../lib/validate.js';
@@ -31,7 +32,12 @@ export async function billingRoutes(app: FastifyInstance): Promise<void> {
   const loadPaid = async (id: string, reqCtx: Parameters<typeof assertCanActForPatient>[1]) => {
     const [p] = await db.select().from(payments).where(eq(payments.id, id));
     if (!p) throw errors.notFound('Payment');
-    await assertCanActForPatient(db, reqCtx, p.patientId, ['book', 'staff_ops'], 'invoice.read');
+    const access = await assertCanActForPatient(db, reqCtx, p.patientId, ['book', 'staff_ops'], 'invoice.read');
+    // B14: staff access to invoices is finance-only (ops_admin / super_admin); coordinators are refused.
+    if (!access.permissions.has('book') && !hasRole(reqCtx.user, 'ops_admin', 'super_admin')) {
+      await audit(db, reqCtx.actor, { action: 'invoice.read', entityType: 'payment', entityId: p.id, outcome: 'denied' });
+      throw errors.forbidden();
+    }
     const inv = await ensureInvoice(db, svc.config, p.id);
     const [fresh] = await db.select().from(payments).where(eq(payments.id, id));
     return { inv, pay: fresh };

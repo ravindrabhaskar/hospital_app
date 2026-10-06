@@ -8661,6 +8661,162 @@ abstract class AppLocalizations {
   /// **'You rated {score} / 5. Thank you!'**
   String youRated(int score);
 
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Hello! I\'m your CareCompanion assistant. I can help you describe what\'s going on and find the right care. I can\'t diagnose conditions. What\'s bothering you today?'**
+  String get aiGreeting;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Fever'**
+  String get qrFever;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Headache'**
+  String get qrHeadache;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Cough or cold'**
+  String get qrCoughCold;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Stomach pain'**
+  String get qrStomachPain;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Skin problem'**
+  String get qrSkinProblem;
+
+  /// No description provided for @qrSinceToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Since today'**
+  String get qrSinceToday;
+
+  /// No description provided for @qrSinceYesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Since yesterday'**
+  String get qrSinceYesterday;
+
+  /// No description provided for @qrTwoThreeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'2-3 days'**
+  String get qrTwoThreeDays;
+
+  /// No description provided for @qrMoreThanWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'More than a week'**
+  String get qrMoreThanWeek;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Mild (3/10)'**
+  String get qrMild;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate (5/10)'**
+  String get qrModerate;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Severe (8/10)'**
+  String get qrSevere;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'No other symptoms'**
+  String get qrNoOtherSymptoms;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Nausea'**
+  String get qrNausea;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Dizziness'**
+  String get qrDizziness;
+
+  /// Medical term (translations need clinical glossary review)
+  ///
+  /// In en, this message translates to:
+  /// **'Body ache'**
+  String get qrBodyAche;
+
+  /// No description provided for @qrCall108.
+  ///
+  /// In en, this message translates to:
+  /// **'Call 108'**
+  String get qrCall108;
+
+  /// No description provided for @qrPressSos.
+  ///
+  /// In en, this message translates to:
+  /// **'Press SOS'**
+  String get qrPressSos;
+
+  /// No description provided for @qrBookDoctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a doctor'**
+  String get qrBookDoctor;
+
+  /// No description provided for @qrRequestHomeVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Request home visit'**
+  String get qrRequestHomeVisit;
+
+  /// No description provided for @cameraPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera permission is off. Allow camera access in Settings to take a photo, or upload a file instead.'**
+  String get cameraPermissionDenied;
+
+  /// No description provided for @photosPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo and file access is off. Allow access in Settings to choose a file.'**
+  String get photosPermissionDenied;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get openSettings;
+
+  /// No description provided for @amountPaidTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount paid'**
+  String get amountPaidTotal;
+
+  /// No description provided for @attachmentNeedsText.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a short message to send this record.'**
+  String get attachmentNeedsText;
+
   /// No description provided for @itemsCount.
   ///
   /// In en, this message translates to:

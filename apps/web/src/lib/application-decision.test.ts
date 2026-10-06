@@ -68,7 +68,7 @@ describe("toDecisionInput", () => {
     expect(toDecisionInput(values({ zoneIds: ["z1", "z2"], capabilities: ["wound_care"] }))).toEqual({
       decision: "approve",
       note: "Credentials checked",
-      credentialExpiresAt: "2027-09-30",
+      credentialExpiresAt: "2027-09-30T18:29:59.999Z",
       zoneIds: ["z1", "z2"],
       capabilities: ["wound_care"],
     });
@@ -76,8 +76,15 @@ describe("toDecisionInput", () => {
 
   it("omits empty arrays for approve", () => {
     const input = toDecisionInput(values());
-    expect(input).toEqual({ decision: "approve", note: "Credentials checked", credentialExpiresAt: "2027-09-30" });
+    expect(input).toEqual({ decision: "approve", note: "Credentials checked", credentialExpiresAt: "2027-09-30T18:29:59.999Z" });
     expect(input).not.toHaveProperty("zoneIds");
     expect(input).not.toHaveProperty("capabilities");
+  });
+
+  it("sends the expiry as a full ISO datetime the API accepts (end of the chosen IST day)", () => {
+    const { credentialExpiresAt } = toDecisionInput(values({ credentialExpiresAt: "2028-12-31" }));
+    expect(credentialExpiresAt).toBe("2028-12-31T18:29:59.999Z");
+    // Mirrors the API's z.string().datetime({ offset: true }).
+    expect(credentialExpiresAt).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/);
   });
 });

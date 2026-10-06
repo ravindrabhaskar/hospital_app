@@ -16,7 +16,8 @@ export interface LabTestFixture {
   sampleRange: { unit: string; low: number; high: number } | null;
 }
 
-const P = ' Placeholder price [REQUIRES PRICING VALIDATION].';
+// Prices are placeholders [REQUIRES PRICING VALIDATION] (this comment is the marker; it is not shown to patients, QA B9).
+const P = '';
 
 export const LAB_TESTS: LabTestFixture[] = [
   { code: 'CBC', name: 'Complete Blood Count (CBC)', description: `Haemoglobin, blood cell counts and platelets.${P}`, category: 'general', sampleType: 'blood', fastingRequired: false, fastingHours: null, turnaroundHours: 12, price: 299, mrp: 400, sampleRange: { unit: 'g/dL (Hb)', low: 12, high: 16 } },
@@ -42,8 +43,8 @@ export const LAB_TESTS: LabTestFixture[] = [
 ];
 
 export const LAB_PACKAGES = [
-  { code: 'DIABETES_CARE', name: 'Diabetes Care Package', tests: ['FBS', 'PPBS', 'HBA1C', 'UACR', 'KFT'], price: 1299, mrp: 1950, description: 'Sugar control, kidney screening. Placeholder price [REQUIRES PRICING VALIDATION].' },
-  { code: 'HEART_CHECK', name: 'Heart Health Check', tests: ['LIPID', 'FBS', 'CRP', 'ELECTRO'], price: 999, mrp: 1450, description: 'Cholesterol and related markers. Placeholder price [REQUIRES PRICING VALIDATION].' },
-  { code: 'SENIOR_BASIC', name: 'Senior Citizen Basic Checkup', tests: ['CBC', 'FBS', 'LIPID', 'LFT', 'KFT', 'TSH', 'URINE_RE', 'VITD'], price: 1999, mrp: 3500, description: 'A broad annual check for adults over 60. Placeholder price [REQUIRES PRICING VALIDATION].' },
-  { code: 'FEVER_PANEL', name: 'Fever Panel', tests: ['CBC', 'ESR', 'CRP', 'URINE_RE'], price: 649, mrp: 950, description: 'Common tests a doctor may order for fever. Placeholder price [REQUIRES PRICING VALIDATION].' },
+  { code: 'DIABETES_CARE', name: 'Diabetes Care Package', tests: ['FBS', 'PPBS', 'HBA1C', 'UACR', 'KFT'], price: 1299, mrp: 1950, description: 'Sugar control, kidney screening.' },
+  { code: 'HEART_CHECK', name: 'Heart Health Check', tests: ['LIPID', 'FBS', 'CRP', 'ELECTRO'], price: 999, mrp: 1450, description: 'Cholesterol and related markers.' },
+  { code: 'SENIOR_BASIC', name: 'Senior Citizen Basic Checkup', tests: ['CBC', 'FBS', 'LIPID', 'LFT', 'KFT', 'TSH', 'URINE_RE', 'VITD'], price: 1999, mrp: 3500, description: 'A broad annual check for adults over 60.' },
+  { code: 'FEVER_PANEL', name: 'Fever Panel', tests: ['CBC', 'ESR', 'CRP', 'URINE_RE'], price: 649, mrp: 950, description: 'Common tests a doctor may order for fever.' },
 ];

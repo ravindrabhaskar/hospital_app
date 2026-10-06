@@ -4843,6 +4843,88 @@ class AppLocalizationsTe extends AppLocalizations {
   }
 
   @override
+  String get aiGreeting =>
+      'నమస్కారం! నేను మీ CareCompanion సహాయకుడిని. మీ సమస్యను వివరించడంలో, సరైన వైద్య సేవను పొందడంలో సహాయం చేస్తాను. నేను రోగనిర్ధారణ చేయలేను. ఈరోజు మీకు ఏమి ఇబ్బందిగా ఉంది?';
+
+  @override
+  String get qrFever => 'జ్వరం';
+
+  @override
+  String get qrHeadache => 'తలనొప్పి';
+
+  @override
+  String get qrCoughCold => 'దగ్గు లేదా జలుబు';
+
+  @override
+  String get qrStomachPain => 'కడుపు నొప్పి';
+
+  @override
+  String get qrSkinProblem => 'చర్మ సమస్య';
+
+  @override
+  String get qrSinceToday => 'ఈరోజు నుండి';
+
+  @override
+  String get qrSinceYesterday => 'నిన్నటి నుండి';
+
+  @override
+  String get qrTwoThreeDays => '2-3 రోజులు';
+
+  @override
+  String get qrMoreThanWeek => 'ఒక వారం కంటే ఎక్కువ';
+
+  @override
+  String get qrMild => 'తేలికపాటి (3/10)';
+
+  @override
+  String get qrModerate => 'మధ్యస్థం (5/10)';
+
+  @override
+  String get qrSevere => 'తీవ్రం (8/10)';
+
+  @override
+  String get qrNoOtherSymptoms => 'ఇతర లక్షణాలు లేవు';
+
+  @override
+  String get qrNausea => 'వికారం';
+
+  @override
+  String get qrDizziness => 'తల తిరగడం';
+
+  @override
+  String get qrBodyAche => 'ఒళ్ళు నొప్పులు';
+
+  @override
+  String get qrCall108 => '108కి కాల్ చేయండి';
+
+  @override
+  String get qrPressSos => 'SOS నొక్కండి';
+
+  @override
+  String get qrBookDoctor => 'డాక్టర్‌ను బుక్ చేయండి';
+
+  @override
+  String get qrRequestHomeVisit => 'హోమ్ విజిట్ అభ్యర్థించండి';
+
+  @override
+  String get cameraPermissionDenied =>
+      'కెమెరా అనుమతి ఆఫ్‌లో ఉంది. ఫోటో తీయడానికి సెట్టింగ్‌లలో కెమెరా అనుమతి ఇవ్వండి, లేదా బదులుగా ఫైల్‌ను అప్‌లోడ్ చేయండి.';
+
+  @override
+  String get photosPermissionDenied =>
+      'ఫోటోలు మరియు ఫైళ్ల అనుమతి ఆఫ్‌లో ఉంది. ఫైల్‌ను ఎంచుకోవడానికి సెట్టింగ్‌లలో అనుమతి ఇవ్వండి.';
+
+  @override
+  String get openSettings => 'సెట్టింగ్‌లు తెరవండి';
+
+  @override
+  String get amountPaidTotal => 'చెల్లించిన మొత్తం';
+
+  @override
+  String get attachmentNeedsText =>
+      'ఈ రికార్డును పంపడానికి ఒక చిన్న సందేశం రాయండి.';
+
+  @override
   String itemsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

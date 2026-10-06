@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import type { VitalMeasurement, VitalType } from "@/lib/api/types";
+import { CHART } from "@/lib/chart-theme";
 import { formatDateTime } from "@/lib/format";
 import { sourceDomId } from "./ai-summary";
 import { ProvenanceBadge } from "./status";
@@ -34,13 +35,13 @@ export function Sparkline({ points, label }: { points: { value: number; at: stri
   const last = points[points.length - 1]!;
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${label} trend, ${points.length} readings, min ${min}, max ${max}`}>
-      <path d={d} fill="none" stroke="#8A3A62" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} fill="none" stroke={CHART.series} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
       {points.map((p, i) => (
         <circle key={i} cx={x(i)} cy={y(p.value)} r={7} fill="transparent">
           <title>{`${p.value} · ${formatDateTime(p.at)}`}</title>
         </circle>
       ))}
-      <circle cx={x(points.length - 1)} cy={y(last.value)} r={4} fill="#8A3A62" stroke="#fff" strokeWidth={2} />
+      <circle cx={x(points.length - 1)} cy={y(last.value)} r={4} fill={CHART.series} stroke={CHART.surface} strokeWidth={2} />
     </svg>
   );
 }

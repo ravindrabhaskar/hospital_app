@@ -555,7 +555,7 @@
       }
     }
   },
-  "readingsCount": "{count} రీడింగ్‌లు",
+  "readingsCount": "{count, plural, =1{1 రీడింగ్} other{{count} రీడింగ్‌లు}}",
   "@readingsCount": {
     "placeholders": {
       "count": {
@@ -563,7 +563,7 @@
       }
     }
   },
-  "vitalTrendSemantics": "{vital} ధోరణి: {min} నుండి {max} మధ్య {count} రీడింగ్‌లు",
+  "vitalTrendSemantics": "{vital} ధోరణి: {min} నుండి {max} మధ్య {count, plural, =1{1 రీడింగ్} other{{count} రీడింగ్‌లు}}",
   "@vitalTrendSemantics": {
     "placeholders": {
       "vital": {
@@ -772,5 +772,29 @@
   "serverDefaultIs": "డిఫాల్ట్: {url}",
   "serverSignOutWarning": "సర్వర్ మార్చితే మీరు లాగ్ అవుట్ అవుతారు.",
   "serverCantReachAt": "{host} వద్ద సర్వర్‌ను చేరుకోలేకపోతున్నాం",
-  "serverChange": "సర్వర్ మార్చండి"
+  "serverChange": "సర్వర్ మార్చండి",
+  "otpIncorrect": "కోడ్ తప్పు. దయచేసి తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.",
+  "otpIncorrectAttempts": "{count, plural, =1{కోడ్ తప్పు. ఇంకా 1 ప్రయత్నం ఉంది.} other{కోడ్ తప్పు. ఇంకా {count} ప్రయత్నాలు ఉన్నాయి.}}",
+  "otpNoAttemptsLeft": "కోడ్ తప్పు. ప్రయత్నాలు అయిపోయాయి, దయచేసి కొత్త కోడ్ అభ్యర్థించండి.",
+  "otpExpired": "ఈ కోడ్ గడువు ముగిసింది. దయచేసి కొత్తది అభ్యర్థించండి.",
+  "otpTooManyAttempts": "చాలా తప్పు ప్రయత్నాలు. దయచేసి కొత్త కోడ్ అభ్యర్థించండి.",
+  "vitalHigh": "ఎక్కువ",
+  "vitalLow": "తక్కువ",
+  "vitalFlagSemantics": "{vital} {value}, {flag}",
+  "logoutConfirmBodyOtp": "మళ్ళీ సైన్ ఇన్ చేయడానికి మీ ఫోన్ OTP అవసరం.",
+  "leaveRemoveTitle": "ఈ సెలవును తీసివేయాలా?",
+  "leaveRemoveBody": "{date} మళ్ళీ బుకింగ్‌లకు తెరవబడుతుంది.",
+  "attachedRecord": "జతచేసిన రికార్డ్",
+  "attachmentUnavailable": "జతచేసిన రికార్డ్ అందుబాటులో లేదు",
+  "attachmentNoFile": "ఈ రికార్డ్‌లో తెరవడానికి ఫైల్ లేదు.",
+  "specGeneralPhysician": "జనరల్ ఫిజీషియన్",
+  "specDermatologist": "చర్మ వైద్య నిపుణులు",
+  "specPediatrician": "పిల్లల వైద్య నిపుణులు",
+  "specGynecologist": "స్త్రీ వైద్య నిపుణులు",
+  "specCardiologist": "గుండె వైద్య నిపుణులు",
+  "specOrthopedist": "ఎముకల వైద్య నిపుణులు",
+  "specPsychiatrist": "మానసిక వైద్య నిపుణులు",
+  "specEnt": "ENT నిపుణులు",
+  "specDiabetologist": "మధుమేహ నిపుణులు",
+  "specNeurologist": "నరాల వైద్య నిపుణులు"
 }

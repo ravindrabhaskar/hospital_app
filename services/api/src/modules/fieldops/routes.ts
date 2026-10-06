@@ -1,4 +1,4 @@
-import { and, asc, eq, gte, lt, lte, notInArray, sql } from 'drizzle-orm';
+import { and, asc, eq, gte, inArray, lt, lte, sql } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { DbOrTx } from '../../db/client.js';
@@ -11,6 +11,10 @@ import { istDate, istDayBounds, iso } from '../../lib/time.js';
 import { parse, zDate, zUuid } from '../../lib/validate.js';
 import { requireRoles } from '../../plugins/auth.js';
 import { haversineKm } from '../providers/routes.js';
+import { addressFor, approxCoord, providerMaySeeFullAddress } from '../homevisits/service.js';
+
+/** Remaining stops for the day: completed, cancelled and handed-back visits are not route stops. */
+const ROUTE_STATUSES = ['assigned', 'accepted', 'en_route', 'arrived', 'in_progress', 'escalated'];
 
 /** Contract section 48: nurse route planning, attendance & supplies. */
 export const SUPPLY_CATALOG: Record<string, { name: string; unit: string }> = {
@@ -30,7 +34,13 @@ export const SUPPLY_CATALOG: Record<string, { name: string; unit: string }> = {
 
 export async function suppliesOf(db: DbOrTx, providerId: string) {
   const rows = await db.select().from(providerSupplies).where(eq(providerSupplies.providerId, providerId)).orderBy(asc(providerSupplies.code));
-  return rows.map((r) => ({ code: r.code, name: SUPPLY_CATALOG[r.code]?.name ?? r.code, unit: SUPPLY_CATALOG[r.code]?.unit ?? 'unit', onHand: r.onHand, reorderLevel: r.reorderLevel }));
+  return rows.map((r) => ({
+    code: r.code,
+    name: SUPPLY_CATALOG[r.code]?.name ?? r.code,
+    unit: SUPPLY_CATALOG[r.code]?.unit ?? 'unit',
+    onHand: r.onHand,
+    reorderLevel: r.reorderLevel,
+  }));
 }
 
 const zItems = z
@@ -58,16 +68,18 @@ export async function fieldOpsRoutes(app: FastifyInstance): Promise<void> {
     const visits = await db
       .select()
       .from(homeVisits)
-      .where(and(eq(homeVisits.providerId, id), gte(homeVisits.preferredStart, start), lt(homeVisits.preferredStart, end), notInArray(homeVisits.status, ['cancelled', 'unassigned'])))
+      .where(and(eq(homeVisits.providerId, id), gte(homeVisits.preferredStart, start), lt(homeVisits.preferredStart, end), inArray(homeVisits.status, ROUTE_STATUSES)))
       .orderBy(asc(homeVisits.preferredStart));
     const services = await db.select().from(homeVisitServices);
     const dur = new Map(services.map((s) => [s.code, { mins: s.durationMins, name: s.name }]));
     const located = visits.filter((v) => typeof v.address.lat === 'number' && typeof v.address.lng === 'number');
-    let startLocation: { lat: number; lng: number } | null =
-      prov?.lastLat != null && prov?.lastLng != null ? { lat: prov.lastLat, lng: prov.lastLng } : null;
+    let startLocation: { lat: number; lng: number } | null = prov?.lastLat != null && prov?.lastLng != null ? { lat: prov.lastLat, lng: prov.lastLng } : null;
     if (!startLocation && located.length) {
       // Zone centre fallback: the centroid of the day's stops.
-      startLocation = { lat: located.reduce((s, v) => s + v.address.lat!, 0) / located.length, lng: located.reduce((s, v) => s + v.address.lng!, 0) / located.length };
+      // Unaccepted stops contribute only their approximate location, so a single stop's home is not revealed.
+      const pt = (v: (typeof located)[number]) =>
+        providerMaySeeFullAddress(v.status) ? { lat: v.address.lat!, lng: v.address.lng! } : { lat: approxCoord(v.address.lat!), lng: approxCoord(v.address.lng!) };
+      startLocation = { lat: located.reduce((s, v) => s + pt(v).lat, 0) / located.length, lng: located.reduce((s, v) => s + pt(v).lng, 0) / located.length };
     }
     // Order: time window first; among visits whose windows overlap the earliest remaining window, nearest neighbour.
     const remaining = [...visits];
@@ -78,7 +90,9 @@ export async function fieldOpsRoutes(app: FastifyInstance): Promise<void> {
       const candidates = remaining.filter((v) => v.preferredStart < earliest.preferredEnd);
       const pick =
         here && candidates.every((c) => typeof c.address.lat === 'number')
-          ? candidates.reduce((a, b) => (haversineKm(here!.lat, here!.lng, a.address.lat!, a.address.lng!) <= haversineKm(here!.lat, here!.lng, b.address.lat!, b.address.lng!) ? a : b))
+          ? candidates.reduce((a, b) =>
+              haversineKm(here!.lat, here!.lng, a.address.lat!, a.address.lng!) <= haversineKm(here!.lat, here!.lng, b.address.lat!, b.address.lng!) ? a : b,
+            )
           : earliest;
       ordered.push(pick);
       remaining.splice(remaining.indexOf(pick), 1);
@@ -104,9 +118,12 @@ export async function fieldOpsRoutes(app: FastifyInstance): Promise<void> {
         visitId: v.id,
         serviceName: dur.get(v.serviceCode)?.name ?? v.serviceCode,
         window: { start: iso(v.preferredStart), end: iso(v.preferredEnd) },
-        address: v.address,
-        lat: hasLoc ? v.address.lat! : null,
-        lng: hasLoc ? v.address.lng! : null,
+        status: v.status,
+        // Contract section 48 / B2: precise address only once the provider has accepted.
+        address: addressFor('provider', v),
+        addressMasked: !providerMaySeeFullAddress(v.status),
+        lat: hasLoc ? (providerMaySeeFullAddress(v.status) ? v.address.lat! : approxCoord(v.address.lat!)) : null,
+        lng: hasLoc ? (providerMaySeeFullAddress(v.status) ? v.address.lng! : approxCoord(v.address.lng!)) : null,
         distanceFromPrevKm: Math.round(km * 10) / 10,
         etaAt: iso(eta),
       });
@@ -117,16 +134,31 @@ export async function fieldOpsRoutes(app: FastifyInstance): Promise<void> {
   });
 
   app.post('/provider/attendance', { preHandler: providerOnly }, async (req, reply) => {
-    const body = parse(z.object({ action: z.enum(['check_in', 'check_out']), lat: z.number().min(-90).max(90).optional(), lng: z.number().min(-180).max(180).optional() }), req.body);
+    const body = parse(
+      z.object({ action: z.enum(['check_in', 'check_out']), lat: z.number().min(-90).max(90).optional(), lng: z.number().min(-180).max(180).optional() }),
+      req.body,
+    );
     const id = pid(req.ctx);
-    const [row] = await db.insert(providerAttendance).values({ providerId: id, action: body.action, lat: body.lat ?? null, lng: body.lng ?? null }).returning();
-    if (body.lat !== undefined && body.lng !== undefined) await db.update(providers).set({ lastLat: body.lat, lastLng: body.lng, lastLocationAt: new Date() }).where(eq(providers.id, id));
+    const [row] = await db
+      .insert(providerAttendance)
+      .values({ providerId: id, action: body.action, lat: body.lat ?? null, lng: body.lng ?? null })
+      .returning();
+    if (body.lat !== undefined && body.lng !== undefined)
+      await db.update(providers).set({ lastLat: body.lat, lastLng: body.lng, lastLocationAt: new Date() }).where(eq(providers.id, id));
     await audit(db, req.ctx.actor, { action: `provider.${body.action}`, entityType: 'provider', entityId: id });
     return reply.code(201).send({ id: row.id, action: row.action, at: iso(row.at), lat: row.lat, lng: row.lng });
   });
 
   app.get('/provider/attendance', { preHandler: providerOnly }, async (req) => {
-    const q = parse(z.object({ month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional() }), req.query);
+    const q = parse(
+      z.object({
+        month: z
+          .string()
+          .regex(/^\d{4}-(0[1-9]|1[0-2])$/)
+          .optional(),
+      }),
+      req.query,
+    );
     const id = pid(req.ctx);
     const month = q.month ?? istDate().slice(0, 7);
     const [y, m] = month.split('-').map(Number);
@@ -134,7 +166,11 @@ export async function fieldOpsRoutes(app: FastifyInstance): Promise<void> {
     const last = new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
     const from = istDayBounds(first).start;
     const to = istDayBounds(last).end;
-    const rows = await db.select().from(providerAttendance).where(and(eq(providerAttendance.providerId, id), gte(providerAttendance.at, from), lt(providerAttendance.at, to))).orderBy(asc(providerAttendance.at));
+    const rows = await db
+      .select()
+      .from(providerAttendance)
+      .where(and(eq(providerAttendance.providerId, id), gte(providerAttendance.at, from), lt(providerAttendance.at, to)))
+      .orderBy(asc(providerAttendance.at));
     const visits = await db
       .select({ completedAt: homeVisits.completedAt })
       .from(homeVisits)
@@ -194,7 +230,10 @@ export async function fieldOpsRoutes(app: FastifyInstance): Promise<void> {
         await tx
           .insert(providerSupplies)
           .values({ providerId: id, code: it.code, onHand: it.qty, reorderLevel: 5 })
-          .onConflictDoUpdate({ target: [providerSupplies.providerId, providerSupplies.code], set: { onHand: sql`${providerSupplies.onHand} + ${it.qty}`, updatedAt: new Date() } });
+          .onConflictDoUpdate({
+            target: [providerSupplies.providerId, providerSupplies.code],
+            set: { onHand: sql`${providerSupplies.onHand} + ${it.qty}`, updatedAt: new Date() },
+          });
       }
       await audit(tx, req.ctx.actor, { action: 'supplies.restock', entityType: 'provider', entityId: id, metadata: { items: body.items.length } });
     });

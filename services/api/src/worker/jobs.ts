@@ -10,7 +10,7 @@ import { lockDoctor, regenerateSlots } from '../modules/schedules/service.js';
 import { activeCoordinatorPlanSubscribers, coveredPatientIds, subscriptionLifecycle } from '../modules/subscriptions/service.js';
 import { escalateFall } from '../modules/emergency/service.js';
 import { autoAssign } from '../modules/homevisits/service.js';
-import { isActiveOn } from '../modules/medications/service.js';
+import { doseBeforeAdded, isActiveOn } from '../modules/medications/service.js';
 import { abdmMockLifecycle } from '../modules/abdm/routes.js';
 import { advanceAmbulances } from '../modules/ambulance/routes.js';
 import { checkinMonitor } from '../modules/checkins/service.js';
@@ -40,6 +40,7 @@ export const markMissedDoses: Job = async (svc, now) => {
     for (const time of m.times) {
       const at = istToUtc(today, time);
       if (now.getTime() <= at.getTime() + svc.config.DOSE_MISSED_GRACE_MIN * 60_000) continue;
+      if (doseBeforeAdded(m, at)) continue; // QA B18: the medication was added after this dose time
       const ins = await svc.db
         .insert(doseLogs)
         .values({ medicationId: m.id, scheduledAt: at, status: 'missed', loggedAt: now })

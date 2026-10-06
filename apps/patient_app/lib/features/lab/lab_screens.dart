@@ -669,8 +669,20 @@ class _LabOrderScreenState extends ConsumerState<LabOrderScreen> {
                     if (o.preferredStart != null)
                       LabeledValue(label: l.sampleCollectionTime, value: fmtDateTime(context, o.preferredStart!)),
                     if (o.partnerName.isNotEmpty) LabeledValue(label: l.labPartner, value: o.partnerName),
-                    if (o.discount > 0) LabeledValue(label: l.couponDiscount, value: '−${money(o.discount)}'),
-                    LabeledValue(label: l.totalAmount, value: money(o.total)),
+                    if (o.discount > 0) ...[
+                      LabeledValue(
+                          key: const Key('lab-subtotal'), label: l.subtotal, value: money(o.subtotal)),
+                      LabeledValue(label: l.couponDiscount, value: '−${money(o.discount)}'),
+                    ],
+                    LabeledValue(
+                      key: const Key('lab-amount-due'),
+                      label: switch (o.status) {
+                        'pending_payment' => l.payableAmount,
+                        'cancelled' => l.totalAmount,
+                        _ => l.amountPaidTotal,
+                      },
+                      value: money(o.amountDue),
+                    ),
                   ],
                 ),
               ),

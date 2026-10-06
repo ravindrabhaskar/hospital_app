@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 import { and, desc, eq, isNotNull } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
@@ -29,7 +30,7 @@ export async function activeSchedule(db: DbOrTx, config: Config): Promise<{ vers
 export function computeItems(defs: PreventiveDef[], p: { dob: string | null; gender: string }, done: Map<string, string>, today = istDate()) {
   return defs.map((d) => {
     const lastDoneAt = done.get(d.code) ?? null;
-    const base = { code: d.code, name: d.name, category: d.category, description: d.description, repeatEveryMonths: d.repeatEveryMonths, lastDoneAt };
+    const base = { code: d.code, name: d.name, category: d.category, description: stripGovernanceMarkers(d.description), repeatEveryMonths: d.repeatEveryMonths, lastDoneAt };
     const sexOk = d.sex === 'any' || d.sex === p.gender;
     if (!p.dob || !sexOk) return { ...base, dueDate: null, status: 'not_applicable' as const };
     const ageMonths = (new Date(`${today}T00:00:00Z`).getTime() - new Date(`${p.dob}T00:00:00Z`).getTime()) / (30.4375 * 86400_000);

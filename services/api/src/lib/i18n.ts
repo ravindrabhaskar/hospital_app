@@ -15,6 +15,7 @@ const STRINGS: Record<Lang, Strings> = {
     'ai.ask.severity': 'On a scale of 0 to 10, how severe is it right now (10 = worst)?',
     'ai.ask.associatedSymptoms': 'Are you noticing any other symptoms along with this?',
     'ai.intakeComplete': 'Thank you. I have noted your concern: {complaint}.',
+    'ai.followUp': 'Thanks, I have noted that. Your recommended next step is above. If anything gets worse or you notice a new symptom, please seek care promptly or call 108 in an emergency.',
     'ai.emergency':
       'This could be a medical emergency. Call 108 now or press the SOS button in the app. If possible, ask someone nearby to stay with you. Do not wait for an online reply.',
     'ai.fallback':
@@ -167,6 +168,7 @@ const STRINGS: Record<Lang, Strings> = {
     'ai.ask.severity': '0 से 10 के पैमाने पर, अभी यह कितना गंभीर है (10 = सबसे ज़्यादा)?',
     'ai.ask.associatedSymptoms': 'क्या इसके साथ कोई और लक्षण भी हैं?',
     'ai.intakeComplete': 'धन्यवाद। मैंने आपकी समस्या नोट कर ली है: {complaint}।',
+    'ai.followUp': 'धन्यवाद, मैंने यह नोट कर लिया है। आपका सुझाया गया अगला कदम ऊपर दिया गया है। अगर तकलीफ़ बढ़े या कोई नया लक्षण दिखे, तो जल्द देखभाल लें या आपात स्थिति में 108 पर कॉल करें।',
     'ai.emergency':
       'यह एक मेडिकल इमरजेंसी हो सकती है। तुरंत 108 पर कॉल करें या ऐप में SOS बटन दबाएँ। हो सके तो पास के किसी व्यक्ति को अपने साथ रहने को कहें।',
     'ai.fallback':
@@ -198,6 +200,7 @@ const STRINGS: Record<Lang, Strings> = {
     'ai.ask.severity': '0 నుండి 10 స్కేల్‌లో, ఇప్పుడు ఇది ఎంత తీవ్రంగా ఉంది (10 = అత్యంత తీవ్రం)?',
     'ai.ask.associatedSymptoms': 'దీనితో పాటు ఇంకేమైనా లక్షణాలు ఉన్నాయా?',
     'ai.intakeComplete': 'ధన్యవాదాలు. మీ సమస్యను నమోదు చేశాను: {complaint}.',
+    'ai.followUp': 'ధన్యవాదాలు, దీన్ని నమోదు చేశాను. మీకు సూచించిన తదుపరి దశ పైన ఉంది. ఏదైనా తీవ్రమైతే లేదా కొత్త లక్షణం కనిపిస్తే, వెంటనే వైద్య సహాయం పొందండి లేదా అత్యవసరమైతే 108కి కాల్ చేయండి.',
     'ai.emergency':
       'ఇది వైద్య అత్యవసర పరిస్థితి కావచ్చు. వెంటనే 108కి కాల్ చేయండి లేదా యాప్‌లో SOS బటన్ నొక్కండి. వీలైతే దగ్గరలో ఉన్నవారిని మీతో ఉండమని అడగండి.',
     'ai.fallback':

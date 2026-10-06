@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 import { randomUUID } from 'node:crypto';
 import { and, desc, eq, ilike, inArray, or } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
@@ -11,7 +12,7 @@ import { envelope, list, pageFromQuery } from '../../lib/pagination.js';
 import { parse, zAddress, zIso, zUuid } from '../../lib/validate.js';
 import { firstDelivery, parseJsonBuffer, rawBodyParsers, verifyHmacHeader } from '../../lib/webhooks.js';
 import { requireRoles } from '../../plugins/auth.js';
-import { ACTIVE_STATUSES, addEvent, createEpisode } from '../episodes/service.js';
+import { ACTIVE_STATUSES, addEvent, createEpisode, settleEpisodeAfterBookingEnded } from '../episodes/service.js';
 import { findZoneForPincode, timelineAdd } from '../homevisits/service.js';
 import { toPayment } from '../payments/service.js';
 import { zCouponCode, zRefundTo } from '../wallet/routes.js';
@@ -36,7 +37,7 @@ export async function labRoutes(app: FastifyInstance): Promise<void> {
 
   app.get('/lab/packages', async () => {
     const rows = await db.select().from(labPackages).where(eq(labPackages.active, true)).orderBy(labPackages.price);
-    return list(rows.map((p) => ({ id: p.id, code: p.code, name: p.name, testIds: p.testIds, price: p.price, mrp: p.mrp, description: p.description })));
+    return list(rows.map((p) => ({ id: p.id, code: p.code, name: p.name, testIds: p.testIds, price: p.price, mrp: p.mrp, description: stripGovernanceMarkers(p.description) })));
   });
 
   app.post('/lab/orders', { config: { idempotent: true } }, async (req, reply) => {
@@ -176,6 +177,7 @@ export async function labRoutes(app: FastifyInstance): Promise<void> {
       }
       if (pay?.status === 'pending') await svc.payments.voidPending(tx, pay.id);
       await addEvent(tx, o.careEpisodeId, 'lab_order_cancelled', 'Lab order cancelled', req.ctx.actor, { labOrderId: o.id });
+      await settleEpisodeAfterBookingEnded(tx, o.careEpisodeId, 'cancelled', req.ctx.actor);
       await audit(tx, req.ctx.actor, { action: 'lab_order.cancel', entityType: 'lab_order', entityId: o.id });
       return r;
     });

@@ -1,4 +1,4 @@
-import type { Threshold, ThresholdLevel, VitalType } from "@/lib/api/types";
+import type { ProgramTemplateApproveInput, Threshold, ThresholdLevel, VitalType } from "@/lib/api/types";
 
 export const VITAL_TYPES: VitalType[] = [
   "bp_systolic",
@@ -126,4 +126,36 @@ export function thresholdsDiffer(a: readonly Threshold[], b: readonly Threshold[
 export function pct(n: number | null | undefined): string {
   if (n === null || n === undefined || !Number.isFinite(n)) return "—";
   return `${Math.round(n)}%`;
+}
+
+/* ---------- Template approval / template fields (admin) ---------- */
+
+export interface ApproveTemplateValues {
+  approverName: string;
+  approverRegistration: string;
+}
+
+/** Mirrors POST /admin/care-programs/templates/:code/approve: approverName 2–100, registration optional 2–60. */
+export function validateApproval(v: ApproveTemplateValues): Partial<Record<keyof ApproveTemplateValues, string>> {
+  const errors: Partial<Record<keyof ApproveTemplateValues, string>> = {};
+  const name = v.approverName.trim();
+  if (name.length < 2) errors.approverName = "Enter the approving clinical lead's name";
+  else if (name.length > 100) errors.approverName = "At most 100 characters";
+  const reg = v.approverRegistration.trim();
+  if (reg && reg.length < 2) errors.approverRegistration = "At least 2 characters";
+  else if (reg.length > 60) errors.approverRegistration = "At most 60 characters";
+  return errors;
+}
+
+export function toApproveInput(v: ApproveTemplateValues, version?: string): ProgramTemplateApproveInput {
+  const reg = v.approverRegistration.trim();
+  return { approverName: v.approverName.trim(), ...(reg ? { approverRegistration: reg } : {}), ...(version ? { version } : {}) };
+}
+
+/** Template description is required by the API (1–1000 chars). */
+export function templateDescriptionError(description: string): string | undefined {
+  const d = description.trim();
+  if (!d) return "Description is required: summarise who the program is for and what it monitors";
+  if (d.length > 1000) return "At most 1000 characters";
+  return undefined;
 }

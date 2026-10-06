@@ -1065,12 +1065,24 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String readingsCount(int count) {
-    return '$count రీడింగ్‌లు';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count రీడింగ్‌లు',
+      one: '1 రీడింగ్',
+    );
+    return '$_temp0';
   }
 
   @override
   String vitalTrendSemantics(String vital, String min, String max, int count) {
-    return '$vital ధోరణి: $min నుండి $max మధ్య $count రీడింగ్‌లు';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count రీడింగ్‌లు',
+      one: '1 రీడింగ్',
+    );
+    return '$vital ధోరణి: $min నుండి $max మధ్య $_temp0';
   }
 
   @override
@@ -1435,4 +1447,93 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get serverChange => 'సర్వర్ మార్చండి';
+
+  @override
+  String get otpIncorrect =>
+      'కోడ్ తప్పు. దయచేసి తనిఖీ చేసి మళ్ళీ ప్రయత్నించండి.';
+
+  @override
+  String otpIncorrectAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'కోడ్ తప్పు. ఇంకా $count ప్రయత్నాలు ఉన్నాయి.',
+      one: 'కోడ్ తప్పు. ఇంకా 1 ప్రయత్నం ఉంది.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otpNoAttemptsLeft =>
+      'కోడ్ తప్పు. ప్రయత్నాలు అయిపోయాయి, దయచేసి కొత్త కోడ్ అభ్యర్థించండి.';
+
+  @override
+  String get otpExpired =>
+      'ఈ కోడ్ గడువు ముగిసింది. దయచేసి కొత్తది అభ్యర్థించండి.';
+
+  @override
+  String get otpTooManyAttempts =>
+      'చాలా తప్పు ప్రయత్నాలు. దయచేసి కొత్త కోడ్ అభ్యర్థించండి.';
+
+  @override
+  String get vitalHigh => 'ఎక్కువ';
+
+  @override
+  String get vitalLow => 'తక్కువ';
+
+  @override
+  String vitalFlagSemantics(String vital, String value, String flag) {
+    return '$vital $value, $flag';
+  }
+
+  @override
+  String get logoutConfirmBodyOtp =>
+      'మళ్ళీ సైన్ ఇన్ చేయడానికి మీ ఫోన్ OTP అవసరం.';
+
+  @override
+  String get leaveRemoveTitle => 'ఈ సెలవును తీసివేయాలా?';
+
+  @override
+  String leaveRemoveBody(String date) {
+    return '$date మళ్ళీ బుకింగ్‌లకు తెరవబడుతుంది.';
+  }
+
+  @override
+  String get attachedRecord => 'జతచేసిన రికార్డ్';
+
+  @override
+  String get attachmentUnavailable => 'జతచేసిన రికార్డ్ అందుబాటులో లేదు';
+
+  @override
+  String get attachmentNoFile => 'ఈ రికార్డ్‌లో తెరవడానికి ఫైల్ లేదు.';
+
+  @override
+  String get specGeneralPhysician => 'జనరల్ ఫిజీషియన్';
+
+  @override
+  String get specDermatologist => 'చర్మ వైద్య నిపుణులు';
+
+  @override
+  String get specPediatrician => 'పిల్లల వైద్య నిపుణులు';
+
+  @override
+  String get specGynecologist => 'స్త్రీ వైద్య నిపుణులు';
+
+  @override
+  String get specCardiologist => 'గుండె వైద్య నిపుణులు';
+
+  @override
+  String get specOrthopedist => 'ఎముకల వైద్య నిపుణులు';
+
+  @override
+  String get specPsychiatrist => 'మానసిక వైద్య నిపుణులు';
+
+  @override
+  String get specEnt => 'ENT నిపుణులు';
+
+  @override
+  String get specDiabetologist => 'మధుమేహ నిపుణులు';
+
+  @override
+  String get specNeurologist => 'నరాల వైద్య నిపుణులు';
 }

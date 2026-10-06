@@ -57,4 +57,37 @@ void main() {
     expect(find.text('1 booked consultations on this day'), findsOneWidget);
     expect(find.text('Ramesh Kumar'), findsOneWidget);
   });
+
+  testWidgets('removing a leave asks for confirmation first (B29)', (tester) async {
+    final be = mockBackend((req, path) {
+      if (path == '/doctor/me/schedule') {
+        return {
+          'weekly': [],
+          'leaves': [
+            {'id': 'lv-1', 'date': '2026-10-14', 'reason': 'Conference'},
+          ],
+        };
+      }
+      if (path == '/doctor/me/leaves/lv-1' && req.method == 'DELETE') return {};
+      return null;
+    });
+    bool deleted() => be.requests.any((r) => r.method == 'DELETE');
+    await tester.pumpWidget(testApp(const ScheduleScreen(), overrides: commonOverrides(be.client), scaffold: false));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Leaves'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('leaveRemove.lv-1')));
+    await tester.pumpAndSettle();
+    expect(find.text('Remove this leave?'), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(deleted(), isFalse);
+
+    await tester.tap(find.byKey(const Key('leaveRemove.lv-1')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('leaveRemoveConfirm')));
+    await tester.pumpAndSettle();
+    expect(deleted(), isTrue);
+  });
 }

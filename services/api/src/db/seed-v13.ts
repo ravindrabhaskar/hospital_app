@@ -275,8 +275,8 @@ export async function seedV13(
     { carePlanId: dPlan.id, patientId: dp.id, type: 'follow_up', title: 'Hospital follow-up visit (day 30)', description: `Follow-up at ${deccan.name}`, dueAt: istToUtc(addDays(dischargeDate, 30), '10:00'), owner: 'patient' },
   ]);
   await db.insert(s.medications).values([
-    { patientId: dp.id, carePlanId: dPlan.id, name: 'Furosemide', dose: '40mg', frequency: 'Once daily', times: ['08:00'], startDate: dischargeDate, endDate: addDays(dischargeDate, 29), source: 'imported', prescribedByName: 'Dr. S. Menon' },
-    { patientId: dp.id, carePlanId: dPlan.id, name: 'Bisoprolol', dose: '2.5mg', frequency: 'Once daily', times: ['09:00'], startDate: dischargeDate, source: 'imported', prescribedByName: 'Dr. S. Menon' },
+    { patientId: dp.id, carePlanId: dPlan.id, name: 'Furosemide', dose: '40mg', frequency: 'Once daily', times: ['08:00'], startDate: dischargeDate, endDate: addDays(dischargeDate, 29), source: 'imported', prescribedByName: 'Dr. S. Menon', createdAt: istToUtc(dischargeDate, '07:00') },
+    { patientId: dp.id, carePlanId: dPlan.id, name: 'Bisoprolol', dose: '2.5mg', frequency: 'Once daily', times: ['09:00'], startDate: dischargeDate, source: 'imported', prescribedByName: 'Dr. S. Menon', createdAt: istToUtc(dischargeDate, '07:00') },
   ]);
   await db.insert(s.checkinSettings).values({ patientId: dp.id, enabled: true, activeUntil: addDays(dischargeDate, 30), updatedByUserId: desk.id, updatedAt: istToUtc(dischargeDate, '12:00') });
   const hf = PROGRAM_FIXTURES.find((p) => p.code === 'heart_failure')!;

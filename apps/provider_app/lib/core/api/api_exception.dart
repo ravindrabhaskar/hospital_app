@@ -6,12 +6,16 @@ class ApiException implements Exception {
     required this.code,
     required this.message,
     this.correlationId,
+    this.details = const {},
+    this.authenticated = true,
   });
 
   const ApiException.network([this.message = 'Network unavailable'])
       : statusCode = 0,
         code = 'NETWORK',
-        correlationId = null;
+        correlationId = null,
+        details = const {},
+        authenticated = true;
 
   /// A queued upload whose local file no longer exists (e.g. cleared by the
   /// OS). Not retryable; the item is dropped and the user told.
@@ -19,7 +23,9 @@ class ApiException implements Exception {
       : statusCode = -1,
         code = localFileMissingCode,
         message = 'The photo file is no longer on this device',
-        correlationId = null;
+        correlationId = null,
+        details = const {},
+        authenticated = true;
 
   static const localFileMissingCode = 'LOCAL_FILE_MISSING';
 
@@ -28,8 +34,25 @@ class ApiException implements Exception {
   final String message;
   final String? correlationId;
 
+  /// The error envelope's `details` object (e.g. `attemptsRemaining`).
+  final Map<String, dynamic> details;
+
+  /// False when the failed call was sent without a session (OTP request and
+  /// verify, refresh). A 401 there is a wrong/expired code, not an expired
+  /// session.
+  final bool authenticated;
+
+  /// `details.attemptsRemaining` (wrong OTP / visit code), when present.
+  int? get attemptsRemaining {
+    final v = details['attemptsRemaining'];
+    return v is num ? v.toInt() : null;
+  }
+
   bool get isNetwork => statusCode == 0;
   bool get isUnauthenticated => statusCode == 401;
+
+  /// A 401 on a call made with a session: the session is gone.
+  bool get isSessionExpired => statusCode == 401 && authenticated;
 
   /// Staff MFA gate (contract §22). Providers are not MFA-enforced, but the
   /// app explains it clearly if the server ever asks for it.

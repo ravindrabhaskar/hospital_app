@@ -143,7 +143,7 @@ class _ServerAddressDialogState extends State<ServerAddressDialog> {
     if (r == null) return const SizedBox.shrink();
     final scheme = Theme.of(context).colorScheme;
     final (IconData icon, Color color, String text) = r.ok
-        ? (Icons.check_circle, Colors.green.shade700, '✓ ${l.serverConnectedVersion(r.version ?? '?')}')
+        ? (Icons.check_circle, Colors.green.shade700, l.serverConnectedVersion(r.version ?? '?'))
         : r.unreachable
             ? (Icons.error_outline, scheme.error, l.serverCantReach)
             : (Icons.error_outline, scheme.error, l.serverNotCareCompanion('${r.statusCode}'));
@@ -169,6 +169,11 @@ class _ServerAddressDialogState extends State<ServerAddressDialog> {
     return AlertDialog(
       title: Text(l.serverAddressTitle),
       scrollable: true,
+      // Keep the buttons in one predictable place: when they don't fit in a
+      // row they stack with Save first, instead of re-flowing as the keyboard
+      // opens and the dialog shrinks.
+      actionsOverflowAlignment: OverflowBarAlignment.end,
+      actionsOverflowDirection: VerticalDirection.up,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -184,10 +189,12 @@ class _ServerAddressDialogState extends State<ServerAddressDialog> {
             decoration: InputDecoration(
               labelText: l.serverAddressLabel,
               errorText: _invalid,
+              // Long hints ("Enter an address like …") wrap instead of ending in "…".
+              errorMaxLines: 4,
               helperText: _invalid == null && normalized != null && normalized != _ctrl.text.trim()
                   ? '→ $normalized'
                   : null,
-              helperMaxLines: 2,
+              helperMaxLines: 3,
             ),
             onChanged: (_) => setState(() {
               _invalid = null;

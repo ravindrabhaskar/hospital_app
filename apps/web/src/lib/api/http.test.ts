@@ -223,3 +223,33 @@ describe("TokenStore", () => {
     expect(storage.raw.size).toBe(0);
   });
 });
+
+describe("approve program template (QA B5)", () => {
+  it("POSTs the approver name, registration and version as the body", async () => {
+    const { api, fetchMock } = setup();
+    fetchMock.mockResolvedValueOnce(json(200, { code: "hf", version: "1.1", status: "approved" }));
+    await api.adminPrograms.approve("hf", { approverName: "Dr Asha Rao", approverRegistration: "KMC-1234", version: "1.1" });
+    const call = fetchMock.mock.calls[0]!;
+    expect(call[0]).toBe(`${BASE}/admin/care-programs/templates/hf/approve`);
+    expect(call[1]?.method).toBe("POST");
+    expect(JSON.parse(String(call[1]?.body))).toEqual({ approverName: "Dr Asha Rao", approverRegistration: "KMC-1234", version: "1.1" });
+  });
+});
+
+describe("ApiError.userMessage (QA B24)", () => {
+  it("expands a generic validation failure with the API's field issues", () => {
+    const e = new ApiError({
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Request validation failed",
+      details: { issues: [{ path: "description", message: "String must contain at least 1 character(s)" }, { path: "defaultThresholds.0.value", message: "Required" }] },
+    });
+    expect(e.fieldIssues).toHaveLength(2);
+    expect(e.userMessage).toBe("Please check: Description: String must contain at least 1 character(s); Default thresholds 1 value: Required");
+  });
+
+  it("keeps the plain message when there are no issues", () => {
+    expect(new ApiError({ status: 409, code: "CONFLICT", message: "Already exists" }).userMessage).toBe("Already exists");
+    expect(new ApiError({ status: 400, code: "VALIDATION_ERROR", message: "validTo must be after validFrom" }).userMessage).toBe("validTo must be after validFrom");
+  });
+});

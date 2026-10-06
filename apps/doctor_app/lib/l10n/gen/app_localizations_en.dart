@@ -1066,12 +1066,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String readingsCount(int count) {
-    return '$count readings';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count readings',
+      one: '1 reading',
+    );
+    return '$_temp0';
   }
 
   @override
   String vitalTrendSemantics(String vital, String min, String max, int count) {
-    return '$vital trend: $count readings between $min and $max';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count readings',
+      one: '1 reading',
+    );
+    return '$vital trend: $_temp0 between $min and $max';
   }
 
   @override
@@ -1436,4 +1448,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverChange => 'Change server';
+
+  @override
+  String get otpIncorrect => 'Incorrect code. Please check it and try again.';
+
+  @override
+  String otpIncorrectAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Incorrect code. $count attempts left.',
+      one: 'Incorrect code. 1 attempt left.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otpNoAttemptsLeft =>
+      'Incorrect code. No attempts left, please request a new code.';
+
+  @override
+  String get otpExpired => 'This code has expired. Please request a new one.';
+
+  @override
+  String get otpTooManyAttempts =>
+      'Too many incorrect attempts. Please request a new code.';
+
+  @override
+  String get vitalHigh => 'High';
+
+  @override
+  String get vitalLow => 'Low';
+
+  @override
+  String vitalFlagSemantics(String vital, String value, String flag) {
+    return '$vital $value, $flag';
+  }
+
+  @override
+  String get logoutConfirmBodyOtp =>
+      'You will need your phone OTP to sign in again.';
+
+  @override
+  String get leaveRemoveTitle => 'Remove this leave?';
+
+  @override
+  String leaveRemoveBody(String date) {
+    return '$date will be open for bookings again.';
+  }
+
+  @override
+  String get attachedRecord => 'Attached record';
+
+  @override
+  String get attachmentUnavailable => 'Attached record unavailable';
+
+  @override
+  String get attachmentNoFile => 'This record has no file to open.';
+
+  @override
+  String get specGeneralPhysician => 'General Physician';
+
+  @override
+  String get specDermatologist => 'Dermatologist';
+
+  @override
+  String get specPediatrician => 'Pediatrician';
+
+  @override
+  String get specGynecologist => 'Gynecologist';
+
+  @override
+  String get specCardiologist => 'Cardiologist';
+
+  @override
+  String get specOrthopedist => 'Orthopedist';
+
+  @override
+  String get specPsychiatrist => 'Psychiatrist';
+
+  @override
+  String get specEnt => 'ENT Specialist';
+
+  @override
+  String get specDiabetologist => 'Diabetologist';
+
+  @override
+  String get specNeurologist => 'Neurologist';
 }

@@ -320,6 +320,23 @@ class _LeavesState extends ConsumerState<_Leaves> {
 
   Future<void> _delete(Leave leave) async {
     final l = context.l10n;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: Text(l.leaveRemoveTitle),
+        content: Text(l.leaveRemoveBody(formatIsoDate(context, leave.date))),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(c, false), child: Text(l.commonCancel)),
+          FilledButton(
+            key: const Key('leaveRemoveConfirm'),
+            style: FilledButton.styleFrom(minimumSize: const Size(96, 48)),
+            onPressed: () => Navigator.pop(c, true),
+            child: Text(l.commonRemove),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
     setState(() => _busy = true);
     try {
       await ref.read(clinicianRepositoryProvider).deleteLeave(leave.id);
@@ -352,6 +369,7 @@ class _LeavesState extends ConsumerState<_Leaves> {
                           title: Text(formatIsoDate(context, lv.date)),
                           subtitle: lv.reason == null ? null : Text(lv.reason!),
                           trailing: IconButton(
+                            key: Key('leaveRemove.${lv.id}'),
                             tooltip: l.commonRemove,
                             icon: const Icon(Icons.delete_outline),
                             onPressed: _busy ? null : () => _delete(lv),

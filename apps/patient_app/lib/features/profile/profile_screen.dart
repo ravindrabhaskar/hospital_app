@@ -77,6 +77,8 @@ class ProfileScreen extends ConsumerWidget {
         automaticallyImplyLeading: false,
         actions: [
           TextButton(onPressed: () => context.push('/profile/personal'), child: Text(l.edit)),
+          // Breathing room from the screen edge (longer Hindi/Telugu labels).
+          const SizedBox(width: Space.sm),
         ],
       ),
       body: ListView(

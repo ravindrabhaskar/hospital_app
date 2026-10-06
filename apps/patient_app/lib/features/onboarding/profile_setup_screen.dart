@@ -10,6 +10,7 @@ import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../models/json.dart';
 import '../../state/core_providers.dart';
+import 'onboarding_resume.dart';
 
 class ProfileSetupScreen extends ConsumerStatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -67,6 +68,9 @@ class _ProfileSetupScreenState extends ConsumerState<ProfileSetupScreen> {
           'gender': ?_gender,
         });
       }
+      // Onboarding counts as complete from here on; remember the remaining
+      // optional steps so a reload resumes them instead of skipping to Home.
+      await ref.read(onboardingResumeProvider.notifier).set(me.id, '/onboarding/emergency');
       await ref.read(sessionProvider.notifier).refreshMe();
       ref.invalidate(patientsProvider);
       if (mounted) context.go('/onboarding/emergency');

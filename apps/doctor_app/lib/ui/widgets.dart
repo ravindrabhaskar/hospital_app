@@ -420,12 +420,18 @@ void showSnack(BuildContext context, String message, {bool error = false}) {
 }
 
 class ButtonSpinner extends StatelessWidget {
-  const ButtonSpinner({super.key, this.color = Colors.white});
-  final Color color;
+  const ButtonSpinner({super.key, this.color});
+
+  /// Defaults to the button's current foreground (text) colour, so the
+  /// spinner stays visible on the disabled button it usually sits in.
+  final Color? color;
 
   @override
-  Widget build(BuildContext context) =>
-      SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5, color: color));
+  Widget build(BuildContext context) => SizedBox(
+    width: 22,
+    height: 22,
+    child: CircularProgressIndicator(strokeWidth: 2.5, color: color ?? DefaultTextStyle.of(context).style.color),
+  );
 }
 
 /// Opens [uri] outside the app; shows a snackbar if nothing can handle it.

@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
+import '../../core/utils/permissions.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../state/core_providers.dart';
@@ -54,6 +55,7 @@ class _EditableAvatarState extends ConsumerState<EditableAvatar> {
     final source = kIsWeb
         ? ImageSource.gallery
         : await showModalBottomSheet<ImageSource>(
+            useRootNavigator: true,
             context: context,
             builder: (c) => SafeArea(
               child: Column(
@@ -99,7 +101,12 @@ class _EditableAvatarState extends ConsumerState<EditableAvatar> {
       ref.invalidate(patientsProvider);
       showSnack(context, l.photoUpdated);
     } catch (e) {
-      if (mounted) showSnack(context, errorMessage(context, e), error: true);
+      if (!mounted) return;
+      if (pickerDenial(e) != null) {
+        showPickerError(context, e);
+      } else {
+        showSnack(context, errorMessage(context, e), error: true);
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }

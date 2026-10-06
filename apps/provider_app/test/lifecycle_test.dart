@@ -116,6 +116,30 @@ void main() {
       expect(calls.single.$2, {'visitCode': '4821', 'consentConfirmed': true});
     });
 
+    testWidgets('B29: a rejected visit code (panel rebuilt) keeps the consent tick', (tester) async {
+      var consent = false;
+      Widget panel(String key) => testApp(StatefulBuilder(
+            builder: (context, setState) => NextActionPanel(
+              key: ValueKey(key),
+              visit: visit(status: VisitStatus.arrived),
+              consent: consent,
+              onConsentChanged: (v) => setState(() => consent = v),
+              onAction: (_, _) async {},
+              onNavigate: () {},
+            ),
+          ));
+      await tester.pumpWidget(panel('panel-arrived'));
+      await tester.tap(find.byKey(const Key('consentCheckbox')));
+      await tester.pump();
+      expect(consent, isTrue);
+
+      // Optimistic in_progress then rollback: the keyed panel is recreated.
+      await tester.pumpWidget(panel('panel-in_progress'));
+      await tester.pumpWidget(panel('panel-arrived'));
+      final box = tester.widget<CheckboxListTile>(find.byKey(const Key('consentCheckbox')));
+      expect(box.value, isTrue);
+    });
+
     testWidgets('start travel sends etaMinutes', (tester) async {
       final calls = <(VisitActionType, Map<String, dynamic>)>[];
       await tester.pumpWidget(testApp(NextActionPanel(

@@ -88,6 +88,7 @@ export async function medicationRoutes(app: FastifyInstance): Promise<void> {
     const meds = await db.select().from(medications).where(and(eq(medications.patientId, q.patientId), eq(medications.active, true)));
     for (const m of await toMedications(db, meds, grace)) {
       for (const d of m.today) {
+        if (d.status === 'not_applicable') continue; // QA B18: added after this dose time
         items.push({
           id: `medication:${m.id}:${d.time}`,
           kind: 'medication',

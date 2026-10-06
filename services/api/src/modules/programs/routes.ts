@@ -10,7 +10,7 @@ import { list, pageFromQuery, paginateArray } from '../../lib/pagination.js';
 import { addDays, istDate } from '../../lib/time.js';
 import { parse, zDate, zUuid, zVitalType } from '../../lib/validate.js';
 import { requireRoles } from '../../plugins/auth.js';
-import { activeTemplates, programSummary, templateByCode, toEnrollments, toTemplate } from './service.js';
+import { activeTemplates, programSummary, templateByCode, toEnrollments, toPublicTemplate, toTemplate } from './service.js';
 
 export const zThreshold = z.object({
   type: zVitalType,
@@ -27,7 +27,7 @@ export async function programRoutes(app: FastifyInstance): Promise<void> {
   const svc = app.svc;
   const db = svc.db;
 
-  app.get('/care-programs/templates', async () => list((await activeTemplates(db, svc.config)).map(toTemplate)));
+  app.get('/care-programs/templates', async () => list((await activeTemplates(db, svc.config)).map(toPublicTemplate)));
 
   app.post('/care-programs/enrollments', { preHandler: requireRoles(svc, 'doctor', 'coordinator') }, async (req, reply) => {
     const body = parse(

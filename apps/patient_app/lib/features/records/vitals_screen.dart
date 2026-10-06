@@ -79,6 +79,7 @@ class VitalsScreen extends ConsumerWidget {
                 label: l.addVital,
                 icon: Icons.add,
                 onPressed: () => showModalBottomSheet<void>(
+                  useRootNavigator: true,
                   context: context,
                   isScrollControlled: true,
                   builder: (_) => const AddVitalSheet(),

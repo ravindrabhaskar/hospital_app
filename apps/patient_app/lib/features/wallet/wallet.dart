@@ -11,6 +11,7 @@ import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../models/engagement_v13.dart';
 import '../../state/v13_providers.dart';
+import '../onboarding/onboarding_resume.dart';
 
 // Wallet & invites (API_CONTRACT §60).
 
@@ -263,17 +264,17 @@ class RedeemInviteDialog extends StatelessWidget {
 }
 
 /// Optional last onboarding step: "Were you invited?".
-class OnboardingInviteScreen extends StatelessWidget {
+class OnboardingInviteScreen extends ConsumerWidget {
   const OnboardingInviteScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
         title: Text(l.haveInviteCode),
         automaticallyImplyLeading: false,
-        actions: [TextButton(key: const Key('invite-skip'), onPressed: () => context.go('/home'), child: Text(l.skip))],
+        actions: [TextButton(key: const Key('invite-skip'), onPressed: () => goOnboardingStep(context, ref, '/home'), child: Text(l.skip))],
       ),
       body: SafeArea(
         child: ListView(
@@ -283,7 +284,7 @@ class OnboardingInviteScreen extends StatelessWidget {
             const SizedBox(height: Space.lg),
             Text(l.onboardingInviteBody, textAlign: TextAlign.center, style: TextStyle(color: context.textMuted)),
             const SizedBox(height: Space.xl),
-            RedeemInviteForm(onDone: () => context.go('/home')),
+            RedeemInviteForm(onDone: () => goOnboardingStep(context, ref, '/home')),
           ],
         ),
       ),

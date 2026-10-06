@@ -136,7 +136,7 @@ class ApiClient {
       }
     }
 
-    final error = _parseError(response);
+    final error = _parseError(response, authenticated: auth);
     if (error.statusCode == 401 && auth) {
       onSessionExpired?.call();
     }
@@ -167,8 +167,9 @@ class ApiClient {
     return r;
   }
 
-  ApiException _parseError(http.Response response) {
+  ApiException _parseError(http.Response response, {bool authenticated = true}) {
     String code = 'HTTP_${response.statusCode}';
+    var details = const <String, dynamic>{};
     String message = response.reasonPhrase ?? 'Request failed';
     String? correlationId = response.headers['x-correlation-id'];
     try {
@@ -178,6 +179,7 @@ class ApiClient {
         code = (err['code'] as String?) ?? code;
         message = (err['message'] as String?) ?? message;
         correlationId = (err['correlationId'] as String?) ?? correlationId;
+        if (err['details'] is Map) details = Map<String, dynamic>.from(err['details'] as Map);
       }
     } catch (_) {}
     return ApiException(
@@ -185,6 +187,8 @@ class ApiClient {
       code: code,
       message: message,
       correlationId: correlationId,
+      details: details,
+      authenticated: authenticated,
     );
   }
 

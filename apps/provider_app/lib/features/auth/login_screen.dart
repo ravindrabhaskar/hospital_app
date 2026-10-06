@@ -73,7 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final session = await ref.read(authRepositoryProvider).verifyOtp(_e164, _otp.text.trim());
       await ref.read(authControllerProvider).signIn(session);
     } catch (e) {
-      if (mounted) setState(() => _error = errorMessage(context.l10n, e));
+      if (mounted) setState(() => _error = otpErrorMessage(context.l10n, e));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

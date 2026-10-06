@@ -31,6 +31,7 @@ class _FamilyPlanScreenState extends ConsumerState<FamilyPlanScreen> {
     final l = context.l10n;
     // Checkout sheet: coupon + wallet before creating the subscription (§60).
     final offers = await showModalBottomSheet<CheckoutOffersController>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => PlanCheckoutSheet(plan: plan, billing: _billing),

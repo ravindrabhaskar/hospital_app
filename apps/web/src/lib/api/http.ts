@@ -35,6 +35,33 @@ export class ApiError extends Error {
   get isMfaRequired() {
     return this.status === 403 && this.code === "MFA_REQUIRED";
   }
+  /** Field problems from a VALIDATION_ERROR (`details.issues`, mapped from the API's zod issues). */
+  get fieldIssues(): { path: string; message: string }[] {
+    const raw = this.details?.issues;
+    if (this.code !== "VALIDATION_ERROR" || !Array.isArray(raw)) return [];
+    return raw
+      .filter((i): i is { path?: unknown; message: unknown } => !!i && typeof i === "object" && typeof (i as { message?: unknown }).message === "string")
+      .map((i) => ({ path: typeof i.path === "string" ? i.path : "", message: i.message as string }));
+  }
+  /** The message to show a person: generic validation failures are expanded with the field problems. */
+  get userMessage(): string {
+    const issues = this.fieldIssues;
+    if (!issues.length) return this.message;
+    const shown = issues.slice(0, 3).map((i) => (i.path ? `${fieldLabel(i.path)}: ${i.message}` : i.message));
+    const more = issues.length > 3 ? ` (+${issues.length - 3} more)` : "";
+    const lead = /^request validation failed$/i.test(this.message) ? "Please check" : this.message;
+    return `${lead}: ${shown.join("; ")}${more}`;
+  }
+}
+
+/** "defaultThresholds.0.value" → "Default thresholds 1 value". */
+export function fieldLabel(path: string): string {
+  const words = path
+    .split(".")
+    .map((seg) => (/^\d+$/.test(seg) ? String(Number(seg) + 1) : seg.replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/_/g, " ").toLowerCase()))
+    .join(" ")
+    .trim();
+  return words.charAt(0).toUpperCase() + words.slice(1);
 }
 
 /** Parse any non-2xx response into an ApiError, tolerating non-JSON bodies. */

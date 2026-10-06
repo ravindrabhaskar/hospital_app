@@ -8,6 +8,7 @@ import '../../models/care.dart';
 import '../../models/clinical.dart';
 import '../../models/prescription.dart';
 import '../../ui/l10n_helpers.dart';
+import '../../ui/vital_flags.dart';
 import '../../ui/widgets.dart';
 import '../common/file_viewer.dart';
 import 'patient_providers.dart';
@@ -193,11 +194,27 @@ class VitalTrendCard extends StatelessWidget {
     final latest = sorted.last;
     final min = values.reduce((a, b) => a < b ? a : b);
     final max = values.reduce((a, b) => a > b ? a : b);
+    final flag = vitalFlag(type, latest.value, unit: latest.unit);
+    final latestText = '${formatNumber(latest.value)} ${latest.unit}';
     return SectionCard(
+      key: Key('vitalCard.$type'),
       title: vitalLabel(l, type),
-      trailing: Text(
-        '${formatNumber(latest.value)} ${latest.unit}',
-        style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.primaryDark),
+      trailing: Semantics(
+        label: flag == null ? latestText : l.vitalFlagSemantics(vitalLabel(l, type), latestText, vitalFlagLabel(context, flag)),
+        excludeSemantics: true,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (flag != null) ...[VitalFlagBadge(flag: flag), const SizedBox(width: 6)],
+            Text(
+              latestText,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: flag == null ? AppColors.primaryDark : AppColors.dangerDeep,
+              ),
+            ),
+          ],
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

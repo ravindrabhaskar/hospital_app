@@ -190,6 +190,12 @@ class LabOrder {
 
   static const flow = ['pending_payment', 'scheduled', 'sample_collected', 'processing', 'report_ready'];
 
+  /// The server's `total` is the gross price of the tests (before coupon).
+  int get subtotal => total;
+
+  /// What the patient pays (or paid): subtotal minus the coupon discount.
+  int get amountDue => total - discount < 0 ? 0 : total - discount;
+
   bool get reportReady => status == 'report_ready' && reportRecordId != null;
   bool get canCancel => status == 'pending_payment' || status == 'scheduled';
 

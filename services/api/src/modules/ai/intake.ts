@@ -22,6 +22,11 @@ export interface Intake {
   allergies: IntakeField<string[]>;
   missingFields: string[];
   complete: boolean;
+  /**
+   * Monotonic question progress over the fixed ASKED_FIELDS list: `answered` only grows and
+   * `step` is the 1-based number of the question being asked (= total once complete).
+   */
+  progress: { step: number; total: number; answered: number };
 }
 
 export const ASKED_FIELDS = ['chiefComplaint', 'durationText', 'severity', 'associatedSymptoms'] as const;
@@ -40,6 +45,7 @@ export function emptyIntake(): Intake {
     allergies: empty(),
     missingFields: [],
     complete: false,
+    progress: { step: 1, total: ASKED_FIELDS.length, answered: 0 },
   };
   return finalize(i);
 }
@@ -47,6 +53,9 @@ export function emptyIntake(): Intake {
 export function finalize(i: Intake): Intake {
   i.missingFields = ASKED_FIELDS.filter((f) => i[f].value === null);
   i.complete = i.missingFields.length === 0;
+  const total = ASKED_FIELDS.length;
+  const answered = total - i.missingFields.length;
+  i.progress = { step: Math.min(answered + 1, total), total, answered };
   return i;
 }
 
@@ -133,8 +142,37 @@ export function findSeverity(text: string, asked: boolean): number | null {
   if (asked) {
     const nums = [...text.matchAll(/\b(\d{1,2})\b/g)].map((m) => Number(m[1])).filter((n) => n >= 0 && n <= 10);
     if (nums.length === 1) return nums[0];
+    const word = severityFromWords(text);
+    if (word !== null) return word;
   }
   return null;
+}
+
+/** Unambiguous severity words, safe to recognise even when another question was asked. */
+const STRICT_SEVERITY = /^\W*(very\s+)?(mild|moderate|severe)\b/i;
+
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+
+/**
+ * Typed severity answers ("Moderate", "quite severe", "very mild", "seven"). Case-insensitive.
+ * Values match the quick replies: mild 3, moderate 5, severe 8.
+ */
+export function severityFromWords(text: string): number | null {
+  const n = text.toLowerCase();
+  const w = /\b(zero|one|two|three|four|five|six|seven|eight|nine|ten)\b/.exec(n);
+  if (w) return NUMBER_WORDS.indexOf(w[1]);
+  if (/\b(unbearable|worst|excruciating|extreme|extremely|very (?:severe|bad|strong|painful))\b/.test(n)) return 9;
+  if (/\b(severe|serious|bad|strong|intense|high)\b/.test(n)) return 8;
+  if (/\b(moderate|moderately|medium|average|manageable)\b/.test(n)) return 5;
+  if (/\b(very mild|barely|slight|slightly|minimal)\b/.test(n)) return 2;
+  if (/\b(mild|low|light|little)\b/.test(n)) return 3;
+  if (/^\s*(none|no pain|nothing)\b/.test(n)) return 0;
+  return null;
+}
+
+/** Older stored intakes lack `progress`; recompute derived fields before returning them. */
+export function normalizeIntake(i: Intake): Intake {
+  return finalize(JSON.parse(JSON.stringify(i)) as Intake);
 }
 
 export function findAllergies(text: string): string[] {
@@ -170,13 +208,18 @@ export function extractFromMessage(prev: Intake, text: string, asked: AskedField
 
   if (i.durationText.value === null) {
     const d = findDuration(trimmed);
-    if (asked === 'durationText' && trimmed.length > 0 && trimmed.length <= 60 && !NEGATIVE.test(trimmed)) {
+    // A severity-style answer ("Moderate") typed while we asked for duration is not a duration.
+    const looksLikeSeverity = !d && (STRICT_SEVERITY.test(trimmed) || /\b\d{1,2}\s*(?:\/|out of)\s*10\b/i.test(trimmed));
+    if (asked === 'durationText' && trimmed.length > 0 && trimmed.length <= 60 && !NEGATIVE.test(trimmed) && !looksLikeSeverity) {
       i.durationText = userField(trimmed, d ? 1 : 0.7);
     } else if (d) i.durationText = userField(d);
   }
 
   if (i.severity.value === null) {
-    const s = findSeverity(trimmed, asked === 'severity');
+    // Also accept a typed severity word when it was the whole answer to the (previous) duration question.
+    const s =
+      findSeverity(trimmed, asked === 'severity') ??
+      (asked === 'durationText' && i.durationText.value === null && trimmed.length <= 40 && STRICT_SEVERITY.test(trimmed) ? severityFromWords(trimmed) : null);
     if (s !== null) i.severity = userField(s);
   }
 
@@ -200,8 +243,7 @@ export function extractFromMessage(prev: Intake, text: string, asked: AskedField
 export function prefillFromRecord(i: Intake, ctx: { conditions: string[]; medications: string[]; allergies: string[] }): Intake {
   const out: Intake = JSON.parse(JSON.stringify(i));
   if (out.relevantHistory.value === null && ctx.conditions.length) out.relevantHistory = { value: ctx.conditions, source: 'record', confidence: 1 };
-  if (out.currentMedications.value === null && ctx.medications.length)
-    out.currentMedications = { value: ctx.medications, source: 'record', confidence: 1 };
+  if (out.currentMedications.value === null && ctx.medications.length) out.currentMedications = { value: ctx.medications, source: 'record', confidence: 1 };
   if (out.allergies.value === null && ctx.allergies.length) out.allergies = { value: ctx.allergies, source: 'record', confidence: 1 };
   return finalize(out);
 }

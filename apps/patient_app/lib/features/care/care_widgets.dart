@@ -11,6 +11,7 @@ import '../../models/care.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
 import '../payments/payment_sheet.dart';
+import 'dose_display.dart';
 
 class AppointmentCard extends StatelessWidget {
   const AppointmentCard({super.key, required this.appointment});
@@ -206,6 +207,7 @@ class _MedicationCardState extends ConsumerState<MedicationCard> {
   Widget build(BuildContext context) {
     final l = context.l10n;
     final m = widget.medication;
+    final doses = visibleDoses(m, ref.watch(medicationAddedLogProvider));
     return Padding(
       padding: const EdgeInsets.only(bottom: Space.sm),
       child: CcCard(
@@ -237,10 +239,10 @@ class _MedicationCardState extends ConsumerState<MedicationCard> {
               const SizedBox(height: 6),
               Text(m.instructions!, style: const TextStyle(fontSize: 12.5)),
             ],
-            if (m.today.isNotEmpty) ...[
+            if (doses.isNotEmpty) ...[
               const SizedBox(height: Space.sm),
               const Divider(),
-              for (final d in m.today)
+              for (final d in doses)
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Row(

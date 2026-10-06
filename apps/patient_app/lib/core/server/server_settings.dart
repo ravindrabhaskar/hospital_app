@@ -119,6 +119,23 @@ class ServerSettings extends ChangeNotifier {
 final _scheme = RegExp(r'^[a-zA-Z][a-zA-Z0-9+.-]*://');
 final _ipv4 = RegExp(r'^\d{1,3}(\.\d{1,3}){3}$');
 
+/// One DNS label: letters, digits and inner hyphens.
+final _hostLabel = RegExp(r'^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$', caseSensitive: false);
+
+/// A URL path made of plain segments (no empty `//` segments, no `:`).
+final _plainPath = RegExp(r'^(/[A-Za-z0-9._~%-]+)*/*$');
+
+/// Hostname rules (B22): valid labels, and a dotted name whose labels are
+/// all numbers except the last one is a mangled IP, not a host.
+bool _validHost(String host) {
+  if (_ipv4.hasMatch(host)) return host.split('.').every((p) => int.parse(p) <= 255);
+  final labels = host.split('.');
+  if (labels.any((l) => !_hostLabel.hasMatch(l))) return false;
+  final numeric = RegExp(r'^\d+$');
+  if (labels.length > 1 && labels.sublist(0, labels.length - 1).every(numeric.hasMatch)) return false;
+  return !numeric.hasMatch(labels.last);
+}
+
 /// Default port of the local API server (`npm run dev`).
 const defaultServerPort = 4000;
 
@@ -133,6 +150,8 @@ const defaultServerPort = 4000;
 String? normalizeServerUrl(String input) {
   var s = input.trim();
   if (s.isEmpty || s.contains(RegExp(r'\s'))) return null;
+  // Two addresses pasted together ("http://a.http//b:9999/...").
+  if (RegExp(r'https?:?//', caseSensitive: false).allMatches(s).length > 1) return null;
   final hasScheme = _scheme.hasMatch(s);
   var addDevPort = false;
   if (!hasScheme) {
@@ -151,8 +170,9 @@ String? normalizeServerUrl(String input) {
   if (scheme != 'http' && scheme != 'https') return null;
   final host = uri.host;
   if (host.isEmpty) return null;
-  if (_ipv4.hasMatch(host) && host.split('.').any((p) => int.parse(p) > 255)) return null;
-  if (uri.userInfo.isNotEmpty) return null;
+  if (!_validHost(host)) return null;
+  if (uri.userInfo.isNotEmpty || uri.hasQuery || uri.hasFragment) return null;
+  if (!_plainPath.hasMatch(uri.path)) return null;
   final port = uri.hasPort ? uri.port : (addDevPort ? defaultServerPort : null);
   var path = uri.path;
   while (path.endsWith('/')) {

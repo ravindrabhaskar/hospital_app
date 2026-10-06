@@ -71,6 +71,7 @@ class _VideoJoinCardState extends ConsumerState<VideoJoinCard> {
   Future<void> _join() async {
     final l = context.l10n;
     final ok = await showModalBottomSheet<bool>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => PreJoinChecklist(audioOnly: widget.appointment.mode == 'audio'),

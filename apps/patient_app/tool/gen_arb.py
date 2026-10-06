@@ -1145,5 +1145,40 @@ def build():
     print('keys:', len(T))
 
 
+# ---- QA 2026-10-05 fixes (B10, B13, ...)
+k('aiGreeting', "Hello! I'm your CareCompanion assistant. I can help you describe what's going on and find the right care. I can't diagnose conditions. What's bothering you today?",
+  'नमस्ते! मैं आपका CareCompanion सहायक हूँ। मैं आपकी समस्या समझने और सही देखभाल तक पहुँचने में मदद कर सकता हूँ। मैं निदान नहीं कर सकता। आज आपको क्या परेशानी है?',
+  'నమస్కారం! నేను మీ CareCompanion సహాయకుడిని. మీ సమస్యను వివరించడంలో, సరైన వైద్య సేవను పొందడంలో సహాయం చేస్తాను. నేను రోగనిర్ధారణ చేయలేను. ఈరోజు మీకు ఏమి ఇబ్బందిగా ఉంది?', MED)
+k('qrFever', 'Fever', 'बुखार', 'జ్వరం', MED)
+k('qrHeadache', 'Headache', 'सिरदर्द', 'తలనొప్పి', MED)
+k('qrCoughCold', 'Cough or cold', 'खाँसी या जुकाम', 'దగ్గు లేదా జలుబు', MED)
+k('qrStomachPain', 'Stomach pain', 'पेट दर्द', 'కడుపు నొప్పి', MED)
+k('qrSkinProblem', 'Skin problem', 'त्वचा की समस्या', 'చర్మ సమస్య', MED)
+k('qrSinceToday', 'Since today', 'आज से', 'ఈరోజు నుండి')
+k('qrSinceYesterday', 'Since yesterday', 'कल से', 'నిన్నటి నుండి')
+k('qrTwoThreeDays', '2-3 days', '2-3 दिन', '2-3 రోజులు')
+k('qrMoreThanWeek', 'More than a week', 'एक हफ़्ते से ज़्यादा', 'ఒక వారం కంటే ఎక్కువ')
+k('qrMild', 'Mild (3/10)', 'हल्का (3/10)', 'తేలికపాటి (3/10)', MED)
+k('qrModerate', 'Moderate (5/10)', 'मध्यम (5/10)', 'మధ్యస్థం (5/10)', MED)
+k('qrSevere', 'Severe (8/10)', 'गंभीर (8/10)', 'తీవ్రం (8/10)', MED)
+k('qrNoOtherSymptoms', 'No other symptoms', 'कोई और लक्षण नहीं', 'ఇతర లక్షణాలు లేవు', MED)
+k('qrNausea', 'Nausea', 'जी मिचलाना', 'వికారం', MED)
+k('qrDizziness', 'Dizziness', 'चक्कर आना', 'తల తిరగడం', MED)
+k('qrBodyAche', 'Body ache', 'बदन दर्द', 'ఒళ్ళు నొప్పులు', MED)
+k('qrCall108', 'Call 108', '108 पर कॉल करें', '108కి కాల్ చేయండి')
+k('qrPressSos', 'Press SOS', 'SOS दबाएँ', 'SOS నొక్కండి')
+k('qrBookDoctor', 'Book a doctor', 'डॉक्टर बुक करें', 'డాక్టర్‌ను బుక్ చేయండి')
+k('qrRequestHomeVisit', 'Request home visit', 'होम विज़िट का अनुरोध करें', 'హోమ్ విజిట్ అభ్యర్థించండి')
+k('cameraPermissionDenied', 'Camera permission is off. Allow camera access in Settings to take a photo, or upload a file instead.',
+  'कैमरे की अनुमति बंद है। फ़ोटो लेने के लिए सेटिंग्स में कैमरा की अनुमति दें, या इसके बजाय फ़ाइल अपलोड करें।',
+  'కెమెరా అనుమతి ఆఫ్‌లో ఉంది. ఫోటో తీయడానికి సెట్టింగ్‌లలో కెమెరా అనుమతి ఇవ్వండి, లేదా బదులుగా ఫైల్‌ను అప్‌లోడ్ చేయండి.')
+k('photosPermissionDenied', 'Photo and file access is off. Allow access in Settings to choose a file.',
+  'फ़ोटो और फ़ाइलों की अनुमति बंद है। फ़ाइल चुनने के लिए सेटिंग्स में अनुमति दें।',
+  'ఫోటోలు మరియు ఫైళ్ల అనుమతి ఆఫ్‌లో ఉంది. ఫైల్‌ను ఎంచుకోవడానికి సెట్టింగ్‌లలో అనుమతి ఇవ్వండి.')
+k('openSettings', 'Open settings', 'सेटिंग्स खोलें', 'సెట్టింగ్‌లు తెరవండి')
+k('amountPaidTotal', 'Amount paid', 'चुकाई गई राशि', 'చెల్లించిన మొత్తం')
+k('attachmentNeedsText', 'Add a short message to send this record.', 'यह रिकॉर्ड भेजने के लिए एक छोटा संदेश लिखें।', 'ఈ రికార్డును పంపడానికి ఒక చిన్న సందేశం రాయండి.')
+# ---- end QA 2026-10-05 fixes
+
 k('itemsCount', '{count} items', '{count} आइटम', '{count} వస్తువులు')
 build()

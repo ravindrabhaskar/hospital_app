@@ -555,7 +555,7 @@
       }
     }
   },
-  "readingsCount": "{count} रीडिंग",
+  "readingsCount": "{count, plural, =1{1 रीडिंग} other{{count} रीडिंग}}",
   "@readingsCount": {
     "placeholders": {
       "count": {
@@ -563,7 +563,7 @@
       }
     }
   },
-  "vitalTrendSemantics": "{vital} रुझान: {min} से {max} के बीच {count} रीडिंग",
+  "vitalTrendSemantics": "{vital} रुझान: {min} से {max} के बीच {count, plural, =1{1 रीडिंग} other{{count} रीडिंग}}",
   "@vitalTrendSemantics": {
     "placeholders": {
       "vital": {
@@ -772,5 +772,29 @@
   "serverDefaultIs": "डिफ़ॉल्ट: {url}",
   "serverSignOutWarning": "सर्वर बदलने पर आप लॉग आउट हो जाएँगे।",
   "serverCantReachAt": "{host} पर सर्वर तक नहीं पहुँच पा रहे",
-  "serverChange": "सर्वर बदलें"
+  "serverChange": "सर्वर बदलें",
+  "otpIncorrect": "कोड गलत है। कृपया जाँचें और फिर से कोशिश करें।",
+  "otpIncorrectAttempts": "{count, plural, =1{कोड गलत है। 1 प्रयास बाकी।} other{कोड गलत है। {count} प्रयास बाकी।}}",
+  "otpNoAttemptsLeft": "कोड गलत है। कोई प्रयास बाकी नहीं, कृपया नया कोड मँगाएँ।",
+  "otpExpired": "इस कोड की समय-सीमा खत्म हो गई है। कृपया नया कोड मँगाएँ।",
+  "otpTooManyAttempts": "बहुत सारे गलत प्रयास। कृपया नया कोड मँगाएँ।",
+  "vitalHigh": "अधिक",
+  "vitalLow": "कम",
+  "vitalFlagSemantics": "{vital} {value}, {flag}",
+  "logoutConfirmBodyOtp": "फिर से साइन इन करने के लिए आपको फ़ोन OTP की ज़रूरत होगी।",
+  "leaveRemoveTitle": "यह छुट्टी हटाएँ?",
+  "leaveRemoveBody": "{date} फिर से बुकिंग के लिए खुल जाएगा।",
+  "attachedRecord": "संलग्न रिकॉर्ड",
+  "attachmentUnavailable": "संलग्न रिकॉर्ड उपलब्ध नहीं है",
+  "attachmentNoFile": "इस रिकॉर्ड में खोलने के लिए कोई फ़ाइल नहीं है।",
+  "specGeneralPhysician": "जनरल फ़िज़िशियन",
+  "specDermatologist": "त्वचा रोग विशेषज्ञ",
+  "specPediatrician": "बाल रोग विशेषज्ञ",
+  "specGynecologist": "स्त्री रोग विशेषज्ञ",
+  "specCardiologist": "हृदय रोग विशेषज्ञ",
+  "specOrthopedist": "हड्डी रोग विशेषज्ञ",
+  "specPsychiatrist": "मनोचिकित्सक",
+  "specEnt": "ईएनटी विशेषज्ञ",
+  "specDiabetologist": "मधुमेह विशेषज्ञ",
+  "specNeurologist": "तंत्रिका रोग विशेषज्ञ"
 }

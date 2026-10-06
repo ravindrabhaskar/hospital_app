@@ -54,6 +54,26 @@ void main() {
       }
     });
 
+    test('garbled / pasted-together addresses are rejected (B22)', () {
+      for (final bad in [
+        'http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1',
+        '10.10.17.http//10.0.2.2:9999',
+        'http://10.0.2.2:4000http://10.0.2.2:4000',
+        'http://10.10.17/api/v1',
+        'http://host_name:4000',
+        'http://-bad.example.com',
+        'http://10.0.2.2:4000/api//v1',
+        'http://10.0.2.2:4000/api/v1?x=1',
+        'http://10.0.2.2:4000/a:b',
+      ]) {
+        expect(normalizeServerUrl(bad), isNull, reason: bad);
+      }
+      // Still fine:
+      expect(normalizeServerUrl('http://10.0.2.2:4000/api/v1'), 'http://10.0.2.2:4000/api/v1');
+      expect(normalizeServerUrl('https://my-api.example.co.in/base'), 'https://my-api.example.co.in/base/api/v1');
+      expect(normalizeServerUrl('localhost:4000'), 'http://localhost:4000/api/v1');
+    });
+
     test('hostOf shows host[:port]', () {
       expect(hostOf('http://10.10.17.134:4000/api/v1'), '10.10.17.134:4000');
       expect(hostOf('https://xyz.trycloudflare.com/api/v1'), 'xyz.trycloudflare.com');
@@ -118,7 +138,7 @@ void main() {
   });
 
   group('dialog', () {
-    testWidgets('test connection: success shows ✓ and the version; Save applies it', (tester) async {
+    testWidgets('test connection: success shows one tick and the version; Save applies it', (tester) async {
       final requests = <Uri>[];
       final client = MockClient((r) async {
         requests.add(r.url);
@@ -136,8 +156,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(requests.single.toString(), 'http://10.10.17.134:4000/api/v1/health');
-      expect(find.textContaining('✓'), findsOneWidget);
-      expect(find.textContaining('1.4.2'), findsOneWidget);
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.textContaining('✓'), findsNothing, reason: 'the tick is shown once, as the icon (B22)');
+      expect(find.text('Connected. Server version 1.4.2'), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('serverSave')));
       await tester.pumpAndSettle();
@@ -156,7 +177,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining("Can't reach the server"), findsOneWidget);
       expect(find.textContaining('START-CARECOMPANION.bat'), findsOneWidget);
-      expect(find.textContaining('✓'), findsNothing);
+      expect(find.byIcon(Icons.check_circle), findsNothing);
     });
 
     testWidgets('a non-CareCompanion answer and invalid input are reported', (tester) async {
@@ -175,6 +196,23 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('Enter an address like'), findsOneWidget);
       expect(settings.isOverridden, isFalse);
+    });
+
+    testWidgets('Save validates like Test: a garbled address is not saved (B22)', (tester) async {
+      final client = MockClient((r) async => http.Response('{"status":"ok","version":"1.0.0"}', 200));
+      final settings = await ServerSettings.load(defaultUrl: _default, overrideAllowed: true);
+      final changed = <bool>[];
+      await tester.pumpWidget(_opener(settings, client, changed));
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byKey(const Key('serverUrlField')),
+          'http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1');
+      await tester.tap(find.byKey(const Key('serverSave')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Enter an address like'), findsOneWidget);
+      expect(settings.isOverridden, isFalse);
+      expect(changed, isEmpty, reason: 'dialog stays open');
     });
 
     testWidgets('Reset to default drops the override', (tester) async {

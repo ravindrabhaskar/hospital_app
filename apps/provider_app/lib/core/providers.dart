@@ -20,6 +20,7 @@ import 'api/token_store.dart';
 import 'config.dart';
 import 'connectivity.dart';
 import 'locale_controller.dart';
+import 'location_permission.dart';
 import 'location_reporter.dart';
 import 'public_config_controller.dart';
 import 'push/push_service.dart';
@@ -48,6 +49,7 @@ final documentPickerProvider = Provider<DocumentPicker>((ref) => pickDocument);
 final voiceDictationProvider = Provider<VoiceDictation>((ref) => SpeechToTextDictation());
 final appVersionReaderProvider = Provider<AppVersionReader>((ref) => readPackageVersion);
 final positionReaderProvider = Provider<PositionReader>((ref) => readCurrentPosition);
+final locationPermissionsProvider = Provider<LocationPermissions>((ref) => const GeolocatorPermissions());
 final firebaseSettingsProvider = Provider<FirebaseSettings>((ref) => FirebaseSettings.fromEnvironment());
 
 final scaffoldMessengerKeyProvider =
@@ -147,6 +149,18 @@ final locationReporterProvider = Provider<LocationReporter>((ref) {
   final reporter = LocationReporter(post: repo.postLocation, connectivity: ref.watch(connectivityProvider));
   ref.onDispose(reporter.stop);
   return reporter;
+});
+
+/// Location permission state + the one-time in-app rationale.
+final locationAccessProvider = Provider<LocationAccessController>((ref) {
+  final reporter = ref.watch(locationReporterProvider);
+  final c = LocationAccessController(
+    permissions: ref.watch(locationPermissionsProvider),
+    store: ref.watch(keyValueStoreProvider),
+    onGranted: reporter.resume,
+  );
+  ref.onDispose(c.dispose);
+  return c;
 });
 
 final localeControllerProvider = Provider<LocaleController>((ref) {

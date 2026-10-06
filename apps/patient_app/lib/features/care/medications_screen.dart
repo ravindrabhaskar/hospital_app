@@ -12,6 +12,7 @@ import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
 import '../onboarding/profile_setup_screen.dart' show DateField;
 import 'care_screen.dart' show MedicationsBody;
+import 'dose_display.dart';
 
 class MedicationsScreen extends StatelessWidget {
   const MedicationsScreen({super.key});
@@ -74,7 +75,8 @@ class _AddMedicationScreenState extends ConsumerState<AddMedicationScreen> {
     setState(() => _saving = true);
     try {
       final patient = await ref.read(activePatientProvider.future);
-      await ref.read(carePlanRepositoryProvider).addMedication(
+      final addedAt = DateTime.now();
+      final med = await ref.read(carePlanRepositoryProvider).addMedication(
             patientId: patient.id,
             name: _name.text.trim(),
             dose: _dose.text.trim(),
@@ -84,11 +86,17 @@ class _AddMedicationScreenState extends ConsumerState<AddMedicationScreen> {
             endDate: _end == null ? null : ymd(_end!),
             instructions: _instructions.text.trim().isEmpty ? null : _instructions.text.trim(),
           );
+      await ref.read(medicationAddedLogProvider.notifier).record(med.id, addedAt);
       ref.invalidate(medicationsProvider);
       ref.invalidate(remindersTodayProvider);
       if (mounted) {
         showSnack(context, l.medicationAdded);
-        context.pop();
+        // Opened directly (deep link / reload): there is no page to go back to.
+        if (context.canPop()) {
+          context.pop();
+        } else {
+          context.go('/medications');
+        }
       }
     } on ApiException catch (e) {
       if (mounted) showSnack(context, errorMessage(context, e), error: true);

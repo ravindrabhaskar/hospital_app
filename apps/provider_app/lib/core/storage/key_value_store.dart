@@ -82,6 +82,9 @@ class StoreKeys {
   static const photoUrl = 'provider.photoUrl';
   static const supplies = 'provider.supplies';
 
+  /// Unsubmitted "Apply to join" form (contains personal details).
+  static const applicationDraft = 'onboarding.applicationDraft';
+
   static const all = [
     accessToken,
     refreshToken,
@@ -91,5 +94,6 @@ class StoreKeys {
     visitCache,
     photoUrl,
     supplies,
+    applicationDraft,
   ];
 }

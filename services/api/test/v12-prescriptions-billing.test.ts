@@ -156,6 +156,12 @@ describe('invoices (section 32)', () => {
     expect(c.status).toBe(409);
     expect((await t.req(lakshmi, 'GET', `/payments/${payment.id}/invoice`)).status).toBe(403);
     expect((await t.req(ops, 'GET', `/payments/${payment.id}/invoice`)).status).toBe(200);
+    // B14: coordinators cannot read invoices (JSON or PDF); super_admin can.
+    const meera = (await t.login(SEED_PHONES.meera)).accessToken;
+    expect((await t.req(meera, 'GET', `/payments/${payment.id}/invoice`)).status).toBe(403);
+    expect((await t.req(meera, 'GET', `/payments/${payment.id}/invoice.pdf`)).status).toBe(403);
+    const admin = (await t.login(SEED_PHONES.admin)).accessToken;
+    expect((await t.req(admin, 'GET', `/payments/${payment.id}/invoice`)).status).toBe(200);
   });
 
   it('numbering is gap-free and unique under concurrency', async () => {

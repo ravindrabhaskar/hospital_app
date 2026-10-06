@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/config.dart';
 import '../../core/providers.dart';
 import '../../core/theme.dart';
+import '../../models/clinical.dart';
 import '../../models/messaging.dart';
+import '../common/file_viewer.dart';
 import '../../ui/l10n_helpers.dart';
 import '../../ui/widgets.dart';
 
@@ -236,12 +238,114 @@ class MessageBubble extends StatelessWidget {
                   style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primaryLight),
                 ),
               Text(m.text, style: TextStyle(color: mine ? Colors.white : AppColors.textPrimary)),
+              if (m.attachmentRecordId != null) ...[
+                const SizedBox(height: 6),
+                AttachmentChip(key: Key('attachment.${m.id}'), recordId: m.attachmentRecordId!),
+              ],
               const SizedBox(height: 2),
               Text(
                 formatTime(context, m.createdAt),
                 style: TextStyle(fontSize: 11, color: mine ? Colors.white70 : AppColors.textSecondary),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A record the sender attached (`attachmentRecordId`, contract §34),
+/// fetched with `GET /records/:id`.
+final attachmentRecordProvider = FutureProvider.autoDispose.family<MedicalRecord, String>(
+  (ref, id) => ref.watch(clinicianRepositoryProvider).record(id),
+);
+
+/// Chip under a message: record title + type; tap opens the original file.
+class AttachmentChip extends ConsumerWidget {
+  const AttachmentChip({super.key, required this.recordId});
+  final String recordId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final value = ref.watch(attachmentRecordProvider(recordId));
+    final r = value.value;
+    final String title;
+    final String? subtitle;
+    if (r != null) {
+      title = r.title;
+      subtitle = [recordTypeLabel(l, r.type), if (r.recordDate != null) formatIsoDate(context, r.recordDate)].join(' · ');
+    } else if (value.hasError) {
+      title = l.attachmentUnavailable;
+      subtitle = null;
+    } else {
+      title = l.attachedRecord;
+      subtitle = null;
+    }
+    final repo = ref.read(clinicianRepositoryProvider);
+    VoidCallback? onTap;
+    if (r != null) {
+      onTap = r.hasFile
+          ? () => openFile(
+              context,
+              title: r.title,
+              mimeType: r.mimeType ?? 'application/pdf',
+              load: () => repo.recordFile(r.id),
+            )
+          : () => showSnack(context, l.attachmentNoFile);
+    } else if (value.hasError) {
+      onTap = () => ref.invalidate(attachmentRecordProvider(recordId));
+    }
+    return Semantics(
+      button: onTap != null,
+      label: [l.attachedRecord, title, ?subtitle].join(', '),
+      excludeSemantics: true,
+      child: Material(
+        color: AppColors.mint50,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    r?.isImage == true ? Icons.image_outlined : Icons.description_outlined,
+                    size: 20,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primaryDark),
+                        ),
+                        if (subtitle != null && subtitle.isNotEmpty)
+                          Text(subtitle, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      ],
+                    ),
+                  ),
+                  if (r != null && r.hasFile) ...[
+                    const SizedBox(width: 6),
+                    const Icon(Icons.open_in_new, size: 18, color: AppColors.primary),
+                  ] else if (r == null && !value.hasError) ...[
+                    const SizedBox(width: 6),
+                    const ButtonSpinner(color: AppColors.primary),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

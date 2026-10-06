@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../core/api/api_exception.dart';
 import '../../core/theme/tokens.dart';
@@ -9,6 +8,7 @@ import '../../core/utils/format.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../state/core_providers.dart';
+import 'onboarding_resume.dart';
 
 /// The optional "invite code" step follows when wallet & offers are on (§60).
 String nextAfterEmergency(WidgetRef ref) => ref.read(featureFlagsProvider).walletOffers ? '/onboarding/invite' : '/home';
@@ -38,14 +38,14 @@ class _State extends ConsumerState<EmergencyContactSetupScreen> {
   Future<void> _save() async {
     if (!_form.currentState!.validate()) return;
     final selfId = ref.read(sessionProvider).me?.selfPatientId;
-    if (selfId == null) return context.go(nextAfterEmergency(ref));
+    if (selfId == null) return goOnboardingStep(context, ref, nextAfterEmergency(ref));
     setState(() => _saving = true);
     try {
       await ref.read(patientRepositoryProvider).addEmergencyContact(selfId,
           name: _name.text.trim(),
           phone: '+91${_phone.text.trim()}',
           relation: _relation.text.trim());
-      if (mounted) context.go(nextAfterEmergency(ref));
+      if (mounted) await goOnboardingStep(context, ref, nextAfterEmergency(ref));
     } on ApiException catch (e) {
       if (mounted) showSnack(context, errorMessage(context, e), error: true);
     } finally {
@@ -60,7 +60,9 @@ class _State extends ConsumerState<EmergencyContactSetupScreen> {
       appBar: AppBar(
         title: Text(l.emergencyContactTitle),
         automaticallyImplyLeading: false,
-        actions: [TextButton(onPressed: () => context.go(nextAfterEmergency(ref)), child: Text(l.skip))],
+        actions: [TextButton(onPressed: () => goOnboardingStep(context, ref, nextAfterEmergency(ref)),
+              child: Text(l.skip))
+        ],
       ),
       body: SafeArea(
         child: Form(

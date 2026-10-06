@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 /**
  * Deterministic safety engine. Pure functions only: the rules themselves are DATA
  * (versioned rule packs stored in the DB and approved by clinical governance).
@@ -83,7 +84,7 @@ export function evaluateRules(
   const level = triggered.reduce<SafetyLevel>((acc, r) => maxLevel(acc, r.level), 'none');
   return {
     level,
-    triggeredRules: triggered.map((r) => ({ ruleId: r.id, title: r.title, action: r.action })),
+    triggeredRules: triggered.map((r) => ({ ruleId: r.id, title: stripGovernanceMarkers(r.title), action: r.action })),
     rulePackVersion: pack.version,
     rulePackStatus: pack.status,
   };

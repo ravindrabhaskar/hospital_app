@@ -9,6 +9,7 @@ import '../../core/api/api_exception.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
 import '../../core/utils/labels.dart';
+import '../../core/utils/permissions.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../models/json.dart';
@@ -95,8 +96,8 @@ class _UploadRecordScreenState extends ConsumerState<UploadRecordScreen> {
           _title.text = f.name.contains('.') ? f.name.substring(0, f.name.lastIndexOf('.')) : f.name;
         }
       });
-    } catch (_) {
-      if (mounted) showSnack(context, l.pickerFailed, error: true);
+    } catch (e) {
+      if (mounted) showPickerError(context, e);
     }
   }
 

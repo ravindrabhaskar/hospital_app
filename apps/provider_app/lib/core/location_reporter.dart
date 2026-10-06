@@ -7,7 +7,10 @@ import 'connectivity.dart';
 
 /// Posts the device location (`POST /provider/location`) periodically while the
 /// provider is on duty. Entirely fail-soft: missing permission, disabled GPS,
-/// or network errors just skip that tick.
+/// or network errors just skip that tick. It never shows the permission
+/// prompt itself: that is asked once with an in-app rationale (see
+/// `LocationAccessController`) and later only when the provider taps
+/// "Turn on location".
 class LocationReporter {
   LocationReporter({required this.post, required this.connectivity});
 
@@ -34,15 +37,18 @@ class LocationReporter {
   /// Report immediately (e.g. when starting travel).
   Future<void> reportNow() => _tick();
 
+  /// Location was just allowed: report again (if running).
+  void resume() {
+    _permissionDenied = false;
+    if (_timer != null) unawaited(_tick());
+  }
+
   Future<void> _tick() async {
     if (_permissionDenied) return;
     try {
       if (!await connectivity.isOnline()) return;
       if (!await Geolocator.isLocationServiceEnabled()) return;
-      var permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
+      final permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
         _permissionDenied = true;
         return;

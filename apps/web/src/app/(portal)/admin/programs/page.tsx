@@ -6,7 +6,19 @@ import { AlertTriangle, BadgeCheck, HeartPulse, Pencil, Plus, Trash2 } from "luc
 import { api } from "@/lib/api";
 import type { MetricFrequency, ProgramTemplate, VitalType } from "@/lib/api/types";
 import { humanize } from "@/lib/format";
-import { VITAL_TYPES, describeThreshold, toDraft, toThresholds, validateThresholds, vitalLabel, type ThresholdDraft } from "@/lib/programs";
+import { useAuth } from "@/lib/auth";
+import {
+  VITAL_TYPES,
+  describeThreshold,
+  templateDescriptionError,
+  toApproveInput,
+  toDraft,
+  toThresholds,
+  validateApproval,
+  validateThresholds,
+  vitalLabel,
+  type ThresholdDraft,
+} from "@/lib/programs";
 import { ThresholdEditor } from "@/components/threshold-editor";
 import { useToast } from "@/components/toast";
 import { Badge, Button, Card, Dialog, EmptyState, Field, Input, PageHeader, QueryView, Select, Textarea } from "@/components/ui";
@@ -107,6 +119,7 @@ function TemplateDialog({ template, onClose }: { template: ProgramTemplate | nul
   const errors = {
     code: /^[a-z][a-z0-9_]{1,39}$/.test(code) ? undefined : "Lowercase snake_case, e.g. heart_failure",
     name: name.trim().length >= 2 ? undefined : "Name is required",
+    description: templateDescriptionError(description),
     version: /^\d+(\.\d+){0,2}$/.test(version.trim()) ? undefined : "e.g. 1.1",
     metrics: metrics.length === 0 ? "Add at least one reading" : metrics.some((m) => !m.unit.trim()) ? "Every reading needs a unit" : undefined,
   };
@@ -165,8 +178,18 @@ function TemplateDialog({ template, onClose }: { template: ProgramTemplate | nul
           <Field label="Version" required error={submitted ? errors.version : undefined}>
             {(id, d) => <Input id={id} aria-describedby={d} value={version} onChange={(e) => setVersion(e.target.value)} />}
           </Field>
-          <Field label="Description" className="sm:col-span-3">
-            {(id) => <Textarea id={id} rows={2} value={description} onChange={(e) => setDescription(e.target.value)} />}
+          <Field label="Description" required className="sm:col-span-3" error={submitted ? errors.description : undefined}>
+            {(id, d) => (
+              <Textarea
+                id={id}
+                rows={2}
+                maxLength={1000}
+                aria-describedby={d}
+                aria-invalid={submitted && !!errors.description}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            )}
           </Field>
         </div>
         <fieldset className="flex flex-col gap-2">
@@ -219,9 +242,15 @@ function nextVersion(v: string) {
 function ApproveDialog({ template, onClose }: { template: ProgramTemplate; onClose: () => void }) {
   const qc = useQueryClient();
   const toast = useToast();
+  const { user } = useAuth();
   const [confirmed, setConfirmed] = useState(false);
+  const [approverName, setApproverName] = useState(user?.name ?? "");
+  const [approverRegistration, setApproverRegistration] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const errors = validateApproval({ approverName, approverRegistration });
+  const ok = Object.keys(errors).length === 0;
   const approve = useMutation({
-    mutationFn: () => api.adminPrograms.approve(template.code),
+    mutationFn: () => api.adminPrograms.approve(template.code, toApproveInput({ approverName, approverRegistration }, template.version)),
     onSuccess: () => {
       toast.success("Template approved", `${template.name} v${template.version}`);
       void qc.invalidateQueries({ queryKey: KEY });
@@ -240,7 +269,15 @@ function ApproveDialog({ template, onClose }: { template: ProgramTemplate; onClo
           <Button variant="ghost" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="danger" disabled={!confirmed} loading={approve.isPending} onClick={() => approve.mutate()}>
+          <Button
+            variant="danger"
+            disabled={!confirmed}
+            loading={approve.isPending}
+            onClick={() => {
+              setSubmitted(true);
+              if (ok) approve.mutate();
+            }}
+          >
             Approve template
           </Button>
         </>
@@ -259,6 +296,25 @@ function ApproveDialog({ template, onClose }: { template: ProgramTemplate; onClo
             </li>
           ))}
         </ul>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Field label="Approving clinical lead" required hint="Recorded on the template and in the audit log" error={submitted ? errors.approverName : undefined}>
+            {(id, d) => (
+              <Input id={id} aria-describedby={d} aria-invalid={submitted && !!errors.approverName} maxLength={100} value={approverName} onChange={(e) => setApproverName(e.target.value)} />
+            )}
+          </Field>
+          <Field label="Registration number" hint="Optional, e.g. medical council number" error={submitted ? errors.approverRegistration : undefined}>
+            {(id, d) => (
+              <Input
+                id={id}
+                aria-describedby={d}
+                aria-invalid={submitted && !!errors.approverRegistration}
+                maxLength={60}
+                value={approverRegistration}
+                onChange={(e) => setApproverRegistration(e.target.value)}
+              />
+            )}
+          </Field>
+        </div>
         <label className="flex items-start gap-2">
           <input type="checkbox" className="mt-0.5 size-4 accent-[#b3261e]" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} data-autofocus="" />
           I confirm a clinical lead has reviewed and signed off these thresholds.

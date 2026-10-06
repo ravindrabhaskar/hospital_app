@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import '../../core/api/api_exception.dart';
+import '../../core/storage/key_value_store.dart';
+import '../../models/json.dart';
 import '../../models/provider_application.dart';
 import 'application_repository.dart';
 import 'document_picker.dart';
@@ -34,15 +38,59 @@ class DocumentUpload {
   UploadState state = UploadState.uploading;
   double progress = 0;
   ApiException? error;
+
+  /// A file over 10 MB fails the same way on every retry, so no "Retry"
+  /// is offered for it (only "remove").
+  bool get canRetry {
+    final e = error;
+    return e == null || (e.code != 'FILE_TOO_LARGE' && e.statusCode != 413);
+  }
 }
 
 /// Client-side limit mirroring the server (contract §30: ≤ 10 MB).
 const maxDocumentBytes = 10 * 1024 * 1024;
 
+/// A new application's form state kept on the device until it is submitted
+/// (survives an app reload / web refresh).
+class SavedApplicationDraft {
+  const SavedApplicationDraft({required this.draft, this.step = 0, this.experienceText = ''});
+  final ApplicationDraft draft;
+  final int step;
+  final String experienceText;
+
+  Json toJson() => {'draft': draft.toDraftJson(), 'step': step, 'experience': experienceText};
+
+  static SavedApplicationDraft? fromJson(Object? json) {
+    if (json is! Map) return null;
+    final draft = json['draft'];
+    if (draft is! Map) return null;
+    return SavedApplicationDraft(
+      draft: ApplicationDraft.fromDraftJson(asJson(draft)),
+      step: (intOrNull(json['step']) ?? 0).clamp(0, 3),
+      experienceText: strOr(json['experience']),
+    );
+  }
+}
+
 class ApplicationController extends ChangeNotifier {
-  ApplicationController({required this.repository, this.onApproved});
+  ApplicationController({required this.repository, this.onApproved, this.store});
 
   final ApplicationRepository repository;
+
+  /// Where the unsubmitted draft and known zone names are kept (secure
+  /// storage in the app). Null: nothing is persisted.
+  final KeyValueStore? store;
+
+  static const zoneNamesKey = 'onboarding.zoneNames';
+
+  SavedApplicationDraft? _savedDraft;
+  Map<String, String> _zoneNames = const {};
+
+  /// Draft restored from the device for a new application (null if none).
+  SavedApplicationDraft? get savedDraft => _savedDraft;
+
+  /// Zone id → name remembered from pincode lookups on this device.
+  Map<String, String> get zoneNames => _zoneNames;
 
   /// Called once when the application is seen as approved, so the identity
   /// (`/me` roles) can be refreshed and the router can move on.
@@ -77,6 +125,7 @@ class ApplicationController extends ChangeNotifier {
     _loading = true;
     _error = null;
     notifyListeners();
+    await _loadLocal();
     try {
       _application = await repository.mine();
       _loaded = true;
@@ -87,6 +136,47 @@ class ApplicationController extends ChangeNotifier {
       notifyListeners();
     }
     await _handleApproved();
+  }
+
+  Future<void> _loadLocal() async {
+    final store = this.store;
+    if (store == null) return;
+    try {
+      final raw = await store.read(StoreKeys.applicationDraft);
+      _savedDraft = raw == null ? null : SavedApplicationDraft.fromJson(jsonDecode(raw));
+    } catch (_) {
+      _savedDraft = null;
+    }
+    try {
+      final raw = await store.read(zoneNamesKey);
+      final decoded = raw == null ? null : jsonDecode(raw);
+      if (decoded is Map) _zoneNames = {for (final e in decoded.entries) '${e.key}': '${e.value}'};
+    } catch (_) {}
+  }
+
+  /// Persists the new-application form (called by the form, debounced).
+  Future<void> saveDraft(SavedApplicationDraft draft) async {
+    if (_application != null) return; // Only unsubmitted applications.
+    _savedDraft = draft;
+    try {
+      await store?.write(StoreKeys.applicationDraft, jsonEncode(draft.toJson()));
+    } catch (_) {}
+  }
+
+  Future<void> clearDraft() async {
+    _savedDraft = null;
+    try {
+      await store?.delete(StoreKeys.applicationDraft);
+    } catch (_) {}
+  }
+
+  /// Remembers a zone's name so "Edit & resubmit" can show it later.
+  Future<void> rememberZone(String id, String? name) async {
+    if (name == null || name.isEmpty || _zoneNames[id] == name) return;
+    _zoneNames = {..._zoneNames, id: name};
+    try {
+      await store?.write(zoneNamesKey, jsonEncode(_zoneNames));
+    } catch (_) {}
   }
 
   Future<void> _handleApproved() async {
@@ -113,10 +203,11 @@ class ApplicationController extends ChangeNotifier {
     _busy = true;
     notifyListeners();
     try {
-      _application =
-          _application == null ? await repository.create(draft) : await repository.update(draft);
+      final created = _application == null;
+      _application = created ? await repository.create(draft) : await repository.update(draft);
       _loaded = true;
       _editing = false;
+      if (created) await clearDraft();
     } finally {
       _busy = false;
       notifyListeners();

@@ -47,6 +47,7 @@ Future<Payment?> showPaymentSheet(
   // A payment fully covered by a coupon / wallet succeeds immediately (§60).
   if (payment.succeeded) return Future.value(payment);
   return showModalBottomSheet<Payment>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     isDismissible: false,
@@ -66,6 +67,7 @@ class PaymentSheet extends ConsumerStatefulWidget {
 class _PaymentSheetState extends ConsumerState<PaymentSheet> {
   late Payment _payment = widget.payment;
   final _action = IdempotentAction();
+  final _retryAction = IdempotentAction();
   bool _busy = false;
   String? _error;
 
@@ -81,20 +83,43 @@ class _PaymentSheetState extends ConsumerState<PaymentSheet> {
         platform: ref.read(appPlatformProvider),
       );
 
+  /// Starts a fresh attempt for a failed payment (`POST /payments/:id/retry`):
+  /// a new gateway order, and the booking's slot is held again. Confirming
+  /// the old, failed order would be a server no-op (B1).
+  Future<Payment> _retryAttempt(Payment p) async {
+    final fresh = await ref
+        .read(paymentRepositoryProvider)
+        .retry(p.id, idempotencyKey: _retryAction.key);
+    _retryAction.complete();
+    if (mounted) setState(() => _payment = fresh);
+    return fresh;
+  }
+
   Future<void> _attemptMock(bool success) async {
     setState(() {
       _busy = true;
       _error = null;
     });
     try {
+      var current = _payment;
+      if (current.failed) {
+        current = await _retryAttempt(current);
+        if (!mounted) return;
+        // Fully covered by wallet/coupon on retry: already settled.
+        if (current.succeeded) {
+          Navigator.of(context).pop(current);
+          return;
+        }
+      }
       final p = await ref
           .read(paymentRepositoryProvider)
-          .confirmMock(_payment.id, success: success, idempotencyKey: _action.key);
+          .confirmMock(current.id, success: success, idempotencyKey: _action.key);
       _action.complete();
       if (!mounted) return;
       setState(() => _payment = p);
       if (p.succeeded) Navigator.of(context).pop(p);
     } on ApiException catch (e) {
+      if (!e.isOffline) _retryAction.complete();
       // Offline: keep the key so a retry is de-duplicated server-side.
       if (!e.isOffline) _action.complete();
       if (mounted) setState(() => _error = errorMessage(context, e));
@@ -114,9 +139,12 @@ class _PaymentSheetState extends ConsumerState<PaymentSheet> {
       // A failed/cancelled attempt (or a payment without an order) needs a
       // fresh checkout from the server.
       if (p.checkout == null || p.failed || _checkoutFailed) {
-        p = await repo.retry(p.id);
+        p = await _retryAttempt(p);
         if (!mounted) return;
-        setState(() => _payment = p);
+        if (p.succeeded) {
+          Navigator.of(context).pop(p);
+          return;
+        }
       }
       final checkout = p.checkout;
       if (checkout == null) {
@@ -145,6 +173,7 @@ class _PaymentSheetState extends ConsumerState<PaymentSheet> {
           });
       }
     } on ApiException catch (e) {
+      if (!e.isOffline) _retryAction.complete();
       if (mounted) setState(() => _error = errorMessage(context, e));
     } finally {
       if (mounted) setState(() => _busy = false);

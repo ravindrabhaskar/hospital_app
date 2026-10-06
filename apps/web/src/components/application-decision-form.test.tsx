@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { HomeVisitService, ProviderApplication, ServiceZone } from "@/lib/api/types";
-import { addDays, todayIST } from "@/lib/format";
+import { addDays, istDayEndISO, todayIST } from "@/lib/format";
 import { ToastProvider } from "./toast";
 import { ApplicationDecisionForm } from "./application-decision-form";
 
@@ -82,7 +82,7 @@ describe("ApplicationDecisionForm", () => {
     expect(decide).toHaveBeenCalledWith("app1", {
       decision: "approve",
       note: "All verified",
-      credentialExpiresAt: expiry,
+      credentialExpiresAt: istDayEndISO(expiry),
       zoneIds: ["z1", "z2"],
       capabilities: ["wound_care"],
     });

@@ -143,16 +143,23 @@ class _SampleChecklistViewState extends State<SampleChecklistView> {
             ),
             box('sample.tubes', l.sampleTubesLabelled, c.tubesLabelled, (v) => c.tubesLabelled = v),
             const SizedBox(height: 4),
-            TextField(
-              key: const Key('sample.count'),
-              controller: _count,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
-              decoration: InputDecoration(labelText: l.sampleCount, isDense: true),
-              onChanged: (v) {
-                c.sampleCount = int.tryParse(v);
-                widget.onChanged();
-              },
+            // Its own semantics node, so screen readers announce and can
+            // target "Number of samples" instead of merging it into the card.
+            Semantics(
+              container: true,
+              textField: true,
+              label: l.sampleCount,
+              child: TextField(
+                key: const Key('sample.count'),
+                controller: _count,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(2)],
+                decoration: InputDecoration(labelText: l.sampleCount, isDense: true),
+                onChanged: (v) {
+                  c.sampleCount = int.tryParse(v);
+                  widget.onChanged();
+                },
+              ),
             ),
             const SizedBox(height: 4),
             box('sample.collected', l.sampleCollectedConfirm, c.samplesCollected, (v) => c.samplesCollected = v),

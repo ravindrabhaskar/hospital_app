@@ -52,6 +52,7 @@ describe('provider applications (section 30)', () => {
     const c = await t.req(app, 'POST', '/provider-applications', { ...base, specialty: 'dermatologist' });
     expect(c.status).toBe(201);
     expect(c.body).toMatchObject({ status: 'submitted', specialty: 'dermatologist', documents: [] });
+    expect(c.body.preferredZones).toEqual([{ id: zoneId, name: expect.any(String) }]);
     expect((await t.req(app, 'POST', '/provider-applications', { ...base, specialty: 'dermatologist' })).status).toBe(409);
 
     // Approval is refused without the required documents.

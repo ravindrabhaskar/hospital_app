@@ -12,6 +12,7 @@ import '../../state/core_providers.dart';
 
 Future<void> showFamilySwitcher(BuildContext context) {
   return showModalBottomSheet<void>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     builder: (_) => const FamilySwitcherSheet(),

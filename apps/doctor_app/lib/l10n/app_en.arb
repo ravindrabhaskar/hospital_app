@@ -459,7 +459,7 @@
       }
     }
   },
-  "readingsCount": "{count} readings",
+  "readingsCount": "{count, plural, =1{1 reading} other{{count} readings}}",
   "@readingsCount": {
     "placeholders": {
       "count": {
@@ -467,7 +467,7 @@
       }
     }
   },
-  "vitalTrendSemantics": "{vital} trend: {count} readings between {min} and {max}",
+  "vitalTrendSemantics": "{vital} trend: {count, plural, =1{1 reading} other{{count} readings}} between {min} and {max}",
   "@vitalTrendSemantics": {
     "placeholders": {
       "vital": {
@@ -657,5 +657,32 @@
   "serverSignOutWarning": "Changing the server signs you out.",
   "serverCantReachAt": "Can't reach the server at {host}",
   "@serverCantReachAt": {"placeholders": {"host": {"type": "String"}}},
-  "serverChange": "Change server"
+  "serverChange": "Change server",
+  "otpIncorrect": "Incorrect code. Please check it and try again.",
+  "otpIncorrectAttempts": "{count, plural, =1{Incorrect code. 1 attempt left.} other{Incorrect code. {count} attempts left.}}",
+  "@otpIncorrectAttempts": {"placeholders": {"count": {"type": "int"}}},
+  "otpNoAttemptsLeft": "Incorrect code. No attempts left, please request a new code.",
+  "otpExpired": "This code has expired. Please request a new one.",
+  "otpTooManyAttempts": "Too many incorrect attempts. Please request a new code.",
+  "vitalHigh": "High",
+  "vitalLow": "Low",
+  "vitalFlagSemantics": "{vital} {value}, {flag}",
+  "@vitalFlagSemantics": {"placeholders": {"vital": {"type": "String"}, "value": {"type": "String"}, "flag": {"type": "String"}}},
+  "logoutConfirmBodyOtp": "You will need your phone OTP to sign in again.",
+  "leaveRemoveTitle": "Remove this leave?",
+  "leaveRemoveBody": "{date} will be open for bookings again.",
+  "@leaveRemoveBody": {"placeholders": {"date": {"type": "String"}}},
+  "attachedRecord": "Attached record",
+  "attachmentUnavailable": "Attached record unavailable",
+  "attachmentNoFile": "This record has no file to open.",
+  "specGeneralPhysician": "General Physician",
+  "specDermatologist": "Dermatologist",
+  "specPediatrician": "Pediatrician",
+  "specGynecologist": "Gynecologist",
+  "specCardiologist": "Cardiologist",
+  "specOrthopedist": "Orthopedist",
+  "specPsychiatrist": "Psychiatrist",
+  "specEnt": "ENT Specialist",
+  "specDiabetologist": "Diabetologist",
+  "specNeurologist": "Neurologist"
 }

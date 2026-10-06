@@ -132,6 +132,57 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
+/// A short, centred label that wraps between words only: when the widest
+/// word does not fit (large font scale, long Hindi/Telugu words) the text is
+/// scaled down so it never breaks mid-word ("Consultatio/n").
+///
+/// Pass [maxWidth] when the label sits under an `IntrinsicHeight` (which
+/// can't measure a LayoutBuilder); otherwise the available width is used.
+class WordWrapLabel extends StatelessWidget {
+  const WordWrapLabel(this.text, {super.key, this.style, this.maxWidth});
+  final String text;
+  final TextStyle? style;
+  final double? maxWidth;
+
+  /// Font scale factor (<= 1) that makes the widest word fit [width].
+  static double fitFactor(String text, TextStyle style, double width,
+      {TextScaler textScaler = TextScaler.noScaling, TextDirection direction = TextDirection.ltr}) {
+    if (width <= 1) return 1;
+    var widest = 0.0;
+    for (final word in text.split(RegExp(r'\s+'))) {
+      if (word.isEmpty) continue;
+      final tp = TextPainter(
+        text: TextSpan(text: word, style: style),
+        textDirection: direction,
+        textScaler: textScaler,
+        maxLines: 1,
+      )..layout();
+      if (tp.width > widest) widest = tp.width;
+      tp.dispose();
+    }
+    // Small margin for glyph overhang / rounding.
+    return widest > width - 1 ? (width - 1) / widest : 1;
+  }
+
+  Widget _text(BuildContext context, double width) {
+    final base = DefaultTextStyle.of(context).style.merge(style);
+    final factor = fitFactor(text, base, width,
+        textScaler: MediaQuery.textScalerOf(context), direction: Directionality.of(context));
+    return Text(text,
+        textAlign: TextAlign.center, style: base.copyWith(fontSize: (base.fontSize ?? 14) * factor));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final w = maxWidth;
+    if (w != null) return _text(context, w);
+    return LayoutBuilder(
+      builder: (context, constraints) =>
+          _text(context, constraints.hasBoundedWidth ? constraints.maxWidth : double.infinity),
+    );
+  }
+}
+
 class IconTile extends StatelessWidget {
   const IconTile({super.key, required this.icon, required this.accent, this.size = 56, this.iconSize});
   final IconData icon;
@@ -145,7 +196,7 @@ class IconTile extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: accent.bg,
+        color: context.accentSurface(accent),
         borderRadius: BorderRadius.circular(size >= 48 ? Radii.tile : 12),
       ),
       child: Icon(icon, color: accent.fg, size: iconSize ?? size * 0.5),
@@ -355,11 +406,14 @@ class ListRowTile extends StatelessWidget {
   }
 }
 
-void showSnack(BuildContext context, String message, {bool error = false}) {
+void showSnack(BuildContext context, String message,
+    {bool error = false, SnackBarAction? action}) {
   final m = ScaffoldMessenger.maybeOf(context);
   m?.hideCurrentSnackBar();
   m?.showSnackBar(SnackBar(
     content: Text(message),
     backgroundColor: error ? AppColors.danger : null,
+    action: action,
+    duration: action == null ? const Duration(milliseconds: 4000) : const Duration(seconds: 8),
   ));
 }

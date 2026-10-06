@@ -105,6 +105,18 @@ void main() {
       expect(calls.single.$2['summary'], summary);
     });
 
+    testWidgets('B29: "Number of samples" is its own screen-reader node', (tester) async {
+      final handle = tester.ensureSemantics();
+      await pumpPanel(tester, HomeVisit.fromJson(sampleVisitJson()));
+      final node = tester.getSemantics(find.byKey(const Key('sample.count')));
+      expect(node.label, contains('Number of samples'));
+      expect(node.label, isNot(contains('labelled')), reason: 'not merged with the checklist items');
+      expect(node.label, isNot(contains('collected')), reason: 'not merged with the checklist items');
+      expect(node.flagsCollection.isTextField, isTrue);
+      expect(find.bySemanticsLabel(RegExp('^Number of samples')), findsWidgets);
+      handle.dispose();
+    });
+
     testWidgets('other services complete without the checklist', (tester) async {
       await pumpPanel(tester, visit(status: VisitStatus.inProgress));
       expect(find.byKey(const Key('sampleChecklist')), findsNothing);

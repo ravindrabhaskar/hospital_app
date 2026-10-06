@@ -142,11 +142,13 @@ class ApplicationDocumentsCard extends StatelessWidget {
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              tooltip: l.commonRetry,
-                              icon: const Icon(Icons.refresh),
-                              onPressed: () => controller.retryUpload(u),
-                            ),
+                            if (u.canRetry)
+                              IconButton(
+                                key: Key('retryUpload.${u.file.name}'),
+                                tooltip: l.commonRetry,
+                                icon: const Icon(Icons.refresh),
+                                onPressed: () => controller.retryUpload(u),
+                              ),
                             IconButton(
                               tooltip: l.commonCancel,
                               icon: const Icon(Icons.close),

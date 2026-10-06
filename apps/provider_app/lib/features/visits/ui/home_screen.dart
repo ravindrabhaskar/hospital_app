@@ -8,17 +8,32 @@ import '../../../models/home_visit.dart';
 import '../../../ui/l10n_helpers.dart';
 import '../../../ui/widgets.dart';
 import '../../field/attendance_screen.dart';
+import '../../field/location_permission_banner.dart';
 import '../../field/route_view.dart';
 import '../../profile/profile_photo.dart';
 import '../data/provider_repository.dart';
 import '../data/visit_providers.dart';
 import '../domain/visit_lifecycle.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Location: explain first, ask at most once automatically.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) maybePromptForLocation(context, ref);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l = context.l10n;
     final auth = ref.watch(authControllerProvider);
     return DefaultTabController(
@@ -54,6 +69,7 @@ class HomeScreen extends ConsumerWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, _) => [
             const SliverToBoxAdapter(child: SyncBanners()),
+            const SliverToBoxAdapter(child: _CredentialWarning()),
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(AppSpacing.screen, 12, AppSpacing.screen, 0),
@@ -73,14 +89,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             SliverToBoxAdapter(
-              child: TabBar(
-                tabs: [
-                  Tab(text: l.tabToday),
-                  Tab(text: l.tabUpcoming),
-                  Tab(text: l.tabCompleted),
-                  Tab(key: const Key('tabRoute'), text: l.tabRoute),
-                ],
-              ),
+              child: _HomeTabBar(labels: [l.tabToday, l.tabUpcoming, l.tabCompleted, l.tabRoute]),
             ),
           ],
           body: const TabBarView(
@@ -93,6 +102,73 @@ class HomeScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Home tabs. Equal-width tabs when every label fits; otherwise (narrow
+/// phone, large font, long translation) a scrollable bar, so labels are
+/// never cut ("Upcomi…").
+class _HomeTabBar extends StatelessWidget {
+  const _HomeTabBar({required this.labels});
+  final List<String> labels;
+
+  static const _labelPadding = 16.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final style = theme.tabBarTheme.labelStyle ?? theme.textTheme.titleSmall;
+    final scaler = MediaQuery.textScalerOf(context);
+    final direction = Directionality.of(context);
+    return LayoutBuilder(builder: (context, constraints) {
+      var widest = 0.0;
+      for (final label in labels) {
+        final painter = TextPainter(
+          text: TextSpan(text: label, style: style),
+          textScaler: scaler,
+          textDirection: direction,
+          maxLines: 1,
+        )..layout();
+        if (painter.width > widest) widest = painter.width;
+        painter.dispose();
+      }
+      final fits = (widest + 2 * _labelPadding + 1) * labels.length <= constraints.maxWidth;
+      return TabBar(
+        isScrollable: !fits,
+        tabAlignment: fits ? null : TabAlignment.start,
+        tabs: [
+          for (var i = 0; i < labels.length; i++)
+            Tab(key: i == labels.length - 1 ? const Key('tabRoute') : null, text: labels[i]),
+        ],
+      );
+    });
+  }
+}
+
+/// Credential expiring within 30 days (also shown on Profile).
+class _CredentialWarning extends ConsumerWidget {
+  const _CredentialWarning();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authControllerProvider);
+    return ListenableBuilder(
+      listenable: auth,
+      builder: (context, _) {
+        final p = auth.profile;
+        final now = ref.read(clockProvider)();
+        final days = p?.daysUntilCredentialExpiry(now);
+        if (p == null || days == null || !p.credentialExpiringSoon(now)) return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 12, AppSpacing.screen, 0),
+          child: CredentialExpiryBanner(
+            key: const Key('homeCredentialWarning'),
+            days: days,
+            onTap: () => context.push('/profile'),
+          ),
+        );
+      },
     );
   }
 }

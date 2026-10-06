@@ -7,9 +7,11 @@ import '../../core/api/api_exception.dart';
 import '../../core/config.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
+import '../../core/utils/permissions.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/illustrations.dart';
 import '../../core/widgets/state_views.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/ai.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
@@ -140,7 +142,10 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> {
       case VoiceStartResult.started:
         setState(() => _listening = true);
       case VoiceStartResult.permissionDenied:
-        showSnack(context, l.micPermissionDenied, error: true);
+        showSnack(context, l.micPermissionDenied,
+            error: true,
+            action: SnackBarAction(
+                label: l.openSettings, textColor: Colors.white, onPressed: openAppSettingsPage));
       case VoiceStartResult.unavailable:
         showSnack(context, l.voiceUnavailable, error: true);
     }
@@ -289,6 +294,38 @@ class _AskAiScreenState extends ConsumerState<AskAiScreen> {
 
 // ------------------------------------------------------------------ Messages
 
+/// Display label for a server quick reply. The server sends (and parses)
+/// English chip values, so the chip shows a translation but sends the
+/// original text; unknown values are shown as sent.
+String localizedQuickReply(AppLocalizations l, String value) => switch (value) {
+      'Fever' => l.qrFever,
+      'Headache' => l.qrHeadache,
+      'Cough or cold' => l.qrCoughCold,
+      'Stomach pain' => l.qrStomachPain,
+      'Skin problem' => l.qrSkinProblem,
+      'Since today' => l.qrSinceToday,
+      'Since yesterday' => l.qrSinceYesterday,
+      '2-3 days' => l.qrTwoThreeDays,
+      'More than a week' => l.qrMoreThanWeek,
+      'Mild (3/10)' => l.qrMild,
+      'Moderate (5/10)' => l.qrModerate,
+      'Severe (8/10)' => l.qrSevere,
+      'No other symptoms' => l.qrNoOtherSymptoms,
+      'Nausea' => l.qrNausea,
+      'Dizziness' => l.qrDizziness,
+      'Body ache' => l.qrBodyAche,
+      'Call 108' => l.qrCall108,
+      'Press SOS' => l.qrPressSos,
+      'Book a doctor' => l.qrBookDoctor,
+      'Request home visit' => l.qrRequestHomeVisit,
+      _ => value,
+    };
+
+/// The conversation's opening question is the server greeting, stored in the
+/// language active when the chat started; show it in the current language.
+bool isGreeting(List<ChatMessage> msgs, int i) =>
+    i == 0 && msgs.isNotEmpty && !msgs[0].isUser && msgs[0].kind == 'question';
+
 class ChatMessageList extends StatelessWidget {
   const ChatMessageList({
     super.key,
@@ -325,10 +362,11 @@ class ChatMessageList extends StatelessWidget {
           if (msgs[i].isSafetyAlert)
             SafetyAlertBubble(text: msgs[i].text, rules: msgs[i].safety?.triggeredRules ?? const [])
           else if (msgs[i].isUser)
-            UserBubble(text: msgs[i].text)
+            UserBubble(text: localizedQuickReply(l, msgs[i].text))
           else
             AssistantBubble(
               message: msgs[i],
+              text: isGreeting(msgs, i) ? l.aiGreeting : null,
               progress: i == msgs.length - 1 ? progress : null,
             ),
           const SizedBox(height: Space.md),
@@ -353,7 +391,8 @@ class ChatMessageList extends StatelessWidget {
               runSpacing: Space.sm,
               children: [
                 for (final r in (replies.isNotEmpty ? replies : starters))
-                  QuickReplyChip(label: r, onTap: () => onQuickReply(r)),
+                  QuickReplyChip(
+                      label: localizedQuickReply(l, r), onTap: () => onQuickReply(r)),
               ],
             ),
           ),
@@ -388,8 +427,11 @@ class QuickReplyChip extends StatelessWidget {
 }
 
 class AssistantBubble extends StatelessWidget {
-  const AssistantBubble({super.key, required this.message, this.progress});
+  const AssistantBubble({super.key, required this.message, this.progress, this.text});
   final ChatMessage message;
+
+  /// Overrides [ChatMessage.text] (e.g. the localized greeting).
+  final String? text;
   final (int, int)? progress;
 
   @override
@@ -422,7 +464,7 @@ class AssistantBubble extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(message.text, style: const TextStyle(fontSize: 14.5, height: 1.4)),
+                Text(text ?? message.text, style: const TextStyle(fontSize: 14.5, height: 1.4)),
                 if (progress != null) ...[
                   const SizedBox(height: 10),
                   Row(

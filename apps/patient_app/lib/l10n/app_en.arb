@@ -3105,6 +3105,71 @@
       }
     }
   },
+  "aiGreeting": "Hello! I'm your CareCompanion assistant. I can help you describe what's going on and find the right care. I can't diagnose conditions. What's bothering you today?",
+  "@aiGreeting": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrFever": "Fever",
+  "@qrFever": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrHeadache": "Headache",
+  "@qrHeadache": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrCoughCold": "Cough or cold",
+  "@qrCoughCold": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrStomachPain": "Stomach pain",
+  "@qrStomachPain": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrSkinProblem": "Skin problem",
+  "@qrSkinProblem": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrSinceToday": "Since today",
+  "qrSinceYesterday": "Since yesterday",
+  "qrTwoThreeDays": "2-3 days",
+  "qrMoreThanWeek": "More than a week",
+  "qrMild": "Mild (3/10)",
+  "@qrMild": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrModerate": "Moderate (5/10)",
+  "@qrModerate": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrSevere": "Severe (8/10)",
+  "@qrSevere": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrNoOtherSymptoms": "No other symptoms",
+  "@qrNoOtherSymptoms": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrNausea": "Nausea",
+  "@qrNausea": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrDizziness": "Dizziness",
+  "@qrDizziness": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrBodyAche": "Body ache",
+  "@qrBodyAche": {
+    "description": "Medical term (translations need clinical glossary review)"
+  },
+  "qrCall108": "Call 108",
+  "qrPressSos": "Press SOS",
+  "qrBookDoctor": "Book a doctor",
+  "qrRequestHomeVisit": "Request home visit",
+  "cameraPermissionDenied": "Camera permission is off. Allow camera access in Settings to take a photo, or upload a file instead.",
+  "photosPermissionDenied": "Photo and file access is off. Allow access in Settings to choose a file.",
+  "openSettings": "Open settings",
+  "amountPaidTotal": "Amount paid",
+  "attachmentNeedsText": "Add a short message to send this record.",
   "itemsCount": "{count, plural, =1{1 item} other{{count} items}}",
   "@itemsCount": {
     "placeholders": {

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { Coupon, CouponInput, PaymentPurpose } from "@/lib/api/types";
+import { isoToISTDate, istDayEndISO, istDayStartISO } from "@/lib/format";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -73,15 +74,15 @@ export function couponDefaults(c?: Coupon | null): CouponFormValues {
     maxDiscount: c.maxDiscount ?? "",
     minAmount: c.minAmount ?? "",
     appliesTo: c.appliesTo,
-    validFrom: c.validFrom?.slice(0, 10) ?? "",
-    validTo: c.validTo?.slice(0, 10) ?? "",
+    validFrom: isoToISTDate(c.validFrom),
+    validTo: isoToISTDate(c.validTo),
     usageLimit: c.usageLimit ?? "",
     perUserLimit: c.perUserLimit,
     active: c.active,
   };
 }
 
-/** Parsed form → §60 body. Unset optional numbers are omitted. */
+/** Parsed form → §60 body. Unset optional numbers are omitted; dates become ISO datetimes. */
 export function toCouponInput(v: CouponParsed): CouponInput {
   const input: CouponInput = {
     code: v.code,
@@ -89,8 +90,9 @@ export function toCouponInput(v: CouponParsed): CouponInput {
     type: v.type,
     value: v.value,
     appliesTo: v.appliesTo as PaymentPurpose[],
-    validFrom: v.validFrom,
-    validTo: v.validTo,
+    // The API takes ISO datetimes: valid from the start of the first IST day through the end of the last.
+    validFrom: istDayStartISO(v.validFrom),
+    validTo: istDayEndISO(v.validTo),
     perUserLimit: v.perUserLimit,
     active: v.active,
   };

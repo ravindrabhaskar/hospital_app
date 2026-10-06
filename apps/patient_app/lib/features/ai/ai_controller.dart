@@ -41,6 +41,7 @@ class ChatState {
     final i = intake;
     if (i == null || i.complete || i.missingFields.isEmpty || maxMissing == 0) return null;
     if (routing != null && routing!.action != 'continue_intake') return null;
+    if (i.progress != null) return i.progress;
     final step = (maxMissing - i.missingFields.length + 1).clamp(1, maxMissing);
     return (step, maxMissing);
   }

@@ -39,6 +39,7 @@ class FamilyScreen extends ConsumerWidget {
               title: l.peopleYouCareFor,
               trailing: TextButton.icon(
                 onPressed: () => showModalBottomSheet<void>(
+                    useRootNavigator: true,
                     context: context, isScrollControlled: true, builder: (_) => const AddDependentSheet()),
                 icon: const Icon(Icons.person_add_alt),
                 label: Text(l.addDependent),
@@ -90,6 +91,7 @@ class FamilyScreen extends ConsumerWidget {
                 title: l.caregiversFor(active.name),
                 trailing: TextButton.icon(
                   onPressed: () => showModalBottomSheet<void>(
+                      useRootNavigator: true,
                       context: context, isScrollControlled: true, builder: (_) => const InviteCaregiverSheet()),
                   icon: const Icon(Icons.group_add_outlined),
                   label: Text(l.invite),

@@ -12,7 +12,7 @@ import { list, envelope, pageFromQuery } from '../../lib/pagination.js';
 import { istDate } from '../../lib/time.js';
 import { parse, zAddress, zIso, zUuid, zVitalType } from '../../lib/validate.js';
 import { requireRoles } from '../../plugins/auth.js';
-import { ACTIVE_STATUSES, addEvent, advanceEpisode, createEpisode } from '../episodes/service.js';
+import { ACTIVE_STATUSES, addEvent, advanceEpisode, createEpisode, settleEpisodeAfterBookingEnded } from '../episodes/service.js';
 import { clinicalContext } from '../patients/service.js';
 import { toPayment } from '../payments/service.js';
 import { zCouponCode, zRefundTo } from '../wallet/routes.js';
@@ -115,7 +115,9 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     });
     await notifyProviderAssigned(result.visit);
     const payment = await svc.payments.settleIfCovered(result.payment, req.ctx.actor);
-    return reply.code(201).send({ homeVisit: await toHomeVisit(db, payment === result.payment ? result.visit : await load(result.visit.id), 'family'), payment: toPayment(payment) });
+    return reply
+      .code(201)
+      .send({ homeVisit: await toHomeVisit(db, payment === result.payment ? result.visit : await load(result.visit.id), 'family'), payment: toPayment(payment) });
   });
 
   async function notifyProviderAssigned(v: HomeVisitRow) {
@@ -140,9 +142,7 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
       await assertCanActForPatient(db, req.ctx, q.patientId, ['book', 'view_records', 'manage_care'], 'home_visit.list');
       patientIds = [q.patientId];
     } else {
-      patientIds = (await listActablePatients(db, req.ctx.user))
-        .filter((p) => p.permissions.some((x) => x !== 'receive_alerts'))
-        .map((p) => p.patientId);
+      patientIds = (await listActablePatients(db, req.ctx.user)).filter((p) => p.permissions.some((x) => x !== 'receive_alerts')).map((p) => p.patientId);
     }
     if (!patientIds.length) return { items: [], nextCursor: null };
     const conds = [inArray(homeVisits.patientId, patientIds)];
@@ -179,7 +179,10 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     const v = await load(id);
     await assertCanActForPatient(db, req.ctx, v.patientId, 'book', 'home_visit.cancel');
     if (!['requested', 'unassigned', 'assigned', 'accepted', 'en_route'].includes(v.status)) throw errors.invalidTransition(v.status, 'cancelled');
-    const [pay] = await db.select().from(payments).where(and(eq(payments.purpose, 'home_visit'), eq(payments.refId, v.id)));
+    const [pay] = await db
+      .select()
+      .from(payments)
+      .where(and(eq(payments.purpose, 'home_visit'), eq(payments.refId, v.id)));
     const row = await db.transaction(async (tx) => {
       const [r] = await tx
         .update(homeVisits)
@@ -188,6 +191,7 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
         .returning();
       if (pay?.status === 'pending') await svc.payments.voidPending(tx, pay.id);
       await addEvent(tx, v.careEpisodeId, 'home_visit_cancelled', 'Home visit cancelled', req.ctx.actor, { homeVisitId: id });
+      await settleEpisodeAfterBookingEnded(tx, v.careEpisodeId, 'cancelled', req.ctx.actor);
       await audit(tx, req.ctx.actor, { action: 'home_visit.cancel', entityType: 'home_visit', entityId: id });
       return r;
     });
@@ -285,7 +289,10 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     if (!body.consentConfirmed) throw errors.validation('Patient consent must be confirmed before starting the visit');
     if (v.verifyAttempts >= 5) throw new AppError('RATE_LIMITED', 'Too many incorrect visit codes. Contact operations.');
     if (!safeEqual(body.visitCode, v.visitCode)) {
-      await db.update(homeVisits).set({ verifyAttempts: v.verifyAttempts + 1 }).where(eq(homeVisits.id, id));
+      await db
+        .update(homeVisits)
+        .set({ verifyAttempts: v.verifyAttempts + 1 })
+        .where(eq(homeVisits.id, id));
       await audit(db, req.ctx.actor, { action: 'home_visit.verify_identity', entityType: 'home_visit', entityId: id, outcome: 'denied' });
       throw errors.validation('Visit code does not match', { attemptsRemaining: Math.max(0, 4 - v.verifyAttempts) });
     }
@@ -312,17 +319,20 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     const inserted = await db.transaction(async (tx) => {
       const out = [];
       for (const m of body.measurements) {
-        const [row] = await tx.insert(vitals).values({
-          patientId: v.patientId,
-          type: m.type,
-          value: m.value,
-          unit: m.unit,
-          measuredAt: new Date(m.measuredAt),
-          source: 'home_visit',
-          recordedByUserId: req.ctx.user.id,
-          recordedByName: req.ctx.user.name,
-          homeVisitId: id,
-        }).returning();
+        const [row] = await tx
+          .insert(vitals)
+          .values({
+            patientId: v.patientId,
+            type: m.type,
+            value: m.value,
+            unit: m.unit,
+            measuredAt: new Date(m.measuredAt),
+            source: 'home_visit',
+            recordedByUserId: req.ctx.user.id,
+            recordedByName: req.ctx.user.name,
+            homeVisitId: id,
+          })
+          .returning();
         out.push(row);
       }
       await audit(tx, req.ctx.actor, { action: 'home_visit.vitals', entityType: 'home_visit', entityId: id, metadata: { count: body.measurements.length } });
@@ -344,9 +354,10 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     rules: Array<{ ruleId: string; title: string }>,
     rulePackVersion: string | null,
     req: FastifyRequest,
+    note: string | null = null,
   ) {
     await db.transaction(async (tx) => {
-      await svc.safety.recordEvent(tx, { patientId: v.patientId, careEpisodeId: v.careEpisodeId, level, source: 'home_visit', rules, rulePackVersion });
+      await svc.safety.recordEvent(tx, { patientId: v.patientId, careEpisodeId: v.careEpisodeId, level, source: 'home_visit', rules, rulePackVersion, note });
       await advanceEpisode(tx, v.careEpisodeId, [level === 'emergency' ? 'EMERGENCY' : 'ESCALATED'], 'Safety rule triggered during home visit', req.ctx.actor, {
         priority: level,
       });
@@ -362,10 +373,7 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
 
   app.post('/home-visits/:id/observations', { preHandler: providerGuard }, async (req) => {
     const { id } = parse(z.object({ id: zUuid }), req.params);
-    const body = parse(
-      z.object({ notes: z.string().max(4000), checklist: z.record(z.string().max(60), z.union([z.boolean(), z.string().max(200)])) }),
-      req.body,
-    );
+    const body = parse(z.object({ notes: z.string().max(4000), checklist: z.record(z.string().max(60), z.union([z.boolean(), z.string().max(200)])) }), req.body);
     const v = await loadAssigned(req, id, ['in_progress', 'escalated'], 'home_visit.observations');
     const row = await update(v, { observations: body }, null, null, 'home_visit.observations', req);
     return toHomeVisit(db, row, 'provider');
@@ -377,7 +385,9 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     const v = await loadAssigned(req, id, ['arrived', 'in_progress'], 'home_visit.escalate');
     const at = new Date().toISOString();
     const row = await update(v, { escalation: { reason: body.reason, severity: body.severity, at } }, 'escalated', null, 'home_visit.escalate', req);
-    await raiseVisitSafety(v, body.severity, [{ ruleId: 'provider.escalation', title: 'Escalated by home-care provider' }], null, req);
+    // B27: Ops must see why the provider escalated, and which visit it was.
+    const note = `Home visit ${v.id} (${v.serviceCode}) escalated by ${req.ctx.user.name ?? 'provider'}: ${body.reason}`;
+    await raiseVisitSafety(v, body.severity, [{ ruleId: 'provider.escalation', title: 'Escalated by home-care provider' }], null, req, note);
     return toHomeVisit(db, row, 'provider');
   });
 
@@ -441,7 +451,10 @@ export async function homeVisitRoutes(app: FastifyInstance): Promise<void> {
     if (!p || !providerEligible(p)) throw errors.conflict('Provider is not eligible (must be a verified field provider with a valid credential)');
     if (!p.capabilities.includes(v.serviceCode)) throw errors.conflict('Provider does not have this service capability');
     if (v.zoneId) {
-      const [z1] = await db.select().from(providerZones).where(and(eq(providerZones.providerId, p.id), eq(providerZones.zoneId, v.zoneId)));
+      const [z1] = await db
+        .select()
+        .from(providerZones)
+        .where(and(eq(providerZones.providerId, p.id), eq(providerZones.zoneId, v.zoneId)));
       if (!z1) throw errors.conflict('Provider does not serve this zone');
     }
     const [row] = await db

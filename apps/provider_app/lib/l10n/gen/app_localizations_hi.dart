@@ -545,7 +545,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get vitalsNoInterpretation =>
-      'मान जैसे मापे गए वैसे ही दर्ज होते हैं। क्लिनिकल समीक्षा केयर टीम करती है।';
+      'वयस्कों की सामान्य सीमा से बाहर के मान अधिक या कम के रूप में हाइलाइट होते हैं। क्लिनिकल समीक्षा केयर टीम करती है।';
 
   @override
   String get obsTitle => 'अवलोकन';
@@ -1593,4 +1593,95 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get serverChange => 'सर्वर बदलें';
+
+  @override
+  String errorOtpIncorrectAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'गलत OTP। $count प्रयास बचे हैं।',
+      one: 'गलत OTP। 1 प्रयास बचा है।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorOtpExpired =>
+      'यह OTP समाप्त हो गया है। कृपया नया OTP मँगाएँ।';
+
+  @override
+  String get errorOtpTooManyAttempts =>
+      'बहुत सारे गलत प्रयास। कृपया नया OTP मँगाएँ।';
+
+  @override
+  String get vitalsFlagHigh => 'अधिक';
+
+  @override
+  String get vitalsFlagLow => 'कम';
+
+  @override
+  String vitalsFlagWithRange(String flag, String range) {
+    return '$flag · वयस्कों की सामान्य सीमा $range';
+  }
+
+  @override
+  String get capVitalsCheck => 'वाइटल्स जाँच';
+
+  @override
+  String get capSampleCollection => 'सैंपल संग्रह';
+
+  @override
+  String get capElderlyCare => 'बुज़ुर्गों की देखभाल';
+
+  @override
+  String get capPostReportConsult => 'रिपोर्ट के बाद परामर्श';
+
+  @override
+  String get capPhysiotherapy => 'फिज़ियोथेरेपी';
+
+  @override
+  String get credentialBannerAction => 'प्रोफ़ाइल देखें';
+
+  @override
+  String get locRationaleTitle => 'आपकी लोकेशन इस्तेमाल करें?';
+
+  @override
+  String get locRationaleBody =>
+      'ड्यूटी पर रहते समय केयरकम्पैनियन प्रो आपका रूट तय करने और मरीज़ों को आपके पहुँचने का समय दिखाने के लिए आपकी लोकेशन केयर टीम के साथ साझा करता है। ड्यूटी से बाहर होने पर यह साझा नहीं होती।';
+
+  @override
+  String get locRationaleAllow => 'आगे बढ़ें';
+
+  @override
+  String get locRationaleNotNow => 'अभी नहीं';
+
+  @override
+  String get locDeniedMessage =>
+      'लोकेशन बंद है, इसलिए रूट का समय और लाइव ट्रैकिंग काम नहीं करेंगे। आप इसे रूट टैब या प्रोफ़ाइल से चालू कर सकते हैं।';
+
+  @override
+  String get locOffBanner =>
+      'लोकेशन बंद है। सही रूट समय और मरीज़ ट्रैकिंग के लिए इसे चालू करें।';
+
+  @override
+  String get locTurnOn => 'लोकेशन चालू करें';
+
+  @override
+  String get locBlocked =>
+      'इस ऐप के लिए लोकेशन ब्लॉक है। सेटिंग्स में अनुमति दें।';
+
+  @override
+  String get locOpenSettings => 'सेटिंग्स खोलें';
+
+  @override
+  String get locSettingTitle => 'लोकेशन एक्सेस';
+
+  @override
+  String get locSettingOn => 'अनुमति है';
+
+  @override
+  String get locSettingOff => 'बंद। चालू करने के लिए टैप करें';
+
+  @override
+  String get locServiceOff => 'इस फ़ोन पर लोकेशन (GPS) बंद है।';
 }

@@ -545,7 +545,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get vitalsNoInterpretation =>
-      'Values are recorded as measured. Clinical review is done by the care team.';
+      'Values outside the usual adult range are highlighted as High or Low. Clinical review is done by the care team.';
 
   @override
   String get obsTitle => 'Observations';
@@ -1593,4 +1593,95 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get serverChange => 'Change server';
+
+  @override
+  String errorOtpIncorrectAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Incorrect OTP. $count attempts left.',
+      one: 'Incorrect OTP. 1 attempt left.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get errorOtpExpired =>
+      'This OTP has expired. Please request a new OTP.';
+
+  @override
+  String get errorOtpTooManyAttempts =>
+      'Too many incorrect attempts. Please request a new OTP.';
+
+  @override
+  String get vitalsFlagHigh => 'High';
+
+  @override
+  String get vitalsFlagLow => 'Low';
+
+  @override
+  String vitalsFlagWithRange(String flag, String range) {
+    return '$flag · usual adult range $range';
+  }
+
+  @override
+  String get capVitalsCheck => 'Vitals check';
+
+  @override
+  String get capSampleCollection => 'Sample collection';
+
+  @override
+  String get capElderlyCare => 'Elderly care';
+
+  @override
+  String get capPostReportConsult => 'Post-report consult';
+
+  @override
+  String get capPhysiotherapy => 'Physiotherapy';
+
+  @override
+  String get credentialBannerAction => 'View profile';
+
+  @override
+  String get locRationaleTitle => 'Use your location?';
+
+  @override
+  String get locRationaleBody =>
+      'While you are on duty, CareCompanion Pro shares your location with your care team to plan your route and show patients your arrival time. It is not shared when you are off duty.';
+
+  @override
+  String get locRationaleAllow => 'Continue';
+
+  @override
+  String get locRationaleNotNow => 'Not now';
+
+  @override
+  String get locDeniedMessage =>
+      'Location is off, so route times and live tracking won\'t work. You can turn it on from the Route tab or your Profile.';
+
+  @override
+  String get locOffBanner =>
+      'Location is off. Turn it on for accurate route times and patient tracking.';
+
+  @override
+  String get locTurnOn => 'Turn on location';
+
+  @override
+  String get locBlocked =>
+      'Location is blocked for this app. Allow it in Settings.';
+
+  @override
+  String get locOpenSettings => 'Open settings';
+
+  @override
+  String get locSettingTitle => 'Location access';
+
+  @override
+  String get locSettingOn => 'Allowed';
+
+  @override
+  String get locSettingOff => 'Off. Tap to turn on';
+
+  @override
+  String get locServiceOff => 'Location (GPS) is turned off on this phone.';
 }

@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { emptyDraft, thresholdsDiffer, toThresholds, validateThresholds, type ThresholdDraft } from "./programs";
+import {
+  emptyDraft,
+  templateDescriptionError,
+  thresholdsDiffer,
+  toApproveInput,
+  toThresholds,
+  validateApproval,
+  validateThresholds,
+  type ThresholdDraft,
+} from "./programs";
 
 const row = (p: Partial<ThresholdDraft> = {}): ThresholdDraft => ({ type: "bp_systolic", op: "gt", value: "160", level: "urgent", message: "Systolic above 160", ...p });
 
@@ -38,5 +47,26 @@ describe("threshold editor validation", () => {
     expect(thresholdsDiffer(a, [...a].reverse())).toBe(false);
     expect(thresholdsDiffer(a, [{ ...a[0]!, value: 165 }, a[1]!])).toBe(true);
     expect(() => toThresholds([row({ value: "" })])).toThrow();
+  });
+});
+
+describe("template approval payload (QA B5)", () => {
+  it("requires an approver name of at least 2 characters", () => {
+    expect(validateApproval({ approverName: " ", approverRegistration: "" }).approverName).toBeTruthy();
+    expect(validateApproval({ approverName: "Dr Asha Rao", approverRegistration: "" })).toEqual({});
+    expect(validateApproval({ approverName: "Dr Asha Rao", approverRegistration: "K" }).approverRegistration).toBeTruthy();
+  });
+
+  it("trims, omits an empty registration and pins the version", () => {
+    expect(toApproveInput({ approverName: "  Dr Asha Rao ", approverRegistration: " " }, "1.1")).toEqual({ approverName: "Dr Asha Rao", version: "1.1" });
+    expect(toApproveInput({ approverName: "Dr Asha Rao", approverRegistration: " KMC-1234 " })).toEqual({ approverName: "Dr Asha Rao", approverRegistration: "KMC-1234" });
+  });
+});
+
+describe("template description (QA B24)", () => {
+  it("is required and capped at 1000 characters", () => {
+    expect(templateDescriptionError("   ")).toMatch(/required/i);
+    expect(templateDescriptionError("x".repeat(1001))).toBeTruthy();
+    expect(templateDescriptionError("Heart failure remote monitoring")).toBeUndefined();
   });
 });

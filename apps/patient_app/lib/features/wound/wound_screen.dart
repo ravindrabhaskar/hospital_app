@@ -6,6 +6,7 @@ import '../../core/api/api_exception.dart';
 import '../../core/theme/tokens.dart';
 import '../../core/utils/format.dart';
 import '../../core/utils/labels.dart';
+import '../../core/utils/permissions.dart';
 import '../../core/widgets/common.dart';
 import '../../core/widgets/state_views.dart';
 import '../../models/misc.dart';
@@ -53,8 +54,8 @@ class _WoundScreenState extends ConsumerState<WoundScreen> {
         _photo = p;
         _last = null;
       });
-    } catch (_) {
-      if (mounted) showSnack(context, l.pickerFailed, error: true);
+    } catch (e) {
+      if (mounted) showPickerError(context, e);
     }
   }
 

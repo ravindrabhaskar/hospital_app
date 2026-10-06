@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 import { and, desc, eq, gte, inArray, lt, lte } from 'drizzle-orm';
 import type { Config } from '../../config.js';
 import type { DbOrTx } from '../../db/client.js';
@@ -24,6 +25,12 @@ export const toTemplate = (t: TemplateRow) => ({
   status: t.status as 'fixture_unapproved' | 'approved',
   version: t.version,
 });
+
+/** Patient/family view: governance status stays in `status`; internal markers are removed from the text (B9). */
+export const toPublicTemplate = (t: TemplateRow) => {
+  const v = toTemplate(t);
+  return { ...v, description: stripGovernanceMarkers(v.description), defaultThresholds: v.defaultThresholds.map((x) => ({ ...x, message: stripGovernanceMarkers(x.message) })) };
+};
 
 /** Usable template versions: approved only in production; the latest approved version wins, else the latest. */
 export async function activeTemplates(db: DbOrTx, config: Config): Promise<TemplateRow[]> {
@@ -196,7 +203,7 @@ export async function evaluateVitals(
         level,
         source: 'program',
         rules: [
-          { ruleId: `program.${e.templateCode}.${v.type}.${top.op}${top.value}`, title: top.message },
+          { ruleId: `program.${e.templateCode}.${v.type}.${top.op}${top.value}`, title: stripGovernanceMarkers(top.message) },
           ...engine.triggeredRules.map((r) => ({ ruleId: r.ruleId, title: r.title })),
         ],
         note: `${v.type} ${v.value}`,
@@ -270,7 +277,7 @@ export async function renderWeeklyReport(p: { patientName: string; templateName:
   b.heading('Agreed limits');
   b.paragraph(p.thresholds.map((t) => `${t.type.replace(/_/g, ' ')} ${t.op === 'gt' ? 'above' : 'below'} ${t.value} (${t.level})`).join('\n') || '-');
   b.paragraph('This report summarises readings entered at home or by devices. It is not a diagnosis. Discuss any concerns with your doctor. In an emergency call 108.', { size: 8.5, color: '#6B7280' });
-  return b.finish(['CareCompanion weekly health report (automatically generated). Limits are program fixtures [REQUIRES CLINICAL GOVERNANCE].']);
+  return b.finish(['CareCompanion weekly health report (automatically generated). Limits are program defaults pending clinical review.']);
 }
 
 /**

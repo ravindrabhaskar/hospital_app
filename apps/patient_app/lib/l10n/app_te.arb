@@ -1919,5 +1919,70 @@
   "handledBy": "{name} చూస్తున్నారు",
   "rateSupport": "మా సపోర్ట్‌కు రేటింగ్ ఇవ్వండి",
   "youRated": "మీరు {score} / 5 ఇచ్చారు. ధన్యవాదాలు!",
+  "aiGreeting": "నమస్కారం! నేను మీ CareCompanion సహాయకుడిని. మీ సమస్యను వివరించడంలో, సరైన వైద్య సేవను పొందడంలో సహాయం చేస్తాను. నేను రోగనిర్ధారణ చేయలేను. ఈరోజు మీకు ఏమి ఇబ్బందిగా ఉంది?",
+  "@aiGreeting": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrFever": "జ్వరం",
+  "@qrFever": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrHeadache": "తలనొప్పి",
+  "@qrHeadache": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrCoughCold": "దగ్గు లేదా జలుబు",
+  "@qrCoughCold": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrStomachPain": "కడుపు నొప్పి",
+  "@qrStomachPain": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrSkinProblem": "చర్మ సమస్య",
+  "@qrSkinProblem": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrSinceToday": "ఈరోజు నుండి",
+  "qrSinceYesterday": "నిన్నటి నుండి",
+  "qrTwoThreeDays": "2-3 రోజులు",
+  "qrMoreThanWeek": "ఒక వారం కంటే ఎక్కువ",
+  "qrMild": "తేలికపాటి (3/10)",
+  "@qrMild": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrModerate": "మధ్యస్థం (5/10)",
+  "@qrModerate": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrSevere": "తీవ్రం (8/10)",
+  "@qrSevere": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrNoOtherSymptoms": "ఇతర లక్షణాలు లేవు",
+  "@qrNoOtherSymptoms": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrNausea": "వికారం",
+  "@qrNausea": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrDizziness": "తల తిరగడం",
+  "@qrDizziness": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrBodyAche": "ఒళ్ళు నొప్పులు",
+  "@qrBodyAche": {
+    "description": "GLOSSARY-REVIEW: medical term, verify with clinical glossary"
+  },
+  "qrCall108": "108కి కాల్ చేయండి",
+  "qrPressSos": "SOS నొక్కండి",
+  "qrBookDoctor": "డాక్టర్‌ను బుక్ చేయండి",
+  "qrRequestHomeVisit": "హోమ్ విజిట్ అభ్యర్థించండి",
+  "cameraPermissionDenied": "కెమెరా అనుమతి ఆఫ్‌లో ఉంది. ఫోటో తీయడానికి సెట్టింగ్‌లలో కెమెరా అనుమతి ఇవ్వండి, లేదా బదులుగా ఫైల్‌ను అప్‌లోడ్ చేయండి.",
+  "photosPermissionDenied": "ఫోటోలు మరియు ఫైళ్ల అనుమతి ఆఫ్‌లో ఉంది. ఫైల్‌ను ఎంచుకోవడానికి సెట్టింగ్‌లలో అనుమతి ఇవ్వండి.",
+  "openSettings": "సెట్టింగ్‌లు తెరవండి",
+  "amountPaidTotal": "చెల్లించిన మొత్తం",
+  "attachmentNeedsText": "ఈ రికార్డును పంపడానికి ఒక చిన్న సందేశం రాయండి.",
   "itemsCount": "{count, plural, =1{1 వస్తువు} other{{count} వస్తువులు}}"
 }

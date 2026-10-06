@@ -7,6 +7,7 @@ import '../../core/providers.dart';
 import '../../core/server/server_actions.dart';
 import '../../core/server/server_address_dialog.dart';
 import '../../core/theme.dart';
+import '../../models/me.dart';
 import '../../ui/l10n_helpers.dart';
 import '../../ui/widgets.dart';
 
@@ -71,7 +72,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _error = null;
     });
     try {
-      final session = await ref.read(authRepositoryProvider).verifyOtp(_e164, _otp.text.trim());
+      final AuthSession session;
+      try {
+        session = await ref.read(authRepositoryProvider).verifyOtp(_e164, _otp.text.trim());
+      } catch (e) {
+        // Wrong / expired code, not an expired session.
+        if (mounted) setState(() => _error = otpErrorMessage(context.l10n, e));
+        return;
+      }
       await ref.read(authControllerProvider).signIn(session);
     } catch (e) {
       if (mounted) setState(() => _error = errorMessage(context.l10n, e));

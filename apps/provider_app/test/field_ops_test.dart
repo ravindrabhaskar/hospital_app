@@ -38,8 +38,11 @@ ApiClient apiWith(Handler handler, {List<http.Request>? log}) {
   return ApiClient(baseUrl: 'http://test/api/v1', tokens: TokenStore(MemoryKeyValueStore()), httpClient: client);
 }
 
-Map<String, dynamic> stop(int order, String id, {double? lat, double? lng, Object? address, num? km, String? eta}) => {
+Map<String, dynamic> stop(int order, String id,
+        {double? lat, double? lng, Object? address, num? km, String? eta, String? status = 'accepted'}) =>
+    {
       'order': order,
+      'status': ?status,
       'visitId': id,
       'serviceName': 'Service $id',
       'window': {'start': '2026-09-29T04:00:00.000Z', 'end': '2026-09-29T05:00:00.000Z'},
@@ -123,6 +126,90 @@ void main() {
       await tester.fling(find.byKey(const Key('routeSummary')), const Offset(0, 400), 1000);
       await tester.pumpAndSettle();
       expect(log.length, 2);
+    });
+
+    test('B7: finished visits are not stops or Maps waypoints', () {
+      final plan = RoutePlan.fromJson({
+        'date': '2026-09-29',
+        'stops': [
+          stop(1, 'done', lat: 1, lng: 1, status: 'completed'),
+          stop(2, 'gone', lat: 2, lng: 2, status: 'cancelled'),
+          stop(3, 'rej', lat: 3, lng: 3, status: 'rejected'),
+          stop(4, 'next', lat: 4, lng: 4, status: 'en_route'),
+          stop(5, 'later', lat: 5, lng: 5, status: 'accepted'),
+        ],
+        'totalKm': 9,
+      });
+      final remaining = plan.remaining();
+      expect(remaining.map((s) => s.visitId), ['next', 'later']);
+      final q = buildMapsRouteUri(remaining).queryParameters;
+      expect(q['waypoints'], '4.0,4.0');
+      expect(q['destination'], '5.0,5.0');
+    });
+
+    test('B2: a visit not yet accepted keeps only area + pincode (list and Maps)', () {
+      final plan = RoutePlan.fromJson({
+        'date': '2026-09-29',
+        'stops': [
+          stop(1, 'ok', address: {'line1': '1 Known St', 'city': 'Hyderabad', 'pincode': '500001'}),
+          stop(2, 'new',
+              lat: 17.4,
+              lng: 78.5,
+              status: 'assigned',
+              address: {'line1': '12 Secret Lane', 'landmark': 'Blue gate', 'city': 'Hyderabad', 'pincode': '500034'}),
+        ],
+        'totalKm': 3,
+      });
+      final remaining = plan.remaining();
+      final hidden = remaining.last;
+      expect(hidden.addressHidden, isTrue);
+      expect(hidden.addressText, isEmpty);
+      expect(hidden.hasCoordinates, isFalse);
+      final uri = buildMapsRouteUri(remaining).toString();
+      expect(uri, isNot(contains('Secret')));
+      expect(uri, isNot(contains('17.4')));
+      expect(buildMapsRouteUri(remaining).queryParameters['destination'], 'Hyderabad 500034');
+      expect(remaining.first.addressText, '1 Known St, Hyderabad, 500001');
+    });
+
+    test('stops without a status use the known visit statuses; unknown means area only', () {
+      final plan = RoutePlan.fromJson({
+        'date': '2026-09-29',
+        'stops': [
+          stop(1, 'a', status: null),
+          stop(2, 'b', status: null),
+          stop(3, 'c', status: null),
+        ],
+        'totalKm': 0,
+      });
+      final remaining = plan.remaining({'a': 'completed', 'b': 'arrived'});
+      expect(remaining.map((s) => s.visitId), ['b', 'c']);
+      expect(remaining[0].addressHidden, isFalse);
+      expect(remaining[1].addressHidden, isTrue);
+    });
+
+    testWidgets('B2/B7: route list hides finished stops and the street of unaccepted ones', (tester) async {
+      tester.view.physicalSize = const Size(1080, 2600);
+      tester.view.devicePixelRatio = 2.5;
+      addTearDown(tester.view.reset);
+      final plan = RoutePlan.fromJson({
+        'date': '2026-09-29',
+        'stops': [
+          stop(1, 'done', status: 'completed', address: {'line1': 'Done Road', 'city': 'Hyderabad', 'pincode': '500001'}),
+          stop(2, 'new',
+              status: 'assigned',
+              address: {'line1': '12 Secret Lane', 'landmark': 'Blue gate', 'city': 'Hyderabad', 'pincode': '500034'}),
+        ],
+        'totalKm': 3,
+      });
+      await tester.pumpWidget(testApp(RouteList(plan: plan), wrap: false));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('routeStop.done')), findsNothing);
+      expect(find.byKey(const Key('routeStop.new')), findsOneWidget);
+      expect(find.textContaining('Secret'), findsNothing);
+      expect(find.textContaining('Blue gate'), findsNothing);
+      expect(find.text('Hyderabad – 500034'), findsOneWidget);
+      expect(find.text('1 stop · 3.0 km in total'), findsOneWidget);
     });
 
     testWidgets('empty route shows the empty state', (tester) async {

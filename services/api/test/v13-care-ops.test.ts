@@ -54,6 +54,54 @@ describe('nurse route planning, attendance & supplies (section 48)', () => {
     expect((await t.req(tok.vaibhav, 'GET', '/provider/route')).status).toBe(403);
   });
 
+  it('route lists only remaining active stops; unaccepted stops show locality only (B2/B7)', async () => {
+    const [sun] = await t.svc.db.select().from(providers).where(eq(providers.name, 'Sunita Devi'));
+    const today = istDate();
+    const base = new Date(`${today}T05:00:00.000Z`);
+    const mk = async (status: string, offsetH: number, lat: number, lng: number) => {
+      const [hv] = await t.svc.db.select().from(homeVisits).limit(1);
+      const [row] = await t.svc.db
+        .insert(homeVisits)
+        .values({ ...hv, id: undefined as never, status, providerId: sun.id, address: { line1: 'Flat 9, Secret Towers', line2: 'Road 12', landmark: 'Opp. temple', city: 'Hyderabad', pincode: '500034', lat, lng }, preferredStart: new Date(base.getTime() + offsetH * 3600_000), preferredEnd: new Date(base.getTime() + (offsetH + 1) * 3600_000), completedAt: status === 'completed' ? new Date() : null, summary: null, timeline: [] })
+        .returning();
+      return row.id;
+    };
+    const done = await mk('completed', 0.1, 17.41, 78.45);
+    const cancelled = await mk('cancelled', 0.2, 17.41, 78.45);
+    const assigned = await mk('assigned', 0.3, 17.412345, 78.456789);
+    const accepted = await mk('accepted', 0.4, 17.4131, 78.4571);
+    const r = await t.req(tok.sunita, 'GET', `/provider/route?date=${today}`);
+    expect(r.status).toBe(200);
+    const ids = r.body.stops.map((s: any) => s.visitId);
+    expect(ids).not.toContain(done);
+    expect(ids).not.toContain(cancelled);
+    expect(ids).toEqual(expect.arrayContaining([assigned, accepted]));
+    expect(r.body.stops.map((s: any) => s.order)).toEqual(r.body.stops.map((_: any, i: number) => i + 1));
+    const a = r.body.stops.find((s: any) => s.visitId === assigned);
+    expect(a.addressMasked).toBe(true);
+    expect(a.address).toEqual({ city: 'Hyderabad', pincode: '500034', lat: 17.41, lng: 78.46, approximate: true });
+    expect(JSON.stringify(a)).not.toMatch(/Secret|Road 12|temple|17\.412345/);
+    expect(a.lat).toBe(17.41);
+    const b = r.body.stops.find((s: any) => s.visitId === accepted);
+    expect(b.addressMasked).toBe(false);
+    expect(b.address.line1).toBe('Flat 9, Secret Towers');
+    expect(b.lat).toBe(17.4131);
+    // Same rule on the visit list and detail.
+    const list = await t.req(tok.sunita, 'GET', '/provider/visits?scope=today');
+    const la = list.body.items.find((v: any) => v.id === assigned);
+    expect(la.addressMasked).toBe(true);
+    expect(la.address.line1).toBeUndefined();
+    expect(la.address.landmark).toBeUndefined();
+    expect(list.body.items.find((v: any) => v.id === accepted).address.landmark).toBe('Opp. temple');
+    const d = await t.req(tok.sunita, 'GET', `/home-visits/${assigned}`);
+    expect(d.body.address).toEqual({ city: 'Hyderabad', pincode: '500034', lat: 17.41, lng: 78.46, approximate: true });
+    // Ops still sees the full address.
+    const ops = await t.req(tok.meera, 'GET', `/home-visits/${assigned}`);
+    expect(ops.body.address.line1).toBe('Flat 9, Secret Towers');
+    // Clean up so later tests see the original data set.
+    for (const id of [done, cancelled, assigned, accepted]) await t.svc.db.delete(homeVisits).where(eq(homeVisits.id, id));
+  });
+
   it('attendance check-in/out and monthly summary', async () => {
     const a = await t.req(tok.sunita, 'POST', '/provider/attendance', { action: 'check_in', lat: 17.41, lng: 78.44 });
     expect(a.status).toBe(201);
@@ -447,5 +495,37 @@ describe('coordinator caseload flags and doctor episode access (v1.3 additions)'
     expect(ok.body.items.every((e: any) => e.patientId === ramesh)).toBe(true);
     expect(ok.body.items.length).toBeGreaterThan(0);
     expect((await t.req(tok.priya, 'GET', `/care-episodes?patientId=${ramesh}`)).status).toBe(403);
+  });
+});
+
+describe('no internal governance markers in patient-facing text (B9)', () => {
+  const MARKERS = /REQUIRES CLINICAL GOVERNANCE|REQUIRES PRICING VALIDATION|placeholder price|\(fixture\)/i;
+  it('preventive schedule, plans, lab catalogue, program templates and AI safety reasons are clean; governance stays as status data', async () => {
+    const prev = await t.req(tok.vaibhav, 'GET', `/patients/${ramesh}/preventive-schedule`);
+    expect(prev.status).toBe(200);
+    expect(prev.body.scheduleStatus).toBe('fixture_unapproved');
+    expect(JSON.stringify(prev.body)).not.toMatch(MARKERS);
+    const plans = await t.req(tok.vaibhav, 'GET', '/subscription-plans');
+    expect(plans.body.items.length).toBeGreaterThan(0);
+    expect(JSON.stringify(plans.body)).not.toMatch(MARKERS);
+    for (const url of ['/lab/tests?limit=100', '/lab/packages']) {
+      const r = await t.req(tok.vaibhav, 'GET', url);
+      expect(r.body.items.length).toBeGreaterThan(0);
+      expect(JSON.stringify(r.body)).not.toMatch(MARKERS);
+    }
+    const tpl = await t.req(tok.vaibhav, 'GET', '/care-programs/templates');
+    expect(tpl.body.items.length).toBeGreaterThan(0);
+    expect(tpl.body.items.some((x: any) => x.status === 'fixture_unapproved')).toBe(true);
+    expect(JSON.stringify(tpl.body)).not.toMatch(MARKERS);
+    // Admins still see the governance markers on fixture templates.
+    const adminTpl = await t.req(tok.admin, 'GET', '/admin/care-programs/templates');
+    expect(JSON.stringify(adminTpl.body)).toMatch(/REQUIRES CLINICAL GOVERNANCE/);
+    // Emergency reason text in the AI assistant.
+    const c = await t.req(tok.vaibhav, 'POST', '/ai/conversations', { patientId: ramesh });
+    const r = await t.req(tok.vaibhav, 'POST', `/ai/conversations/${c.body.id}/messages`, { text: 'severe chest pain' });
+    expect(r.body.safety.level).toBe('emergency');
+    expect(r.body.safety.rulePackStatus).toBe('fixture_unapproved');
+    expect(r.body.safety.triggeredRules[0].title).toMatch(/chest pain/i);
+    expect(JSON.stringify(r.body)).not.toMatch(MARKERS);
   });
 });

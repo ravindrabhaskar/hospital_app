@@ -63,6 +63,7 @@ class EmergencyContactsScreen extends ConsumerWidget {
                   label: l.addEmergencyContact,
                   icon: Icons.add,
                   onPressed: () => showModalBottomSheet<void>(
+                    useRootNavigator: true,
                     context: context,
                     isScrollControlled: true,
                     builder: (_) => _AddContactSheet(patientId: p.id),

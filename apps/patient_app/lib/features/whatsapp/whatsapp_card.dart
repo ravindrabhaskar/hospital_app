@@ -79,6 +79,7 @@ class _WhatsappAssistantCardState extends ConsumerState<WhatsappAssistantCard> {
                   OutlinedButton.icon(
                     key: const Key('whatsapp-try'),
                     onPressed: () => showModalBottomSheet<void>(
+                      useRootNavigator: true,
                       context: context,
                       isScrollControlled: true,
                       builder: (_) => const WhatsappCommandsSheet(),

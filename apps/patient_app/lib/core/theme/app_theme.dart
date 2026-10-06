@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'tokens.dart';
@@ -8,6 +9,24 @@ class AppTheme {
 
   /// Set to false in tests so no font is fetched over the network.
   static bool useGoogleFonts = true;
+
+  /// Status/navigation bar icons that stay readable: dark icons over the light
+  /// (butter/cream) screens, light icons in dark mode (B26).
+  static SystemUiOverlayStyle overlayFor(Brightness brightness) => brightness == Brightness.dark
+      ? const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+          systemNavigationBarColor: AppColors.darkSurface,
+          systemNavigationBarIconBrightness: Brightness.light,
+        )
+      : const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.light,
+          systemNavigationBarColor: AppColors.surface,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        );
 
   static TextTheme _text(TextTheme base, Color primary, Color secondary) {
     final t = base.copyWith(
@@ -90,6 +109,7 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
+        systemOverlayStyle: overlayFor(scheme.brightness),
         titleTextStyle: textTheme.titleMedium?.copyWith(color: text),
       ),
       cardTheme: CardThemeData(

@@ -28,7 +28,65 @@ String vitalErrorText(AppLocalizations l, VitalError e) => switch (e.kind) {
       VitalErrorKind.empty => l.vitalsErrorEmpty,
     };
 
-/// Structured vitals capture. Records values only; no interpretation.
+String vitalFlagLabel(AppLocalizations l, VitalFlag flag) => switch (flag) {
+      VitalFlag.high => l.vitalsFlagHigh,
+      VitalFlag.low => l.vitalsFlagLow,
+    };
+
+/// "90–139 mmHg", "≥ 95 %" (the usual adult range of [spec]).
+String vitalRangeText(VitalSpec spec) {
+  final lo = spec.normalLow;
+  final hi = spec.normalHigh;
+  final range = lo != null && hi != null
+      ? '${_fmt(lo)}–${_fmt(hi)}'
+      : lo != null
+          ? '≥ ${_fmt(lo)}'
+          : hi != null
+              ? '≤ ${_fmt(hi)}'
+              : '';
+  return '$range ${spec.unit}'.trim();
+}
+
+/// Out-of-range marker: warning colour + arrow icon + "High"/"Low" text, so
+/// it never relies on colour alone.
+class VitalFlagBadge extends StatelessWidget {
+  const VitalFlagBadge({super.key, required this.flag, this.detail});
+  final VitalFlag flag;
+
+  /// Optional extra text (e.g. the usual range) after the label.
+  final String? detail;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final label = vitalFlagLabel(l, flag);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: AppColors.dangerBg,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.dangerDeep),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(flag == VitalFlag.high ? Icons.arrow_upward : Icons.arrow_downward,
+              size: 14, color: AppColors.dangerDeep),
+          const SizedBox(width: 2),
+          Flexible(
+            child: Text(
+              detail == null ? label : l.vitalsFlagWithRange(label, detail!),
+              style: const TextStyle(color: AppColors.dangerDeep, fontWeight: FontWeight.w700, fontSize: 12),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Structured vitals capture. Values outside the usual adult range are
+/// highlighted (see [VitalRanges]); impossible values are refused.
 class VitalsForm extends StatefulWidget {
   const VitalsForm({super.key, required this.onSubmit, this.busy = false, this.clock = DateTime.now});
 
@@ -75,6 +133,11 @@ class _VitalsFormState extends State<VitalsForm> {
   Widget _field(VitalSpec spec) {
     final l = context.l10n;
     final error = _errors[spec.type];
+    final flag = error == null ? VitalRanges.flagRaw(spec, _controllers[spec.type]!.text) : null;
+    const flagBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      borderSide: BorderSide(color: AppColors.dangerDeep, width: 2),
+    );
     return TextField(
       key: Key('vital.${spec.type}'),
       controller: _controllers[spec.type],
@@ -85,14 +148,24 @@ class _VitalsFormState extends State<VitalsForm> {
         suffixText: spec.unit,
         errorText: error == null ? null : vitalErrorText(l, error),
         errorMaxLines: 2,
+        helper: flag == null
+            ? null
+            : Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: VitalFlagBadge(key: Key('vitalFlag.${spec.type}'), flag: flag, detail: vitalRangeText(spec)),
+              ),
+        enabledBorder: flag == null ? null : flagBorder,
+        focusedBorder: flag == null ? null : flagBorder,
+        prefixIcon: flag == null ? null : const Icon(Icons.warning_amber_rounded, color: AppColors.dangerDeep),
       ),
       onChanged: (_) {
-        if (_errors.containsKey(spec.type) || _formError != null) {
-          setState(() {
+        // Rebuild for the High/Low highlight and to clear a stale error.
+        setState(() {
+          if (_errors.containsKey(spec.type) || _formError != null) {
             _errors = Map.of(_errors)..remove(spec.type);
             _formError = null;
-          });
-        }
+          }
+        });
       },
     );
   }

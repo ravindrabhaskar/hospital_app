@@ -13,6 +13,11 @@ import '../../state/data_providers.dart';
 import 'care_widgets.dart';
 import 'video_join.dart';
 
+/// A booking cancelled because its payment failed can still be paid: the
+/// payment retry holds the same slot again (B1).
+bool hasFailedPaymentFor(String refId, List<Payment> payments) =>
+    payments.any((p) => p.refId == refId && p.failed);
+
 class AppointmentDetailScreen extends ConsumerStatefulWidget {
   const AppointmentDetailScreen({super.key, required this.id});
   final String id;
@@ -26,6 +31,7 @@ class _State extends ConsumerState<AppointmentDetailScreen> {
 
   void _refreshAll() {
     ref.invalidate(appointmentProvider(widget.id));
+    ref.invalidate(paymentsProvider);
     ref.invalidate(appointmentsProvider('upcoming'));
     ref.invalidate(appointmentsProvider('past'));
     ref.invalidate(remindersTodayProvider);
@@ -59,7 +65,11 @@ class _State extends ConsumerState<AppointmentDetailScreen> {
         data: (a) {
           final upcoming = a.status == 'confirmed' || a.status == 'pending_payment';
           Widget? primary;
-          if (a.status == 'pending_payment') {
+          final unpaidRetry = a.status == 'cancelled' &&
+              (a.cancelReason == null || a.cancelReason == 'payment_failed') &&
+              a.startAt.isAfter(DateTime.now()) &&
+              hasFailedPaymentFor(a.id, ref.watch(paymentsProvider).value ?? const []);
+          if (a.status == 'pending_payment' || unpaidRetry) {
             primary = PrimaryButton(
               label: l.completePayment(money(a.fee)),
               onPressed: () async {

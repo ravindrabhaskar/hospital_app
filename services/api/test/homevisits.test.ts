@@ -75,12 +75,20 @@ describe('home visits', () => {
     expect(pv.body.patientContext.allergies).toContain('Penicillin');
     const list = await t.req(sunita, 'GET', '/provider/visits?scope=today');
     for (const v of list.body.items) expect(v.visitCode).toBeNull();
-    // another provider cannot act on it
+    // B2: until accepted, the provider sees locality only
+    expect(pv.body.addressMasked).toBe(true);
+    expect(pv.body.address.line1).toBeUndefined();
+    expect(pv.body.address).toMatchObject({ city: 'Hyderabad', pincode: '500034' });
+    expect(list.body.items.find((v: any) => v.id === hv.id).address.line1).toBeUndefined();
+        // another provider cannot act on it
     expect((await t.req(ravi, 'POST', `/home-visits/${hv.id}/accept`)).status).toBe(403);
     expect((await t.req(ravi, 'GET', `/home-visits/${hv.id}`)).status).toBe(403);
 
     expect((await t.req(sunita, 'POST', `/home-visits/${hv.id}/arrived`)).status).toBe(409); // invalid order
-    expect((await t.req(sunita, 'POST', `/home-visits/${hv.id}/accept`)).body.status).toBe('accepted');
+    const acc = await t.req(sunita, 'POST', `/home-visits/${hv.id}/accept`);
+    expect(acc.body.status).toBe('accepted');
+    expect(acc.body.addressMasked).toBe(false);
+    expect(acc.body.address.line1).toBe(address.line1);
     expect((await t.req(sunita, 'POST', `/home-visits/${hv.id}/en-route`, { etaMinutes: 20 })).body.etaMinutes).toBe(20);
     expect((await t.req(sunita, 'POST', `/home-visits/${hv.id}/arrived`)).body.status).toBe('arrived');
     const wrong = await t.req(sunita, 'POST', `/home-visits/${hv.id}/verify-identity`, { visitCode: code === '0000' ? '1111' : '0000', consentConfirmed: true });
@@ -139,6 +147,22 @@ describe('home visits', () => {
     expect(ack.body.status).toBe('acknowledged');
     const res = await t.req(ops, 'POST', `/ops/safety-events/${mine.id}/resolve`, { note: 'Patient transferred' });
     expect(res.body.status).toBe('resolved');
+  });
+
+  it('provider escalation copies the reason and visit reference into the Ops safety event note (B27)', async () => {
+    const r = await request('vitals_check', window(10));
+    const hv = r.body.homeVisit;
+    const who = hv.provider.name === 'Sunita Devi' ? sunita : ravi;
+    await t.req(who, 'POST', `/home-visits/${hv.id}/accept`);
+    await t.req(who, 'POST', `/home-visits/${hv.id}/en-route`, { etaMinutes: 5 });
+    await t.req(who, 'POST', `/home-visits/${hv.id}/arrived`);
+    const esc = await t.req(who, 'POST', `/home-visits/${hv.id}/escalate`, { reason: 'Patient confused and breathless', severity: 'urgent' });
+    expect(esc.status).toBe(200);
+    const ops = (await t.login(SEED_PHONES.ops)).accessToken;
+    const ev = await t.req(ops, 'GET', '/ops/safety-events?status=open');
+    const mine = ev.body.items.find((e: any) => e.careEpisodeId === hv.careEpisodeId && e.rules[0]?.ruleId === 'provider.escalation');
+    expect(mine.note).toContain('Patient confused and breathless');
+    expect(mine.note).toContain(hv.id);
   });
 
   it('reject sends the visit back to the matcher', async () => {

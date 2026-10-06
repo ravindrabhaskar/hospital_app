@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 import { and, desc, eq, gte } from 'drizzle-orm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
@@ -25,7 +26,7 @@ const toPlan = (p: PlanRow) => ({
   calorieTarget: p.calorieTarget,
   meals: p.meals,
   avoid: p.avoid,
-  notes: p.notes,
+  notes: stripGovernanceMarkers(p.notes),
   validUntil: p.validUntil,
   status: p.validUntil < istDate() ? ('expired' as const) : ('active' as const),
   createdAt: iso(p.createdAt),

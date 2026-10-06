@@ -118,6 +118,19 @@ class ServerSettings extends ChangeNotifier {
 
 final _scheme = RegExp(r'^[a-zA-Z][a-zA-Z0-9+.-]*://');
 final _ipv4 = RegExp(r'^\d{1,3}(\.\d{1,3}){3}$');
+final _label = RegExp(r'^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$');
+final _path = RegExp(r'^(/[A-Za-z0-9._~-]*)*$');
+
+/// `localhost`, or a DNS name whose labels are letters/digits/hyphens. A name
+/// made of numbers plus a non-numeric tail (`10.10.17.http`) is a garbled IP,
+/// and a label that is a URL scheme (`http`) means two URLs were pasted together.
+bool _isHostName(String host) {
+  final labels = host.toLowerCase().split('.');
+  if (labels.any((l) => !_label.hasMatch(l) || l == 'http' || l == 'https')) return false;
+  if (labels.length > 1 && labels.take(labels.length - 1).every((l) => RegExp(r'^\d+$').hasMatch(l))) return false;
+  if (RegExp(r'^\d+$').hasMatch(labels.last)) return false;
+  return true;
+}
 
 /// Default port of the local API server (`npm run dev`).
 const defaultServerPort = 4000;
@@ -151,9 +164,18 @@ String? normalizeServerUrl(String input) {
   if (scheme != 'http' && scheme != 'https') return null;
   final host = uri.host;
   if (host.isEmpty) return null;
-  if (_ipv4.hasMatch(host) && host.split('.').any((p) => int.parse(p) > 255)) return null;
-  if (uri.userInfo.isNotEmpty) return null;
+  if (_ipv4.hasMatch(host)) {
+    if (host.split('.').any((p) => int.parse(p) > 255)) return null;
+  } else if (!host.contains(':') && !_isHostName(host)) {
+    // IPv6 literals (`[::1]`) contain ':' and were already validated by Uri.
+    return null;
+  }
+  if (uri.userInfo.isNotEmpty || uri.hasQuery || uri.hasFragment) return null;
+  if (uri.hasPort && (uri.port < 1 || uri.port > 65535)) return null;
   final port = uri.hasPort ? uri.port : (addDevPort ? defaultServerPort : null);
+  // Path: plain segments only. Rejects pasted-together addresses such as
+  // `http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1`.
+  if (uri.path.contains('//') || !_path.hasMatch(uri.path)) return null;
   var path = uri.path;
   while (path.endsWith('/')) {
     path = path.substring(0, path.length - 1);

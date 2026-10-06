@@ -335,7 +335,9 @@ export function createEndpoints(http: HttpClient) {
       templates: () => get<T.ListResponse<T.ProgramTemplate>>("/admin/care-programs/templates"),
       /** Creates a template (or, with an existing code, a new version for review; it starts unapproved). */
       create: (input: T.ProgramTemplateInput) => post<T.ProgramTemplate>("/admin/care-programs/templates", input),
-      approve: (code: string) => post<T.ProgramTemplate>(`/admin/care-programs/templates/${enc(code)}/approve`),
+      /** The API records the named approver (clinical lead) and, when given, approves that exact version. */
+      approve: (code: string, input: T.ProgramTemplateApproveInput) =>
+        post<T.ProgramTemplate>(`/admin/care-programs/templates/${enc(code)}/approve`, input),
     },
 
     /* 44. Lab tests */

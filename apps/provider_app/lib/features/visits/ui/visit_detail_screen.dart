@@ -18,6 +18,7 @@ import '../../field/supplies_screen.dart';
 import '../../offline/offline_queue.dart';
 import '../data/visit_providers.dart';
 import '../domain/visit_lifecycle.dart';
+import '../domain/vitals_validation.dart';
 import 'escalate_dialog.dart';
 import 'lifecycle_panel.dart';
 import 'observations_form.dart';
@@ -38,6 +39,10 @@ class _VisitDetailScreenState extends ConsumerState<VisitDetailScreen> {
 
   /// Latest copy returned by an action, shown until the provider refetches.
   HomeVisit? _latest;
+
+  /// Consent tick of the verify step; kept here so a wrong visit code
+  /// (rejected → panel rebuilt) does not clear it.
+  bool _consent = false;
 
   void _refreshAll() {
     ref.invalidate(visitDetailProvider(widget.visitId));
@@ -234,6 +239,8 @@ class _VisitDetailScreenState extends ConsumerState<VisitDetailScreen> {
                               visit: visit,
                               busy: _busy,
                               online: online,
+                              consent: _consent,
+                              onConsentChanged: (v) => setState(() => _consent = v),
                               onNavigate: () => _navigate(visit),
                               onAction: (type, body) async {
                                 await _perform(visit, type, body);
@@ -526,12 +533,23 @@ class _RecordedVitals extends StatelessWidget {
         children: [
           for (final v in visit.vitals)
             ConstrainedBox(
+              key: Key('recordedVital.${v.type}.${v.id ?? v.measuredAt?.toIso8601String()}'),
               constraints: const BoxConstraints(minHeight: 40),
               child: MergeSemantics(
                 child: Row(
                   children: [
                     Expanded(child: Text(vitalLabel(l, v.type))),
-                    Text('${v.value} ${v.unit}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                    if (VitalRanges.flag(v.type, v.value) case final flag?) ...[
+                      VitalFlagBadge(flag: flag),
+                      const SizedBox(width: 8),
+                    ],
+                    Text(
+                      '${v.value} ${v.unit}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: VitalRanges.flag(v.type, v.value) == null ? null : AppColors.dangerDeep,
+                      ),
+                    ),
                     const SizedBox(width: 8),
                     Text(formatTime(context, v.measuredAt),
                         style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),

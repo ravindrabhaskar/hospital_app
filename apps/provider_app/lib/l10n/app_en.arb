@@ -271,7 +271,7 @@
   "vitalsErrorBpPair": "Enter both systolic and diastolic",
   "vitalsErrorBpOrder": "Diastolic must be lower than systolic",
   "vitalsErrorEmpty": "Enter at least one vital",
-  "vitalsNoInterpretation": "Values are recorded as measured. Clinical review is done by the care team.",
+  "vitalsNoInterpretation": "Values outside the usual adult range are highlighted as High or Low. Clinical review is done by the care team.",
   "obsTitle": "Observations",
   "obsAlertOriented": "Patient alert and oriented",
   "obsMedicationsReviewed": "Medications reviewed",
@@ -839,7 +839,13 @@
   "slotDinner": "Dinner",
   "slotBedtime": "Bedtime",
   "serverChip": "Server: {host}",
-  "@serverChip": {"placeholders": {"host": {"type": "String"}}},
+  "@serverChip": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
   "serverAddressTitle": "Server address",
   "serverAddressHelp": "Enter the CareCompanion server address, for example 10.10.17.134, http://10.10.17.134:4000 or a tunnel link like https://xyz.trycloudflare.com.",
   "serverAddressLabel": "Server URL or IP address",
@@ -847,16 +853,82 @@
   "serverTestConnection": "Test connection",
   "serverTesting": "Testing connection…",
   "serverConnectedVersion": "Connected. Server version {version}",
-  "@serverConnectedVersion": {"placeholders": {"version": {"type": "String"}}},
+  "@serverConnectedVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "serverCantReach": "Can't reach the server: check the PC is running START-CARECOMPANION.bat and the phone is on the same network, or use the tunnel link.",
   "serverNotCareCompanion": "The server answered (HTTP {status}) but it is not the CareCompanion API. Check the address.",
-  "@serverNotCareCompanion": {"placeholders": {"status": {"type": "String"}}},
+  "@serverNotCareCompanion": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
   "serverSave": "Save",
   "serverReset": "Reset to default",
   "serverDefaultIs": "Default: {url}",
-  "@serverDefaultIs": {"placeholders": {"url": {"type": "String"}}},
+  "@serverDefaultIs": {
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
   "serverSignOutWarning": "Changing the server signs you out.",
   "serverCantReachAt": "Can't reach the server at {host}",
-  "@serverCantReachAt": {"placeholders": {"host": {"type": "String"}}},
-  "serverChange": "Change server"
+  "@serverCantReachAt": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "serverChange": "Change server",
+  "errorOtpIncorrectAttempts": "{count, plural, =1{Incorrect OTP. 1 attempt left.} other{Incorrect OTP. {count} attempts left.}}",
+  "@errorOtpIncorrectAttempts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "errorOtpExpired": "This OTP has expired. Please request a new OTP.",
+  "errorOtpTooManyAttempts": "Too many incorrect attempts. Please request a new OTP.",
+  "vitalsFlagHigh": "High",
+  "vitalsFlagLow": "Low",
+  "vitalsFlagWithRange": "{flag} · usual adult range {range}",
+  "@vitalsFlagWithRange": {
+    "placeholders": {
+      "flag": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "capVitalsCheck": "Vitals check",
+  "capSampleCollection": "Sample collection",
+  "capElderlyCare": "Elderly care",
+  "capPostReportConsult": "Post-report consult",
+  "capPhysiotherapy": "Physiotherapy",
+  "credentialBannerAction": "View profile",
+  "locRationaleTitle": "Use your location?",
+  "locRationaleBody": "While you are on duty, CareCompanion Pro shares your location with your care team to plan your route and show patients your arrival time. It is not shared when you are off duty.",
+  "locRationaleAllow": "Continue",
+  "locRationaleNotNow": "Not now",
+  "locDeniedMessage": "Location is off, so route times and live tracking won't work. You can turn it on from the Route tab or your Profile.",
+  "locOffBanner": "Location is off. Turn it on for accurate route times and patient tracking.",
+  "locTurnOn": "Turn on location",
+  "locBlocked": "Location is blocked for this app. Allow it in Settings.",
+  "locOpenSettings": "Open settings",
+  "locSettingTitle": "Location access",
+  "locSettingOn": "Allowed",
+  "locSettingOff": "Off. Tap to turn on",
+  "locServiceOff": "Location (GPS) is turned off on this phone."
 }

@@ -1,3 +1,4 @@
+import { stripGovernanceMarkers } from '../../lib/governance.js';
 import { randomUUID } from 'node:crypto';
 import { and, eq, inArray, lte } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../../db/client.js';
@@ -8,7 +9,7 @@ import { randomDigits } from '../../lib/crypto.js';
 import { PdfBuilder, pdfDate } from '../../lib/pdf.js';
 import { ageFromDob, istDate, iso } from '../../lib/time.js';
 import type { Services } from '../../services.js';
-import { addEvent } from '../episodes/service.js';
+import { addEvent, advanceEpisode, settleEpisodeAfterBookingEnded } from '../episodes/service.js';
 import { autoAssign, findZoneForPincode } from '../homevisits/service.js';
 import type { PaymentEffects, PaymentRow } from '../payments/service.js';
 import { storeRecord } from '../records/service.js';
@@ -22,7 +23,7 @@ export const toLabTest = (t: LabTestRow) => ({
   id: t.id,
   code: t.code,
   name: t.name,
-  description: t.description,
+  description: stripGovernanceMarkers(t.description),
   category: t.category,
   sampleType: t.sampleType,
   fastingRequired: t.fastingRequired,
@@ -113,6 +114,8 @@ export function labPaymentEffects(svc: () => Services): PaymentEffects {
           .set({ status: 'scheduled', collectionVisitId: v.id, timeline: timelinePush(o, 'scheduled'), updatedAt: new Date() })
           .where(eq(labOrders.id, o.id));
         await addEvent(tx, o.careEpisodeId, 'lab_order_scheduled', 'Lab sample collection scheduled', SYSTEM_ACTOR, { labOrderId: o.id, homeVisitId: v.id });
+        // QA B30: a paid lab order means care is scheduled (the episode no longer stays NEW).
+        await advanceEpisode(tx, o.careEpisodeId, ['CARE_SCHEDULED'], 'Lab order paid; sample collection scheduled', SYSTEM_ACTOR, { nextAction: 'Home sample collection' });
         await audit(tx, SYSTEM_ACTOR, { action: 'lab_order.scheduled', entityType: 'lab_order', entityId: o.id, metadata: { homeVisitId: v.id } });
         return { order: o, visit: assigned };
       });
@@ -135,7 +138,11 @@ export function labPaymentEffects(svc: () => Services): PaymentEffects {
     async onFailed(db: Db, p: PaymentRow) {
       const [o] = await db.select().from(labOrders).where(eq(labOrders.id, p.refId));
       if (!o || o.status !== 'pending_payment') return;
-      await db.update(labOrders).set({ status: 'cancelled', cancelReason: 'payment_failed', timeline: timelinePush(o, 'cancelled'), updatedAt: new Date() }).where(eq(labOrders.id, o.id));
+      await db.transaction(async (tx) => {
+        await tx.update(labOrders).set({ status: 'cancelled', cancelReason: 'payment_failed', timeline: timelinePush(o, 'cancelled'), updatedAt: new Date() }).where(eq(labOrders.id, o.id));
+        await addEvent(tx, o.careEpisodeId, 'lab_order_cancelled', 'Lab order cancelled: payment failed', SYSTEM_ACTOR, { labOrderId: o.id });
+        await settleEpisodeAfterBookingEnded(tx, o.careEpisodeId, 'payment_failed', SYSTEM_ACTOR);
+      });
     },
     async onRetry(tx, p: PaymentRow) {
       const [o] = await tx.select().from(labOrders).where(eq(labOrders.id, p.refId));

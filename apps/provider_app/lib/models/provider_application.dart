@@ -38,6 +38,7 @@ class ProviderApplication {
     required this.decidedByName,
     required this.updatedAt,
     required this.decidedAt,
+    this.zoneNames = const {},
   });
 
   final String id;
@@ -56,6 +57,9 @@ class ProviderApplication {
   final String? decidedByName;
   final DateTime? updatedAt;
   final DateTime? decidedAt;
+
+  /// Zone id → name, when the server includes `preferredZones` (optional).
+  final Map<String, String> zoneNames;
 
   /// Fields and documents can change only while under review (PATCH rules).
   bool get isEditable => status == ApplicationStatus.submitted || status == ApplicationStatus.changesRequested;
@@ -80,6 +84,10 @@ class ProviderApplication {
         decidedByName: str(json['decidedByName']),
         updatedAt: dateOrNull(json['updatedAt']),
         decidedAt: dateOrNull(json['decidedAt']),
+        zoneNames: {
+          for (final z in jsonList(json['preferredZones']))
+            if (str(z['id']) != null && str(z['name']) != null) str(z['id'])!: str(z['name'])!,
+        },
       );
 }
 
@@ -147,7 +155,10 @@ class ApplicationDraft {
 
   bool get isDoctor => type == 'doctor';
 
-  factory ApplicationDraft.fromApplication(ProviderApplication a) => ApplicationDraft(
+  /// [zoneNames] (zone id → name, e.g. remembered on this device when the
+  /// area was added) names the zones; otherwise the server's names are used.
+  factory ApplicationDraft.fromApplication(ProviderApplication a, {Map<String, String> zoneNames = const {}}) =>
+      ApplicationDraft(
         type: a.type,
         fullName: a.fullName,
         qualification: a.qualification,
@@ -156,7 +167,37 @@ class ApplicationDraft {
         specialty: a.specialty,
         experienceYears: a.experienceYears,
         languages: [...a.languages],
-        zones: [for (final id in a.preferredZoneIds) ZoneChoice(id: id)],
+        zones: [for (final id in a.preferredZoneIds) ZoneChoice(id: id, name: a.zoneNames[id] ?? zoneNames[id])],
+      );
+
+  /// Local, unsubmitted draft (saved on the device until it is submitted).
+  Json toDraftJson() => {
+        'type': type,
+        'fullName': fullName,
+        'qualification': qualification,
+        'registrationNumber': registrationNumber,
+        'registrationCouncil': registrationCouncil,
+        'specialty': specialty,
+        'experienceYears': experienceYears,
+        'languages': languages,
+        'zones': [
+          for (final z in zones) {'id': z.id, 'name': z.name},
+        ],
+      };
+
+  factory ApplicationDraft.fromDraftJson(Json json) => ApplicationDraft(
+        type: strOr(json['type'], 'nurse'),
+        fullName: strOr(json['fullName']),
+        qualification: strOr(json['qualification']),
+        registrationNumber: strOr(json['registrationNumber']),
+        registrationCouncil: strOr(json['registrationCouncil']),
+        specialty: str(json['specialty']),
+        experienceYears: intOrNull(json['experienceYears']) ?? 0,
+        languages: stringList(json['languages']),
+        zones: [
+          for (final z in jsonList(json['zones']))
+            if (str(z['id']) != null) ZoneChoice(id: str(z['id'])!, name: str(z['name'])),
+        ],
       );
 
   Json toJson() => {

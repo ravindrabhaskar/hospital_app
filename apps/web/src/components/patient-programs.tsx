@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Activity, AlertTriangle, CheckCircle2, LineChart as LineIcon, Pause, Play, Plus } from "lucide-react";
 import { api } from "@/lib/api";
+import { CHART } from "@/lib/chart-theme";
 import type { CareEpisode, Enrollment, EnrollmentStatus, ProgramTemplate, VitalType } from "@/lib/api/types";
 import { addDays, formatDate, formatDateTime, humanize, relativeTime, todayIST } from "@/lib/format";
 import { describeThreshold, pct, thresholdsDiffer, toDraft, toThresholds, validateThresholds, vitalLabel, type ThresholdDraft } from "@/lib/programs";
@@ -193,9 +194,9 @@ function TrendChart({ summary, thresholds }: { summary: { trend: { date: string;
       <figure aria-label={`${vitalLabel(type)} daily average`} className="h-56 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-            <CartesianGrid stroke="#e3ece7" vertical={false} />
-            <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#5b6b64" }} tickLine={false} axisLine={{ stroke: "#e3ece7" }} />
-            <YAxis tick={{ fontSize: 11, fill: "#5b6b64" }} tickLine={false} axisLine={false} width={40} domain={["auto", "auto"]} />
+            <CartesianGrid stroke={CHART.grid} vertical={false} />
+            <XAxis dataKey="label" tick={{ fontSize: 11, fill: CHART.inkMuted }} tickLine={false} axisLine={{ stroke: CHART.grid }} />
+            <YAxis tick={{ fontSize: 11, fill: CHART.inkMuted }} tickLine={false} axisLine={false} width={40} domain={["auto", "auto"]} />
             <Tooltip
               formatter={(v) => [String(v ?? "—"), "Average"]}
               labelFormatter={(_l, p) => {
@@ -204,9 +205,9 @@ function TrendChart({ summary, thresholds }: { summary: { trend: { date: string;
               }}
             />
             {lines.map((t, i) => (
-              <ReferenceLine key={i} y={t.value} stroke={t.level === "routine" ? "#a4520a" : "#d93a3a"} strokeDasharray="4 4" label={{ value: `${t.op === "gt" ? ">" : "<"} ${t.value} ${t.level}`, fontSize: 10, fill: "#5b6b64", position: "insideTopRight" }} />
+              <ReferenceLine key={i} y={t.value} stroke={t.level === "routine" ? CHART.warning : CHART.danger} strokeDasharray="4 4" label={{ value: `${t.op === "gt" ? ">" : "<"} ${t.value} ${t.level}`, fontSize: 10, fill: CHART.inkMuted, position: "insideTopRight" }} />
             ))}
-            <Line type="monotone" dataKey="avg" stroke="#8A3A62" strokeWidth={2} dot={{ r: 3, fill: "#8A3A62", stroke: "#fff", strokeWidth: 2 }} activeDot={{ r: 5 }} isAnimationActive={false} />
+            <Line type="monotone" dataKey="avg" stroke={CHART.series} strokeWidth={2} dot={{ r: 3, fill: CHART.series, stroke: CHART.surface, strokeWidth: 2 }} activeDot={{ r: 5 }} isAnimationActive={false} />
           </LineChart>
         </ResponsiveContainer>
       </figure>

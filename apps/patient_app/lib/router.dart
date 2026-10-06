@@ -24,6 +24,7 @@ import 'features/misc/force_update_screen.dart';
 import 'features/onboarding/consents_screen.dart';
 import 'features/onboarding/emergency_contact_screen.dart';
 import 'features/onboarding/language_screen.dart';
+import 'features/onboarding/onboarding_resume.dart';
 import 'features/onboarding/otp_screen.dart';
 import 'features/onboarding/phone_screen.dart';
 import 'features/onboarding/profile_setup_screen.dart';
@@ -83,6 +84,7 @@ String? appRedirect({
   required bool languageChosen,
   required String location,
   bool updateRequired = false,
+  String? onboardingResume,
 }) {
   // Health Connect opens the app on its privacy/rationale screen; it must be
   // reachable in any state (store requirement).
@@ -104,6 +106,8 @@ String? appRedirect({
       if (session.needsOnboarding) {
         return location.startsWith('/onboarding') ? null : '/onboarding/consents';
       }
+      // Reloaded during the optional steps after the profile: resume there.
+      if (isPublic && onboardingResume != null) return onboardingResume;
       return isPublic ? '/home' : null;
   }
 }
@@ -126,6 +130,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       languageChosen: ref.read(localeProvider.notifier).hasChosen,
       location: state.matchedLocation,
       updateRequired: ref.read(updateRequiredProvider),
+      onboardingResume:
+          ref.read(onboardingResumeProvider.notifier).routeFor(ref.read(sessionProvider).me?.id),
     ),
     routes: [
       page('/splash', (_) => const SplashScreen()),

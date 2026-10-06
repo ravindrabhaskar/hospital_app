@@ -107,4 +107,28 @@ extension CcPalette on BuildContext {
   Color get lavenderSurface => isDark ? const Color(0xFF2B2542) : AppColors.lavenderBg;
   Color get skySurface => isDark ? const Color(0xFF1B2B42) : AppColors.skyBg;
   Color get tealSurface => isDark ? const Color(0xFF3A1F2C) : AppColors.tealBg;
+
+  /// Tinted square behind an accent icon (quick-action tiles): the pastel
+  /// tint in light mode, the matching dark surface in dark mode.
+  Color accentSurface(Accent a) {
+    if (!isDark) return a.bg;
+    return switch (a.bg) {
+      AppColors.tealBg => tealSurface,
+      AppColors.roseBg => roseSurface,
+      AppColors.lavenderBg => lavenderSurface,
+      AppColors.peachBg => peachSurface,
+      AppColors.skyBg => skySurface,
+      _ => mintSurface,
+    };
+  }
+
+  /// Selected bottom-nav item: butter pill with a plum icon (same as the
+  /// doctor/nurse apps); butter stays readable on the dark nav bar too.
+  Color get navIndicator => AppColors.mint100;
+  Color get onNavIndicator => AppColors.primaryDark;
+
+  /// Ask-AI centre button: plum in light mode, a brighter plum with a butter
+  /// ring in dark mode so it stands out from the dark bar.
+  Color get askAiFill => isDark ? AppColors.primaryLight : AppColors.primary;
+  Color get askAiRing => isDark ? AppColors.darkPrimary : surface;
 }

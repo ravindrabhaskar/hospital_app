@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,6 +8,7 @@ import '../../core/theme.dart';
 import '../../models/provider_application.dart';
 import '../../ui/l10n_helpers.dart';
 import '../../ui/widgets.dart';
+import 'application_controller.dart' show SavedApplicationDraft;
 import 'application_repository.dart';
 
 /// Language names stored in `languages` (the same values doctors use).
@@ -24,10 +27,23 @@ class ApplicationForm extends StatefulWidget {
     this.initial,
     this.busy = false,
     this.onCancel,
+    this.restored,
+    this.onDraftChanged,
+    this.onZoneResolved,
   });
 
   final ApplicationRepository repository;
   final ApplicationDraft? initial;
+
+  /// A new application's draft saved on the device (ignored when editing).
+  final SavedApplicationDraft? restored;
+
+  /// Called (debounced) whenever a new application's form changes, so it
+  /// survives a reload until it is submitted.
+  final Future<void> Function(SavedApplicationDraft draft)? onDraftChanged;
+
+  /// A pincode resolved to a zone (lets the app remember the zone's name).
+  final void Function(String zoneId, String? zoneName)? onZoneResolved;
 
   /// Returns normally on success; throws [ApiException] on failure.
   final Future<void> Function(ApplicationDraft draft) onSubmit;
@@ -41,17 +57,21 @@ class ApplicationForm extends StatefulWidget {
 }
 
 class _ApplicationFormState extends State<ApplicationForm> {
-  late final ApplicationDraft _draft = widget.initial ?? ApplicationDraft();
+  late final ApplicationDraft _draft = widget.initial ?? widget.restored?.draft ?? ApplicationDraft();
   final _detailsKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: _draft.fullName);
   late final _qualification = TextEditingController(text: _draft.qualification);
   late final _regNumber = TextEditingController(text: _draft.registrationNumber);
   late final _regCouncil = TextEditingController(text: _draft.registrationCouncil);
-  late final _experience =
-      TextEditingController(text: widget.initial == null ? '' : _draft.experienceYears.toString());
+  late final _experience = TextEditingController(
+      text: widget.initial != null
+          ? _draft.experienceYears.toString()
+          : (widget.restored?.experienceText ?? ''));
   final _pincode = TextEditingController();
 
-  int _step = 0;
+  late int _step = widget.initial == null ? (widget.restored?.step ?? 0) : 0;
+  Timer? _saveTimer;
+  bool _submitted = false;
   bool _languagesError = false;
   String? _pincodeError;
   bool _checkingPincode = false;
@@ -62,14 +82,36 @@ class _ApplicationFormState extends State<ApplicationForm> {
   void initState() {
     super.initState();
     if (_draft.isDoctor) _loadSpecialties();
+    for (final c in [_name, _qualification, _regNumber, _regCouncil, _experience]) {
+      c.addListener(_scheduleSave);
+    }
   }
 
   @override
   void dispose() {
+    _saveTimer?.cancel();
     for (final c in [_name, _qualification, _regNumber, _regCouncil, _experience, _pincode]) {
       c.dispose();
     }
     super.dispose();
+  }
+
+  /// Saves a new application's draft on the device shortly after a change.
+  void _scheduleSave() {
+    if (widget.onDraftChanged == null || widget.isEdit || _submitted) return;
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(milliseconds: 400), () {
+      if (!mounted || _submitted) return;
+      _syncDetails();
+      widget.onDraftChanged!(
+          SavedApplicationDraft(draft: _draft, step: _step, experienceText: _experience.text));
+    });
+  }
+
+  @override
+  void setState(VoidCallback fn) {
+    super.setState(fn);
+    _scheduleSave();
   }
 
   Future<void> _loadSpecialties() async {
@@ -118,10 +160,13 @@ class _ApplicationFormState extends State<ApplicationForm> {
     }
     final l = context.l10n;
     final messenger = ScaffoldMessenger.of(context);
+    _saveTimer?.cancel();
+    _submitted = true;
     try {
       await widget.onSubmit(_draft);
       messenger.showSnackBar(SnackBar(content: Text(l.onbSubmitted)));
     } on ApiException catch (e) {
+      _submitted = false;
       messenger.showSnackBar(SnackBar(content: Text(errorMessage(l, e))));
     }
   }
@@ -145,6 +190,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
           if (!_draft.zones.any((z) => z.id == r.zoneId)) {
             _draft.zones.add(ZoneChoice(id: r.zoneId!, name: r.zoneName));
           }
+          widget.onZoneResolved?.call(r.zoneId!, r.zoneName);
           _pincode.clear();
         } else {
           _pincodeError = l.onbAreaNotServiceable(pin);
@@ -265,7 +311,8 @@ class _ApplicationFormState extends State<ApplicationForm> {
             key: const Key('onbFullName'),
             controller: _name,
             textCapitalization: TextCapitalization.words,
-            maxLength: 120,
+            // API limit (contract §30: fullName ≤ 100).
+            maxLength: 100,
             decoration: InputDecoration(labelText: l.onbFullName),
             validator: _required,
           ),

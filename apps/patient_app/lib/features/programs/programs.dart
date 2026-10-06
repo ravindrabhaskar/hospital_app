@@ -402,6 +402,7 @@ Future<bool?> showLogReadingSheet(BuildContext context, {ProgramTemplate? templa
     initial = ReadingKind.weight;
   }
   return showModalBottomSheet<bool>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     builder: (_) => LogReadingSheet(initial: initial),

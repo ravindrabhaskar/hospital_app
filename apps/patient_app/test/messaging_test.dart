@@ -134,6 +134,31 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('Enter (send action) sends the message (B30)', (tester) async {
+    useTallPhone(tester);
+    final repo = FakeMessagingRepository();
+    final overrides = await baseOverrides();
+    await tester.pumpWidget(testApp(const ThreadScreen(episodeId: 'e1'), overrides: [
+      ...overrides,
+      messagingRepositoryProvider.overrideWithValue(repo),
+    ]));
+    await tester.pump();
+    await tester.pump();
+
+    await tester.enterText(find.byKey(const Key('thread-input')), 'Feeling better');
+    await tester.pump();
+    await tester.testTextInput.receiveAction(TextInputAction.send);
+    await tester.pump();
+    await tester.pump();
+    expect(repo.sent, ['Feeling better']);
+
+    // Nothing to send: Enter does nothing.
+    await tester.testTextInput.receiveAction(TextInputAction.send);
+    await tester.pump();
+    expect(repo.sent, ['Feeling better']);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   test('push deep links to a thread open the thread screen', () {
     expect(resolveDeepLink('/care-episodes/e1/messages'), '/care-episodes/e1/messages');
     expect(resolveDeepLink('/care-episodes/e1'), '/episodes/e1');

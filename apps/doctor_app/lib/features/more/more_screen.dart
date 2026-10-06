@@ -127,7 +127,8 @@ class MoreScreen extends ConsumerWidget {
                 context: context,
                 builder: (c) => AlertDialog(
                   title: Text(l.logoutConfirmTitle),
-                  content: Text(l.logoutConfirmBody),
+                  // Only mention the authenticator when two-step verification is on.
+                  content: Text(me?.mfaEnrolled == true ? l.logoutConfirmBody : l.logoutConfirmBodyOtp),
                   actions: [
                     TextButton(onPressed: () => Navigator.pop(c, false), child: Text(l.commonCancel)),
                     FilledButton(

@@ -30,6 +30,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final auth = ref.read(authControllerProvider);
     _controller = ApplicationController(
       repository: ref.read(applicationRepositoryProvider),
+      store: ref.read(keyValueStoreProvider),
       // Approval adds the role server-side: re-read /me so the router moves on.
       onApproved: auth.loadIdentity,
     )..load();
@@ -91,7 +92,10 @@ class OnboardingView extends StatelessWidget {
           ApplicationPhase.form => ApplicationForm(
               key: ValueKey('form.${controller.editing}'),
               repository: controller.repository,
-              initial: app == null ? null : ApplicationDraft.fromApplication(app),
+              initial: app == null ? null : ApplicationDraft.fromApplication(app, zoneNames: controller.zoneNames),
+              restored: app == null ? controller.savedDraft : null,
+              onDraftChanged: app == null ? controller.saveDraft : null,
+              onZoneResolved: controller.rememberZone,
               busy: controller.busy,
               onSubmit: controller.submit,
               onCancel: controller.editing ? controller.cancelEditing : null,

@@ -88,8 +88,8 @@ const CASES: Case[] = [
   { name: 'prescription pdf', method: 'GET', url: () => `/prescriptions/${ids.rx}/pdf`, allow: 'vaibhav', deny: ['stranger', 'sunita'] },
   { name: 'prescription pharmacy match', method: 'GET', url: () => `/prescriptions/${ids.rx}/pharmacy-match`, allow: 'vaibhav', deny: ['stranger'] },
   // section 32
-  { name: 'invoice', method: 'GET', url: () => `/payments/${ids.payment}/invoice`, allow: 'vaibhav', deny: ['lakshmi', 'stranger', 'ananya'] },
-  { name: 'invoice pdf', method: 'GET', url: () => `/payments/${ids.payment}/invoice.pdf`, allow: 'ops', deny: ['lakshmi', 'stranger'] },
+  { name: 'invoice', method: 'GET', url: () => `/payments/${ids.payment}/invoice`, allow: 'vaibhav', deny: ['lakshmi', 'stranger', 'ananya', 'meera'] },
+  { name: 'invoice pdf', method: 'GET', url: () => `/payments/${ids.payment}/invoice.pdf`, allow: 'ops', deny: ['lakshmi', 'stranger', 'meera'] },
   { name: 'provider earnings', method: 'GET', url: () => '/provider/earnings', allow: 'sunita', deny: ['vaibhav', 'ops', 'meera'] },
   { name: 'settlements', method: 'GET', url: () => '/ops/settlements', allow: 'admin', deny: ['meera', 'ananya', 'vaibhav'] },
   { name: 'settlements csv', method: 'GET', url: () => '/ops/settlements.csv', allow: 'ops', deny: ['meera', 'sunita'] },

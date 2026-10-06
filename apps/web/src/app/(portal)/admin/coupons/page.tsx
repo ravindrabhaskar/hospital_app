@@ -6,7 +6,7 @@ import { Pencil, Plus, Ticket } from "lucide-react";
 import { api } from "@/lib/api";
 import type { Coupon, CouponInput } from "@/lib/api/types";
 import { describeCoupon } from "@/lib/coupons";
-import { formatDate, humanize, todayIST } from "@/lib/format";
+import { formatDate, humanize, isoToISTDate, todayIST } from "@/lib/format";
 import { CouponForm } from "@/components/coupon-form";
 import { useToast } from "@/components/toast";
 import { Badge, Button, Card, Dialog, EmptyState, PageHeader, QueryView, Table, Td, Th } from "@/components/ui";
@@ -45,7 +45,7 @@ export default function CouponsPage() {
               </thead>
               <tbody>
                 {d.items.map((c) => {
-                  const expired = c.validTo.slice(0, 10) < today;
+                  const expired = isoToISTDate(c.validTo) < today;
                   return (
                     <tr key={c.id}>
                       <Td>

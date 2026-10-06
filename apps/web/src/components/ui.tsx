@@ -280,7 +280,7 @@ export function ErrorState({ error, onRetry }: { error: unknown; onRetry?: () =>
 }
 
 export function errorMessage(error: unknown): string {
-  if (error instanceof ApiError) return error.message;
+  if (error instanceof ApiError) return error.userMessage;
   if (error instanceof TypeError) return "Could not reach the server. Check your connection or that the API is running.";
   if (error instanceof Error) return error.message;
   return "Unexpected error.";

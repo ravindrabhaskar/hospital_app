@@ -799,7 +799,7 @@ async function seedV12(
       {
         code: 'family_basic',
         name: 'Family Basic',
-        description: 'Everyday support for your family. [REQUIRES PRICING VALIDATION]',
+        description: 'Everyday support for your family.',
         priceMonthly: 299,
         priceYearly: 2999,
         benefits: ['Up to 4 family members', '10% off home visits', 'Shared family health records', 'Medicine and appointment reminders'],
@@ -810,7 +810,7 @@ async function seedV12(
       {
         code: 'family_plus',
         name: 'Family Plus',
-        description: 'Hands-on care coordination for families managing long-term conditions. [REQUIRES PRICING VALIDATION]',
+        description: 'Hands-on care coordination for families managing long-term conditions.',
         priceMonthly: 699,
         priceYearly: 6999,
         benefits: ['Up to 6 family members', '15% off home visits', 'Dedicated care coordinator', 'Shared family health records', 'Priority support'],

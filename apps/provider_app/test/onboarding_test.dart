@@ -313,6 +313,116 @@ void main() {
           'other', PickedDocument(name: 'big.pdf', bytes: List.filled(maxDocumentBytes + 1, 0), mimeType: 'application/pdf'));
       expect(api.requests.length, before);
       expect(c.uploads.single.error!.code, 'FILE_TOO_LARGE');
+      expect(c.uploads.single.canRetry, isFalse, reason: 'retrying an oversized file can never succeed');
+    });
+
+    testWidgets('B29: an oversized file offers remove but no Retry', (tester) async {
+      final api = FakeApplicationsApi(application: applicationJson());
+      final c = ApplicationController(repository: api.repository);
+      await c.load();
+      await tester.pumpWidget(testApp(ApplicationDocumentsCard(
+        controller: c,
+        picker: (source, {imagesOnly = false}) async =>
+            PickedDocument(name: 'big.pdf', bytes: List.filled(maxDocumentBytes + 1, 0), mimeType: 'application/pdf'),
+      )));
+      await tester.pumpAndSettle();
+      await addDoc(tester, 'other');
+      expect(find.textContaining('larger than 10 MB'), findsOneWidget);
+      expect(find.byTooltip('Retry'), findsNothing);
+      expect(find.byTooltip('Cancel'), findsOneWidget);
+    });
+  });
+
+  group('B29: apply form details', () {
+    Future<ApplicationController> pumpForm(WidgetTester tester, FakeApplicationsApi api, KeyValueStore store) async {
+      final c = ApplicationController(repository: api.repository, store: store);
+      await c.load();
+      await tester.pumpWidget(testApp(
+        OnboardingView(controller: c, picker: fakePicker, onLogout: () {}, onCheckApproved: () async {}),
+        wrap: false,
+      ));
+      await tester.pumpAndSettle();
+      return c;
+    }
+
+    testWidgets('full name is limited to 100 characters (API max)', (tester) async {
+      await pumpForm(tester, FakeApplicationsApi(), MemoryKeyValueStore());
+      await tester.tap(find.byKey(const Key('onbNext.0')));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(const Key('onbFullName')), 'x' * 130);
+      await tester.pump();
+      final field = tester.widget<TextField>(
+          find.descendant(of: find.byKey(const Key('onbFullName')), matching: find.byType(TextField)));
+      expect(field.maxLength, 100);
+      expect(field.controller!.text.length, 100);
+    });
+
+    testWidgets('the draft survives a reload and is cleared once submitted', (tester) async {
+      final store = MemoryKeyValueStore();
+      final api = FakeApplicationsApi();
+      await pumpForm(tester, api, store);
+      await tester.tap(find.byKey(const Key('onbType.technician')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('onbNext.0')));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byKey(const Key('onbFullName')), 'Ravi Kumar');
+      await tester.enterText(find.byKey(const Key('onbExperience')), '6');
+      await tester.pump(const Duration(seconds: 1));
+      expect(store.data[StoreKeys.applicationDraft], contains('Ravi Kumar'));
+
+      // "Reload": a fresh controller + form on the same storage.
+      await tester.pumpWidget(const SizedBox());
+      await pumpForm(tester, api, store);
+      expect(find.text('Ravi Kumar'), findsOneWidget);
+      expect(find.text('6'), findsOneWidget);
+      await tester.enterText(find.byKey(const Key('onbQualification')), 'DMLT');
+      await tester.enterText(find.byKey(const Key('onbRegNumber')), 'PMC-778');
+      await tester.ensureVisible(find.byKey(const Key('onbNext.1')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('onbNext.1')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('onbLang.Hindi')));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const Key('onbNext.2')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('onbNext.2')));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const Key('onbSubmit')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('onbSubmit')));
+      await tester.pumpAndSettle();
+
+      final post = api.requests.singleWhere((r) => r.method == 'POST' && r.url.path.endsWith('/provider-applications'));
+      expect((jsonDecode(post.body) as Map)['type'], 'technician');
+      expect(store.data.containsKey(StoreKeys.applicationDraft), isFalse);
+      expect(StoreKeys.all, contains(StoreKeys.applicationDraft), reason: 'wiped on logout');
+    });
+
+    testWidgets('editing shows the zone name, not "Saved area"', (tester) async {
+      final store = MemoryKeyValueStore()
+        ..data[ApplicationController.zoneNamesKey] = jsonEncode({'z1': 'Hyderabad-Central'});
+      final api = FakeApplicationsApi(application: applicationJson(status: 'changes_requested', note: 'Fix'));
+      await pumpForm(tester, api, store);
+      await tester.tap(find.byKey(const Key('onbEditResubmit')));
+      await tester.pumpAndSettle();
+      for (final step in [0, 1, 2]) {
+        await tester.ensureVisible(find.byKey(Key('onbNext.$step')));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(Key('onbNext.$step')));
+        await tester.pumpAndSettle();
+      }
+      expect(find.text('Hyderabad-Central'), findsWidgets);
+      expect(find.text('Saved area'), findsNothing);
+    });
+
+    test('zone names from the server (preferredZones) are used too', () {
+      final app = ProviderApplication.fromJson({
+        ...applicationJson(),
+        'preferredZones': [
+          {'id': 'z1', 'name': 'Hyderabad-Central'},
+        ],
+      });
+      expect(ApplicationDraft.fromApplication(app).zones.single.name, 'Hyderabad-Central');
     });
   });
 

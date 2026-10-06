@@ -4820,6 +4820,88 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
+  String get aiGreeting =>
+      'नमस्ते! मैं आपका CareCompanion सहायक हूँ। मैं आपकी समस्या समझने और सही देखभाल तक पहुँचने में मदद कर सकता हूँ। मैं निदान नहीं कर सकता। आज आपको क्या परेशानी है?';
+
+  @override
+  String get qrFever => 'बुखार';
+
+  @override
+  String get qrHeadache => 'सिरदर्द';
+
+  @override
+  String get qrCoughCold => 'खाँसी या जुकाम';
+
+  @override
+  String get qrStomachPain => 'पेट दर्द';
+
+  @override
+  String get qrSkinProblem => 'त्वचा की समस्या';
+
+  @override
+  String get qrSinceToday => 'आज से';
+
+  @override
+  String get qrSinceYesterday => 'कल से';
+
+  @override
+  String get qrTwoThreeDays => '2-3 दिन';
+
+  @override
+  String get qrMoreThanWeek => 'एक हफ़्ते से ज़्यादा';
+
+  @override
+  String get qrMild => 'हल्का (3/10)';
+
+  @override
+  String get qrModerate => 'मध्यम (5/10)';
+
+  @override
+  String get qrSevere => 'गंभीर (8/10)';
+
+  @override
+  String get qrNoOtherSymptoms => 'कोई और लक्षण नहीं';
+
+  @override
+  String get qrNausea => 'जी मिचलाना';
+
+  @override
+  String get qrDizziness => 'चक्कर आना';
+
+  @override
+  String get qrBodyAche => 'बदन दर्द';
+
+  @override
+  String get qrCall108 => '108 पर कॉल करें';
+
+  @override
+  String get qrPressSos => 'SOS दबाएँ';
+
+  @override
+  String get qrBookDoctor => 'डॉक्टर बुक करें';
+
+  @override
+  String get qrRequestHomeVisit => 'होम विज़िट का अनुरोध करें';
+
+  @override
+  String get cameraPermissionDenied =>
+      'कैमरे की अनुमति बंद है। फ़ोटो लेने के लिए सेटिंग्स में कैमरा की अनुमति दें, या इसके बजाय फ़ाइल अपलोड करें।';
+
+  @override
+  String get photosPermissionDenied =>
+      'फ़ोटो और फ़ाइलों की अनुमति बंद है। फ़ाइल चुनने के लिए सेटिंग्स में अनुमति दें।';
+
+  @override
+  String get openSettings => 'सेटिंग्स खोलें';
+
+  @override
+  String get amountPaidTotal => 'चुकाई गई राशि';
+
+  @override
+  String get attachmentNeedsText =>
+      'यह रिकॉर्ड भेजने के लिए एक छोटा संदेश लिखें।';
+
+  @override
   String itemsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

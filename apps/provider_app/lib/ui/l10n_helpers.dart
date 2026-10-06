@@ -55,6 +55,16 @@ String providerTypeLabel(AppLocalizations l, String type) {
   }
 }
 
+/// Provider capabilities are home-visit service codes.
+String capabilityLabel(AppLocalizations l, String code) => switch (code) {
+      'vitals_check' => l.capVitalsCheck,
+      'sample_collection' => l.capSampleCollection,
+      'elderly_care' => l.capElderlyCare,
+      'post_report_consult' => l.capPostReportConsult,
+      'physiotherapy' => l.capPhysiotherapy,
+      _ => code.replaceAll('_', ' '),
+    };
+
 /// Application document types (contract §30).
 String docTypeLabel(AppLocalizations l, String docType) => switch (docType) {
       'registration_certificate' => l.docRegistrationCertificate,
@@ -104,10 +114,24 @@ String errorMessage(AppLocalizations l, Object error) {
     if (error.isMfaRequired) return l.errorMfaRequired;
     if (error.code == ApiException.localFileMissingCode) return l.photoFileMissing;
     if (error.code == 'FILE_TOO_LARGE') return l.onbFileTooLarge;
-    if (error.isUnauthenticated) return l.errorSessionExpired;
+    if (error.isSessionExpired) return l.errorSessionExpired;
     if (error.message.isNotEmpty) return error.message;
   }
   return l.errorGeneric;
+}
+
+/// `POST /auth/otp/verify` failures. That call carries no session, so a 401
+/// means a wrong or expired OTP, never "session expired".
+String otpErrorMessage(AppLocalizations l, Object error) {
+  if (error is ApiException && !error.isNetwork) {
+    if (error.code == 'RATE_LIMITED' || error.statusCode == 429) return l.errorOtpTooManyAttempts;
+    if (error.statusCode == 401 || error.code == 'UNAUTHENTICATED') {
+      final left = error.attemptsRemaining;
+      if (left != null) return left > 0 ? l.errorOtpIncorrectAttempts(left) : l.errorOtpTooManyAttempts;
+      return l.errorOtpExpired;
+    }
+  }
+  return errorMessage(l, error);
 }
 
 String formatTime(BuildContext context, DateTime? dt) {

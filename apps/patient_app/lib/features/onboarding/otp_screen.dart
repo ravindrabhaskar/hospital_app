@@ -29,6 +29,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   int _resendIn = 30;
   Timer? _timer;
 
+  /// A verify request is in flight: auto-submit on the 6th digit and a tap on
+  /// Verify must not both send one (each burns an attempt) (B23).
+  bool _submitting = false;
+
+  /// The code the server just rejected; re-sending it unchanged only burns
+  /// another attempt.
+  String? _rejectedCode;
+
   @override
   void initState() {
     super.initState();
@@ -54,11 +62,17 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   }
 
   Future<void> _verify() async {
+    if (_submitting) return;
     final otp = _ctrl.text.trim();
     if (otp.length != 6) {
       setState(() => _error = context.l10n.otpInvalid);
       return;
     }
+    if (otp == _rejectedCode) {
+      setState(() => _error = context.l10n.otpWrong);
+      return;
+    }
+    _submitting = true;
     setState(() {
       _loading = true;
       _error = null;
@@ -72,11 +86,13 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       await ref.read(sessionProvider.notifier).signIn(session);
       // Router redirect takes over (onboarding or home).
     } on ApiException catch (e) {
+      final wrong = e.isValidation || e.isUnauthenticated;
+      if (wrong) _rejectedCode = otp;
       if (mounted) {
-        setState(() => _error =
-            e.isValidation || e.isUnauthenticated ? context.l10n.otpWrong : errorMessage(context, e));
+        setState(() => _error = wrong ? context.l10n.otpWrong : errorMessage(context, e));
       }
     } finally {
+      _submitting = false;
       if (mounted) setState(() => _loading = false);
     }
   }
@@ -85,7 +101,13 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     try {
       final r = await ref.read(authRepositoryProvider).requestOtp(widget.phone);
       if (!mounted) return;
-      setState(() => _devOtp = r.devOtp);
+      // A new code: the old error and the rejected code no longer apply.
+      setState(() {
+        _devOtp = r.devOtp;
+        _error = null;
+        _rejectedCode = null;
+        _ctrl.clear();
+      });
       _startTimer();
       showSnack(context, context.l10n.otpResent);
     } on ApiException catch (e) {
@@ -152,7 +174,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               ),
             ],
             const SizedBox(height: Space.xxl),
-            PrimaryButton(label: l.verify, loading: _loading, onPressed: _verify),
+            PrimaryButton(
+                key: const Key('otp-verify'),
+                label: l.verify,
+                loading: _loading,
+                onPressed: _loading ? null : _verify),
             const SizedBox(height: Space.md),
             Center(
               child: TextButton(

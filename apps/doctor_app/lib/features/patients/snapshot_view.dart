@@ -5,6 +5,7 @@ import '../../core/providers.dart';
 import '../../core/theme.dart';
 import '../../models/clinical.dart';
 import '../../ui/l10n_helpers.dart';
+import '../../ui/vital_flags.dart';
 import '../../ui/widgets.dart';
 
 /// The clinical snapshot summary (contract §16): allergies in red, intake,
@@ -125,10 +126,23 @@ class SnapshotSummary extends StatelessWidget {
                             style: const TextStyle(color: AppColors.dangerDeep, fontWeight: FontWeight.w600),
                           ),
                         if (f.vitals.isNotEmpty)
-                          Text(
-                            f.vitals
-                                .map((v) => '${vitalLabel(l, v.type)} ${formatNumber(v.value)} ${v.unit}')
-                                .join(' · '),
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                for (final (i, v) in f.vitals.indexed) ...[
+                                  if (i > 0) const TextSpan(text: ' · '),
+                                  if (vitalFlag(v.type, v.value, unit: v.unit) case final flag?)
+                                    TextSpan(
+                                      text:
+                                          '${vitalLabel(l, v.type)} ${formatNumber(v.value)} ${v.unit} '
+                                          '(${flag == VitalFlag.high ? '↑' : '↓'} ${vitalFlagLabel(context, flag)})',
+                                      style: const TextStyle(color: AppColors.dangerDeep, fontWeight: FontWeight.w700),
+                                    )
+                                  else
+                                    TextSpan(text: '${vitalLabel(l, v.type)} ${formatNumber(v.value)} ${v.unit}'),
+                                ],
+                              ],
+                            ),
                             style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                           ),
                       ],
@@ -151,21 +165,35 @@ class _VitalTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    final flag = vitalFlag(vital.type, vital.value, unit: vital.unit);
+    final value = '${formatNumber(vital.value)} ${vital.unit}';
     return Semantics(
-      label: '${vitalLabel(l, vital.type)} ${formatNumber(vital.value)} ${vital.unit}',
+      label: flag == null
+          ? '${vitalLabel(l, vital.type)} $value'
+          : l.vitalFlagSemantics(vitalLabel(l, vital.type), value, vitalFlagLabel(context, flag)),
       excludeSemantics: true,
       child: Container(
+        key: Key('vitalTile.${vital.type}'),
         width: 150,
         padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(color: AppColors.mint50, borderRadius: BorderRadius.circular(AppSpacing.tileRadius)),
+        decoration: BoxDecoration(
+          color: flag == null ? AppColors.mint50 : AppColors.dangerBg,
+          borderRadius: BorderRadius.circular(AppSpacing.tileRadius),
+          border: flag == null ? null : Border.all(color: AppColors.danger),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(vitalLabel(l, vital.type), style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
             Text(
-              '${formatNumber(vital.value)} ${vital.unit}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: flag == null ? null : AppColors.dangerDeep,
+              ),
             ),
+            if (flag != null) ...[const SizedBox(height: 2), VitalFlagBadge(flag: flag)],
             Text(
               formatDateTime(context, vital.measuredAt),
               style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),

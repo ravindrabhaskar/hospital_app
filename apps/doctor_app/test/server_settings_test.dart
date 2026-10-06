@@ -54,6 +54,32 @@ void main() {
       }
     });
 
+    test('malformed / pasted-together addresses are rejected (B22)', () {
+      for (final bad in [
+        'http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1',
+        'http://10.0.2.2:4000http://10.0.2.2:4000',
+        'http://10.10.17/api/v1',
+        '10.10.17.http',
+        'http://http/api/v1',
+        'http://host_name.com',
+        'http://-bad.example.com',
+        'http://10.0.2.2:4000/api//v1',
+        'http://10.0.2.2:4000/a:b',
+        'http://10.0.2.2:4000/?x=1',
+        'http://10.0.2.2:4000/#top',
+        'http://10.0.2.2:99999',
+      ]) {
+        expect(normalizeServerUrl(bad), isNull, reason: bad);
+      }
+    });
+
+    test('valid http(s)://host[:port]/path forms still pass', () {
+      expect(normalizeServerUrl('http://10.0.2.2:4000/api/v1'), 'http://10.0.2.2:4000/api/v1');
+      expect(normalizeServerUrl('https://api.example.co.in/base'), 'https://api.example.co.in/base/api/v1');
+      expect(normalizeServerUrl('http://my-server:8080'), 'http://my-server:8080/api/v1');
+      expect(normalizeServerUrl('https://1password-like.example.com'), 'https://1password-like.example.com/api/v1');
+    });
+
     test('hostOf shows host[:port]', () {
       expect(hostOf('http://10.10.17.134:4000/api/v1'), '10.10.17.134:4000');
       expect(hostOf('https://xyz.trycloudflare.com/api/v1'), 'xyz.trycloudflare.com');
@@ -118,7 +144,7 @@ void main() {
   });
 
   group('dialog', () {
-    testWidgets('test connection: success shows ✓ and the version; Save applies it', (tester) async {
+    testWidgets('test connection: success shows one tick and the version; Save applies it', (tester) async {
       final requests = <Uri>[];
       final client = MockClient((r) async {
         requests.add(r.url);
@@ -136,7 +162,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(requests.single.toString(), 'http://10.10.17.134:4000/api/v1/health');
-      expect(find.textContaining('✓'), findsOneWidget);
+      // One tick only: the icon, no second "✓" character in the text (B22).
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.textContaining('✓'), findsNothing);
       expect(find.textContaining('1.4.2'), findsOneWidget);
 
       await tester.tap(find.byKey(const Key('serverSave')));
@@ -171,6 +199,14 @@ void main() {
       expect(find.textContaining('HTTP 404'), findsOneWidget);
 
       await tester.enterText(find.byKey(const Key('serverUrlField')), 'not a url');
+      await tester.tap(find.byKey(const Key('serverSave')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Enter an address like'), findsOneWidget);
+      expect(settings.isOverridden, isFalse);
+
+      // Save validates the same way as Test: a garbled address is refused.
+      await tester.enterText(
+          find.byKey(const Key('serverUrlField')), 'http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1');
       await tester.tap(find.byKey(const Key('serverSave')));
       await tester.pumpAndSettle();
       expect(find.textContaining('Enter an address like'), findsOneWidget);

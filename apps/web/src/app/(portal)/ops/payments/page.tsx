@@ -8,7 +8,7 @@ import type { OpsPayment, PaymentStatus } from "@/lib/api/types";
 import { ApiError } from "@/lib/api/http";
 import { formatDateTime, formatINR, humanize } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
-import { canRefund } from "@/lib/roles";
+import { canRefund, canViewInvoices } from "@/lib/roles";
 import { PaymentStatusBadge } from "@/components/status";
 import { BlobButton } from "@/components/blob-actions";
 import { InvoiceView } from "@/components/invoice-view";
@@ -22,6 +22,7 @@ type Filter = "all" | PaymentStatus;
 export default function PaymentsPage() {
   const { roles } = useAuth();
   const refundAllowed = canRefund(roles);
+  const invoicesAllowed = canViewInvoices(roles);
   const [filter, setFilter] = useState<Filter>("all");
   const [refunding, setRefunding] = useState<OpsPayment | null>(null);
   const [invoiceFor, setInvoiceFor] = useState<OpsPayment | null>(null);
@@ -81,7 +82,7 @@ export default function PaymentsPage() {
                     </Td>
                     <Td className="text-right">
                       <div className="flex flex-wrap justify-end gap-2">
-                        {INVOICEABLE.includes(p.status) && (
+                        {invoicesAllowed && INVOICEABLE.includes(p.status) && (
                           <Button
                             size="sm"
                             variant="ghost"
@@ -107,7 +108,7 @@ export default function PaymentsPage() {
         </QueryView>
       </Card>
       {refunding && <RefundDialog payment={refunding} onClose={() => setRefunding(null)} />}
-      {invoiceFor && <InvoiceDialog payment={invoiceFor} onClose={() => setInvoiceFor(null)} />}
+      {invoicesAllowed && invoiceFor && <InvoiceDialog payment={invoiceFor} onClose={() => setInvoiceFor(null)} />}
     </>
   );
 }

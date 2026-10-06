@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canAccessPath, canRefund, homePathFor, visibleNav } from "./roles";
+import { canAccessPath, canRefund, canViewInvoices, homePathFor, visibleNav } from "./roles";
 import type { Role } from "./api/types";
 
 const hrefs = (roles: Role[]) => visibleNav(roles).flatMap((s) => s.items.map((i) => i.href));
@@ -59,5 +59,13 @@ describe("route guard", () => {
   it("only ops_admin/super_admin may refund", () => {
     expect(canRefund(["coordinator"])).toBe(false);
     expect(canRefund(["ops_admin"])).toBe(true);
+  });
+});
+
+describe("canViewInvoices (QA B14)", () => {
+  it("is limited to finance roles", () => {
+    expect(canViewInvoices(["ops_admin"])).toBe(true);
+    expect(canViewInvoices(["super_admin"])).toBe(true);
+    for (const r of ["coordinator", "doctor", "support_agent", "hospital_staff"] as const) expect(canViewInvoices([r])).toBe(false);
   });
 });

@@ -2089,13 +2089,13 @@ abstract class AppLocalizations {
   /// No description provided for @readingsCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} readings'**
+  /// **'{count, plural, =1{1 reading} other{{count} readings}}'**
   String readingsCount(int count);
 
   /// No description provided for @vitalTrendSemantics.
   ///
   /// In en, this message translates to:
-  /// **'{vital} trend: {count} readings between {min} and {max}'**
+  /// **'{vital} trend: {count, plural, =1{1 reading} other{{count} readings}} between {min} and {max}'**
   String vitalTrendSemantics(String vital, String min, String max, int count);
 
   /// No description provided for @vitalBpSystolic.
@@ -2757,6 +2757,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change server'**
   String get serverChange;
+
+  /// No description provided for @otpIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect code. Please check it and try again.'**
+  String get otpIncorrect;
+
+  /// No description provided for @otpIncorrectAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Incorrect code. 1 attempt left.} other{Incorrect code. {count} attempts left.}}'**
+  String otpIncorrectAttempts(int count);
+
+  /// No description provided for @otpNoAttemptsLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect code. No attempts left, please request a new code.'**
+  String get otpNoAttemptsLeft;
+
+  /// No description provided for @otpExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This code has expired. Please request a new one.'**
+  String get otpExpired;
+
+  /// No description provided for @otpTooManyAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many incorrect attempts. Please request a new code.'**
+  String get otpTooManyAttempts;
+
+  /// No description provided for @vitalHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get vitalHigh;
+
+  /// No description provided for @vitalLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get vitalLow;
+
+  /// No description provided for @vitalFlagSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'{vital} {value}, {flag}'**
+  String vitalFlagSemantics(String vital, String value, String flag);
+
+  /// No description provided for @logoutConfirmBodyOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'You will need your phone OTP to sign in again.'**
+  String get logoutConfirmBodyOtp;
+
+  /// No description provided for @leaveRemoveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this leave?'**
+  String get leaveRemoveTitle;
+
+  /// No description provided for @leaveRemoveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{date} will be open for bookings again.'**
+  String leaveRemoveBody(String date);
+
+  /// No description provided for @attachedRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Attached record'**
+  String get attachedRecord;
+
+  /// No description provided for @attachmentUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Attached record unavailable'**
+  String get attachmentUnavailable;
+
+  /// No description provided for @attachmentNoFile.
+  ///
+  /// In en, this message translates to:
+  /// **'This record has no file to open.'**
+  String get attachmentNoFile;
+
+  /// No description provided for @specGeneralPhysician.
+  ///
+  /// In en, this message translates to:
+  /// **'General Physician'**
+  String get specGeneralPhysician;
+
+  /// No description provided for @specDermatologist.
+  ///
+  /// In en, this message translates to:
+  /// **'Dermatologist'**
+  String get specDermatologist;
+
+  /// No description provided for @specPediatrician.
+  ///
+  /// In en, this message translates to:
+  /// **'Pediatrician'**
+  String get specPediatrician;
+
+  /// No description provided for @specGynecologist.
+  ///
+  /// In en, this message translates to:
+  /// **'Gynecologist'**
+  String get specGynecologist;
+
+  /// No description provided for @specCardiologist.
+  ///
+  /// In en, this message translates to:
+  /// **'Cardiologist'**
+  String get specCardiologist;
+
+  /// No description provided for @specOrthopedist.
+  ///
+  /// In en, this message translates to:
+  /// **'Orthopedist'**
+  String get specOrthopedist;
+
+  /// No description provided for @specPsychiatrist.
+  ///
+  /// In en, this message translates to:
+  /// **'Psychiatrist'**
+  String get specPsychiatrist;
+
+  /// No description provided for @specEnt.
+  ///
+  /// In en, this message translates to:
+  /// **'ENT Specialist'**
+  String get specEnt;
+
+  /// No description provided for @specDiabetologist.
+  ///
+  /// In en, this message translates to:
+  /// **'Diabetologist'**
+  String get specDiabetologist;
+
+  /// No description provided for @specNeurologist.
+  ///
+  /// In en, this message translates to:
+  /// **'Neurologist'**
+  String get specNeurologist;
 }
 
 class _AppLocalizationsDelegate

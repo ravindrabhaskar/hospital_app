@@ -238,6 +238,7 @@ class Appointment {
     required this.videoRoomUrl,
     required this.clinicianNotes,
     required this.createdAt,
+    this.cancelReason,
   });
   final String id;
   final String patientId;
@@ -256,6 +257,10 @@ class Appointment {
   final String? videoRoomUrl;
   final String? clinicianNotes;
   final DateTime? createdAt;
+
+  /// Why it was cancelled, when the server sends it (`payment_failed` for an
+  /// unpaid booking that can still be paid via a payment retry).
+  final String? cancelReason;
 
   bool get isActive =>
       status == 'pending_payment' || status == 'confirmed' || status == 'in_progress';
@@ -278,6 +283,7 @@ class Appointment {
         videoRoomUrl: strOrNull(j, 'videoRoomUrl'),
         clinicianNotes: strOrNull(j, 'clinicianNotes'),
         createdAt: dateOrNull(j, 'createdAt'),
+        cancelReason: strOrNull(j, 'cancelReason'),
       );
 }
 
@@ -538,6 +544,7 @@ class Medication {
     required this.prescribedByName,
     required this.active,
     required this.today,
+    this.createdAt,
   });
   final String id;
   final String patientId;
@@ -553,6 +560,9 @@ class Medication {
   final bool active;
   final List<DoseToday> today;
 
+  /// When the medicine was added (if the server sends it).
+  final DateTime? createdAt;
+
   factory Medication.fromJson(Json j) => Medication(
         id: str(j, 'id'),
         patientId: str(j, 'patientId'),
@@ -567,6 +577,7 @@ class Medication {
         prescribedByName: strOrNull(j, 'prescribedByName'),
         active: boolOf(j, 'active', true),
         today: listOf(j['today'], DoseToday.fromJson),
+        createdAt: dateOrNull(j, 'createdAt'),
       );
 }
 

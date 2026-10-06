@@ -54,6 +54,29 @@ void main() {
       }
     });
 
+    test('malformed / pasted-together addresses are rejected (QA B22)', () {
+      for (final bad in [
+        'http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1',
+        'http://10.0.2.2:4000http://10.0.2.2:4000/api/v1',
+        '10.10.17.http',
+        'http://10.10.17/api/v1',
+        'http://host_name:4000',
+        'http://10.0.2.2:4000/api//v1',
+        'http://10.0.2.2:4000/api/v1?x=1',
+        'http://10.0.2.2:4000/#frag',
+        'http://-bad-.example.com',
+      ]) {
+        expect(normalizeServerUrl(bad), isNull, reason: bad);
+      }
+    });
+
+    test('ordinary addresses still pass', () {
+      expect(normalizeServerUrl('http://10.0.2.2:4000/api/v1'), 'http://10.0.2.2:4000/api/v1');
+      expect(normalizeServerUrl('https://api.care-companion.in'), 'https://api.care-companion.in/api/v1');
+      expect(normalizeServerUrl('http://my-server:4000'), 'http://my-server:4000/api/v1');
+      expect(normalizeServerUrl('https://example.com/backend'), 'https://example.com/backend/api/v1');
+    });
+
     test('hostOf shows host[:port]', () {
       expect(hostOf('http://10.10.17.134:4000/api/v1'), '10.10.17.134:4000');
       expect(hostOf('https://xyz.trycloudflare.com/api/v1'), 'xyz.trycloudflare.com');
@@ -118,7 +141,7 @@ void main() {
   });
 
   group('dialog', () {
-    testWidgets('test connection: success shows ✓ and the version; Save applies it', (tester) async {
+    testWidgets('test connection: success shows one tick and the version; Save applies it', (tester) async {
       final requests = <Uri>[];
       final client = MockClient((r) async {
         requests.add(r.url);
@@ -136,8 +159,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(requests.single.toString(), 'http://10.10.17.134:4000/api/v1/health');
-      expect(find.textContaining('✓'), findsOneWidget);
-      expect(find.textContaining('1.4.2'), findsOneWidget);
+      expect(find.text('Connected. Server version 1.4.2'), findsOneWidget);
+      expect(find.byIcon(Icons.check_circle), findsOneWidget);
+      expect(find.textContaining('✓'), findsNothing, reason: 'the tick is the icon only, not repeated in the text');
 
       await tester.tap(find.byKey(const Key('serverSave')));
       await tester.pumpAndSettle();
@@ -175,6 +199,56 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.textContaining('Enter an address like'), findsOneWidget);
       expect(settings.isOverridden, isFalse);
+    });
+
+    testWidgets('Save refuses a garbled address instead of storing it', (tester) async {
+      final requests = <Uri>[];
+      final client = MockClient((r) async {
+        requests.add(r.url);
+        return http.Response('{"status":"ok"}', 200);
+      });
+      final settings = await ServerSettings.load(defaultUrl: _default, overrideAllowed: true);
+      final changed = <bool>[];
+      await tester.pumpWidget(_opener(settings, client, changed));
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+          find.byKey(const Key('serverUrlField')), 'http://10.10.17.http//10.0.2.2:9999/api/v134:4000/api/v1');
+      await tester.tap(find.byKey(const Key('serverSave')));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Enter an address like'), findsOneWidget);
+      expect(find.byKey(const Key('serverSave')), findsOneWidget, reason: 'dialog stays open');
+      expect(settings.isOverridden, isFalse);
+      expect(changed, isEmpty);
+
+      await tester.tap(find.byKey(const Key('serverTest')));
+      await tester.pumpAndSettle();
+      expect(requests, isEmpty, reason: 'Test applies the same validation');
+    });
+
+    testWidgets('large text + keyboard: Test connection stays reachable', (tester) async {
+      tester.view.physicalSize = const Size(1080, 1300);
+      tester.view.devicePixelRatio = 2.625;
+      tester.view.viewInsets = const FakeViewPadding(bottom: 700);
+      addTearDown(tester.view.reset);
+      final settings = await ServerSettings.load(defaultUrl: _default, overrideAllowed: true);
+      await tester.pumpWidget(MediaQuery(
+        data: const MediaQueryData(textScaler: TextScaler.linear(1.3)),
+        child: _opener(settings, MockClient((r) async => http.Response('', 500)), []),
+      ));
+      await tester.tap(find.text('open'));
+      await tester.pumpAndSettle();
+      await tester.showKeyboard(find.byKey(const Key('serverUrlField')));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      final button = tester.getRect(find.byKey(const Key('serverTest')));
+      final visible = tester.getRect(find.byType(SingleChildScrollView).last);
+      expect(button.top >= visible.top && button.bottom <= visible.bottom, isTrue,
+          reason: 'not clipped: $button inside $visible');
+      await tester.tap(find.byKey(const Key('serverTest')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('serverResult')), findsOneWidget);
     });
 
     testWidgets('Reset to default drops the override', (tester) async {

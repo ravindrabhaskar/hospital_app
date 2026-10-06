@@ -9,6 +9,9 @@ import '../../models/care_plans.dart' show ymd;
 import '../../models/field_ops.dart';
 import '../../ui/l10n_helpers.dart';
 import '../../ui/widgets.dart';
+import '../visits/data/provider_repository.dart' show VisitScope;
+import '../visits/data/visit_providers.dart';
+import 'location_permission_banner.dart';
 
 /// `GET /provider/route?date=YYYY-MM-DD` (§48).
 final routePlanProvider = FutureProvider.autoDispose.family<RoutePlan, String>((ref, date) {
@@ -29,18 +32,28 @@ class RouteView extends ConsumerWidget {
     final date = ymd(now ?? ref.watch(clockProvider)());
     final async = ref.watch(routePlanProvider(date));
     Future<void> refresh() => ref.refresh(routePlanProvider(date).future).then((_) {}, onError: (_) {});
+    // Visit statuses from today's list: a fallback for servers whose route
+    // stops carry no status (finished stops are hidden, unaccepted ones
+    // show only the area).
+    final today = ref.watch(visitListProvider(VisitScope.today)).value?.visits ?? const [];
+    final statuses = {for (final v in today) v.id: v.status};
 
     return RefreshIndicator(
       onRefresh: refresh,
       child: async.when(
-        loading: () => ListView(children: const [SizedBox(height: 200, child: LoadingView())]),
+        loading: () => ListView(children: const [
+          LocationPermissionBanner(),
+          SizedBox(height: 200, child: LoadingView()),
+        ]),
         error: (e, _) => ListView(
           physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 12, AppSpacing.screen, 0),
           children: [
+            const LocationPermissionBanner(),
             SizedBox(height: 320, child: ErrorView(message: errorMessage(l, e), onRetry: refresh)),
           ],
         ),
-        data: (plan) => RouteList(plan: plan),
+        data: (plan) => RouteList(plan: plan, knownStatuses: statuses, header: const LocationPermissionBanner()),
       ),
     );
   }
@@ -48,22 +61,33 @@ class RouteView extends ConsumerWidget {
 
 /// Pure rendering of a [RoutePlan] (always scrollable, for pull-to-refresh).
 class RouteList extends StatelessWidget {
-  const RouteList({super.key, required this.plan});
+  const RouteList({super.key, required this.plan, this.knownStatuses = const {}, this.header});
   final RoutePlan plan;
 
-  Future<void> _navigate(BuildContext context) async {
-    final uri = buildMapsRouteUri(plan.stops, originLat: plan.startLat, originLng: plan.startLng);
+  /// Visit id → status, used when a stop has no `status` of its own.
+  final Map<String, String> knownStatuses;
+
+  /// Optional widget above the route (e.g. the "location is off" banner).
+  final Widget? header;
+
+  Future<void> _navigate(BuildContext context, List<RouteStop> stops) async {
+    final uri = buildMapsRouteUri(stops, originLat: plan.startLat, originLng: plan.startLng);
     await openExternal(context, uri);
   }
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final stops = plan.ordered;
+    final stops = plan.remaining(knownStatuses);
     if (stops.isEmpty) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        children: [const SizedBox(height: 40), EmptyView(message: l.routeEmpty, icon: Icons.route_outlined)],
+        padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 12, AppSpacing.screen, 24),
+        children: [
+          ?header,
+          const SizedBox(height: 40),
+          EmptyView(message: l.routeEmpty, icon: Icons.route_outlined),
+        ],
       );
     }
     final km = NumberFormat('#,##0.0', Localizations.localeOf(context).toString());
@@ -71,6 +95,7 @@ class RouteList extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(AppSpacing.screen, 12, AppSpacing.screen, 24),
       children: [
+        ?header,
         SectionCard(
           color: AppColors.mint50,
           child: Column(
@@ -91,7 +116,7 @@ class RouteList extends StatelessWidget {
               const SizedBox(height: 12),
               FilledButton.icon(
                 key: const Key('routeNavigate'),
-                onPressed: () => _navigate(context),
+                onPressed: () => _navigate(context, stops),
                 icon: const Icon(Icons.navigation_outlined),
                 label: Text(l.routeStartNavigation),
               ),
@@ -175,7 +200,29 @@ class RouteStopTile extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(window, style: const TextStyle(color: AppColors.textSecondary)),
                           ]),
-                          if (stop.addressText.isNotEmpty) ...[
+                          if (stop.addressHidden) ...[
+                            const SizedBox(height: 2),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.place_outlined, size: 16, color: AppColors.textSecondary),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (stop.areaText.isNotEmpty)
+                                        Text(l.visitAreaOnly(stop.city, stop.pincode),
+                                            key: Key('routeStopArea.${stop.visitId}'),
+                                            style: const TextStyle(color: AppColors.textSecondary)),
+                                      Text(l.visitAddressHidden,
+                                          style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ] else if (stop.addressText.isNotEmpty) ...[
                             const SizedBox(height: 2),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,

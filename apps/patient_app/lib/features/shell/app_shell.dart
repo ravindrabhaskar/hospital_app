@@ -109,7 +109,18 @@ class _NavItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(selected ? activeIcon : icon, color: color, size: 26),
+                AnimatedContainer(
+                  key: selected ? const Key('nav-indicator') : null,
+                  duration: const Duration(milliseconds: 200),
+                  width: 56,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: selected ? context.navIndicator : Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(selected ? activeIcon : icon,
+                      color: selected ? context.onNavIndicator : color, size: 24),
+                ),
                 const SizedBox(height: 4),
                 Text(label,
                     maxLines: 1,
@@ -156,8 +167,8 @@ class _AskAiButton extends StatelessWidget {
                   height: 66,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.primary,
-                    border: Border.all(color: context.surface, width: 4),
+                    color: context.askAiFill,
+                    border: Border.all(color: context.askAiRing, width: context.isDark ? 3 : 4),
                     boxShadow: Shadows.raised,
                   ),
                   child: const Center(child: EcgIcon(size: 30)),

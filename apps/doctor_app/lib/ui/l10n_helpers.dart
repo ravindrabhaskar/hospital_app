@@ -202,6 +202,42 @@ String errorMessage(AppLocalizations l, Object error) {
   return l.errorGeneric;
 }
 
+/// Errors from `POST /auth/otp/verify`. There is no session yet, so a 401
+/// means a wrong or expired code, never "session expired" (that wording is
+/// for authenticated calls only, see [errorMessage]).
+String otpErrorMessage(AppLocalizations l, Object error) {
+  if (error is ApiException) {
+    if (error.isUnauthenticated) {
+      final left = error.details['attemptsRemaining'];
+      if (left is num) return left <= 0 ? l.otpNoAttemptsLeft : l.otpIncorrectAttempts(left.toInt());
+      if (error.message.toLowerCase().contains('expired')) return l.otpExpired;
+      return l.otpIncorrect;
+    }
+    if (error.isRateLimited) return l.otpTooManyAttempts;
+  }
+  return errorMessage(l, error);
+}
+
+String specialtyLabel(AppLocalizations l, String code) => switch (code) {
+  'general_physician' => l.specGeneralPhysician,
+  'dermatologist' => l.specDermatologist,
+  'pediatrician' => l.specPediatrician,
+  'gynecologist' => l.specGynecologist,
+  'cardiologist' => l.specCardiologist,
+  'orthopedist' => l.specOrthopedist,
+  'psychiatrist' => l.specPsychiatrist,
+  'ent' => l.specEnt,
+  'diabetologist' => l.specDiabetologist,
+  'neurologist' => l.specNeurologist,
+  _ => _humanize(code),
+};
+
+/// `sports_medicine` -> `Sports medicine` for codes without a translation.
+String _humanize(String code) {
+  final s = code.replaceAll('_', ' ').trim();
+  return s.isEmpty ? '–' : s[0].toUpperCase() + s.substring(1);
+}
+
 /// Integer rupees (contract: money is integer rupees), Indian grouping.
 String formatRupees(num amount) =>
     NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: amount % 1 == 0 ? 0 : 2).format(amount);

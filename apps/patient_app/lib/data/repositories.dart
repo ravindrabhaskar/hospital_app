@@ -618,9 +618,12 @@ class PaymentRepository {
   /// `GET /payments/:id/invoice.pdf` (§32).
   Future<List<int>> invoicePdf(String id) => api.getBytes('/payments/$id/invoice.pdf');
 
-  /// A fresh checkout for a `failed`/`pending` payment (§25).
-  Future<Payment> retry(String id) async =>
-      Payment.fromJson(asJson(await api.post('/payments/$id/retry')));
+  /// A fresh attempt for a `failed`/`pending` payment (§25): a new gateway
+  /// order (Razorpay checkout, or a fresh mock order), and a failed booking's
+  /// slot is held again. The route is idempotent, so a key is required.
+  Future<Payment> retry(String id, {String? idempotencyKey}) async =>
+      Payment.fromJson(asJson(await api.post('/payments/$id/retry',
+          idempotencyKey: idempotencyKey ?? newIdempotencyKey())));
 }
 
 // ---------------------------------------------------------------- Pharmacy

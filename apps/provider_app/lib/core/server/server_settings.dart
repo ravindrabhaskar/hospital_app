@@ -118,6 +118,25 @@ class ServerSettings extends ChangeNotifier {
 
 final _scheme = RegExp(r'^[a-zA-Z][a-zA-Z0-9+.-]*://');
 final _ipv4 = RegExp(r'^\d{1,3}(\.\d{1,3}){3}$');
+final _hostLabel = RegExp(r'^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$');
+final _numeric = RegExp(r'^\d+$');
+
+/// `/`-separated plain segments only (no empty `//`, no `:`, no `%`).
+final _plainPath = RegExp(r'^(/[A-Za-z0-9._~-]+)*/*$');
+
+/// A host is a valid IPv4 address, `localhost`, an IPv6 literal, or a DNS
+/// name whose labels are letters/digits/hyphens. Something that starts like
+/// an IP but isn't one (`10.10.17.http`) is rejected.
+bool _validHost(String host) {
+  final h = host.toLowerCase();
+  if (h.contains(':')) return true; // IPv6 literal, already parsed by Uri.
+  if (_ipv4.hasMatch(h)) return h.split('.').every((p) => int.parse(p) <= 255);
+  if (RegExp(r'^[\d.]+$').hasMatch(h)) return false;
+  final labels = h.split('.');
+  if (!labels.every(_hostLabel.hasMatch)) return false;
+  if (labels.length > 1 && labels.sublist(0, labels.length - 1).every(_numeric.hasMatch)) return false;
+  return true;
+}
 
 /// Default port of the local API server (`npm run dev`).
 const defaultServerPort = 4000;
@@ -130,6 +149,9 @@ const defaultServerPort = 4000;
 /// * `http://10.10.17.134:4000` → `http://10.10.17.134:4000/api/v1`
 /// * `https://xyz.trycloudflare.com/` → `https://xyz.trycloudflare.com/api/v1`
 /// * `xyz.trycloudflare.com` (bare domain name) → `https://xyz.trycloudflare.com/api/v1`
+///
+/// Anything else (two schemes, odd host, query, `//` or `:` in the path) is
+/// null: it must be `http(s)://host[:port][/path]`. Test and Save both use this.
 String? normalizeServerUrl(String input) {
   var s = input.trim();
   if (s.isEmpty || s.contains(RegExp(r'\s'))) return null;
@@ -149,10 +171,14 @@ String? normalizeServerUrl(String input) {
   }
   final scheme = uri.scheme.toLowerCase();
   if (scheme != 'http' && scheme != 'https') return null;
+  // Exactly one scheme: pasted-together addresses ("http://a.http//b:1/...")
+  // are rejected instead of being saved garbled.
+  if ('://'.allMatches(s).length != 1) return null;
   final host = uri.host;
-  if (host.isEmpty) return null;
-  if (_ipv4.hasMatch(host) && host.split('.').any((p) => int.parse(p) > 255)) return null;
+  if (host.isEmpty || !_validHost(host)) return null;
   if (uri.userInfo.isNotEmpty) return null;
+  if (uri.hasQuery || uri.hasFragment) return null;
+  if (!_plainPath.hasMatch(uri.path)) return null;
   final port = uri.hasPort ? uri.port : (addDevPort ? defaultServerPort : null);
   var path = uri.path;
   while (path.endsWith('/')) {

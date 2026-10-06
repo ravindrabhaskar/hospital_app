@@ -63,6 +63,7 @@ class _AbhaSectionState extends ConsumerState<AbhaSection> {
 
   Future<void> _edit() async {
     final saved = await showModalBottomSheet<bool>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => AbhaEditSheet(profile: widget.profile),

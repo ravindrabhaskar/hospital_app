@@ -105,3 +105,25 @@ export function istLocalToISO(local: string): string {
   // local = "YYYY-MM-DDTHH:mm"
   return new Date(`${local}:00+05:30`).toISOString();
 }
+
+const DATE_ONLY_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Start of an IST calendar day (YYYY-MM-DD) as an ISO UTC datetime, e.g. "2028-12-31" → "2028-12-30T18:30:00.000Z". */
+export function istDayStartISO(date: string): string {
+  if (!DATE_ONLY_RE.test(date)) throw new RangeError(`Expected YYYY-MM-DD, got "${date}"`);
+  return new Date(`${date}T00:00:00.000+05:30`).toISOString();
+}
+
+/** Last millisecond of an IST calendar day (YYYY-MM-DD) as an ISO UTC datetime, e.g. "2028-12-31" → "2028-12-31T18:29:59.999Z". */
+export function istDayEndISO(date: string): string {
+  if (!DATE_ONLY_RE.test(date)) throw new RangeError(`Expected YYYY-MM-DD, got "${date}"`);
+  return new Date(`${date}T23:59:59.999+05:30`).toISOString();
+}
+
+/** ISO datetime (or a plain YYYY-MM-DD) → the IST calendar date for a `<input type="date">`; "" when missing/invalid. */
+export function isoToISTDate(v: string | null | undefined): string {
+  if (!v) return "";
+  if (DATE_ONLY_RE.test(v)) return v;
+  const d = toDate(v);
+  return d ? todayIST(d) : "";
+}

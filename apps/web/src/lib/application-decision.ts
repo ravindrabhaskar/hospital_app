@@ -5,6 +5,7 @@ import type {
   ApplicationStatus,
   ProviderApplication,
 } from "@/lib/api/types";
+import { istDayEndISO } from "@/lib/format";
 
 export interface DecisionFormValues {
   decision: ApplicationDecision;
@@ -70,7 +71,8 @@ export function toDecisionInput(v: DecisionFormValues): ApplicationDecisionInput
   if (v.decision !== "approve") return base;
   return {
     ...base,
-    credentialExpiresAt: v.credentialExpiresAt,
+    // The API takes an ISO datetime; the credential stays valid through the whole chosen (IST) day.
+    credentialExpiresAt: istDayEndISO(v.credentialExpiresAt),
     ...(v.zoneIds.length ? { zoneIds: v.zoneIds } : {}),
     ...(v.capabilities.length ? { capabilities: v.capabilities } : {}),
   };

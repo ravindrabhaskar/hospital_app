@@ -100,4 +100,33 @@ void main() {
     expect(container.read(sharedPrefsProvider).getStringList(ReviewDismissals.key), contains('appt-dismiss'));
     expect(container.read(nextReviewPromptProvider), isNull);
   });
+
+  testWidgets('closing the sheet persists like "Not now" and snoozes other pending reviews (B15)',
+      (tester) async {
+    useTallPhone(tester);
+    final repo = FakeReviewRepository([pending('visit-1'), pending('visit-2')]);
+    final overrides = await baseOverrides();
+    late ProviderContainer container;
+    await tester.pumpWidget(testApp(
+      Consumer(builder: (context, ref, _) {
+        container = ProviderScope.containerOf(context);
+        return const Scaffold(body: ReviewPromptHost());
+      }),
+      overrides: [...overrides, reviewRepositoryProvider.overrideWithValue(repo)],
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('How was your care?'), findsOneWidget);
+
+    // Dismiss by tapping outside the sheet (no "Not now").
+    await tester.tapAt(const Offset(10, 10));
+    await tester.pumpAndSettle();
+    expect(find.text('How was your care?'), findsNothing);
+    expect(container.read(reviewDismissalsProvider), contains('visit-1'));
+    final prefs = container.read(sharedPrefsProvider);
+    expect(prefs.getInt(ReviewSnooze.key), isNotNull, reason: 'snooze survives a reload');
+    // visit-2 is still pending, but the prompt is snoozed.
+    expect(container.read(nextReviewPromptProvider), isNull);
+    expect(container.read(reviewSnoozeProvider.notifier).isSnoozed(DateTime.now().add(const Duration(days: 4))),
+        isFalse);
+  });
 }

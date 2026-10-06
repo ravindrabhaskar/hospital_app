@@ -168,7 +168,8 @@ Slot reservation is concurrency-safe (a unique constraint plus a transactional c
 ```ts
 Appointment = { id, patientId, patientName, doctorId, doctorName, doctorSpecialty, doctorPhotoUrl: string|null,
                 startAt, endAt, mode, status: "pending_payment"|"confirmed"|"in_progress"|"completed"|"cancelled"|"no_show",
-                reason, fee, careEpisodeId, videoRoomUrl: string|null, clinicianNotes: string|null, createdAt }
+                reason, fee, careEpisodeId, videoRoomUrl: string|null, clinicianNotes: string|null,
+                cancelReason: string|null /* only when cancelled, e.g. "payment_failed" (POST /payments/:id/retry can revive it) */, createdAt }
 ```
 
 ## 8. Home visits
@@ -202,8 +203,14 @@ Auto-match on creation: verified, on-duty `provider` whose service zone covers t
 
 ```ts
 Address = { line1, line2?: string, landmark?: string, city, pincode, lat?: number, lng?: number }
+MaskedAddress = { city, pincode, lat?: number, lng?: number /* rounded to 2 decimals, ~1 km */, approximate: true }
+/* Provider view: the full Address (line1/line2/landmark, exact lat/lng) is returned only when the visit status is
+   accepted|en_route|arrived|in_progress|escalated|completed. For assigned/unassigned/cancelled visits the provider
+   receives MaskedAddress and addressMasked = true (lists, detail and /provider/route alike). */
 VitalType = "bp_systolic"|"bp_diastolic"|"pulse"|"spo2"|"temperature"|"blood_glucose"|"weight"|"respiratory_rate"
-HomeVisit = { id, status, serviceCode, serviceName, price, patientId, patientName, reason, address: Address,
+HomeVisit = { id, status, serviceCode, serviceName, price, patientId, patientName, reason,
+              address: Address | MaskedAddress /* provider view: MaskedAddress until the provider accepts */,
+              addressMasked: boolean,
               preferredStart, preferredEnd, careEpisodeId,
               visitCode: string|null /* ONLY returned to the patient/family, never to the provider */,
               provider: { id, name, qualification, photoUrl: string|null, phoneMasked } | null,
@@ -257,13 +264,16 @@ AssistantTurn = { messages: Message[] /* new messages only: the user echo + assi
 Intake = { chiefComplaint: IntakeField<string>, durationText: IntakeField<string>, severity: IntakeField<number /*0-10*/>,
            associatedSymptoms: IntakeField<string[]>, relevantHistory: IntakeField<string[]>,
            currentMedications: IntakeField<string[]>, allergies: IntakeField<string[]>,
-           missingFields: string[], complete: boolean }
+           missingFields: string[], complete: boolean,
+           progress: { step: number /*1-based question being asked; = total when complete*/, total: number /*always 4*/, answered: number } }
 IntakeField<T> = { value: T | null, source: "user"|"record"|"model_extraction"|null, confidence: number|null }
 SafetyResult = { level: "none"|"routine"|"urgent"|"emergency", triggeredRules: [{ ruleId, title, action }],
                  rulePackVersion: string, rulePackStatus: "approved"|"fixture_unapproved" }
 Routing = { action: "continue_intake"|"information"|"book_doctor"|"home_visit"|"emergency",
-            suggestedSpecialty: string|null, careEpisodeId: string|null, explanation }
+            suggestedSpecialty: string|null /* always a specialty at least one bookable doctor has; else "general_physician" */,
+            careEpisodeId: string|null, explanation }
 ```
+Intake progress is monotonic: use `intake.progress` for "Question {step} of {total}" instead of deriving it from `missingFields`. Typed severity answers are accepted case-insensitively (numbers 0-10, "N/10", "mild"=3, "moderate"=5, "severe"=8). Once intake is complete and routed, further messages get a short acknowledgement (`info`/`text`) and no new `routing` message; the turn's `routing` field still carries the current recommendation.
 Pipeline per message: patient resolution → authorized context (allergies/conditions/meds) → intake extraction → **deterministic safety engine** → reviewed knowledge (RAG) → LLM reply → policy check (no diagnosis labels) → routing → AIInteraction audit.
 If the safety level is `emergency`, the assistant reply is replaced by the fixed emergency template (call 108, SOS button). The LLM cannot downgrade the level.
 If the AI provider is unavailable, a safe fallback message is returned and routing offers a doctor consultation.
@@ -291,8 +301,9 @@ CarePlan = { id, careEpisodeId, patientId, doctorId, doctorName, status: "active
 CareTask = { id, carePlanId, patientId, type, title, description: string|null, dueAt: string|null, owner,
              status: "open"|"done"|"overdue"|"cancelled", completedAt: string|null, completedByName: string|null }
 Medication = { id, patientId, name, dose, frequency, times: string[], startDate, endDate: string|null, instructions: string|null,
-               source: Provenance, prescribedByName: string|null, active: boolean,
-               today: [{ time, scheduledAt, status: "taken"|"skipped"|"pending"|"missed" }] }
+               source: Provenance, prescribedByName: string|null, createdAt /* when it was added */, active: boolean,
+               today: [{ time, scheduledAt, status: "taken"|"skipped"|"pending"|"missed"|"not_applicable" }] }
+               /* "not_applicable": the dose time had already passed when the medication was added (never "missed", no reminder) */
 DoseLog = { id, medicationId, scheduledAt, status, loggedAt }
 Reminder = { id, kind: "medication"|"task"|"appointment"|"home_visit"|"follow_up", title, subtitle: string|null, at, status: "pending"|"done"|"missed", refId }
 ```
@@ -606,7 +617,7 @@ Schedule = { weekly: WeeklyBlock[], leaves: Leave[], horizonDays: number, timezo
 
 ```ts
 ProviderApplication = { id, userId, phone, fullName, type, qualification, registrationNumber, registrationCouncil: string|null, specialty: string|null,
-  experienceYears, languages: string[], preferredZoneIds: string[], status: "submitted"|"changes_requested"|"approved"|"rejected",
+  experienceYears, languages: string[], preferredZoneIds: string[], preferredZones: [{ id, name: string|null }], status: "submitted"|"changes_requested"|"approved"|"rejected",
   documents: [{ id, docType, fileName, mimeType, sizeBytes, uploadedAt }], decisionNote: string|null, decidedByName: string|null,
   createdAt, updatedAt, decidedAt: string|null }
 ```
@@ -641,6 +652,8 @@ Rules:
 |---|---|---|
 | GET | `/payments/:id/invoice` | `Invoice` (status `succeeded`/`refunded`/`partially_refunded` only; else CONFLICT) |
 | GET | `/payments/:id/invoice.pdf` | the PDF |
+
+Invoice access (JSON and PDF): the patient, or a guardian/family member holding `book` for that patient, plus `ops_admin` and `super_admin`. Coordinators, doctors, providers and other staff get FORBIDDEN (audited).
 | GET | `/provider/earnings?from=&to=` (doctor or provider; defaults to the current IST month) | `Earnings` for self |
 | GET | `/ops/settlements?from=&to=` (ops_admin, super_admin) | list of `Earnings` (one per doctor/provider with activity) |
 | GET | `/ops/settlements.csv?from=&to=` | CSV download |
@@ -768,7 +781,7 @@ Conventions as before: `{ items, nextCursor }` lists, 🔑 = `Idempotency-Key` r
 - a real adapter enabled by env credentials;
 - a refusal to start in production while the mock is configured, except where noted.
 
-**Clinical content** (program thresholds, interaction packs, preventive schedules, exercise and diet templates) is versioned data with `status: "fixture_unapproved"|"approved"`. Fixtures are clearly labelled **[REQUIRES CLINICAL GOVERNANCE]**, and production refuses to use unapproved packs (the same model as the safety rule packs, §19).
+**Clinical content** (program thresholds, interaction packs, preventive schedules, exercise and diet templates) is versioned data with `status: "fixture_unapproved"|"approved"`. Fixtures are clearly labelled **[REQUIRES CLINICAL GOVERNANCE]** in source and in admin views, and production refuses to use unapproved packs (the same model as the safety rule packs, §19). Patient- and family-facing responses never contain internal markers (`[REQUIRES CLINICAL GOVERNANCE]`, `[REQUIRES PRICING VALIDATION]`, "Placeholder price", "(fixture)"); clients read governance from the status fields (`status`, `scheduleStatus`, `rulePackStatus`, `knowledgePack.status`).
 
 New roles:
 - `hospital_staff`: linked to one facility; can use the §59 discharge endpoints and read their facility's discharged patients;
@@ -887,7 +900,7 @@ The engine checks:
 ## 48. Nurse route planning, attendance & supplies (role `provider`)
 | Method | Path | Body | Response |
 |---|---|---|---|
-| GET | `/provider/route?date=` | – | `{ date, stops: [{ order, visitId, serviceName, window: { start, end }, address, lat, lng, distanceFromPrevKm, etaAt }], totalKm, startLocation: { lat, lng }|null }` |
+| GET | `/provider/route?date=` | – | `{ date, stops: [{ order, visitId, serviceName, status, window: { start, end }, address: Address|MaskedAddress, addressMasked, lat, lng, distanceFromPrevKm, etaAt }], totalKm, startLocation: { lat, lng }|null }` |
 | POST | `/provider/attendance` | `{ action: "check_in"|"check_out", lat?, lng? }` | `{ id, action, at, lat, lng }` |
 | GET | `/provider/attendance?month=YYYY-MM` | – | `{ items: [{ date, checkInAt, checkOutAt, hours, visits }] }` |
 | GET | `/provider/supplies` | – | `{ items: [{ code, name, unit, onHand, reorderLevel }] }` |
@@ -895,7 +908,7 @@ The engine checks:
 | POST | `/ops/providers/:id/supplies/restock` (ops) | `{ items: [{ code, qty }] }` | supplies |
 | GET | `/ops/supplies/low-stock` | – | list `{ providerId, providerName, code, name, onHand, reorderLevel }` |
 
-Routes are ordered by time window first, then nearest-neighbour by haversine distance (default speed 20 km/h). A `MapsProvider` adapter (Google Distance Matrix, when `GOOGLE_MAPS_API_KEY` is set) refines distances and ETAs. The start point is the provider's last location, or the zone centre. Seed: supplies for Sunita, and lat/lng on seeded addresses.
+Routes are ordered by time window first, then nearest-neighbour by haversine distance (default speed 20 km/h). A `MapsProvider` adapter (Google Distance Matrix, when `GOOGLE_MAPS_API_KEY` is set) refines distances and ETAs. The start point is the provider's last location, or the zone centre. Stops are only the day's remaining active visits (status `assigned|accepted|en_route|arrived|in_progress|escalated`); completed, cancelled and handed-back visits are not stops. Stops not yet accepted carry `MaskedAddress` and approximate `lat`/`lng` (2 decimals). Seed: supplies for Sunita, and lat/lng on seeded addresses.
 
 ## 49. Specialist second opinion
 | Method | Path | Body | Response |

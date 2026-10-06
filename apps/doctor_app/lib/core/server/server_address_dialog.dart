@@ -143,7 +143,7 @@ class _ServerAddressDialogState extends State<ServerAddressDialog> {
     if (r == null) return const SizedBox.shrink();
     final scheme = Theme.of(context).colorScheme;
     final (IconData icon, Color color, String text) = r.ok
-        ? (Icons.check_circle, Colors.green.shade700, '✓ ${l.serverConnectedVersion(r.version ?? '?')}')
+        ? (Icons.check_circle, Colors.green.shade700, l.serverConnectedVersion(r.version ?? '?'))
         : r.unreachable
             ? (Icons.error_outline, scheme.error, l.serverCantReach)
             : (Icons.error_outline, scheme.error, l.serverNotCareCompanion('${r.statusCode}'));

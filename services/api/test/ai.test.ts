@@ -3,7 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import { aiInteractions, consents, users } from '../src/db/schema.js';
 import type { ChatModel, ModelRequest } from '../src/modules/ai/models.js';
 import { evaluateRules, FIXTURE_RULES } from '../src/modules/safety/engine.js';
-import { extractFromMessage, emptyIntake, mergeGroundedExtraction } from '../src/modules/ai/intake.js';
+import { extractFromMessage, emptyIntake, findSeverity, mergeGroundedExtraction } from '../src/modules/ai/intake.js';
 import { SEED_PHONES, rameshId, setup, type TestCtx } from './helpers.js';
 
 /** Fake LLM: always claims nothing is wrong; for extraction it hallucinates values. */
@@ -70,6 +70,51 @@ describe('safety engine (unit)', () => {
     expect(merged.associatedSymptoms.value).toBeNull();
     const grounded = mergeGroundedExtraction(i1, { associatedSymptoms: ['yesterday'] }, 'I have a headache since yesterday');
     expect(grounded.associatedSymptoms).toMatchObject({ value: ['yesterday'], source: 'model_extraction' });
+  });
+});
+
+describe('intake severity and progress (unit, B25)', () => {
+  it('typed severity answers are understood, case-insensitively', () => {
+    expect(findSeverity('Moderate', true)).toBe(5);
+    expect(findSeverity('moderate (5/10)', true)).toBe(5);
+    expect(findSeverity('MODERATE', true)).toBe(5);
+    expect(findSeverity('severe', true)).toBe(8);
+    expect(findSeverity('it is quite severe', true)).toBe(8);
+    expect(findSeverity('mild', true)).toBe(3);
+    expect(findSeverity('Mild (3/10)', true)).toBe(3);
+    expect(findSeverity('7', true)).toBe(7);
+    expect(findSeverity('about 6 out of 10', true)).toBe(6);
+    expect(findSeverity('seven', true)).toBe(7);
+    expect(findSeverity('unbearable', true)).toBe(9);
+    // Not asked: free words are not turned into a severity.
+    expect(findSeverity('severe', false)).toBeNull();
+    expect(findSeverity('banana', true)).toBeNull();
+  });
+
+  it('a severity word typed while duration was asked fills severity, not duration', () => {
+    const i1 = extractFromMessage(emptyIntake(), 'I have a sore throat', 'chiefComplaint');
+    const i2 = extractFromMessage(i1, 'Moderate', 'durationText');
+    expect(i2.durationText.value).toBeNull();
+    expect(i2.severity.value).toBe(5);
+  });
+
+  it('progress is monotonic over the fixed question list', () => {
+    let i = emptyIntake();
+    expect(i.progress).toEqual({ step: 1, total: 4, answered: 0 });
+    const steps = [i.progress.step];
+    for (const [text, asked] of [
+      ['I have a headache', 'chiefComplaint'],
+      ['2 days', 'durationText'],
+      ['severe', 'severity'],
+      ['no', 'associatedSymptoms'],
+    ] as const) {
+      i = extractFromMessage(i, text, asked);
+      expect(i.progress.total).toBe(4);
+      steps.push(i.progress.step);
+    }
+    expect(steps).toEqual([1, 2, 3, 4, 4]);
+    expect(i.progress.answered).toBe(4);
+    expect(i.complete).toBe(true);
   });
 });
 
@@ -147,6 +192,51 @@ describe('AI assistant (API)', () => {
       expect(row.rulePackVersion).toBeTruthy();
       expect(Object.values(row).join(' ')).not.toMatch(/headache/i); // no raw PHI text in the audit table
     }
+  });
+
+  it('suggested specialty is one that bookable doctors have (no ENT doctor -> general physician) (B11)', async () => {
+    const ent = await t.req(vaibhav, 'GET', '/doctors?specialty=ent');
+    expect(ent.body.items).toHaveLength(0);
+    const c = await start();
+    await say(c.id, 'I have a sore throat since 2 days');
+    await say(c.id, 'mild');
+    const r = await say(c.id, 'no');
+    expect(r.body.intake.complete).toBe(true);
+    const sp = r.body.routing.suggestedSpecialty;
+    expect(sp).toBe('general_physician');
+    const docs = await t.req(vaibhav, 'GET', `/doctors?specialty=${sp}`);
+    expect(docs.body.items.length).toBeGreaterThan(0);
+    // A specialty that exists is still suggested.
+    const c2 = await start();
+    await say(c2.id, 'I have a skin rash since 3 days');
+    await say(c2.id, 'Moderate');
+    const r2 = await say(c2.id, 'no');
+    expect(r2.body.routing.suggestedSpecialty).toBe('dermatologist');
+  });
+
+  it('typed severity is understood; after routing, follow-ups are acknowledged without repeating the routing reply (B25)', async () => {
+    const c = await start();
+    const r1 = await say(c.id, 'I have a stomach ache');
+    expect(r1.body.intake.progress).toMatchObject({ step: 2, total: 4 });
+    const r2 = await say(c.id, 'since yesterday');
+    expect(r2.body.intake.progress).toMatchObject({ step: 3, total: 4 });
+    const r3 = await say(c.id, 'Moderate');
+    expect(r3.body.intake.severity).toMatchObject({ value: 5, source: 'user' });
+    expect(r3.body.messages.find((m: any) => m.kind === 'question').text).not.toMatch(/scale of 0 to 10/);
+    expect(r3.body.intake.progress).toMatchObject({ step: 4, total: 4 });
+    const r4 = await say(c.id, 'no');
+    expect(r4.body.intake.complete).toBe(true);
+    expect(r4.body.messages.filter((m: any) => m.kind === 'routing')).toHaveLength(1);
+    const r5 = await say(c.id, 'thank you');
+    expect(r5.status).toBe(200);
+    expect(r5.body.messages.filter((m: any) => m.kind === 'routing')).toHaveLength(0);
+    expect(r5.body.routing.action).toBe('book_doctor'); // still returned for the client
+    const r6 = await say(c.id, 'ok');
+    const assistantTexts = [...r5.body.messages, ...r6.body.messages].filter((m: any) => m.role === 'assistant').map((m: any) => m.text);
+    expect(assistantTexts.length).toBeGreaterThan(0);
+    for (const txt of assistantTexts) expect(txt).not.toBe(r4.body.messages.find((m: any) => m.kind === 'routing').text);
+    const conv = await t.req(vaibhav, 'GET', `/ai/conversations/${c.id}`);
+    expect(conv.body.intake.progress).toMatchObject({ step: 4, total: 4, answered: 4 });
   });
 
   it('missing ai_assistance consent -> CONSENT_REQUIRED', async () => {

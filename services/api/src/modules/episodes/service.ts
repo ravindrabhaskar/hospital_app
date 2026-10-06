@@ -1,6 +1,6 @@
 import { eq, inArray } from 'drizzle-orm';
 import type { DbOrTx } from '../../db/client.js';
-import { careEpisodes, episodeEvents, patients, users } from '../../db/schema.js';
+import { appointments, careEpisodes, conversations, episodeEvents, homeVisits, labOrders, patients, users } from '../../db/schema.js';
 import { audit } from '../../lib/audit.js';
 import type { Actor } from '../../lib/context.js';
 import { errors } from '../../lib/errors.js';
@@ -153,6 +153,41 @@ export async function advanceEpisode(
     return row;
   }
   return ep;
+}
+
+/**
+ * QA B30: a booking on this episode ended without care being delivered (its payment failed, or it was cancelled).
+ * Call AFTER the booking row itself was updated. When nothing else on the episode is still live:
+ * - payment failed: NEW -> AWAITING_CARE (the patient may retry the payment or book again; a successful retry
+ *   moves it on to CARE_SCHEDULED as usual);
+ * - cancelled: an episode that existed only for bookings that were all cancelled (no AI intake, no delivered care)
+ *   and never got past scheduling is closed as CANCELLED. Other episodes keep the existing rule
+ *   (CARE_SCHEDULED -> AWAITING_CARE).
+ */
+export async function settleEpisodeAfterBookingEnded(db: DbOrTx, episodeId: string, outcome: 'payment_failed' | 'cancelled', actor: Actor): Promise<void> {
+  const [ep] = await db.select().from(careEpisodes).where(eq(careEpisodes.id, episodeId));
+  if (!ep || !['NEW', 'AWAITING_CARE', 'CARE_SCHEDULED'].includes(ep.status)) return;
+  const [appts, visits, labs] = await Promise.all([
+    db.select({ status: appointments.status }).from(appointments).where(eq(appointments.careEpisodeId, episodeId)),
+    db.select({ status: homeVisits.status }).from(homeVisits).where(eq(homeVisits.careEpisodeId, episodeId)),
+    db.select({ status: labOrders.status }).from(labOrders).where(eq(labOrders.careEpisodeId, episodeId)),
+  ]);
+  const live =
+    appts.some((a) => ['pending_payment', 'confirmed', 'in_progress'].includes(a.status)) ||
+    visits.some((v) => !['cancelled', 'completed'].includes(v.status)) ||
+    labs.some((l) => !['cancelled', 'report_ready'].includes(l.status));
+  if (live) return;
+  if (outcome === 'payment_failed') {
+    await advanceEpisode(db, episodeId, ['AWAITING_CARE'], 'Payment failed; nothing is scheduled', actor, { nextAction: 'Retry the payment or book again' });
+    return;
+  }
+  const allCancelled = appts.every((a) => a.status === 'cancelled') && visits.every((v) => v.status === 'cancelled') && labs.every((l) => l.status === 'cancelled');
+  const [aiIntake] = await db.select({ id: conversations.id }).from(conversations).where(eq(conversations.careEpisodeId, episodeId)).limit(1);
+  if (allCancelled && !aiIntake) {
+    await transitionEpisode(db, episodeId, 'CANCELLED', 'Booking cancelled; no other care on this episode', actor, [], { nextAction: null });
+  } else if (ep.status === 'CARE_SCHEDULED' || ep.status === 'NEW') {
+    await advanceEpisode(db, episodeId, ['AWAITING_CARE'], 'All scheduled care was cancelled', actor);
+  }
 }
 
 export async function toCareEpisodes(db: DbOrTx, rows: EpisodeRow[]) {

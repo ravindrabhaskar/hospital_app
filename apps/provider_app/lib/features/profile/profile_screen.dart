@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/locale_controller.dart';
+import '../../core/location_permission.dart';
 import '../../core/providers.dart';
 import '../../core/server/server_actions.dart';
 import '../../core/theme.dart';
 import '../../models/public_config.dart';
 import '../../ui/l10n_helpers.dart';
 import '../../ui/widgets.dart';
+import '../field/location_permission_banner.dart';
 import 'profile_photo.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -161,25 +163,7 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 if (p.credentialExpiringSoon(now) && days != null) ...[
                   const SizedBox(height: 12),
-                  Semantics(
-                    liveRegion: true,
-                    child: Container(
-                      key: const Key('credentialWarning'),
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: AppColors.warningBg,
-                        borderRadius: BorderRadius.circular(AppSpacing.tileRadius),
-                        border: Border.all(color: AppColors.warning),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.warning_amber_rounded, color: Color(0xFF9A5A10)),
-                          const SizedBox(width: 10),
-                          Expanded(child: Text(l.profileCredentialExpiring(days))),
-                        ],
-                      ),
-                    ),
-                  ),
+                  CredentialExpiryBanner(key: const Key('credentialWarning'), days: days),
                 ],
                 const SizedBox(height: 12),
                 Card(
@@ -231,7 +215,7 @@ class ProfileScreen extends ConsumerWidget {
                       : Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: [for (final c in p.capabilities) Chip(label: Text(c.replaceAll('_', ' ')))],
+                          children: [for (final c in p.capabilities) Chip(label: Text(capabilityLabel(l, c)))],
                         ),
                 ),
                 const SizedBox(height: 12),
@@ -254,6 +238,7 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
+                const _LocationAccessTile(),
                 const SizedBox(height: 12),
                 SectionCard(
                   key: const Key('supportCard'),
@@ -347,6 +332,49 @@ class ProfileScreen extends ConsumerWidget {
           );
         },
       ),
+    );
+  }
+}
+
+/// "Location access: Allowed / Off. Tap to turn on" (hidden when unknown).
+class _LocationAccessTile extends ConsumerStatefulWidget {
+  const _LocationAccessTile();
+
+  @override
+  ConsumerState<_LocationAccessTile> createState() => _LocationAccessTileState();
+}
+
+class _LocationAccessTileState extends ConsumerState<_LocationAccessTile> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(locationAccessProvider).refresh();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final access = ref.watch(locationAccessProvider);
+    return ListenableBuilder(
+      listenable: access,
+      builder: (context, _) {
+        if (access.access == LocationAccess.unknown) return const SizedBox.shrink();
+        final granted = access.access == LocationAccess.granted;
+        return Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Card(
+            child: ListTile(
+              key: const Key('locationAccess'),
+              leading: Icon(granted ? Icons.location_on_outlined : Icons.location_off_outlined,
+                  color: granted ? AppColors.primary : const Color(0xFF9A5A10)),
+              title: Text(l.locSettingTitle),
+              subtitle: Text(granted ? l.locSettingOn : l.locSettingOff),
+              trailing: granted ? null : const Icon(Icons.chevron_right),
+              onTap: granted ? null : () => turnOnLocation(context, ref),
+            ),
+          ),
+        );
+      },
     );
   }
 }

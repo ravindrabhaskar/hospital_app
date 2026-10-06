@@ -69,6 +69,20 @@ describe('records', () => {
     expect((await t.req(priya, 'GET', `/records/${rec.id}/file`)).status).toBe(200);
   });
 
+  it('a dose scheduled before the medication was added is not_applicable, never missed (B18)', async () => {
+    const { toMedications } = await import('../src/modules/medications/service.js');
+    const { istDate, istToUtc } = await import('../src/lib/time.js');
+    const today = istDate();
+    const createdAt = istToUtc(today, '15:00');
+    const now = istToUtc(today, '16:00');
+    const m = { id: '00000000-0000-0000-0000-0000000000b1', patientId: ramesh, name: 'Test', dose: '1', frequency: 'x', times: ['08:00', '20:00'], startDate: today, endDate: null, instructions: null, source: 'patient_entered', prescribedByName: null, active: true, createdAt } as any;
+    const [out] = await toMedications(t.svc.db, [m], 60, now);
+    expect(out.today.map((d: any) => d.status)).toEqual(['not_applicable', 'pending']);
+    expect(out.createdAt).toBe(createdAt.toISOString());
+    const later = await toMedications(t.svc.db, [{ ...m, createdAt: istToUtc(today, '07:00') }], 60, now);
+    expect(later[0].today[0].status).toBe('missed');
+  });
+
   it('timeline, vitals, insights, medications and reminders', async () => {
     const tl = await t.req(vaibhav, 'GET', `/timeline?patientId=${ramesh}&limit=50`);
     const kinds = new Set(tl.body.items.map((i: any) => i.kind));

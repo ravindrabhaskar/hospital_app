@@ -7,7 +7,7 @@ import { AppError, errors } from '../../lib/errors.js';
 import { formatIst } from '../../lib/i18n.js';
 import { iso } from '../../lib/time.js';
 import { specialtyNames } from '../doctors/routes.js';
-import { addEvent, advanceEpisode } from '../episodes/service.js';
+import { addEvent, advanceEpisode, settleEpisodeAfterBookingEnded } from '../episodes/service.js';
 import type { NotificationService } from '../notifications/service.js';
 import type { PaymentEffects, PaymentRow, PaymentService } from '../payments/service.js';
 import type { VideoProvider } from '../video/provider.js';
@@ -44,6 +44,7 @@ export async function toAppointments(db: DbOrTx, rows: AppointmentRow[]) {
       careEpisodeId: a.careEpisodeId,
       videoRoomUrl: a.status === 'confirmed' || a.status === 'in_progress' ? a.videoRoomUrl : null,
       clinicianNotes: a.clinicianNotes,
+      cancelReason: a.status === 'cancelled' ? a.cancelReason : null,
       createdAt: iso(a.createdAt),
     };
   });
@@ -137,6 +138,7 @@ export function appointmentPaymentEffects(notify: NotificationService, video: Vi
         await releaseSlot(tx, a.slotId);
         await addEvent(tx, a.careEpisodeId, 'appointment_cancelled', 'Appointment cancelled: payment failed', SYSTEM_ACTOR, { appointmentId: a.id });
         await maybeUnschedule(tx, a.careEpisodeId, a.id, SYSTEM_ACTOR);
+        await settleEpisodeAfterBookingEnded(tx, a.careEpisodeId, 'payment_failed', SYSTEM_ACTOR);
       });
     },
   };
@@ -162,6 +164,7 @@ export async function cancelAppointment(
     if (pay?.status === 'pending') await paymentsSvc.voidPending(tx, pay.id);
     await addEvent(tx, a.careEpisodeId, 'appointment_cancelled', 'Appointment cancelled', actor, { appointmentId: a.id });
     await maybeUnschedule(tx, a.careEpisodeId, a.id, actor);
+    await settleEpisodeAfterBookingEnded(tx, a.careEpisodeId, 'cancelled', actor);
     await audit(tx, actor, { action: 'appointment.cancel', entityType: 'appointment', entityId: a.id });
     return row;
   });

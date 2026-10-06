@@ -178,6 +178,7 @@ class _ThreadScreenState extends ConsumerState<ThreadScreen> with WidgetsBinding
     final pid = patientId ?? (await ref.read(activePatientProvider.future)).id;
     if (!mounted) return;
     final r = await showModalBottomSheet<MedicalRecord>(
+      useRootNavigator: true,
       context: context,
       isScrollControlled: true,
       builder: (_) => RecordPickerSheet(patientId: pid),
@@ -444,6 +445,14 @@ class _Composer extends StatelessWidget {
                   deleteButtonTooltipMessage: l.remove,
                 ),
               ),
+            // The server needs some text with every message (an attachment
+            // alone is rejected), so say why Send is still disabled.
+            if (attachment != null && controller.text.trim().isEmpty)
+              Padding(
+                key: const Key('attachment-needs-text'),
+                padding: const EdgeInsets.only(left: Space.sm, bottom: Space.xs),
+                child: Text(l.attachmentNeedsText, style: TextStyle(fontSize: 12, color: context.textMuted)),
+              ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -461,6 +470,14 @@ class _Composer extends StatelessWidget {
                     maxLines: 5,
                     maxLength: 2000,
                     textCapitalization: TextCapitalization.sentences,
+                    // Enter sends (hardware keyboard / web); the soft keyboard
+                    // shows a Send key. Long messages still wrap.
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) {
+                      if (canSend) onSend();
+                    },
+                    // Keep the keyboard open after sending.
+                    onEditingComplete: () {},
                     decoration: InputDecoration(
                       hintText: l.messageHint,
                       counterText: '',

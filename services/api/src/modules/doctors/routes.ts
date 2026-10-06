@@ -16,6 +16,22 @@ export function isBookableDoctor(p: ProviderRow, now = new Date()): boolean {
   return p.kind === 'doctor' && p.verificationStatus === 'verified' && p.credentialExpiresAt > now;
 }
 
+/** Specialty codes that at least one doctor listed by GET /doctors currently has (same filters). */
+export async function bookableSpecialties(db: DbOrTx): Promise<Set<string>> {
+  const rows = await db
+    .selectDistinct({ specialty: providers.specialty })
+    .from(providers)
+    .where(
+      and(
+        eq(providers.kind, 'doctor'),
+        eq(providers.verificationStatus, 'verified'),
+        gt(providers.credentialExpiresAt, new Date()),
+        eq(providers.acceptingBookings, true),
+      ),
+    );
+  return new Set(rows.map((r) => r.specialty ?? 'general_physician'));
+}
+
 export async function specialtyNames(db: DbOrTx): Promise<Map<string, string>> {
   const rows = await db.select().from(specialties);
   return new Map(rows.map((s) => [s.code, s.name]));
@@ -108,7 +124,14 @@ export async function doctorDetail(db: DbOrTx, d: ProviderRow) {
     ...stripInternal(doc),
     bio: d.bio,
     registrationNumber: d.registrationNumber,
-    reviews: rows.map((r) => ({ id: r.id, rating: r.rating, text: r.text ?? '', authorLabel: r.authorLabel, source: 'verified_patient' as const, createdAt: iso(r.createdAt) })),
+    reviews: rows.map((r) => ({
+      id: r.id,
+      rating: r.rating,
+      text: r.text ?? '',
+      authorLabel: r.authorLabel,
+      source: 'verified_patient' as const,
+      createdAt: iso(r.createdAt),
+    })),
   };
 }
 
@@ -138,11 +161,17 @@ export async function doctorRoutes(app: FastifyInstance): Promise<void> {
       eq(providers.acceptingBookings, true),
     ];
     if (q.specialty) conds.push(eq(providers.specialty, q.specialty));
-    const rows = await db.select().from(providers).where(and(...conds)).orderBy(desc(providers.rating), asc(providers.name));
+    const rows = await db
+      .select()
+      .from(providers)
+      .where(and(...conds))
+      .orderBy(desc(providers.rating), asc(providers.name));
     let docs = await toDoctors(db, rows, { specialty: q.specialty, language: q.language });
     if (q.q) {
       const needle = q.q.toLowerCase();
-      docs = docs.filter((d) => d.name.toLowerCase().includes(needle) || d.specialtyName.toLowerCase().includes(needle) || d.qualifications.toLowerCase().includes(needle));
+      docs = docs.filter(
+        (d) => d.name.toLowerCase().includes(needle) || d.specialtyName.toLowerCase().includes(needle) || d.qualifications.toLowerCase().includes(needle),
+      );
     }
     if (q.language) {
       const lname = (LANG_NAMES[q.language] ?? q.language).toLowerCase();

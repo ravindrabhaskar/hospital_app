@@ -4821,6 +4821,87 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get aiGreeting =>
+      'Hello! I\'m your CareCompanion assistant. I can help you describe what\'s going on and find the right care. I can\'t diagnose conditions. What\'s bothering you today?';
+
+  @override
+  String get qrFever => 'Fever';
+
+  @override
+  String get qrHeadache => 'Headache';
+
+  @override
+  String get qrCoughCold => 'Cough or cold';
+
+  @override
+  String get qrStomachPain => 'Stomach pain';
+
+  @override
+  String get qrSkinProblem => 'Skin problem';
+
+  @override
+  String get qrSinceToday => 'Since today';
+
+  @override
+  String get qrSinceYesterday => 'Since yesterday';
+
+  @override
+  String get qrTwoThreeDays => '2-3 days';
+
+  @override
+  String get qrMoreThanWeek => 'More than a week';
+
+  @override
+  String get qrMild => 'Mild (3/10)';
+
+  @override
+  String get qrModerate => 'Moderate (5/10)';
+
+  @override
+  String get qrSevere => 'Severe (8/10)';
+
+  @override
+  String get qrNoOtherSymptoms => 'No other symptoms';
+
+  @override
+  String get qrNausea => 'Nausea';
+
+  @override
+  String get qrDizziness => 'Dizziness';
+
+  @override
+  String get qrBodyAche => 'Body ache';
+
+  @override
+  String get qrCall108 => 'Call 108';
+
+  @override
+  String get qrPressSos => 'Press SOS';
+
+  @override
+  String get qrBookDoctor => 'Book a doctor';
+
+  @override
+  String get qrRequestHomeVisit => 'Request home visit';
+
+  @override
+  String get cameraPermissionDenied =>
+      'Camera permission is off. Allow camera access in Settings to take a photo, or upload a file instead.';
+
+  @override
+  String get photosPermissionDenied =>
+      'Photo and file access is off. Allow access in Settings to choose a file.';
+
+  @override
+  String get openSettings => 'Open settings';
+
+  @override
+  String get amountPaidTotal => 'Amount paid';
+
+  @override
+  String get attachmentNeedsText => 'Add a short message to send this record.';
+
+  @override
   String itemsCount(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

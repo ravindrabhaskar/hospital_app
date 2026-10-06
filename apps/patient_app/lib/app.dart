@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -98,6 +99,12 @@ class _CareCompanionAppState extends ConsumerState<CareCompanionApp> {
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: localizationsDelegates,
       routerConfig: router,
+      // Screens without an AppBar (Home's butter header) still get readable
+      // status-bar icons for the active theme.
+      builder: (c, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: AppTheme.overlayFor(Theme.of(c).brightness),
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }

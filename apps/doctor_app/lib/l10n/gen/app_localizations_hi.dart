@@ -1059,12 +1059,24 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String readingsCount(int count) {
-    return '$count रीडिंग';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count रीडिंग',
+      one: '1 रीडिंग',
+    );
+    return '$_temp0';
   }
 
   @override
   String vitalTrendSemantics(String vital, String min, String max, int count) {
-    return '$vital रुझान: $min से $max के बीच $count रीडिंग';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count रीडिंग',
+      one: '1 रीडिंग',
+    );
+    return '$vital रुझान: $min से $max के बीच $_temp0';
   }
 
   @override
@@ -1428,4 +1440,93 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get serverChange => 'सर्वर बदलें';
+
+  @override
+  String get otpIncorrect => 'कोड गलत है। कृपया जाँचें और फिर से कोशिश करें।';
+
+  @override
+  String otpIncorrectAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'कोड गलत है। $count प्रयास बाकी।',
+      one: 'कोड गलत है। 1 प्रयास बाकी।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get otpNoAttemptsLeft =>
+      'कोड गलत है। कोई प्रयास बाकी नहीं, कृपया नया कोड मँगाएँ।';
+
+  @override
+  String get otpExpired =>
+      'इस कोड की समय-सीमा खत्म हो गई है। कृपया नया कोड मँगाएँ।';
+
+  @override
+  String get otpTooManyAttempts =>
+      'बहुत सारे गलत प्रयास। कृपया नया कोड मँगाएँ।';
+
+  @override
+  String get vitalHigh => 'अधिक';
+
+  @override
+  String get vitalLow => 'कम';
+
+  @override
+  String vitalFlagSemantics(String vital, String value, String flag) {
+    return '$vital $value, $flag';
+  }
+
+  @override
+  String get logoutConfirmBodyOtp =>
+      'फिर से साइन इन करने के लिए आपको फ़ोन OTP की ज़रूरत होगी।';
+
+  @override
+  String get leaveRemoveTitle => 'यह छुट्टी हटाएँ?';
+
+  @override
+  String leaveRemoveBody(String date) {
+    return '$date फिर से बुकिंग के लिए खुल जाएगा।';
+  }
+
+  @override
+  String get attachedRecord => 'संलग्न रिकॉर्ड';
+
+  @override
+  String get attachmentUnavailable => 'संलग्न रिकॉर्ड उपलब्ध नहीं है';
+
+  @override
+  String get attachmentNoFile =>
+      'इस रिकॉर्ड में खोलने के लिए कोई फ़ाइल नहीं है।';
+
+  @override
+  String get specGeneralPhysician => 'जनरल फ़िज़िशियन';
+
+  @override
+  String get specDermatologist => 'त्वचा रोग विशेषज्ञ';
+
+  @override
+  String get specPediatrician => 'बाल रोग विशेषज्ञ';
+
+  @override
+  String get specGynecologist => 'स्त्री रोग विशेषज्ञ';
+
+  @override
+  String get specCardiologist => 'हृदय रोग विशेषज्ञ';
+
+  @override
+  String get specOrthopedist => 'हड्डी रोग विशेषज्ञ';
+
+  @override
+  String get specPsychiatrist => 'मनोचिकित्सक';
+
+  @override
+  String get specEnt => 'ईएनटी विशेषज्ञ';
+
+  @override
+  String get specDiabetologist => 'मधुमेह विशेषज्ञ';
+
+  @override
+  String get specNeurologist => 'तंत्रिका रोग विशेषज्ञ';
 }

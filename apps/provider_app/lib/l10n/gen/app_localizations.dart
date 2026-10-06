@@ -1069,7 +1069,7 @@ abstract class AppLocalizations {
   /// No description provided for @vitalsNoInterpretation.
   ///
   /// In en, this message translates to:
-  /// **'Values are recorded as measured. Clinical review is done by the care team.'**
+  /// **'Values outside the usual adult range are highlighted as High or Low. Clinical review is done by the care team.'**
   String get vitalsNoInterpretation;
 
   /// No description provided for @obsTitle.
@@ -2864,6 +2864,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change server'**
   String get serverChange;
+
+  /// No description provided for @errorOtpIncorrectAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Incorrect OTP. 1 attempt left.} other{Incorrect OTP. {count} attempts left.}}'**
+  String errorOtpIncorrectAttempts(int count);
+
+  /// No description provided for @errorOtpExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This OTP has expired. Please request a new OTP.'**
+  String get errorOtpExpired;
+
+  /// No description provided for @errorOtpTooManyAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many incorrect attempts. Please request a new OTP.'**
+  String get errorOtpTooManyAttempts;
+
+  /// No description provided for @vitalsFlagHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get vitalsFlagHigh;
+
+  /// No description provided for @vitalsFlagLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get vitalsFlagLow;
+
+  /// No description provided for @vitalsFlagWithRange.
+  ///
+  /// In en, this message translates to:
+  /// **'{flag} · usual adult range {range}'**
+  String vitalsFlagWithRange(String flag, String range);
+
+  /// No description provided for @capVitalsCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Vitals check'**
+  String get capVitalsCheck;
+
+  /// No description provided for @capSampleCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample collection'**
+  String get capSampleCollection;
+
+  /// No description provided for @capElderlyCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Elderly care'**
+  String get capElderlyCare;
+
+  /// No description provided for @capPostReportConsult.
+  ///
+  /// In en, this message translates to:
+  /// **'Post-report consult'**
+  String get capPostReportConsult;
+
+  /// No description provided for @capPhysiotherapy.
+  ///
+  /// In en, this message translates to:
+  /// **'Physiotherapy'**
+  String get capPhysiotherapy;
+
+  /// No description provided for @credentialBannerAction.
+  ///
+  /// In en, this message translates to:
+  /// **'View profile'**
+  String get credentialBannerAction;
+
+  /// No description provided for @locRationaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your location?'**
+  String get locRationaleTitle;
+
+  /// No description provided for @locRationaleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'While you are on duty, CareCompanion Pro shares your location with your care team to plan your route and show patients your arrival time. It is not shared when you are off duty.'**
+  String get locRationaleBody;
+
+  /// No description provided for @locRationaleAllow.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get locRationaleAllow;
+
+  /// No description provided for @locRationaleNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get locRationaleNotNow;
+
+  /// No description provided for @locDeniedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off, so route times and live tracking won\'t work. You can turn it on from the Route tab or your Profile.'**
+  String get locDeniedMessage;
+
+  /// No description provided for @locOffBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is off. Turn it on for accurate route times and patient tracking.'**
+  String get locOffBanner;
+
+  /// No description provided for @locTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on location'**
+  String get locTurnOn;
+
+  /// No description provided for @locBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is blocked for this app. Allow it in Settings.'**
+  String get locBlocked;
+
+  /// No description provided for @locOpenSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open settings'**
+  String get locOpenSettings;
+
+  /// No description provided for @locSettingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Location access'**
+  String get locSettingTitle;
+
+  /// No description provided for @locSettingOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Allowed'**
+  String get locSettingOn;
+
+  /// No description provided for @locSettingOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Off. Tap to turn on'**
+  String get locSettingOff;
+
+  /// No description provided for @locServiceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Location (GPS) is turned off on this phone.'**
+  String get locServiceOff;
 }
 
 class _AppLocalizationsDelegate

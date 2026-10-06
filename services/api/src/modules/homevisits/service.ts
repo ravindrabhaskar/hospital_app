@@ -1,13 +1,13 @@
 import { and, eq, gt, gte, inArray, lt, notInArray, sql } from 'drizzle-orm';
 import type { Db, DbOrTx } from '../../db/client.js';
-import { homeVisitServices, homeVisits, patients, providerZones, providers, serviceZones, users, type TimelineEntry } from '../../db/schema.js';
+import { homeVisitServices, homeVisits, patients, providerZones, providers, serviceZones, users, type AddressJson, type TimelineEntry } from '../../db/schema.js';
 import { resolvePatientAccess } from '../../lib/access.js';
 import { audit } from '../../lib/audit.js';
 import { OPS_ROLES, SYSTEM_ACTOR, hasRole, type Actor, type RequestCtx } from '../../lib/context.js';
 import { maskPhone } from '../../lib/crypto.js';
 import { errors } from '../../lib/errors.js';
 import { istDate, istDayBounds, iso } from '../../lib/time.js';
-import { addEvent, advanceEpisode } from '../episodes/service.js';
+import { addEvent, advanceEpisode, settleEpisodeAfterBookingEnded } from '../episodes/service.js';
 import type { NotificationService } from '../notifications/service.js';
 import { clinicalContext } from '../patients/service.js';
 import type { PaymentEffects, PaymentRow } from '../payments/service.js';
@@ -18,6 +18,37 @@ export type HomeVisitRow = typeof homeVisits.$inferSelect;
 export type VisitView = 'family' | 'provider' | 'doctor' | 'ops';
 
 export const LIVE_PROVIDER_STATUSES = ['assigned', 'accepted', 'en_route', 'arrived', 'in_progress', 'escalated'];
+
+/**
+ * Statuses in which the assigned provider may see the precise address (line1/line2/landmark and
+ * exact coordinates). Before the provider accepts (`assigned`), and once a visit is cancelled or
+ * handed back, only the locality (city + pincode) and an approximate location (~1 km) are shared.
+ */
+export const FULL_ADDRESS_STATUSES = ['accepted', 'en_route', 'arrived', 'in_progress', 'escalated', 'completed'];
+
+export type MaskedAddress = { city: string; pincode: string; lat?: number; lng?: number; approximate: true };
+
+/** Round a coordinate to 2 decimals (~1.1 km) so it cannot pinpoint a home. */
+export const approxCoord = (n: number): number => Math.round(n * 100) / 100;
+
+export function providerMaySeeFullAddress(status: string): boolean {
+  return FULL_ADDRESS_STATUSES.includes(status);
+}
+
+export function maskAddress(a: AddressJson): MaskedAddress {
+  return {
+    city: a.city,
+    pincode: a.pincode,
+    ...(typeof a.lat === 'number' && typeof a.lng === 'number' ? { lat: approxCoord(a.lat), lng: approxCoord(a.lng) } : {}),
+    approximate: true,
+  };
+}
+
+/** Address as the given view may see it: providers get locality only until they accept. */
+export function addressFor(view: VisitView, row: Pick<HomeVisitRow, 'status' | 'address'>): AddressJson | MaskedAddress {
+  if (view === 'provider' && !providerMaySeeFullAddress(row.status)) return maskAddress(row.address);
+  return row.address;
+}
 
 export async function findZoneForPincode(db: DbOrTx, pincode: string) {
   const zones = await db.select().from(serviceZones);
@@ -82,7 +113,17 @@ export async function findMatch(db: DbOrTx, visit: HomeVisitRow): Promise<typeof
   const counts = await db
     .select({ providerId: homeVisits.providerId, n: sql<number>`count(*)::int` })
     .from(homeVisits)
-    .where(and(inArray(homeVisits.providerId, free.map((p) => p.id)), gte(homeVisits.preferredStart, start), lt(homeVisits.preferredStart, end), notInArray(homeVisits.status, ['cancelled'])))
+    .where(
+      and(
+        inArray(
+          homeVisits.providerId,
+          free.map((p) => p.id),
+        ),
+        gte(homeVisits.preferredStart, start),
+        lt(homeVisits.preferredStart, end),
+        notInArray(homeVisits.status, ['cancelled']),
+      ),
+    )
     .groupBy(homeVisits.providerId);
   const countOf = new Map(counts.map((c) => [c.providerId, Number(c.n)]));
   free.sort((a, b) => (countOf.get(a.id) ?? 0) - (countOf.get(b.id) ?? 0) || a.name.localeCompare(b.name));
@@ -130,15 +171,14 @@ export async function toHomeVisits(db: DbOrTx, rows: HomeVisitRow[], viewOf: (r:
   if (!rows.length) return [];
   const [services, pats, provs, vit, labCtx] = await Promise.all([
     db.select().from(homeVisitServices),
-    db.select({ id: patients.id, name: patients.name }).from(patients).where(inArray(patients.id, [...new Set(rows.map((r) => r.patientId))])),
+    db
+      .select({ id: patients.id, name: patients.name })
+      .from(patients)
+      .where(inArray(patients.id, [...new Set(rows.map((r) => r.patientId))])),
     (async () => {
       const ids = [...new Set(rows.map((r) => r.providerId).filter((x): x is string => !!x))];
       if (!ids.length) return [];
-      return db
-        .select({ p: providers, phone: users.phone })
-        .from(providers)
-        .innerJoin(users, eq(users.id, providers.userId))
-        .where(inArray(providers.id, ids));
+      return db.select({ p: providers, phone: users.phone }).from(providers).innerJoin(users, eq(users.id, providers.userId)).where(inArray(providers.id, ids));
     })(),
     vitalsForVisits(
       db,
@@ -173,14 +213,14 @@ export async function toHomeVisits(db: DbOrTx, rows: HomeVisitRow[], viewOf: (r:
       patientId: r.patientId,
       patientName: pm.get(r.patientId) ?? null,
       reason: r.reason,
-      address: r.address,
+      address: addressFor(view, r),
+      /** True when `address` is reduced to locality + approximate location (provider has not accepted yet). */
+      addressMasked: view === 'provider' && !providerMaySeeFullAddress(r.status),
       preferredStart: iso(r.preferredStart),
       preferredEnd: iso(r.preferredEnd),
       careEpisodeId: r.careEpisodeId,
       visitCode: view === 'family' ? r.visitCode : null,
-      provider: prov
-        ? { id: prov.p.id, name: prov.p.name, qualification: prov.p.qualification, photoUrl: prov.p.photoUrl, phoneMasked: maskPhone(prov.phone) }
-        : null,
+      provider: prov ? { id: prov.p.id, name: prov.p.name, qualification: prov.p.qualification, photoUrl: prov.p.photoUrl, phoneMasked: maskPhone(prov.phone) } : null,
       etaMinutes: r.etaMinutes,
       timeline: r.timeline,
       patientContext,
@@ -219,6 +259,7 @@ export function homeVisitPaymentEffects(_notify: NotificationService): PaymentEf
           .set({ status: 'cancelled', cancelReason: 'payment_failed', timeline: timelineAdd(v, 'cancelled', 'Payment failed'), updatedAt: new Date() })
           .where(eq(homeVisits.id, v.id));
         await addEvent(tx, v.careEpisodeId, 'home_visit_cancelled', 'Home visit cancelled: payment failed', SYSTEM_ACTOR, { homeVisitId: v.id });
+        await settleEpisodeAfterBookingEnded(tx, v.careEpisodeId, 'payment_failed', SYSTEM_ACTOR);
       });
     },
     /** A visit cancelled for non-payment released its provider; the patient must request a new visit. */

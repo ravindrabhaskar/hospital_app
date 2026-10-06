@@ -84,7 +84,7 @@ class _List extends ConsumerWidget {
                   final so = items[i];
                   return SectionCard(
                     key: Key('so.${so.id}'),
-                    title: '${so.patientName} · ${so.specialty}',
+                    title: '${so.patientName} · ${specialtyLabel(l, so.specialty)}',
                     trailing: TonePill(
                       label: secondOpinionStatusLabel(l, so.status),
                       bg: AppColors.lavenderBg,

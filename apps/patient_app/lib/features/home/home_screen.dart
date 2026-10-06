@@ -16,6 +16,7 @@ import '../../models/patient.dart';
 import '../../state/core_providers.dart';
 import '../../state/data_providers.dart';
 import '../../state/v13_providers.dart';
+import '../care/dose_display.dart';
 import '../checkin/checkin.dart';
 import '../messages/inbox_screen.dart' show UnreadBadge;
 import '../programs/programs.dart' show MyProgramsSection;
@@ -453,43 +454,49 @@ class QuickActionsRow extends ConsumerWidget {
         pharmacyOn ? '/pharmacy' : unavailableRoute(l.qaOrderMedicines),
       ),
     ];
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          for (var i = 0; i < items.length; i++) ...[
-            if (i > 0) const VerticalDivider(width: 1, indent: 10, endIndent: 10),
-            Expanded(
-              child: Semantics(
-                button: true,
-                label: '${items[i].$3}. ${items[i].$4}',
-                excludeSemantics: true,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(Radii.tile),
-                  onTap: () => context.push(items[i].$5),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                    child: Column(
-                      children: [
-                        IconTile(icon: items[i].$1, accent: items[i].$2, size: 64, iconSize: 32),
-                        const SizedBox(height: Space.sm),
-                        Text(items[i].$3,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5)),
-                        const SizedBox(height: 2),
-                        Text(items[i].$4,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: context.textMuted, fontSize: 11.5)),
-                      ],
+    // Each column's text width: labels are fitted word by word, and an
+    // IntrinsicHeight can't measure a LayoutBuilder below it.
+    return LayoutBuilder(builder: (context, constraints) {
+      final labelWidth = (constraints.maxWidth - (items.length - 1)) / items.length - 4;
+      return IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (var i = 0; i < items.length; i++) ...[
+              if (i > 0) const VerticalDivider(width: 1, indent: 10, endIndent: 10),
+              Expanded(
+                child: Semantics(
+                  button: true,
+                  label: '${items[i].$3}. ${items[i].$4}',
+                  excludeSemantics: true,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(Radii.tile),
+                    onTap: () => context.push(items[i].$5),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                      child: Column(
+                        children: [
+                          IconTile(icon: items[i].$1, accent: items[i].$2, size: 64, iconSize: 32),
+                          const SizedBox(height: Space.sm),
+                          WordWrapLabel(items[i].$3,
+                              maxWidth: labelWidth,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600, fontSize: 13.5, color: context.textStrong)),
+                          const SizedBox(height: 2),
+                          WordWrapLabel(items[i].$4,
+                              maxWidth: labelWidth,
+                              style: TextStyle(color: context.textMuted, fontSize: 11.5)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ],
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
 
@@ -633,6 +640,7 @@ const quickAccessPrimaryCount = 9;
 
 void showMoreQuickAccess(BuildContext context, List<QuickAccessItem> items) {
   showModalBottomSheet<void>(
+    useRootNavigator: true,
     context: context,
     isScrollControlled: true,
     builder: (c) => SafeArea(
@@ -761,24 +769,8 @@ class QuickAccessTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   // Word-by-word so a long word ("Emergency") shrinks instead of breaking mid-word.
-                  LayoutBuilder(
-                    builder: (context, constraints) => Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 3,
-                      children: [
-                        for (final word in item.label.split(' '))
-                          ConstrainedBox(
-                            constraints: BoxConstraints(maxWidth: constraints.maxWidth),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(word,
-                                  style: const TextStyle(
-                                      fontSize: 11.5, fontWeight: FontWeight.w500, height: 1.2)),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+                  WordWrapLabel(item.label,
+                      style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w500, height: 1.2)),
                   if (item.comingSoon)
                     Padding(
                       padding: const EdgeInsets.only(top: 3),
@@ -813,8 +805,9 @@ class RemindersSection extends ConsumerWidget {
             compact: true, error: v.error!, onRetry: () => ref.invalidate(remindersTodayProvider)),
       ]);
     }
-    final items = v.value;
-    if (items == null) return const LoadingView(compact: true);
+    final raw = v.value;
+    if (raw == null) return const LoadingView(compact: true);
+    final items = visibleReminders(raw, ref.watch(medicationAddedLogProvider));
     if (items.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1013,7 +1006,7 @@ class InsightCard extends StatelessWidget {
                 Container(
                   width: 34,
                   height: 34,
-                  decoration: BoxDecoration(color: accent.bg, shape: BoxShape.circle),
+                  decoration: BoxDecoration(color: context.accentSurface(accent), shape: BoxShape.circle),
                   child: Icon(icon, color: accent.fg, size: 19),
                 ),
                 const SizedBox(width: 8),

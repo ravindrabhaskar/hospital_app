@@ -322,3 +322,49 @@ class SupportContactButtons extends StatelessWidget {
     );
   }
 }
+
+/// "Your credential expires in N days" warning (Home and Profile).
+class CredentialExpiryBanner extends StatelessWidget {
+  const CredentialExpiryBanner({super.key, required this.days, this.onTap});
+  final int days;
+
+  /// Optional action (Home: open the profile).
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    return Semantics(
+      liveRegion: true,
+      button: onTap != null,
+      child: Material(
+        color: AppColors.warningBg,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.tileRadius),
+          side: const BorderSide(color: AppColors.warning),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                const Icon(Icons.warning_amber_rounded, color: Color(0xFF9A5A10)),
+                const SizedBox(width: 10),
+                Expanded(child: Text(l.profileCredentialExpiring(days))),
+                if (onTap != null) ...[
+                  const SizedBox(width: 8),
+                  Tooltip(
+                    message: l.credentialBannerAction,
+                    child: const Icon(Icons.chevron_right, color: Color(0xFF9A5A10)),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
